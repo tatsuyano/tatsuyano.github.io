@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>blog.10rane.com</title>
-    <link>http://localhost:1313/</link>
-    <description>Recent content on blog.10rane.com</description>
+    <title>Emacs on blog.10rane.com</title>
+    <link>http://localhost:1313/tags/emacs/</link>
+    <description>Recent content in Emacs on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Mon, 20 Aug 2012 02:29:52 +0900</lastBuildDate>
-    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/tags/emacs/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>auto-complete.elをインストールする</title>
@@ -117,38 +117,6 @@ wget http://www.emacswiki.org/emacs/download/auto-install.el
 &lt;li&gt;&lt;a href=&#34;http://typester.stfuawsc.com/slides/perlcasual2/start.html&#34;&gt;Perl Hacks on Emacs&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://yasuwagon.blogspot.jp/2011/02/auto-installel.html&#34;&gt;auto-install.el のインストール&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>スポニチフィットラン 皇居 RUNNING FESTA</title>
-      <link>http://localhost:1313/2012/08/05/suponichi-fitrun-running-festa/</link>
-      <pubDate>Sun, 05 Aug 2012 01:45:52 +0900</pubDate>
-      
-      <guid>http://localhost:1313/2012/08/05/suponichi-fitrun-running-festa/</guid>
-      <description>&lt;p&gt;先月（7月）、久々に皇居の10kmレース「スポニチフィットラン 皇居 RUNNING FESTA」に出場しました。
-タイムは以前出場時よりも、5kgの体重増と猛暑だったこともあり、約4分も遅くなってしまいました。。&lt;/p&gt;
-
-&lt;p&gt;今回はそのリベンジということで、2ヶ月連続で「スポニチフィットラン 皇居 RUNNING FESTA（第19回）」に出場しました。&lt;/p&gt;
-
-&lt;p&gt;※今回写真は撮れなかったので、以前に撮影した写真を代用。&lt;/p&gt;
-
-&lt;p&gt;前日にバナナマンのライブを見たせいか寝付けず、結局朝の6時ぐらいに就寝。8時起床と最悪のコンディション。
-寝ぼけていたのか、受付＆着替える施設がある小川町ではなく、レース会場の竹橋に向かってしまい、急遽Uターン。&lt;/p&gt;
-
-&lt;p&gt;レース会場まで全力でダッシュしスタート2分前に着くといういい加減な気持ちでレースに参加。
-いちよスタートは切れたものの、運営者さんのご好意で自分だけ4分遅れでスタートさせてもらうという形になってしまい、
-大変迷惑をかけてしまいました。本当に反省しています。&lt;/p&gt;
-
-&lt;p&gt;結局タイムは54分台というリベンジどころかさらに悪くなるという最悪な結果に。。
-まあ自業自得ということなのでしょう。以前はしっかりレース前の調整をしていたのですが、最近慣れてきたせいか
-すごくお座なりになってしまっているので、これを最後にしっかりコンディションを作れるよう調整をしようと思います。&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/suponichi-fitrun-running-festa001.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;br&gt;&lt;br&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/suponichi-fitrun-running-festa002.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;/center&gt;&lt;/p&gt;
 </description>
     </item>
     

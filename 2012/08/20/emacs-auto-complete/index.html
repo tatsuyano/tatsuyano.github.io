@@ -9,11 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Posts -- blog.10rane.com</title>
+    <title>auto-complete.elをインストールする -- blog.10rane.com</title>
 
-    
-    <link href="http://localhost:1313/post/index.xml" rel="alternate" type="application/rss+xml" title="blog.10rane.com" />
-    <link href="http://localhost:1313/post/index.xml" rel="feed" type="application/rss+xml" title="blog.10rane.com" />
     
 
     
@@ -71,63 +68,94 @@
 
 
     
-    <header class="intro-header" style="background-image: url('http://localhost:1313//img/home-bg.jpg')">
-     <div class="container">
-       <div class="row">
-         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-           <div class="site-heading">
-             <h1>Posts</h1>
-             <hr class="small">
-             <span class="subheading"></span>
+    
+    <header class="intro-header" style="background-image: url('http://localhost:1313//img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Auto-Complete.Elをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Aug 20, 2012
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://localhost:1313/tags/emacs" >emacs</a> 
+
+               </span>
+             </div>
            </div>
-         </div>
-       </div>
-     </div>
+        </div>
+      </div>
     </header>
 
     
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://localhost:1313/2012/08/20/emacs-auto-complete/">auto-complete.elをインストールする</a> on Mon, Aug 20, 2012
-                    <br />
-                    In 
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
 
-                    Tags <a href="http://localhost:1313/tags/emacs" >emacs</a> 
+<h2 id="はじめに:b592550574e7bf3db9d0845e8c853199">はじめに</h2>
 
-                  </p>
-               </div>
+<p>すでにauto-intall.elがインストールされている前提で話をすすめます。<br />
+auto-installのインストール手順は<a href="http://localhost:1313/2012/08/20/emacs-auto-install/">こちら</a>をご覧ください。</p>
 
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://localhost:1313/2012/08/20/emacs-auto-install/">auto-install.elをインストールする</a> on Mon, Aug 20, 2012
-                    <br />
-                    In 
+<p>またauto-installを使わずに、手動でインストール、コンパイルしたい場合は、<br />
+下記サイト(auto-complete.elの開発者さんが説明してくれています)をご参照ください。</p>
 
-                    Tags <a href="http://localhost:1313/tags/emacs" >emacs</a> 
+<ul>
+<li><a href="http://dev.ariel-networks.com/wp/documents/aritcles/emacs/part9">「Emacsのトラノマキ」連載第09回「auto-completeを使おう」</a></li>
+</ul>
 
-                  </p>
-               </div>
+<h2 id="インストール手順:b592550574e7bf3db9d0845e8c853199">インストール手順</h2>
 
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://localhost:1313/2012/08/05/suponichi-fitrun-running-festa/">スポニチフィットラン 皇居 RUNNING FESTA</a> on Sun, Aug 5, 2012
-                    <br />
-                    In 
+<p>emacsを起動し、</p>
 
-                    Tags <a href="http://localhost:1313/tags/running" >running</a> 
+<pre><code>M-x auto-install-batch &lt;RET&gt;
+Extension name: auto-complete development version &lt;RET&gt;
+</code></pre>
 
-                  </p>
-               </div>
+<p>auto-isntall-batchを実行、次にインストールしたいパッケージ名(auto-complete development version)を入力します。<br />
+すると自動で複数ソースのダウンロードが始まります。</p>
 
-          
-          
-    
+<p>ダウンロードし終わると「モード行」に</p>
+
+<pre><code>Type C-c C-c to continue; Type C-c C-d for view diff; Type C-c C-q to quit.
+</code></pre>
+
+<p>というメッセージが出てくるので、「C-c C-c」と入力し、ダウンロードしたソースを順番にコンパイルしていきます。<br />
+すべてコンパイルし終えると、以下のようなメッセージが表示され、インストールが完了します。</p>
+
+<pre><code>Installation is completed.
+</code></pre>
+
+<h2 id="emacsの設定:b592550574e7bf3db9d0845e8c853199">emacsの設定</h2>
+
+<pre><code class="language-scheme">;; auto-complete
+(require 'auto-complete)
+(require 'auto-complete-config) ; 必須ではないですが一応
+(global-auto-complete-mode t)
+</code></pre>
+
+<h2 id="実行画面:b592550574e7bf3db9d0845e8c853199">実行画面</h2>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/auto-complete001.png" alt="" /></p>
+
+<h2 id="参考サイト:b592550574e7bf3db9d0845e8c853199">参考サイト</h2>
+
+<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
+
+<ul>
+<li><a href="http://dev.ariel-networks.com/wp/documents/aritcles/emacs/part9">「Emacsのトラノマキ」連載第09回「auto-completeを使おう」</a></li>
+</ul>
+
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
+    </article>
 
     <hr>
     

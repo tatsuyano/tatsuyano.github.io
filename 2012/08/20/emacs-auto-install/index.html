@@ -9,11 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Posts -- blog.10rane.com</title>
+    <title>auto-install.elをインストールする -- blog.10rane.com</title>
 
-    
-    <link href="http://localhost:1313/post/index.xml" rel="alternate" type="application/rss+xml" title="blog.10rane.com" />
-    <link href="http://localhost:1313/post/index.xml" rel="feed" type="application/rss+xml" title="blog.10rane.com" />
     
 
     
@@ -71,63 +68,77 @@
 
 
     
-    <header class="intro-header" style="background-image: url('http://localhost:1313//img/home-bg.jpg')">
-     <div class="container">
-       <div class="row">
-         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-           <div class="site-heading">
-             <h1>Posts</h1>
-             <hr class="small">
-             <span class="subheading"></span>
+    
+    <header class="intro-header" style="background-image: url('http://localhost:1313///img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Auto-Install.Elをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Aug 20, 2012
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://localhost:1313/tags/emacs" >emacs</a> 
+
+               </span>
+             </div>
            </div>
-         </div>
-       </div>
-     </div>
+        </div>
+      </div>
     </header>
 
     
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://localhost:1313/2012/08/20/emacs-auto-complete/">auto-complete.elをインストールする</a> on Mon, Aug 20, 2012
-                    <br />
-                    In 
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
 
-                    Tags <a href="http://localhost:1313/tags/emacs" >emacs</a> 
+<p>anything.elやperl-completion.elを簡単にインストールできるauto-install.elをインストールします。</p>
 
-                  </p>
-               </div>
+<h2 id="emacs-d以下の構成:a0b40df5cd99ebed008dd372837e9b1c">emacs.d以下の構成</h2>
 
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://localhost:1313/2012/08/20/emacs-auto-install/">auto-install.elをインストールする</a> on Mon, Aug 20, 2012
-                    <br />
-                    In 
+<p>.emacs.d以下の構成は<a href="http://typester.stfuawsc.com/slides/perlcasual2/start.html">Perl Hacks on Emacs</a>に習い、以下のようにします。</p>
 
-                    Tags <a href="http://localhost:1313/tags/emacs" >emacs</a> 
+<pre><code>.emacs.d
+├── conf … init-loader.elで使う。
+├── elisp … auto-install.elでインストールしたソースや、手動でダウンロードしたソースの置場所。
+└── site … それ以外のライブラリの置場所。
+</code></pre>
 
-                  </p>
-               </div>
+<h2 id="ダウンロード:a0b40df5cd99ebed008dd372837e9b1c">ダウンロード</h2>
 
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://localhost:1313/2012/08/05/suponichi-fitrun-running-festa/">スポニチフィットラン 皇居 RUNNING FESTA</a> on Sun, Aug 5, 2012
-                    <br />
-                    In 
+<pre><code>cd .emacs.d/elisp/
+wget http://www.emacswiki.org/emacs/download/auto-install.el
+</code></pre>
 
-                    Tags <a href="http://localhost:1313/tags/running" >running</a> 
+<h2 id="emacsの設定:a0b40df5cd99ebed008dd372837e9b1c">.emacsの設定</h2>
 
-                  </p>
-               </div>
+<pre><code class="language-scheme">;; emacs起動時に、読み込むソース(auto-installなど)の置場所を指定します。
+(add-to-list 'load-path &quot;~/.emacs.d/elisp&quot;)
 
-          
-          
-    
+;; auto-installでインストールしたソースの置場所を指定します。
+(require 'auto-install)
+(setq auto-install-directory &quot;~/.emacs.d/elisp/&quot;)
+</code></pre>
+
+<h2 id="参考サイト:a0b40df5cd99ebed008dd372837e9b1c">参考サイト</h2>
+
+<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
+
+<ul>
+<li><a href="http://typester.stfuawsc.com/slides/perlcasual2/start.html">Perl Hacks on Emacs</a></li>
+<li><a href="http://yasuwagon.blogspot.jp/2011/02/auto-installel.html">auto-install.el のインストール</a></li>
+</ul>
+
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
+    </article>
 
     <hr>
     

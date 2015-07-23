@@ -2,20 +2,153 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on blog.10rane.com</title>
-    <link>http://tatsuyano.github.io/post/</link>
+    <link>http://localhost:1313/post/</link>
     <description>Recent content in Posts on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Thu, 23 Jul 2015 07:14:01 +0000</lastBuildDate>
-    <atom:link href="http://tatsuyano.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 20 Aug 2012 02:29:52 +0900</lastBuildDate>
+    <atom:link href="http://localhost:1313/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>article title</title>
-      <link>http://tatsuyano.github.io/article-title/</link>
-      <pubDate>Thu, 23 Jul 2015 07:14:01 +0000</pubDate>
+      <title>auto-complete.elをインストールする</title>
+      <link>http://localhost:1313/2012/08/20/emacs-auto-complete/</link>
+      <pubDate>Mon, 20 Aug 2012 02:29:52 +0900</pubDate>
       
-      <guid>http://tatsuyano.github.io/article-title/</guid>
-      <description>&lt;p&gt;test6&lt;/p&gt;
+      <guid>http://localhost:1313/2012/08/20/emacs-auto-complete/</guid>
+      <description>
+
+&lt;h2 id=&#34;はじめに:b592550574e7bf3db9d0845e8c853199&#34;&gt;はじめに&lt;/h2&gt;
+
+&lt;p&gt;すでにauto-intall.elがインストールされている前提で話をすすめます。&lt;br /&gt;
+auto-installのインストール手順は&lt;a href=&#34;http://localhost:1313/2012/08/20/emacs-auto-install/&#34;&gt;こちら&lt;/a&gt;をご覧ください。&lt;/p&gt;
+
+&lt;p&gt;またauto-installを使わずに、手動でインストール、コンパイルしたい場合は、&lt;br /&gt;
+下記サイト(auto-complete.elの開発者さんが説明してくれています)をご参照ください。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://dev.ariel-networks.com/wp/documents/aritcles/emacs/part9&#34;&gt;「Emacsのトラノマキ」連載第09回「auto-completeを使おう」&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;インストール手順:b592550574e7bf3db9d0845e8c853199&#34;&gt;インストール手順&lt;/h2&gt;
+
+&lt;p&gt;emacsを起動し、&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;M-x auto-install-batch &amp;lt;RET&amp;gt;
+Extension name: auto-complete development version &amp;lt;RET&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;auto-isntall-batchを実行、次にインストールしたいパッケージ名(auto-complete development version)を入力します。&lt;br /&gt;
+すると自動で複数ソースのダウンロードが始まります。&lt;/p&gt;
+
+&lt;p&gt;ダウンロードし終わると「モード行」に&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Type C-c C-c to continue; Type C-c C-d for view diff; Type C-c C-q to quit.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;というメッセージが出てくるので、「C-c C-c」と入力し、ダウンロードしたソースを順番にコンパイルしていきます。&lt;br /&gt;
+すべてコンパイルし終えると、以下のようなメッセージが表示され、インストールが完了します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Installation is completed.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;emacsの設定:b592550574e7bf3db9d0845e8c853199&#34;&gt;emacsの設定&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;;; auto-complete
+(require &#39;auto-complete)
+(require &#39;auto-complete-config) ; 必須ではないですが一応
+(global-auto-complete-mode t)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;実行画面:b592550574e7bf3db9d0845e8c853199&#34;&gt;実行画面&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/auto-complete001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:b592550574e7bf3db9d0845e8c853199&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://dev.ariel-networks.com/wp/documents/aritcles/emacs/part9&#34;&gt;「Emacsのトラノマキ」連載第09回「auto-completeを使おう」&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>auto-install.elをインストールする</title>
+      <link>http://localhost:1313/2012/08/20/emacs-auto-install/</link>
+      <pubDate>Mon, 20 Aug 2012 02:18:07 +0900</pubDate>
+      
+      <guid>http://localhost:1313/2012/08/20/emacs-auto-install/</guid>
+      <description>
+
+&lt;p&gt;anything.elやperl-completion.elを簡単にインストールできるauto-install.elをインストールします。&lt;/p&gt;
+
+&lt;h2 id=&#34;emacs-d以下の構成:a0b40df5cd99ebed008dd372837e9b1c&#34;&gt;emacs.d以下の構成&lt;/h2&gt;
+
+&lt;p&gt;.emacs.d以下の構成は&lt;a href=&#34;http://typester.stfuawsc.com/slides/perlcasual2/start.html&#34;&gt;Perl Hacks on Emacs&lt;/a&gt;に習い、以下のようにします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.emacs.d
+├── conf … init-loader.elで使う。
+├── elisp … auto-install.elでインストールしたソースや、手動でダウンロードしたソースの置場所。
+└── site … それ以外のライブラリの置場所。
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;ダウンロード:a0b40df5cd99ebed008dd372837e9b1c&#34;&gt;ダウンロード&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;cd .emacs.d/elisp/
+wget http://www.emacswiki.org/emacs/download/auto-install.el
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;emacsの設定:a0b40df5cd99ebed008dd372837e9b1c&#34;&gt;.emacsの設定&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;;; emacs起動時に、読み込むソース(auto-installなど)の置場所を指定します。
+(add-to-list &#39;load-path &amp;quot;~/.emacs.d/elisp&amp;quot;)
+
+;; auto-installでインストールしたソースの置場所を指定します。
+(require &#39;auto-install)
+(setq auto-install-directory &amp;quot;~/.emacs.d/elisp/&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;参考サイト:a0b40df5cd99ebed008dd372837e9b1c&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://typester.stfuawsc.com/slides/perlcasual2/start.html&#34;&gt;Perl Hacks on Emacs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://yasuwagon.blogspot.jp/2011/02/auto-installel.html&#34;&gt;auto-install.el のインストール&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>スポニチフィットラン 皇居 RUNNING FESTA</title>
+      <link>http://localhost:1313/2012/08/05/suponichi-fitrun-running-festa/</link>
+      <pubDate>Sun, 05 Aug 2012 01:45:52 +0900</pubDate>
+      
+      <guid>http://localhost:1313/2012/08/05/suponichi-fitrun-running-festa/</guid>
+      <description>&lt;p&gt;先月（7月）、久々に皇居の10kmレース「スポニチフィットラン 皇居 RUNNING FESTA」に出場しました。
+タイムは以前出場時よりも、5kgの体重増と猛暑だったこともあり、約4分も遅くなってしまいました。。&lt;/p&gt;
+
+&lt;p&gt;今回はそのリベンジということで、2ヶ月連続で「スポニチフィットラン 皇居 RUNNING FESTA（第19回）」に出場しました。&lt;/p&gt;
+
+&lt;p&gt;※今回写真は撮れなかったので、以前に撮影した写真を代用。&lt;/p&gt;
+
+&lt;p&gt;前日にバナナマンのライブを見たせいか寝付けず、結局朝の6時ぐらいに就寝。8時起床と最悪のコンディション。
+寝ぼけていたのか、受付＆着替える施設がある小川町ではなく、レース会場の竹橋に向かってしまい、急遽Uターン。&lt;/p&gt;
+
+&lt;p&gt;レース会場まで全力でダッシュしスタート2分前に着くといういい加減な気持ちでレースに参加。
+いちよスタートは切れたものの、運営者さんのご好意で自分だけ4分遅れでスタートさせてもらうという形になってしまい、
+大変迷惑をかけてしまいました。本当に反省しています。&lt;/p&gt;
+
+&lt;p&gt;結局タイムは54分台というリベンジどころかさらに悪くなるという最悪な結果に。。
+まあ自業自得ということなのでしょう。以前はしっかりレース前の調整をしていたのですが、最近慣れてきたせいか
+すごくお座なりになってしまっているので、これを最後にしっかりコンディションを作れるよう調整をしようと思います。&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/suponichi-fitrun-running-festa001.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;br&gt;&lt;br&gt;
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/suponichi-fitrun-running-festa002.jpg&#34; alt=&#34;&#34; /&gt;
+&lt;/center&gt;&lt;/p&gt;
 </description>
     </item>
     
