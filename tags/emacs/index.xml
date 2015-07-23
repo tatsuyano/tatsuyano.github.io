@@ -2,25 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Emacs on blog.10rane.com</title>
-    <link>http://localhost:1313/tags/emacs/</link>
+    <link>http://tatsuyano.github.io/tags/emacs/</link>
     <description>Recent content in Emacs on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Mon, 20 Aug 2012 02:29:52 +0900</lastBuildDate>
-    <atom:link href="http://localhost:1313/tags/emacs/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://tatsuyano.github.io/tags/emacs/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>auto-complete.elをインストールする</title>
-      <link>http://localhost:1313/2012/08/20/emacs-auto-complete/</link>
+      <link>http://tatsuyano.github.io/2012/08/20/emacs-auto-complete/</link>
       <pubDate>Mon, 20 Aug 2012 02:29:52 +0900</pubDate>
       
-      <guid>http://localhost:1313/2012/08/20/emacs-auto-complete/</guid>
+      <guid>http://tatsuyano.github.io/2012/08/20/emacs-auto-complete/</guid>
       <description>
 
 &lt;h2 id=&#34;はじめに:b592550574e7bf3db9d0845e8c853199&#34;&gt;はじめに&lt;/h2&gt;
 
 &lt;p&gt;すでにauto-intall.elがインストールされている前提で話をすすめます。&lt;br /&gt;
-auto-installのインストール手順は&lt;a href=&#34;http://localhost:1313/2012/08/20/emacs-auto-install/&#34;&gt;こちら&lt;/a&gt;をご覧ください。&lt;/p&gt;
+auto-installのインストール手順は&lt;a href=&#34;http://tatsuyano.github.io/2012/08/20/emacs-auto-install/&#34;&gt;こちら&lt;/a&gt;をご覧ください。&lt;/p&gt;
 
 &lt;p&gt;またauto-installを使わずに、手動でインストール、コンパイルしたい場合は、&lt;br /&gt;
 下記サイト(auto-complete.elの開発者さんが説明してくれています)をご参照ください。&lt;/p&gt;
@@ -75,10 +75,10 @@ Extension name: auto-complete development version &amp;lt;RET&amp;gt;
     
     <item>
       <title>auto-install.elをインストールする</title>
-      <link>http://localhost:1313/2012/08/20/emacs-auto-install/</link>
+      <link>http://tatsuyano.github.io/2012/08/20/emacs-auto-install/</link>
       <pubDate>Mon, 20 Aug 2012 02:18:07 +0900</pubDate>
       
-      <guid>http://localhost:1313/2012/08/20/emacs-auto-install/</guid>
+      <guid>http://tatsuyano.github.io/2012/08/20/emacs-auto-install/</guid>
       <description>
 
 &lt;p&gt;anything.elやperl-completion.elを簡単にインストールできるauto-install.elをインストールします。&lt;/p&gt;
