@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CoffeeScriptの勉強 その３(オブジェクト) -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>CoffeeScriptの勉強 その３(オブジェクト)</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Mar 11, 2013
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/coffeescript" >coffeescript</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h4 id="objectの生成:9c9cb6880bdaa691aadbf9dcf2d7811d">Objectの生成</h4>
+
+<p>this.x の代わりに @x と書くことができる</p>
+
+<pre><code class="language-coffeescript">pos =
+  x:100
+  y:200
+  dump: -> console.log "x:#{@x},y:#{@y}"
+
+pos.dump()
+</code></pre>
+
+<p>コンパイル結果↓</p>
+
+<pre><code class="language-coffeescript">var pos;
+pos = {
+  x: 100,
+  y: 200,
+  dump: function() {
+    return console.log("x:" + this.x + ", y:" + this.y);
+  }
+};
+</code></pre>
+
+<p>一行で書く場合、「,」で区切る</p>
+
+<pre><code class="language-coffeescript">size = width:100, height:200
+</code></pre>
+
+<p>コンパイル結果↓</p>
+
+<pre><code class="language-coffeescript">var size;
+size = {
+  width: 100,
+  height: 100
+};
+</code></pre>
+<br>
+
+#### 配列
+
+for .. in でループが書けます。
+
+<pre><code class="language-coffeescript">seq = ["a","b","c"]
+for x in seq
+  console.log x
+
+ a
+ b
+ c
+</code></pre>
+
+<p>ループ中に配列のインデックスを拾いたい場合はforとinの間に2つ変数を置きます。</p>
+
+<pre><code class="language-coffeescript">seq = ["a","b","c"]
+for x,i in seq
+  console.log "#{i} -> #{x}"
+{% endcodeblock %}
+0 -> a
+1 -> b
+2 -> c
+</code></pre>
+<br>
+
+#### 連想配列
+
+for .. of を使って配列と同じように反復処理ができます。
+
+<pre><code class="language-coffeescript">data =
+  x:100
+  y:200
+
+for key,value of data
+  console.log "#{key} -> #{value}"
+
+x -> 100
+y -> 200
+</code></pre>
+<br>
+
+#### 存在チェック
+
+変数名や関数名の直後に ? を付けると「その変数あるいは関数が定義されておりnull以外の値が入っているかどうか」をテストできます。
+
+<pre><code class="language-coffeescript">if myName?
+  console.log "yes"
+else
+  console.log "no"
+</code></pre>
+
+<p>コンパイル結果↓</p>
+
+<pre><code class="language-coffeescript">if (typeof myName != "undefined" && myName !== null) {
+  console.log("yes");
+} else {
+  console.log("no");
+}
+</code></pre>
+
+<p>また「.」や 「()」の前に ? を置くことで、変数や関数が存在する場合のみ処理を進めるようにできます。</p>
+
+<pre><code class="language-coffeescript">console?.log?("Hello World")
+</code></pre>
+
+<p>コンパイル結果↓</p>
+
+<pre><code class="language-coffeescript">if (typeof console != "undefined" && console !== null) {
+  if (typeof console.log == "function") {
+    console.log("Hello World");
+  }
+}
+</code></pre>
+<br>
+
+#### ヒアドキュメント
+
+<pre><code class="language-coffeescript">html = '''
+aaa
+bbb
+ccc
+'''
+</code></pre>
+
+<p>コンパイル結果↓</p>
+
+<pre><code class="language-coffeescript">var html;
+html = 'aaa\nbbb\nccc';
+</code></pre>
+<br>
+
+#### thisのバインド
+
+関数定義時に -> の代わりに => を使うと、thisがバインドされて外側のthisを参照するようになります。
+
+<pre><code class="language-coffeescript">pos =
+  x:100
+  y:200
+  dump: ->
+    # 関数内部で@x(this.x)を使いたいのでfuncの定義は=>にしないといけない
+    func = => console.log "x:#{@x}, y:#{@y}"
+        func()
+</code></pre>
+
+<p>コンパイル結果↓</p>
+
+<pre><code class="language-coffeescript">var pos;
+
+pos = {
+  x: 100,
+  y: 200,
+  dump: function() {
+    var func,
+    _this = this;
+    func = function() {
+      return console.log("x:" + _this.x + ", y:" + _this.y);
+    };
+    return func();
+  }
+};
+</code></pre>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>zshをバージョン5 に上げる -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Zshをバージョン5 に上げる</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Aug 19, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/zsh" >zsh</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>yumでインストールするとバージョンが4.3だったので、makeしてインストールしました。</p>
+
+<p>まずはmakeするために必要なライブラリのインストール</p>
+
+<pre><code># yum -y install gcc ncurses-devel
+</code></pre>
+
+<p>ダウンロード</p>
+
+<pre><code># wget http://www.zsh.org/pub/zsh-5.0.5.tar.bz2
+# tar jxvf zsh-5.0.5.tar.bz2
+</code></pre>
+
+<p>make &amp; install</p>
+
+<pre><code># cd zsh-5.0.5
+# ./configure
+# make
+# make install
+</code></pre>
+
+<p>インストールが正常に終わったら、zshを登録します。</p>
+
+<p>shellの登録 &amp; 変更</p>
+
+<pre><code># echo /usr/local/bin/zsh &gt;&gt; /etc/shells
+# chsh
+</code></pre>
+
+<p><em>/usr/local/bin/zsh以外にインストールされている可能性があるので、確認してください</em></p>
+
+<pre><code>$ zsh --version
+zsh 5.0.5 (x86_64-unknown-linux-gnu)
+</code></pre>
+
+<p>ログイン時にzshが起動するようbashrcに追加する。</p>
+
+<p>~/.bashrc</p>
+
+<pre><code># Use zsh
+if [ -f /usr/local/bin/zsh ]; then
+    exec /usr/local/bin/zsh
+fi
+</code></pre>
+
+<p>一度ログアウトし、ログイン後shellがzshに切り替わっていれば完了です。</p>
+
+<pre><code>$echo $0
+/usr/local/bin/zsh   
+</code></pre>
+
+<ul>
+<li><a href="http://tzono.com/wiki/index.php?linux%2Fzsh">linux/zsh</a></li>
+<li><a href="http://tkuchiki.hatenablog.com/entry/2014/05/08/222135">現在の shell を shellscript の中から確認する</a></li>
+</ul>
+
+<p>お疲れ様でした。</p>
+
+<h4 id="関連する記事:8403d3785f94a15561a9ce234d03172d">関連する記事</h4>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/08/06/install-oh-my-zsh/">oh-my-zshをインストールする</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

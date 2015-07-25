@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Rails4でのデバッグ方法 -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Rails4でのデバッグ方法</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Feb 18, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/rails" >rails</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>最近覚えたデバッグ方法を、備忘のためにまとめておきます。</p>
+
+<h2 id="ログに出力する:c4921657da7f6c61871c1bfb230ed626">ログに出力する</h2>
+
+<p>ActiveSupport::Logger#debugメソッドを使って、rails serverの標準出力にデバッグコードを出力する。</p>
+
+<p><pre><code class="language-ruby">logger.debug(&lsquo;Hello world&rsquo;)
+</pre></code>
+<br></p>
+
+<h3 id="sqlを出力する:c4921657da7f6c61871c1bfb230ed626">SQLを出力する</h3>
+
+<p>ActiveRecord::Relation#to_sqlメソッドでSQLを出力する。</p>
+
+<p><pre><code class="language-ruby">User.all.to_sql #=&gt; SELECT &ldquo;users&rdquo;.* FROM &ldquo;users&rdquo;
+</pre></code>
+<br></p>
+
+<h2 id="ブレークポイントを設定する:c4921657da7f6c61871c1bfb230ed626">ブレークポイントを設定する</h2>
+
+<p>コード内に<code>binding.pry</code>というコードを書くと、そこまで実行中のプログラムが中断され、
+以降をコンソール上からデバッグできます。</p>
+
+<p>Gemfile
+<pre><code class="language-ruby">gem &lsquo;pry-rails&rsquo;,  group: [:development, :test]
+gem &lsquo;pry-byebug&rsquo;, group: [:development, :test]
+</pre></code>
+<br></p>
+
+<p><pre><code class="language-ruby">$ bundle install
+$ rails server
+</pre></code>
+<br></p>
+
+<p>中断したい箇所に<code>binding.pry</code>を記述。</p>
+
+<p><pre><code class="language-ruby">def index
+  @users = User.all</p>
+
+<p>binding.pry # &lt;- This!</p>
+
+<p>logger.debug(&lsquo;&mdash;&mdash; 1 &mdash;&mdash;-&rsquo;)
+  logger.debug(&lsquo;&mdash;&mdash; 2 &mdash;&mdash;-&rsquo;)
+  logger.debug(&lsquo;&mdash;&mdash; 3 &mdash;&mdash;-&rsquo;)
+  logger.debug(&lsquo;&mdash;&mdash; 4 &mdash;&mdash;-&rsquo;)
+end
+</pre></code>
+<br></p>
+
+<p>ブレークポイントの移動は<code>next</code>,<code>step</code>,<code>exit</code>で行う。</p>
+
+<p><pre><code class="language-ruby">     7: def index
+     8:   @users = User.all
+     9:
+    10:   binding.pry
+    11:
+ =&gt; 12:   logger.debug(&lsquo;&mdash;&mdash; 1 &mdash;&mdash;-&rsquo;)
+    13:   logger.debug(&lsquo;&mdash;&mdash; 2 &mdash;&mdash;-&rsquo;)
+    14:   logger.debug(&lsquo;&mdash;&mdash; 3 &mdash;&mdash;-&rsquo;)
+    15:   logger.debug(&lsquo;&mdash;&mdash; 4 &mdash;&mdash;-&rsquo;)
+    16: end
+</pre></code>
+<br></p>
+
+<h3 id="おまけ1-出力結果を見やすく整形する:c4921657da7f6c61871c1bfb230ed626">おまけ1 出力結果を見やすく整形する</h3>
+
+<ul>
+<li>pコマンド</li>
+</ul>
+
+<p><pre><code class="language-ruby">p Array.new(10) { {:hoge =&gt; :fuga} }
+#=&gt; [{:hoge=&gt;:fuga}, {:hoge=&gt;:fuga}, {:hoge=&gt;:fuga}, {:hoge=&gt;:fuga}, {:hoge=&gt;:fuga}, {:hoge=&gt;:fuga}, {:hoge=&gt;:fuga}, {:hoge=&gt;:fuga},
+{:hoge=&gt;:fuga}, {:hoge=&gt;:fuga}]
+</pre></code>
+<br></p>
+
+<ul>
+<li>ppコマンド</li>
+</ul>
+
+<p><pre><code class="language-ruby">require &lsquo;pp&rsquo;
+pp Array.new(10) { {:hoge =&gt; :fuga} }
+#=&gt; [{:hoge=&gt;:fuga},
+{:hoge=&gt;:fuga},
+{:hoge=&gt;:fuga},
+{:hoge=&gt;:fuga},
+{:hoge=&gt;:fuga},
+{:hoge=&gt;:fuga},
+{:hoge=&gt;:fuga},
+{:hoge=&gt;:fuga},
+{:hoge=&gt;:fuga},
+{:hoge=&gt;:fuga}]
+</pre></code>
+<br></p>
+
+<h3 id="おまけ2-オブジェクトの情報を出力する:c4921657da7f6c61871c1bfb230ed626">おまけ2 オブジェクトの情報を出力する</h3>
+
+<ul>
+<li>Object#inspectメソッドでオブジェクトを文字列として出力する。</li>
+</ul>
+
+<p><pre><code class="language-ruby">User.inspect
+</pre></code>
+<br></p>
+
+<ul>
+<li>オブジェクトのメソッドを出力する</li>
+</ul>
+
+<p><pre><code class="language-ruby">User.methods
+</pre></code>
+<br></p>
+
+<ul>
+<li>オブジェクト(クラス)の継承関係を出力する</li>
+</ul>
+
+<p><pre><code class="language-ruby">User.ancestors
+</pre></code>
+<br></p>
+
+<h2 id="参考サイト-書籍:c4921657da7f6c61871c1bfb230ed626">参考サイト&amp; 書籍</h2>
+
+<ul>
+<li><a href="http://www.amazon.co.jp/dp/B00P0UR1RU/">パーフェクトRuby on Rails</a></li>
+<li><a href="http://secondlife.hatenablog.jp/entry/20061010/1160453355">Ruby で debug する7つの方法</a></li>
+<li><a href="http://www.matzmtok.com/blog/?p=119">Rubyでのデバッグテクニック</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

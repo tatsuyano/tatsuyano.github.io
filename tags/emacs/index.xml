@@ -6,117 +6,1662 @@
     <description>Recent content in Emacs on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Mon, 20 Aug 2012 02:29:52 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 25 Mar 2015 01:00:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/tags/emacs/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>auto-complete.elをインストールする</title>
-      <link>http://tatsuyano.github.io/2012/08/20/emacs-auto-complete/</link>
-      <pubDate>Mon, 20 Aug 2012 02:29:52 +0900</pubDate>
+      <title>emacsにrcodetoolsをインストールして、返り値をコメントに出力する</title>
+      <link>http://tatsuyano.github.io/2015/03/25/install-rcodetools-to-emacs/</link>
+      <pubDate>Wed, 25 Mar 2015 01:00:00 +0900</pubDate>
       
-      <guid>http://tatsuyano.github.io/2012/08/20/emacs-auto-complete/</guid>
+      <guid>http://tatsuyano.github.io/2015/03/25/install-rcodetools-to-emacs/</guid>
       <description>
 
-&lt;h2 id=&#34;はじめに:b592550574e7bf3db9d0845e8c853199&#34;&gt;はじめに&lt;/h2&gt;
+&lt;p&gt;返り値をコメントに出力したい場合、rcodetoolsのxmpfilterを使うことで可能になります。&lt;/p&gt;
 
-&lt;p&gt;すでにauto-intall.elがインストールされている前提で話をすすめます。&lt;br /&gt;
-auto-installのインストール手順は&lt;a href=&#34;http://tatsuyano.github.io/2012/08/20/emacs-auto-install/&#34;&gt;こちら&lt;/a&gt;をご覧ください。&lt;/p&gt;
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;3 + 4
+↓
+3 + 4 # =&amp;gt; 7
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
 
-&lt;p&gt;またauto-installを使わずに、手動でインストール、コンパイルしたい場合は、&lt;br /&gt;
-下記サイト(auto-complete.elの開発者さんが説明してくれています)をご参照ください。&lt;/p&gt;
+&lt;h2 id=&#34;インストール:ad54d5cd39040f18666c590ba2c4a628&#34;&gt;インストール&lt;/h2&gt;
+
+&lt;p&gt;まずはrcodetools本体をインストールします。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ gem install rcodetools
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;次にインストールしたgemの中にある&lt;code&gt;rcodetools.el&lt;/code&gt;をemacsのload-pathが通っている階層にコピーします。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ cp -a $HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/rcodetools-0.8.5.0/rcodetools.el $HOME/src/github.com/tatsuyano/dot.emacs.d/init_loader/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;emacsの設定:ad54d5cd39040f18666c590ba2c4a628&#34;&gt;emacsの設定&lt;/h2&gt;
+
+&lt;p&gt;今回は、&lt;code&gt;M-p&lt;/code&gt;にxmpfilterを割り当てます。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;(require &amp;lsquo;rcodetools)
+(define-key ruby-mode-map (kbd &amp;ldquo;M-p&amp;rdquo;) &amp;lsquo;xmp)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;操作方法:ad54d5cd39040f18666c590ba2c4a628&#34;&gt;操作方法&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;まずは返り値を出力したい行で、&lt;code&gt;M-;(comment-dwim)&lt;/code&gt;を2回実行すると「# =&amp;gt;」というコメントがソースに出力されます。&lt;/li&gt;
+&lt;li&gt;その状態で、&lt;code&gt;M-p(xmp)&lt;/code&gt;を実行すると、コメントに返り値が出力されます。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;ちなみに&lt;code&gt;M-;&lt;/code&gt;はAltを押しながら&lt;code&gt;;&lt;/code&gt;を押下です。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;3 + 4
+↓
+3 + 4 # =&amp;gt;          1. comment-dwimを2回実行
+↓
+3 + 4 # =&amp;gt; 7        2. xmpfilterを実行
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;※ &lt;em&gt;環境によっては、&lt;code&gt;gems/rcodetools/bin/&lt;/code&gt;をPATHに加える必要があるようなので、動かない場合は試してみてください。&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:ad54d5cd39040f18666c590ba2c4a628&#34;&gt;参考サイト&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://dev.ariel-networks.com/wp/documents/aritcles/emacs/part9&#34;&gt;「Emacsのトラノマキ」連載第09回「auto-completeを使おう」&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;インストール手順:b592550574e7bf3db9d0845e8c853199&#34;&gt;インストール手順&lt;/h2&gt;
-
-&lt;p&gt;emacsを起動し、&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;M-x auto-install-batch &amp;lt;RET&amp;gt;
-Extension name: auto-complete development version &amp;lt;RET&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;auto-isntall-batchを実行、次にインストールしたいパッケージ名(auto-complete development version)を入力します。&lt;br /&gt;
-すると自動で複数ソースのダウンロードが始まります。&lt;/p&gt;
-
-&lt;p&gt;ダウンロードし終わると「モード行」に&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Type C-c C-c to continue; Type C-c C-d for view diff; Type C-c C-q to quit.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;というメッセージが出てくるので、「C-c C-c」と入力し、ダウンロードしたソースを順番にコンパイルしていきます。&lt;br /&gt;
-すべてコンパイルし終えると、以下のようなメッセージが表示され、インストールが完了します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Installation is completed.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;emacsの設定:b592550574e7bf3db9d0845e8c853199&#34;&gt;emacsの設定&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;;; auto-complete
-(require &#39;auto-complete)
-(require &#39;auto-complete-config) ; 必須ではないですが一応
-(global-auto-complete-mode t)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;実行画面:b592550574e7bf3db9d0845e8c853199&#34;&gt;実行画面&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/auto-complete001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:b592550574e7bf3db9d0845e8c853199&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://dev.ariel-networks.com/wp/documents/aritcles/emacs/part9&#34;&gt;「Emacsのトラノマキ」連載第09回「auto-completeを使おう」&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://futurismo.biz/archives/2213&#34;&gt;EmacsでRubyの開発環境をさらにめちゃガチャパワーアップしたまとめ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/ironsand/items/ce7c02eb46fcc25a438b&#34;&gt;Emacs で rcodetools を使って &amp;ldquo;=&amp;gt;&amp;rdquo; で値を表示する&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
     
     <item>
-      <title>auto-install.elをインストールする</title>
-      <link>http://tatsuyano.github.io/2012/08/20/emacs-auto-install/</link>
-      <pubDate>Mon, 20 Aug 2012 02:18:07 +0900</pubDate>
+      <title>helm-gtags-modeを導入してソースコードの読解する</title>
+      <link>http://tatsuyano.github.io/2014/09/17/to-reading-comprehension-of-the-source-code-by-introducing-the-helm-gtags-mode/</link>
+      <pubDate>Wed, 17 Sep 2014 01:00:00 +0900</pubDate>
       
-      <guid>http://tatsuyano.github.io/2012/08/20/emacs-auto-install/</guid>
+      <guid>http://tatsuyano.github.io/2014/09/17/to-reading-comprehension-of-the-source-code-by-introducing-the-helm-gtags-mode/</guid>
       <description>
 
-&lt;p&gt;anything.elやperl-completion.elを簡単にインストールできるauto-install.elをインストールします。&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;helm-gtags&lt;/code&gt;を導入すると、メソッドの定義先に簡単に移動できたり(メソッドジャンプ)、
+メソッドの参照元の一覧を表示できたりと大変便利です。&lt;/p&gt;
 
-&lt;h2 id=&#34;emacs-d以下の構成:a0b40df5cd99ebed008dd372837e9b1c&#34;&gt;emacs.d以下の構成&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;helm-gtags&lt;/code&gt;は&lt;code&gt;GNU GLOBAL(gtag)&lt;/code&gt;というソフトウェアを使って上記の機能を実装しています。
+ただ&lt;code&gt;GNU GLOBAL&lt;/code&gt;は今まではC言語やJava、PHPなど一部言語しか対応していませんでした。&lt;/p&gt;
 
-&lt;p&gt;.emacs.d以下の構成は&lt;a href=&#34;http://typester.stfuawsc.com/slides/perlcasual2/start.html&#34;&gt;Perl Hacks on Emacs&lt;/a&gt;に習い、以下のようにします。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;GNU GLOBAL(gtag)とは、ソースファイルを解析し、インデックスファイルを生成してくれるソフトウェアです&lt;/em&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;.emacs.d
-├── conf … init-loader.elで使う。
-├── elisp … auto-install.elでインストールしたソースや、手動でダウンロードしたソースの置場所。
-└── site … それ以外のライブラリの置場所。
+&lt;p&gt;しかし、バージョン&lt;code&gt;6.3.2&lt;/code&gt;から&lt;code&gt;global-pygments-plugin&lt;/code&gt;が取り込まれたことで、Rubyなど多くの言語に対応しました。&lt;/p&gt;
+
+&lt;p&gt;今回は、RubyとPHPを&lt;code&gt;helm-gtags-mode&lt;/code&gt;に対応するようにしました。&lt;/p&gt;
+
+&lt;h3 id=&#34;ソフトウェアの依存関係:e3e233bf5c17e9630342a72bfcb7ccd1&#34;&gt;ソフトウェアの依存関係&lt;/h3&gt;
+
+&lt;p&gt;少しややこしいので整理しておきますと、&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;helm-gtags(複数言語対応)&lt;/code&gt;は &lt;code&gt;GNU GLOBAL 6.3.2&lt;/code&gt;が必要&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;GNU GLOBAL&lt;/code&gt;に取り込まれた&lt;code&gt;global-pygments-plugin&lt;/code&gt;は、&lt;code&gt;Pygment&lt;/code&gt;が必要&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;Pygment&lt;/code&gt;は&lt;code&gt;Python 2.6以上&lt;/code&gt;が必要&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;[helm-gtags] &amp;lt;- [GLOBAL] &amp;lt;- [Pygment] &amp;lt;- [Python 2系] という関係性なので、
+まずは、Python 2系からインストールします。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;注意&lt;/em&gt;
+&lt;code&gt;Pygment&lt;/code&gt;のコマンドは&lt;code&gt;pygmentize&lt;/code&gt;で、初めからインストールされている可能性があります。
+その場合は、&lt;code&gt;Python 2系&lt;/code&gt;、&lt;code&gt;Pygment&lt;/code&gt;のインストール手順はスルーしてください。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ which pygmentize
+$ /usr/bin/pygmentize
+
+$ pygmentize -V
+$ Pygments version 1.4, (c) 2006-2008 by Georg Brandl.
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;ダウンロード:a0b40df5cd99ebed008dd372837e9b1c&#34;&gt;ダウンロード&lt;/h2&gt;
+&lt;h3 id=&#34;python-2系のインストール:e3e233bf5c17e9630342a72bfcb7ccd1&#34;&gt;Python 2系のインストール&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code&gt;cd .emacs.d/elisp/
-wget http://www.emacswiki.org/emacs/download/auto-install.el
+&lt;p&gt;&lt;code&gt;pyenv&lt;/code&gt;を使って2系をインストールします。
+&lt;code&gt;pyenv&lt;/code&gt;のインストールは&lt;a href=&#34;http://blog.10rane.com/2014/08/19/install-anyenv/&#34;&gt;こちら&lt;/a&gt;を参考にしてください。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ pyenv install 2.7.8
+$ pyenv global 2.7.8
+$ pyenv version
+2.7.8
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;emacsの設定:a0b40df5cd99ebed008dd372837e9b1c&#34;&gt;.emacsの設定&lt;/h2&gt;
+&lt;h3 id=&#34;pygmentsのインストール:e3e233bf5c17e9630342a72bfcb7ccd1&#34;&gt;Pygmentsのインストール&lt;/h3&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;;; emacs起動時に、読み込むソース(auto-installなど)の置場所を指定します。
-(add-to-list &#39;load-path &amp;quot;~/.emacs.d/elisp&amp;quot;)
+&lt;pre&gt;&lt;code&gt;$ pip install Pygments
 
-;; auto-installでインストールしたソースの置場所を指定します。
-(require &#39;auto-install)
-(setq auto-install-directory &amp;quot;~/.emacs.d/elisp/&amp;quot;)
+$ $HOME/.anyenv/envs/pyenv/versions/2.7.8/bin/pygmentize -V
+$ Pygments version 1.6, (c) 2006-2013 by Georg Brandl.
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;参考サイト:a0b40df5cd99ebed008dd372837e9b1c&#34;&gt;参考サイト&lt;/h2&gt;
+&lt;h3 id=&#34;gnu-globalのインストール:e3e233bf5c17e9630342a72bfcb7ccd1&#34;&gt;GNU GLOBALのインストール&lt;/h3&gt;
+
+&lt;p&gt;ダウンロード&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo bash
+# cd /usr/local/src
+# wget http://tamacom.com/global/global-6.3.2.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;インストール&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# tar xvzf global-6.3.2.tar.gz
+# cd global-6.3.2
+# ./configure
+# make
+# make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ which global
+/usr/local/bin/global
+
+$ global --version
+global (GNU GLOBAL) 6.3.2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ which gtags
+/usr/local/bin/gtags
+
+$ gtags --version
+gtags (GNU GLOBAL) 6.3.2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;rootでも使えるようリンクを貼っておきます&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo ln -s /usr/local/bin/gtags /usr/bin/gtags
+$ sudo ln -s /usr/local/bin/global /usr/bin/global
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;global-pygments-pluginの設定:e3e233bf5c17e9630342a72bfcb7ccd1&#34;&gt;global-pygments-pluginの設定&lt;/h3&gt;
+
+&lt;p&gt;デフォルトのままだと、Rubyには対応していないので、設定ファイルをダウンロードします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ wget https://raw.githubusercontent.com/yoshizow/global-pygments-plugin/master/sample.globalrc
+$ mv sample.globalrc $HOME/.globalrc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;設定ファイルでは、拡張子&lt;code&gt;.tt&lt;/code&gt;がTreetopというパーサ？に設定されていますが、Rubyを解析時にエラーがでたので、
+とりあえずコメントアウトします。&lt;/p&gt;
+
+&lt;p&gt;$HOME/.globalrc&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#:langmap=Treetop\:.treetop.tt:\　　　　　#:gtags_parser=Treetop\:/usr/local/lib/gtags/pygments-parser.la:\
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;gtagsを使ってみる:e3e233bf5c17e9630342a72bfcb7ccd1&#34;&gt;gtagsを使ってみる&lt;/h3&gt;
+
+&lt;p&gt;とりあえず単体で&lt;code&gt;GNU GLOBAL(gtags)&lt;/code&gt;が使えるようになっているはずなので、テストしてみます。
+&lt;code&gt;GNU GLOBAL&lt;/code&gt;はプロジェクトの直下にインデックスファイル(GPATH、GRTAGS、GTAGS)を生成することで、検索が可能になります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd /tmp/gtags_test
+$ cat &amp;gt; hoge.php
+&amp;lt;?php
+class Hoge
+{
+    public function hello()
+    {
+        print &amp;quot;hello\n&amp;quot;;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ gtags --gtagslabel=pygments --debug
+$ tree
+.
+├── GPATH
+├── GRTAGS
+├── GTAGS
+└── hoge.php
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;　&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ global -sx hello hoge.php
+hello               4 hoge.php             public function hello()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;helm-gtagsのインストール:e3e233bf5c17e9630342a72bfcb7ccd1&#34;&gt;helm-gtagsのインストール&lt;/h3&gt;
+
+&lt;p&gt;$HOME/.emacs.d/Cask&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(depends-on &amp;quot;helm-gtags&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;$HOME/.emacs.d/init_loader/02_helm.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(add-hook &#39;helm-gtags-mode-hook
+&#39;(lambda ()
+;;入力されたタグの定義元へジャンプ
+(local-set-key (kbd &amp;quot;M-t&amp;quot;) &#39;helm-gtags-find-tag)
+
+;;入力タグを参照する場所へジャンプ
+(local-set-key (kbd &amp;quot;M-r&amp;quot;) &#39;helm-gtags-find-rtag)  
+
+;;入力したシンボルを参照する場所へジャンプ
+(local-set-key (kbd &amp;quot;M-s&amp;quot;) &#39;helm-gtags-find-symbol)
+
+;;タグ一覧からタグを選択し, その定義元にジャンプする
+(local-set-key (kbd &amp;quot;M-l&amp;quot;) &#39;helm-gtags-select)
+
+;;ジャンプ前の場所に戻る
+(local-set-key (kbd &amp;quot;C-t&amp;quot;) &#39;helm-gtags-pop-stack)))
+
+(add-hook &#39;php-mode-hook &#39;helm-gtags-mode)
+(add-hook &#39;ruby-mode-hook &#39;helm-gtags-mode)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;helm-gtags-modeの使い方:e3e233bf5c17e9630342a72bfcb7ccd1&#34;&gt;helm-gtags-modeの使い方&lt;/h4&gt;
+
+&lt;p&gt;先ほど&lt;code&gt;php-mode&lt;/code&gt;と&lt;code&gt;ruby-mode&lt;/code&gt;に&lt;code&gt;helm-gtags-mode&lt;/code&gt;をホークしたので、Rubyファイルを開くと自動で&lt;code&gt;helm-gtags-mode&lt;/code&gt;が起動します。&lt;/p&gt;
+
+&lt;p&gt;ただインデックスファイルがないと検索できないので、&lt;code&gt;helm-gtags-mode&lt;/code&gt;のショートカットを実行すると
+ミニバッファに&lt;code&gt;File GTAGS not found. Run &#39;gtags&#39;? (yes or no)&lt;/code&gt;というメッセージが出てくるので、インデックスファイルを作って下さい。&lt;/p&gt;
+
+&lt;p&gt;インデックスファイルが正常に作成されないと、エラーがミニバッファに出るので、その場合は一度Emacsから出て
+&lt;code&gt;$ gtags --gtagslabel=pygments --debug&lt;/code&gt;で確認してください。&lt;/p&gt;
+
+&lt;p&gt;すごく便利ですね！お疲れ様でした。&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:e3e233bf5c17e9630342a72bfcb7ccd1&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/5t111111/items/c14ac68f762ce71a7760&#34;&gt;GNU GLOBALへのPygmentsパーサー取り込みでソースコード読みが信じられないくらいに捗るはず&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.matsumoto-r.jp/?p=2369&#34;&gt;GNU GLOBALとvimで巨大なコードでも快適にコードリーディング&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.turtlewalk.org/blog/2014/03/09/global-pygments-plugin/&#34;&gt;Pygments を利用して GNU GLOBAL の対応言語を大幅に増やす&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/yoshizow/global-pygments-plugin&#34;&gt;yoshizow/global-pygments-plugin&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://emacs-jp.github.io/packages/helm/helm-gtags.html&#34;&gt;EmacsJP:helm-gtags&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/syohex/20121025/1351175067&#34;&gt;PHPで GNU globalを使う&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:e3e233bf5c17e9630342a72bfcb7ccd1&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/19/install-anyenv/&#34;&gt;anyenvをインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/28/how-to-install-and-setup-helm-in-cask/&#34;&gt;HelmをCaskでインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/20/install-cask/&#34;&gt;Caskをインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>emacsのruby環境をセットアップする</title>
+      <link>http://tatsuyano.github.io/2014/09/01/set-up-ruby-mode-of-emacs/</link>
+      <pubDate>Mon, 01 Sep 2014 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/09/01/set-up-ruby-mode-of-emacs/</guid>
+      <description>
+
+&lt;p&gt;最近&lt;code&gt;cask&lt;/code&gt;に切り替えたので、ruby環境も一から作り直したいと思います。
+オムニ補完には、今までは&lt;code&gt;Rsense&lt;/code&gt;を使っていましたが、今回は&lt;code&gt;robe&lt;/code&gt;というパッケージと使ってみたいと思います。&lt;br /&gt;
+&lt;em&gt;対象のEmacsのバージョンは24.3.1になります&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;今回インストールするパッケージ:a38f072717c64d469504de0db33dd425&#34;&gt;今回インストールするパッケージ&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;ruby-mode&lt;/li&gt;
+&lt;li&gt;ruby-end&lt;/li&gt;
+&lt;li&gt;ruby-block&lt;/li&gt;
+&lt;li&gt;inf-ruby&lt;/li&gt;
+&lt;li&gt;robe&lt;/li&gt;
+&lt;li&gt;auto-complete&lt;/li&gt;
+&lt;li&gt;rvenv 　　　　　　# 2015/02/23追記&lt;/li&gt;
+&lt;li&gt;smart-newline　# 2015/02/23追記&lt;/li&gt;
+&lt;li&gt;rspec-mode 　　# 2015/02/23追記&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;ruby-mode-ruby-end-ruby-blockをインストール:a38f072717c64d469504de0db33dd425&#34;&gt;ruby-mode,ruby-end,ruby-blockをインストール&lt;/h3&gt;
+
+&lt;p&gt;まずは基本的なところから。
+Emacs24だと&lt;code&gt;ruby-electric&lt;/code&gt;がうまく動かなかったので、
+今回はインストールしませんでしたが、&lt;code&gt;ruby-end&lt;/code&gt;だけで事足りました。&lt;/p&gt;
+
+&lt;p&gt;~/.emacs/Cask&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;;; Ruby
+(depends-on &amp;quot;ruby-mode&amp;quot;)
+(depends-on &amp;quot;ruby-end&amp;quot;)
+(depends-on &amp;quot;ruby-block&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;~/.emacs.d/init_loader/03_ruby.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;;; --------------------------------------------------
+;; ruby-mode
+;; http://shibayu36.hatenablog.com/entry/2013/03/18/192651
+;; --------------------------------------------------
+(autoload &#39;ruby-mode &amp;quot;ruby-mode&amp;quot;
+  &amp;quot;Mode for editing ruby source files&amp;quot; t)
+(add-to-list &#39;auto-mode-alist &#39;(&amp;quot;\\.rb$&amp;quot; . ruby-mode))
+(add-to-list &#39;auto-mode-alist &#39;(&amp;quot;Capfile$&amp;quot; . ruby-mode))
+(add-to-list &#39;auto-mode-alist &#39;(&amp;quot;Gemfile$&amp;quot; . ruby-mode))
+(add-to-list &#39;interpreter-mode-alist &#39;(&amp;quot;ruby&amp;quot; . ruby-mode)) ;; shebangがrubyの場合、ruby-modeを開く
+
+;; ruby-modeのインデントを改良する
+(setq ruby-deep-indent-paren-style nil)
+(defadvice ruby-indent-line (after unindent-closing-paren activate)
+  (let ((column (current-column))
+        indent offset)
+    (save-excursion
+      (back-to-indentation)
+      (let ((state (syntax-ppss)))
+        (setq offset (- column (current-column)))
+        (when (and (eq (char-after) ?\))
+                   (not (zerop (car state))))
+          (goto-char (cadr state))
+          (setq indent (current-indentation)))))
+    (when indent
+      (indent-line-to indent)
+      (when (&amp;gt; offset 0) (forward-char offset)))))
+
+;; --------------------------------------------------
+;; ruby-end
+;; endや括弧などを自動挿入する
+;; http://blog.livedoor.jp/ooboofo3/archives/53748087.html
+;; --------------------------------------------------
+(require &#39;ruby-end)
+(add-hook &#39;ruby-mode-hook
+  &#39;(lambda ()
+    (abbrev-mode 1)
+    (electric-pair-mode t)
+    (electric-indent-mode t)
+    (electric-layout-mode t)))
+
+;; --------------------------------------------------
+;; ruby-block
+;; endにカーソルを合わせると、そのendに対応する行をハイライトする
+;; --------------------------------------------------
+(require &#39;ruby-block)
+(ruby-block-mode t)
+(setq ruby-block-highlight-toggle t)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;auto-completeのインストール:a38f072717c64d469504de0db33dd425&#34;&gt;auto-completeのインストール&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;cask&lt;/code&gt;でインストールすると、辞書が格納されるディレクトリ(dict)のパスが
+&lt;code&gt;~/.emacs.d/.cask/24.3.1/elpa/auto-complete-20140824.1658/dict&amp;quot;&lt;/code&gt;になりました。&lt;/p&gt;
+
+&lt;p&gt;~/.emacs/Cask&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;;; Auto-complete
+(depends-on &amp;quot;auto-complete&amp;quot;)
+(depends-on &amp;quot;fuzzy&amp;quot;)
+(depends-on &amp;quot;popup&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;~/.emacs.d/init_loader/02_auto-complete.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(require &#39;auto-complete-config)
+(add-to-list &#39;ac-dictionary-directories &amp;quot;~/.emacs.d/.cask/24.3.1/elpa/auto-complete-20140824.1658/dict&amp;quot;)
+(ac-config-default)
+(setq ac-use-menu-map t)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;robeのインストール:a38f072717c64d469504de0db33dd425&#34;&gt;robeのインストール&lt;/h3&gt;
+
+&lt;p&gt;ここからが本題のrobeのインストールです。
+&lt;code&gt;robe&lt;/code&gt;を使うには、&lt;code&gt;pry&lt;/code&gt;という&lt;code&gt;Gem&lt;/code&gt;が必要になりますが、
+&lt;code&gt;pry&lt;/code&gt;を使うためには、&lt;code&gt;read-line&lt;/code&gt;ライブラリをインストール時にオプション指定したRubyが必要になります。&lt;/p&gt;
+
+&lt;p&gt;今回すでに、&lt;code&gt;read-line&lt;/code&gt;が入っていない状態でRubyをインストールしていたので、
+再度インストールし直したいと思います。&lt;/p&gt;
+
+&lt;h4 id=&#34;pryのインストール:a38f072717c64d469504de0db33dd425&#34;&gt;pryのインストール&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;$ gem install pry
+$ source $HOME/.zshrc
+
+$ which pry
+$HOME/.anyenv/envs/rbenv/shims/pry
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;read-line&lt;/code&gt;ライブラリを読み込めないため、&lt;code&gt;pry&lt;/code&gt;が実行できない&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt; $ pry
+ Sorry, you can&#39;t use Pry without Readline or a compatible library.
+ Possible solutions:
+  * Rebuild Ruby with Readline support using `--with-readline`
+  * Use the rb-readline gem, which is a pure-Ruby port of Readline
+  * Use the pry-coolline gem, a pure-ruby alternative to Readline
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/Tamadon/items/347baf2ba89ccde89624&#34;&gt;Pry起動時にエラーが出る場合の対処法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://labs.timedia.co.jp/2011/12/rubyist-should-use-pry.html&#34;&gt;Rubyistよ、irbを捨ててPryを使おう&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;readlineのインストールとrubyの再インストール:a38f072717c64d469504de0db33dd425&#34;&gt;readlineのインストールとRubyの再インストール&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo yum -y install readline-devel
+$ rbenv uninstall 2.1.0
+$ rbenv install 2.1.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;注意&lt;/em&gt;&lt;br /&gt;
+Ruby本体の再インストールをしたため、&lt;code&gt;pry&lt;/code&gt;や&lt;code&gt;bundle&lt;/code&gt;なども削除されていますので、
+再度インストールしてください。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ gem install pry pry-doc bundler
+$ source $HOME/.zshrc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;emacsの設定:a38f072717c64d469504de0db33dd425&#34;&gt;emacsの設定&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;robe&lt;/code&gt;は内部で&lt;code&gt;inf-ruby&lt;/code&gt;を使っているので、&lt;code&gt;robe&lt;/code&gt;をインストールすると、
+&lt;code&gt;inf-ruby&lt;/code&gt;も自動でインストールされます。&lt;/p&gt;
+
+&lt;p&gt;~/.emacs/Cask&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(depends-on &amp;quot;robe&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;~/.emacs.d/init_loader/03_ruby.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;;; --------------------------------------------------
+;; robe
+;; http://codeout.hatenablog.com/entry/2014/02/04/210237
+;; --------------------------------------------------
+(add-hook &#39;ruby-mode-hook &#39;robe-mode)
+(autoload &#39;robe-mode &amp;quot;robe&amp;quot; &amp;quot;Code navigation, documentation lookup and completion for Ruby&amp;quot; t nil)
+(autoload &#39;ac-robe-setup &amp;quot;ac-robe&amp;quot; &amp;quot;auto-complete robe&amp;quot; nil nil)
+(add-hook &#39;robe-mode-hook &#39;ac-robe-setup)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;robeの起動方法:a38f072717c64d469504de0db33dd425&#34;&gt;robeの起動方法&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;robe&lt;/code&gt;を利用するには、&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;M-x inf-ruby&lt;/code&gt;を実行し、裏で&lt;code&gt;irb(pry)&lt;/code&gt;を起動させ、&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;M-x robe-start&lt;/code&gt;で初めて&lt;code&gt;robe&lt;/code&gt;が使えるようになります。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/set-up-ruby-mode-of-emacs_01.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;gemfileを用意してirb-pry-を裏で自動に起動させる:a38f072717c64d469504de0db33dd425&#34;&gt;Gemfileを用意してirb(pry)を裏で自動に起動させる&lt;/h4&gt;
+
+&lt;p&gt;編集したいファイルと同じディレクトリに&lt;code&gt;pry&lt;/code&gt;のための&lt;code&gt;Gemfile&lt;/code&gt;を用意しておけば、
+&lt;code&gt;M-x robe-start&lt;/code&gt;だけで&lt;code&gt;robe&lt;/code&gt;をつかうことができます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ bundle init
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Gemfile&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;source &amp;quot;https://rubygems.org&amp;quot;
+
+gem &amp;quot;pry&amp;quot;
+gem &amp;quot;pry-doc&amp;quot;,       &amp;quot;&amp;gt;= 0.6.0&amp;quot;
+gem &amp;quot;method_source&amp;quot;, &amp;quot;&amp;gt;= 0.8.2&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/dgutov/robe#dependencies&#34;&gt;robe:Dependencies&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;rbenvのパスを通す:a38f072717c64d469504de0db33dd425&#34;&gt;rbenvのパスを通す&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;2015/02/23 追記&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;Emacsにrbenvのパスを通してくれます。&lt;/p&gt;
+
+&lt;p&gt;~/.emacs.d/initloader/03_ruby.el
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt; (require &amp;lsquo;rbenv)
+ (global-rbenv-mode)
+ (setq rbenv-installation-dir &amp;ldquo;~/.anyenv/envs/rbenv&amp;rdquo;)
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://block-given.hatenablog.com/entry/2014/11/12/005657&#34;&gt;モダンなEmacsを求めて (6) Rubyについて&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;smart-newlineを導入する:a38f072717c64d469504de0db33dd425&#34;&gt;smart-newlineを導入する&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;2015/02/23 追記&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;改行をよしなにやってくれます。素敵です。&lt;/p&gt;
+
+&lt;p&gt;~/.emacs.d/initloader/03_ruby.el
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt; (add-hook &amp;lsquo;ruby-mode-hook
+   (lambda ()
+   (smart-newline-mode t)))
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://ainame.hateblo.jp/entry/2013/12/08/162032&#34;&gt;smart-newline.elという拡張&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;rspec-modeを導入する:a38f072717c64d469504de0db33dd425&#34;&gt;rspec-modeを導入する&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;2015/02/23 追記&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;テストとその対象のコードを簡単に切り替えてくれたり、カーソルのある行だけのテストを実行してくれる。
+キーバインドにカンマが入っていることに注意。&lt;/p&gt;
+
+&lt;p&gt;~/.emacs.d/initloader/03ruby.el
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt; ;; C-c , v RSpec実行
+ ;; C-c , s カ-ソルが当たっているサンプルを実行
+ ;; C-c , t Specとソースを切り替える
+ (require &amp;lsquo;rspec-mode)
+ (custom-set-variables &amp;lsquo;(rspec-use-rake-flag nil))
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://futurismo.biz/archives/2266&#34;&gt;EmacsでRSpec環境をめちゃガチャパワーアップしたまとめ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;お疲れ様でした。&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:a38f072717c64d469504de0db33dd425&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://shibayu36.hatenablog.com/entry/2013/03/18/192651&#34;&gt;emacsのruby環境を整えています&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.livedoor.jp/ooboofo3/archives/53748087.html&#34;&gt;Emacs24 で ruby-electric的なruby-modeを実現するには&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://codeout.hatenablog.com/entry/2014/02/04/210237&#34;&gt;auto-complete + rsense の代わりに auto-complete + robe をつかう&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/Tamadon/items/347baf2ba89ccde89624&#34;&gt;Pry起動時にエラーが出る場合の対処法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://labs.timedia.co.jp/2011/12/rubyist-should-use-pry.html&#34;&gt;Rubyistよ、irbを捨ててPryを使おう&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/dgutov/robe#dependencies&#34;&gt;robe:Dependencies&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:a38f072717c64d469504de0db33dd425&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/19/install-anyenv/&#34;&gt;anyenvをインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/28/how-to-install-and-setup-initloader-in-cask/&#34;&gt;init-loaderをCaskでインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>HelmをCaskでインストールする</title>
+      <link>http://tatsuyano.github.io/2014/08/28/how-to-install-and-setup-helm-in-cask/</link>
+      <pubDate>Thu, 28 Aug 2014 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/08/28/how-to-install-and-setup-helm-in-cask/</guid>
+      <description>
+
+&lt;p&gt;&lt;code&gt;anything.el&lt;/code&gt;をフォークして作られたツール、&lt;code&gt;Helm&lt;/code&gt;を&lt;code&gt;Cask&lt;/code&gt;でインストール、管理したいと思います。&lt;/p&gt;
+
+&lt;h3 id=&#34;インストール:4098104992e48cdbc33d0f8655e4d9b6&#34;&gt;インストール&lt;/h3&gt;
+
+&lt;p&gt;~/.emacs.d/Cask&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(depends-on &amp;quot;helm&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;cask&lt;/code&gt;コマンドの実行&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd .emacs.d
+$ cask
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/archives/gnu/archive-contents
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/archives/marmalade/archive-contents
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/archives/melpa/archive-contents
+Making version-control local to helm-autoloads.el while let-bound!
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/helm-20140827.436/helm-autoloads.el
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;最小限の設定:4098104992e48cdbc33d0f8655e4d9b6&#34;&gt;最小限の設定&lt;/h3&gt;
+
+&lt;p&gt;とりあえず&lt;a href=&#34;https://github.com/emacs-helm/helm/blob/master/README.md&#34;&gt;README.md&lt;/a&gt;に書いてある最小限の設定をします。&lt;/p&gt;
+
+&lt;p&gt;~/.emacs.d/init.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;;; Helm
+(require &#39;helm-config)
+(global-set-key (kbd &amp;quot;C-c h&amp;quot;) &#39;helm-mini)
+(helm-mode 1)
+
+;;ミニバッファでC-hをバックスペースに割り当て
+(define-key helm-read-file-map (kbd &amp;quot;C-h&amp;quot;) &#39;delete-backward-char)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;基本的な操作:4098104992e48cdbc33d0f8655e4d9b6&#34;&gt;基本的な操作&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;C-c h&lt;/code&gt;で最近開いたバッファ(ファイル)を選択する&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;C-c f&lt;/code&gt;で&lt;code&gt;helm-mode-find-file&lt;/code&gt;が実行&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;helm-mode 1&lt;/code&gt;がどういう設定になっているかわかっていないので、今はこれぐらいしか把握していません(笑)。
+もう少し理解したら書き足したいと思います。&lt;/p&gt;
+
+&lt;h4 id=&#34;追加-2014-9-11-helmの設定:4098104992e48cdbc33d0f8655e4d9b6&#34;&gt;追加 2014.9.11 Helmの設定&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://d.hatena.ne.jp/a_bicky/20140104/1388822688&#34;&gt;こちらのサイト&lt;/a&gt;を参考に設定してみました。設定はまったく同じなので、省略します。&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:4098104992e48cdbc33d0f8655e4d9b6&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/emacs-helm/helm&#34;&gt;emacs-helm&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://rubikitch.com/2014/08/14/helm&#34;&gt;helmでC-eとC-jが使えなくなったので取り戻した&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://konbu13.hatenablog.com/entry/2014/01/15/223014&#34;&gt;helm.elをインストールしてみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://emacs.tsutomuonoda.com/emacs-anything-el-helm-mode-install&#34;&gt;anything.elのフォークhelm-modeをインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/syohex/dot_files/blob/master/emacs/init_loader/02_helm.el&#34;&gt;syohex/dot_files/emacs/init_loader/02_helm.el&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/a_bicky/20140104/1388822688&#34;&gt;Helm をストレスなく使うための個人的な設定&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:4098104992e48cdbc33d0f8655e4d9b6&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/20/install-cask/&#34;&gt;Caskをインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>init-loaderをCaskでインストールする</title>
+      <link>http://tatsuyano.github.io/2014/08/28/how-to-install-and-setup-initloader-in-cask/</link>
+      <pubDate>Thu, 28 Aug 2014 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/08/28/how-to-install-and-setup-initloader-in-cask/</guid>
+      <description>
+
+&lt;p&gt;最近&lt;code&gt;cask&lt;/code&gt;に乗り換えたので、&lt;code&gt;init-loader.el&lt;/code&gt;も再度設定し直しました。&lt;/p&gt;
+
+&lt;h3 id=&#34;init-loaderのインストール:af05674282cdca3f015095d80d55db77&#34;&gt;init-loaderのインストール&lt;/h3&gt;
+
+&lt;p&gt;まずはCaskファイルに設定し、&lt;code&gt;cask&lt;/code&gt;コマンドで&lt;code&gt;init-loader&lt;/code&gt;をインストールします。&lt;/p&gt;
+
+&lt;p&gt;~/.emacs.d/Cask&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;;; Setup
+(depends-on &amp;quot;init-loader&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;次に設定ファイル(elisp)を格納するディレクトリ、&lt;code&gt;init_loader&lt;/code&gt;を作成します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir $HOME/.emacs.d/init_loader
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;先ほど作成したディレクトリを&lt;code&gt;init-loader&lt;/code&gt;がロードするように設定します。&lt;/p&gt;
+
+&lt;p&gt;~/.emacs.d/init.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;;; init-loader
+(custom-set-variables
+ &#39;(init-loader-show-log-after-init &#39;error-only))
+ (init-loader-load (concat user-emacs-directory &amp;quot;init_loader&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;init-loaderで読み込むファイル:af05674282cdca3f015095d80d55db77&#34;&gt;init-loaderで読み込むファイル&lt;/h3&gt;
+
+&lt;p&gt;とりあえずinit-loaderで読み込むファイルは以下のように設定しました。
+まだすべて&lt;code&gt;cask&lt;/code&gt;に移行しきれていないので、順々に対応していきたいと思います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;init_loader
+│
+├── 01_basic.el
+├── 02_helm.el
+└── 02_migemo.el
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;お疲れ様でした。&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:af05674282cdca3f015095d80d55db77&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/syohex/dot_files/tree/master/emacs&#34;&gt;syohex/dotfiles/emacs&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:af05674282cdca3f015095d80d55db77&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/20/install-cask/&#34;&gt;Caskをインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/27/how-to-install-and-setup-migemo-on-amazon-linux/&#34;&gt;Amazon LinuxにMigemoをインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/28/how-to-install-and-setup-helm-in-cask/&#34;&gt;HelmをCaskでインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Amazon LinuxにMigemoをインストールする</title>
+      <link>http://tatsuyano.github.io/2014/08/27/how-to-install-and-setup-migemo-on-amazon-linux/</link>
+      <pubDate>Wed, 27 Aug 2014 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/08/27/how-to-install-and-setup-migemo-on-amazon-linux/</guid>
+      <description>
+
+&lt;p&gt;migemoを使うと、日本語の文章をローマ字で検索できるようになります。&lt;/p&gt;
+
+&lt;h3 id=&#34;作業の流れ:615ab6bd9b063aad980b072d8bbfc916&#34;&gt;作業の流れ&lt;/h3&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;code&gt;RPM&lt;/code&gt;で&lt;code&gt;nkf&lt;/code&gt;をインストール&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;ghq&lt;/code&gt;で&lt;code&gt;cmigemo&lt;/code&gt;のインストール&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;cask&lt;/code&gt;で&lt;code&gt;migemo.el&lt;/code&gt;をインストール&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;init.el&lt;/code&gt;に&lt;code&gt;migemo&lt;/code&gt;の設定を行う&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;rpmでnkfをインストール:615ab6bd9b063aad980b072d8bbfc916&#34;&gt;RPMでnkfをインストール&lt;/h3&gt;
+
+&lt;p&gt;migemoをインストールするには&lt;code&gt;nkf&lt;/code&gt;が必要です。&lt;code&gt;nkf&lt;/code&gt;がないと下記のようなエラーが出ます。
+&lt;a href=&#34;https://github.com/koron/cmigemo/blob/master/configure#L49&#34;&gt;ERROR: Require qkc or nkf installed for encode filter.&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;ただAmazon Linuxのyumには、nkfパッケージがないので、RPMでインストールします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo bash
+# cd /tmp/
+# wget http://mirror.centos.org/centos/6/os/x86_64/Packages/nkf-2.0.8b-6.2.el6.x86_64.rpm
+# rpm -ivh nkf-2.0.8b-6.2.el6.x86_64.rpm
+
+# which nkf
+/usr/bin/nkf
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;ghqでcmigemoのインストール:615ab6bd9b063aad980b072d8bbfc916&#34;&gt;ghqでcmigemoのインストール&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;migemo&lt;/code&gt;は元々rubyで実装されていたらしいのですが、今はC言語で実装された&lt;code&gt;cmigemo&lt;/code&gt;をインストールします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ ghq get https://github.com/koron/cmigemo.git
+$ cd $HOME/src/github.com/koron/cmigemo
+$ ./configure
+$ make gcc
+$ make gcc-dict
+$ sudo make gcc-install
+
+$ which cmigemo
+/usr/local/bin/cmigemo
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;cmigemoが正常にインストールされているか確認:615ab6bd9b063aad980b072d8bbfc916&#34;&gt;cmigemoが正常にインストールされているか確認&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cmigemo -d /usr/local/share/migemo/utf-8/migemo-dict
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;適当なローマ字(toukyoなど)を入力すると正規表現を生成される -&amp;gt; 正常にインストールされている&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;migemo_open(&amp;quot;/usr/local/share/migemo/utf-8/migemo-dict&amp;quot;)=0x21d3010
+clock()=0.090000
+QUERY: toukyo
+PATTERN: (ﾄｳｷｮ|トウキョ|等距離|登極|当(局|協会)|東[教京]|とうきょ|ｔｏｕｋｙｏ|toukyo)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;caskでmigemo-elをインストール:615ab6bd9b063aad980b072d8bbfc916&#34;&gt;caskでmigemo.elをインストール&lt;/h3&gt;
+
+&lt;p&gt;~/emacs.d/Cask&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(depends-on &amp;quot;migemo&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;cask&lt;/code&gt;コマンドでインストール&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd ~/.emacs.d
+$ cask
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/archives/gnu/archive-contents
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/archives/marmalade/archive-contents
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/archives/melpa/archive-contents
+Making version-control local to migemo-autoloads.el while let-bound!
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/migemo-20140823.2003/migemo-autoloads.el
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;init-elにmigemoの設定を行う:615ab6bd9b063aad980b072d8bbfc916&#34;&gt;init.elにmigemoの設定を行う&lt;/h3&gt;
+
+&lt;p&gt;~/.emacs.d/init.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(require &#39;migemo)
+(setq migemo-command &amp;quot;/usr/local/bin/cmigemo&amp;quot;)
+(setq migemo-options &#39;(&amp;quot;-q&amp;quot; &amp;quot;--emacs&amp;quot;))
+(setq migemo-dictionary &amp;quot;/usr/local/share/migemo/utf-8/migemo-dict&amp;quot;)
+(setq migemo-user-dictionary nil)
+(setq migemo-coding-system &#39;utf-8-unix)
+(setq migemo-regex-dictionary nil)
+(load-library &amp;quot;migemo&amp;quot;)
+(migemo-init)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;これで&lt;code&gt;C-s&lt;/code&gt;でミニバッファに &lt;code&gt;[MIGEMO] I-search&lt;/code&gt; と表示され日本語インクリメンタルサーチが可能になります。すごい！&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:615ab6bd9b063aad980b072d8bbfc916&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tkuchiki.hatenablog.com/entry/2012/12/01/004833&#34;&gt;Amazon EC2（Amazon Linux AMI) にnkf をインストールする手順&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://deris.hatenablog.jp/entry/20120812/1344731592&#34;&gt;c/migemoをインストールしてvimから使う方法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://weblog.ymt2.net/blog/html/2013/08/23/install_migemo_to_emacs_24_3_1.html&#34;&gt;migemo を emacs 24.3.1 にインストールしたときのメモ, Mac OS X&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:615ab6bd9b063aad980b072d8bbfc916&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/20/install-cask/&#34;&gt;Caskをインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Caskをインストールする</title>
+      <link>http://tatsuyano.github.io/2014/08/20/install-cask/</link>
+      <pubDate>Wed, 20 Aug 2014 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/08/20/install-cask/</guid>
+      <description>
+
+&lt;p&gt;やろうやろうと思ってやっていなかったCaskを導入しようと思います。
+今ままでは主に&lt;code&gt;el-get&lt;/code&gt;を中心に使っていたのですが、
+どのパッケージをインストールしたかとか、環境の切り替えが少し面倒でした。&lt;/p&gt;
+
+&lt;p&gt;今回導入する&lt;code&gt;Cask&lt;/code&gt;はrubyのBundlerチックに管理してくれるため、上記の問題を解決してくれます。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Caskのインストールにはpythonが必要です。&lt;/em&gt;
+&lt;em&gt;インストールされていない場合、&lt;a href=&#34;http://blog.10rane.com/2014/08/19/install-anyenv/&#34;&gt;anyenv&lt;/a&gt;でpythonをインストールしてください&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;emacs-24のインストール:01206951a7ce81840a3c5d243aea0541&#34;&gt;Emacs 24のインストール&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;Cask&lt;/code&gt;は Emacs 24以上が必須です。
+今回うっかりyum経由でEmacsをインストールしていたため、バージョンが23.1.1.だったので
+いったん削除し、再度バージョン24以上のEmacsをインストールします。&lt;/p&gt;
+
+&lt;p&gt;yumでインストールしたEmacs 23を削除&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# yum list installed | grep emacs
+# yum -y remove emacs.x86_64 emacs-common.x86_64
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;make &amp;amp; install&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# yum install gcc make ncurses-devel
+# wget http://ftp.jaist.ac.jp/pub/GNU/emacs/emacs-24.3.tar.gz
+
+# tar zxvfp emacs-24.3.tar.gz
+# cd emacs-24.3
+# ./configure -without-x -without-selinux
+# make
+# make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;バージョンの確認&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ emacs --version
+GNU Emacs 24.3.1
+Copyright (C) 2013 Free Software Foundation, Inc.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.beard-bear.com/blog/archives/123&#34;&gt;CentOS6.5にEmacs24.3をインストール&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;caskのインストール:01206951a7ce81840a3c5d243aea0541&#34;&gt;Caskのインストール&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;$ curl -fsSkL https://raw.github.com/cask/cask/master/go | python
+Successfully installed Cask!  Now, add the cask binary to your $PATH:
+  export PATH=&amp;quot;$HOME/.cask/bin:$PATH&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;~/.zshrc&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;echo &amp;gt;&amp;gt; export PATH=&amp;quot;$HOME/.cask/bin:$PATH&amp;quot; &amp;gt;&amp;gt; ~/.zshrc
+source $HOME/.zshrc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;インストールするパッケージのリストは&lt;code&gt;Cask&lt;/code&gt;という名前のファイルに設定します。&lt;code&gt;Cask&lt;/code&gt;ファイルを作るには、&lt;code&gt;cask init&lt;/code&gt;で生成されます。
+パッケージのインストール先は&lt;code&gt;.cask&lt;/code&gt;ディレクトリです。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd ~/.emacs.d/
+$ cask init
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ディレクトリ構成&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;~/.emacs.d
+ ├── ac-comphist.dat
+ ├── auto-save-list
+ ├── .cask #&amp;lt;= パッケージがインストールされるディレクトリ
+ ├── Cask
+ └── init.el
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;~/.emacs.d/Cask&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(source gnu)
+(source marmalade)
+(source melpa)
+
+(depends-on &amp;quot;markdown-mode&amp;quot;)
+
+;; Ruby
+(depends-on &amp;quot;ruby-block&amp;quot;)
+(depends-on &amp;quot;ruby-compilation&amp;quot;)
+(depends-on &amp;quot;ruby-end&amp;quot;)
+(depends-on &amp;quot;ruby-interpolation&amp;quot;)
+(depends-on &amp;quot;ruby-mode&amp;quot;)
+(depends-on &amp;quot;ruby-test-mode&amp;quot;)
+(depends-on &amp;quot;ruby-tools&amp;quot;)
+(depends-on &amp;quot;inf-ruby&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;~/.emacs.d/init.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;;; Emacs package system
+(require &#39;cask &amp;quot;~/.cask/cask.el&amp;quot;)
+(cask-initialize)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;パッケージのインストール&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd ~/.emacs.d
+$ cask
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Caskファイルの精査はまた今度行おうと思います。
+とりあえずCaskをインストールまでをまとめました。&lt;/p&gt;
+
+&lt;p&gt;お疲れ様でした。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/naoya/20140424/1398318293&#34;&gt;Cask&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/syohex/20140424/1398310931&#34;&gt;package.elから Caskに切り替えました&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://gongo.hatenablog.com/entry/2014/05/09/230836&#34;&gt;Emacs のパッケージ管理を package.el + el-get から Cask + pallet に乗り換えました&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://cask.github.io/usage.html&#34;&gt;Cask Usage&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>elpaでyasnippet.elをインストールする</title>
+      <link>http://tatsuyano.github.io/2013/10/16/install-yasnippet-to-elpa/</link>
+      <pubDate>Wed, 16 Oct 2013 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/10/16/install-yasnippet-to-elpa/</guid>
+      <description>
+
+&lt;p&gt;今さらですけどysnippet.elをインストールすることにしました。&lt;br /&gt;
+でいつものようにel-getでインストールしようとしたんですが、&lt;br /&gt;
+昨日scss-modeをインストールしようとした時と同じで、&lt;br /&gt;
+githubに接続するところで止まってしまう(インストールが完了しない)。&lt;/p&gt;
+
+&lt;p&gt;もうel-getやめようかなあ。elpaだけのほうが楽っぽいし。。&lt;br /&gt;
+とりあえず、今回はelpaでインストールすることにしました。&lt;/p&gt;
+
+&lt;h3 id=&#34;elpaでのインストール:f4d837b940d363aa60f2294c3e74d2d7&#34;&gt;elpaでのインストール&lt;/h3&gt;
+
+&lt;p&gt;M-x list-packages でパッケージリストを表示させ、ysnippetの行で[x] &amp;amp; [i]でインストール。&lt;/p&gt;
+
+&lt;p&gt;~/.emacs.d/conf/82-yasnippet.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;;; yasnippetを置いているフォルダにパス
+(add-to-list &#39;load-path
+             (expand-file-name &amp;quot;~/.emacs.d/elisp/el-get/package/elpa/yasnippet-0.8.0&amp;quot;))
+
+(require &#39;yasnippet)
+
+(setq yas-snippet-dirs
+      &#39;(&amp;quot;~/.emacs.d/elisp/el-get/package/elpa/yasnippet-0.8.0/snippets&amp;quot;
+        ))
+(yas-global-mode 1)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;スニペットの登録:f4d837b940d363aa60f2294c3e74d2d7&#34;&gt;スニペットの登録&lt;/h3&gt;
+
+&lt;p&gt;試しに、html-modeでスペースのエスケープ文字を登録してみます。&lt;/p&gt;
+
+&lt;p&gt;[sp]と入力してtabを押下すると[&amp;amp;nbsp]と出力できるようにする&lt;/p&gt;
+
+&lt;p&gt;htmlモードに変更&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;M-x html-mode
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;snippetのひな形作成&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;M-x yas/new-snippet
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;# -*- mode: snippet -*-
+# name: &amp;amp;nbsp;
+# key: sp
+# --
+&amp;amp;nbsp;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;html-modeで使いたいので、保存先は以下にします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/.emacs.d/elisp/el-get/package/elpa/yasnippet-0.8.0/snippets/html-mode/sp
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;参考サイト:f4d837b940d363aa60f2294c3e74d2d7&#34;&gt;参考サイト&lt;/h2&gt;
 
 &lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://typester.stfuawsc.com/slides/perlcasual2/start.html&#34;&gt;Perl Hacks on Emacs&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://yasuwagon.blogspot.jp/2011/02/auto-installel.html&#34;&gt;auto-install.el のインストール&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://rakkyoo.net/?p=1157&#34;&gt;Emacsで「ysnippet.el」を使ってみる&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/mizchi/20100806/1281093295&#34;&gt;Emacs/yasnipettで、やさしいコードスニペットの作り方&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://fukuyama.co/yasnippet&#34;&gt;yasnippet 8.0の導入からスニペットの書き方、anything/helm/auto-completeとの連携&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>auto-installでscss-modeをインストールする</title>
+      <link>http://tatsuyano.github.io/2013/10/15/emacs-install-scss-mode/</link>
+      <pubDate>Tue, 15 Oct 2013 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/10/15/emacs-install-scss-mode/</guid>
+      <description>
+
+&lt;p&gt;el-getでうまくインストールできなかったので、今回はauto-installを使いました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;M-x auto-install-from-url RET https://raw.github.com/antonj/scss-mode/master/scss-mode.el
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;touch ~/.emacs.d/conf/55-scss.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;;; scss-mode
+;; https://github.com/antonj/scss-mode
+(autoload &#39;scss-mode &amp;quot;scss-mode&amp;quot;)
+(add-to-list &#39;auto-mode-alist &#39;(&amp;quot;\\.\\(scss\\|css\\|sass\\)\\&#39;&amp;quot; . scss-mode))
+(setq scss-compile-at-save nil)
+
+;; auto-comple
+(add-to-list &#39;ac-modes &#39;scss-mode)
+(add-hook &#39;scss-mode-hook &#39;ac-css-mode-setup)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;参考サイト:d834f13bee9b64e5b4fe07d231f97490&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.sanojimaru.com/post/20621077969/emacs-scss-scss-mode&#34;&gt;emacsでscssを扱うscss-modeを入れる&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.be-open.net/emacs/emacs-scss-mode/&#34;&gt;Emacsにscss-modeをいれた。&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>git-gutter.elをインストールする</title>
+      <link>http://tatsuyano.github.io/2013/04/16/emacs-git-gutter/</link>
+      <pubDate>Tue, 16 Apr 2013 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/04/16/emacs-git-gutter/</guid>
+      <description>
+
+&lt;p&gt;gitの差分を表示してくれる git-gutter を入れてみました。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/git_gutter_001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;インストール:68a282e6a00cf095213f73c695365c04&#34;&gt;インストール&lt;/h2&gt;
+
+&lt;p&gt;はじめREADME.mdにかいてあるとおり、M-x package-install git-gutter で&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Installation
+You can install git-gutter.el from MELPA with package.el (M-x package-install git-gutter).
+And you can also install it with el-get.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;ELPA経由インストールしてみたが、versionが0.28と少し古くエラーがでたので、el-getのrecipeを用意してインストールした。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(:name emacs-git-gutter
+  :type github
+  :website &amp;quot;https://github.com/syohex/emacs-git-gutter&amp;quot;
+  :description &amp;quot;[My Recipes] git-gutter.el is port of GitGutter which is a plugin of Sublime Text.&amp;quot;
+  :pkgname &amp;quot;syohex/emacs-git-gutter&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;設定:68a282e6a00cf095213f73c695365c04&#34;&gt;設定&lt;/h2&gt;
+
+&lt;p&gt;とりあえず差分の表示だけがほしいので、最小限の設定に。&lt;/p&gt;
+
+&lt;p&gt;.emacs.d/conf/81-git-gutter.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(require &#39;git-gutter)
+;;(global-git-gutter-mode t)
+
+(setq git-gutter:separator-sign &amp;quot;|&amp;quot;)
+(set-face-foreground &#39;git-gutter:separator &amp;quot;yellow&amp;quot;)
+
+(add-hook &#39;cperl-mode-hook &#39;git-gutter-mode)
+(add-hook &#39;js2-mode-hook   &#39;git-gutter-mode)
+(add-hook &#39;php-mode-hook   &#39;git-gutter-mode)
+(add-hook &#39;ruby-mode-hook  &#39;git-gutter-mode)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;参考サイト:68a282e6a00cf095213f73c695365c04&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/syohex/emacs-git-gutter/blob/master/README.md&#34;&gt;github&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/naoya/20130414/1365967372&#34;&gt;git-gutter.el&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>emacsでのRuby環境(Rsenseでオムニ補完)</title>
+      <link>http://tatsuyano.github.io/2013/03/26/emacs-rsense/</link>
+      <pubDate>Tue, 26 Mar 2013 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/03/26/emacs-rsense/</guid>
+      <description>
+
+&lt;p&gt;今更ですが、最近yugaiさんの「初めてのRuby」を読み始めています。すごく読みやすくて楽しいです。&lt;br /&gt;
+そこでemacsのRuby環境もちゃんと用意することにしました。&lt;/p&gt;
+
+&lt;h2 id=&#34;rsenseとは:53938f802e6679a03d75b4e3e59e202e&#34;&gt;Rsenseとは&lt;/h2&gt;
+
+&lt;p&gt;Rsenseは、rubyコードのオムニ補完(文脈を解析して行う補完)をしてくれるツールです。&lt;br /&gt;
+emacsでのrubyのコード補完は、他にもauto-complete(単体)、auto-complete-ruby、rcodetools などあります。&lt;br /&gt;
+※ Rsense は Java Runtime Environment (JRE) 1.5以上が必要です。JREはOSXに標準でインストールされています。&lt;/p&gt;
+
+&lt;h2 id=&#34;rsense-のインストール:53938f802e6679a03d75b4e3e59e202e&#34;&gt;Rsense のインストール&lt;/h2&gt;
+
+&lt;p&gt;本家サイトから最新版をwgetします。&lt;br /&gt;
+※ emacs には el-get.le を事前にインストールしておいてください。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;wget http://cx4a.org/pub/rsense/rsense-0.3.tar.bz2
+tar xvzf rsense-0.3.tar.bz2
+
+mkdir .emacs.d/opt
+mv rsense-0.3 .emacs.d/opt/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;rsenseの作成:53938f802e6679a03d75b4e3e59e202e&#34;&gt;.rsenseの作成&lt;/h2&gt;
+
+&lt;p&gt;次に Rsense に Rubyの環境変数を指定するための ~/.rsense を作成します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd $HOME/.emacs.d/opt/rsense-0.3/
+chmod +x ./bin/rsense
+bin/rsense version
+&amp;gt;&amp;gt; RSense 0.3 # &amp;lt;- 今回インストールしたRsenseのバージョン
+
+# $HOME 直下に ~/.rsenseファイルを作成、環境変数が設定されている
+ruby ./etc/config.rb &amp;gt; ~/.rsense
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;java-runtime-が正しく動くか確認:53938f802e6679a03d75b4e3e59e202e&#34;&gt;Java Runtime が正しく動くか確認&lt;/h2&gt;
+
+&lt;p&gt;生成した ~/.rsense の環境変数が正しく設定されていないと Java Runtime が動きません。&lt;br /&gt;
+下記のコマンドで、まずJava Runtimeが正常に動くか確認してください。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd $HOME/.emacs.d/opt/rsense-0.3/
+bin/rsense server # &amp;lt;- 環境変数がおかしいと、この段階でエラーが出るのでパスを修正する
+
+java -cp lib/jruby.jar:lib/antlr-runtime-3.2.jar:lib/rsense.jar org.cx4a.rsense.Main version
+RSense 0.3 # &amp;lt;- 正常値
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;本家サイトに&lt;a href=&#34;http://cx4a.org/software/rsense/manual.ja.html#.E3.83.88.E3.83.A9.E3.83.96.E3.83.AB.E3.82.B7.E3.83.A5.E3.83.BC.E3.83.86.E3.82.A3.E3.83.B3.E3.82.B0&#34;&gt;トラブルシューティング&lt;/a&gt;があるのでうまく動かない場合は、確認にしてみてください。&lt;/p&gt;
+
+&lt;h2 id=&#34;emacs-に-rsense-の設定を追加:53938f802e6679a03d75b4e3e59e202e&#34;&gt;.emacs に Rsense の設定を追加&lt;/h2&gt;
+
+&lt;p&gt;.emacs.d/conf/54-ruby.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(setq rsense-home (expand-file-name &amp;quot;~/.emacs.d/opt/rsense-0.3&amp;quot;))
+(add-to-list &#39;load-path (concat rsense-home &amp;quot;/etc&amp;quot;))
+(require &#39;rsense)
+(add-hook &#39;ruby-mode-hook
+  (lambda ()
+    (add-to-list &#39;ac-sources &#39;ac-source-rsense-method)
+    (add-to-list &#39;ac-sources &#39;ac-source-rsense-constant)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Rsenseが正しく動いているか確認&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;M-x rsense-version # =&amp;gt; Rsense 3.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/emacs_rsense_001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;リファレンスの追加:53938f802e6679a03d75b4e3e59e202e&#34;&gt;リファレンスの追加&lt;/h2&gt;
+
+&lt;p&gt;リファレンスを追加することで、オムニ補完中にリファレンスを表示することができる。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd $HOME/.emacs.d/opt/rsense-0.3/doc
+wget ruby-refm-1.9.3-dynamic-snapshot.tar.gz
+tar xvzf ruby-refm-1.9.3-dynamic-snapshot.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;emacs-に設定追加:53938f802e6679a03d75b4e3e59e202e&#34;&gt;.emacs に設定追加&lt;/h3&gt;
+
+&lt;p&gt;.emacs.d/conf/54-ruby.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(setq rsense-rurema-home (concat rsense-home &amp;quot;/doc/ruby-refm-1.9.3-dynamic-snapshot&amp;quot;))
+(setq rsense-rurema-refe &amp;quot;refe-1_9_3&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/emacs_rsense_002.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:53938f802e6679a03d75b4e3e59e202e&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://kayakaya.net/d/20100321.html&#34;&gt;Rsenseを動かしてみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://cx4a.org/software/rsense/manual.ja.html#.E3.83.88.E3.83.A9.E3.83.96.E3.83.AB.E3.82.B7.E3.83.A5.E3.83.BC.E3.83.86.E3.82.A3.E3.83.B3.E3.82.B0&#34;&gt;本家サイト トラブルシューティング&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://tcnksm.sakura.ne.jp/blog/2012/05/07/&#34;&gt;Emacs で ruby の自動入力補完とリファレンスの表示&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://cx4a.org/software/rsense/manual.ja.html#Ruby.E3.83.AA.E3.83.95.E3.82.A1.E3.83.AC.E3.83.B3.E3.82.B9.E3.83.9E.E3.83.8B.E3.83.A5.E3.82.A2.E3.83.AB&#34;&gt;本家サイト Rubyリファレンスマニュアル&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;ruby-block-ruby-electric-のインストール:53938f802e6679a03d75b4e3e59e202e&#34;&gt;ruby-block、ruby-electric のインストール&lt;/h2&gt;
+
+&lt;p&gt;ruby-block は、end に対応する行をハイライトしてくれるパッケージです。&lt;br /&gt;
+ruby-electric は、括弧などを自動挿入してくれます。&lt;/p&gt;
+
+&lt;p&gt;こちらは el-get に初めから recipe があるので、M-x el-get-list-package でインストールします。&lt;/p&gt;
+
+&lt;p&gt;.emacs.d/conf/54-ruby.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(require &#39;ruby-block)
+(ruby-block-mode t)
+(setq ruby-block-highlight-toggle t)
+
+(require &#39;ruby-electric)
+(add-hook &#39;ruby-mode-hook &#39;(lambda () (ruby-electric-mode t)))
+(setq ruby-electric-expand-delimiters-list nil)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;参考サイト-1:53938f802e6679a03d75b4e3e59e202e&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://shibayu36.hatenablog.com/entry/2013/03/18/192651&#34;&gt;emacsのruby環境を整えています&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;inf-ruby-のインストール:53938f802e6679a03d75b4e3e59e202e&#34;&gt;inf-ruby のインストール&lt;/h2&gt;
+
+&lt;p&gt;irb を emacs 上から利用することができます。M-x run-ruby (C-c C-s)&lt;br /&gt;
+el-get でインストールすると error がでて、Rsense が動かなくなったので、自分で recipe を用意します。&lt;/p&gt;
+
+&lt;p&gt;.emacs.d/conf/10-el-get.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(setq el-get-dir &amp;quot;~/.emacs.d/elisp/el-get/&amp;quot;)
+
+(unless (require &#39;el-get nil &#39;noerror)
+  (with-current-buffer
+    (url-retrieve-synchronously
+    &amp;quot;https://raw.github.com/dimitri/el-get/master/el-get-install.el&amp;quot;)
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(setq el-get-sources
+  &#39;(
+  (:name inf-ruby
+    :type http
+    :url &amp;quot;https://raw.github.com/ruby/ruby/trunk/misc/inf-ruby.el&amp;quot;
+    :description &amp;quot;[My Recipes] Inferior Ruby Mode&amp;quot;)
+    ))
+(el-get &#39;sync)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;.emacs.d/conf/54-ruby.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(autoload &#39;run-ruby &amp;quot;inf-ruby&amp;quot; &amp;quot;Run an inferior Ruby process&amp;quot;)
+(autoload &#39;inf-ruby-keys &amp;quot;inf-ruby&amp;quot; &amp;quot;Set local key defs for inf-ruby in ruby-mode&amp;quot;)
+(add-hook &#39;ruby-mode-hook &#39;(lambda () (inf-ruby-keys)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;参考サイト-2:53938f802e6679a03d75b4e3e59e202e&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/a666666/20090703/1246609986&#34;&gt;Emacs から irb を使いやすくするために inf-ruby.el の設定を追加した&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;rcodetools-のインストール:53938f802e6679a03d75b4e3e59e202e&#34;&gt;rcodetools のインストール&lt;/h2&gt;
+
+&lt;p&gt;コード補完や xmp(画面出力の結果をコメントにしてソースに自動で記載してくれる) など、便利な機能が追加されます。&lt;br /&gt;
+自分は補完は Rsense で行なっているので、xmp のみ使っています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;gem install rcodetools
+cp -a .rbenv/versions/2.0.0-p0/lib/ruby/gems/2.0.0/gems/rcodetools-0.8.5.0/rcodetools.el .emacs.d/elisp/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;.emacs.d/conf/54-ruby.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(require &#39;rcodetools)
+(setq rct-find-tag-if-available nil)
+(defun ruby-mode-hook-rcodetools ()
+;;  (define-key ruby-mode-map &amp;quot;\M-\C-i&amp;quot; &#39;rct-complete-symbol)
+  (define-key ruby-mode-map &amp;quot;\C-c\C-t&amp;quot; &#39;ruby-toggle-buffer)
+  (define-key ruby-mode-map &amp;quot;\C-c\C-d&amp;quot; &#39;xmp)
+  (define-key ruby-mode-map &amp;quot;\C-c\C-f&amp;quot; &#39;rct-ri))
+  (add-hook &#39;ruby-mode-hook &#39;ruby-mode-hook-rcodetools)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;rsquo; # =&amp;gt;&amp;rsquo; とコメントして、C-cC-d すると、&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/emacs_rsense_003.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;出力結果をコメントしてくれる:53938f802e6679a03d75b4e3e59e202e&#34;&gt;出力結果をコメントしてくれる。&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/emacs_rsense_004.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト-3:53938f802e6679a03d75b4e3e59e202e&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/authorNari/20090523/1243051306&#34;&gt;rcodetoolsが素晴らしすぎる件&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;最終的な-emacsd:53938f802e6679a03d75b4e3e59e202e&#34;&gt;最終的な.emacsd&lt;/h2&gt;
+
+&lt;p&gt;※ el-get の recipe は省略してます。&lt;/p&gt;
+
+&lt;p&gt;.emacs.d/conf/54-ruby.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;;; --------------------------------------------------
+;; ruby-mode
+;; http://shibayu36.hatenablog.com/entry/2013/03/18/192651
+;; --------------------------------------------------
+(autoload &#39;ruby-mode &amp;quot;ruby-mode&amp;quot;
+  &amp;quot;Mode for editing ruby source files&amp;quot; t)
+  (add-to-list &#39;auto-mode-alist &#39;(&amp;quot;\\.rb$&amp;quot; . ruby-mode))
+  (add-to-list &#39;auto-mode-alist &#39;(&amp;quot;Capfile$&amp;quot; . ruby-mode))
+  (add-to-list &#39;auto-mode-alist &#39;(&amp;quot;Gemfile$&amp;quot; . ruby-mode))
+
+;; --------------------------------------------------
+;; Rsense
+;; [description] オムニ補完
+;; http://kayakaya.net/d/20100321.html
+;; http://cx4a.org/software/rsense/manual.ja.html#.E3.83.88.E3.83.A9.E3.83.96.E3.83.AB.E3.82.B7.E3.83.A5.E3.83.BC.E3.83.86.E3.82.A3.E3.83.B3.E3.82.B0
+;; http://tcnksm.sakura.ne.jp/blog/2012/05/07/
+;; --------------------------------------------------
+(setq rsense-home (expand-file-name &amp;quot;~/.emacs.d/opt/rsense-0.3&amp;quot;))
+(add-to-list &#39;load-path (concat rsense-home &amp;quot;/etc&amp;quot;))
+(require &#39;rsense)
+(add-hook &#39;ruby-mode-hook
+  (lambda ()
+    (add-to-list &#39;ac-sources &#39;ac-source-rsense-method)
+    (add-to-list &#39;ac-sources &#39;ac-source-rsense-constant)))
+
+;; http://cx4a.org/software/rsense/manual.ja.html#Ruby.E3.83.AA.E3.83.95.E3.82.A1.E3.83.AC.E3.83.B3.E3.82.B9.E3.83.9E.E3.83.8B.E3.83.A5.E3.82.A2.E3.83.AB
+;; cd $HOME/.emacs.d/opt/rsense-0.3/doc &amp;amp;&amp;amp; wget ruby-refm-1.9.3-dynamic-snapshot.tar.gz
+(setq rsense-rurema-home (concat rsense-home &amp;quot;/doc/ruby-refm-1.9.3-dynamic-snapshot&amp;quot;))
+(setq rsense-rurema-refe &amp;quot;refe-1_9_3&amp;quot;)
+
+;; --------------------------------------------------
+;; ruby-block
+;; [description] endに対応する行のハイライト
+;; --------------------------------------------------
+(require &#39;ruby-block)
+(ruby-block-mode t)
+(setq ruby-block-highlight-toggle t)
+
+;; --------------------------------------------------
+;; ruby-electric
+;; [description] 括弧などを自動挿入
+;; --------------------------------------------------
+(require &#39;ruby-electric)
+(add-hook &#39;ruby-mode-hook &#39;(lambda () (ruby-electric-mode t)))
+(setq ruby-electric-expand-delimiters-list nil)
+
+;; --------------------------------------------------
+;; rcodetools
+;; http://d.hatena.ne.jp/authorNari/20090523/1243051306
+;; gem install rcodetools
+;; cp -a .rbenv/versions/2.0.0-p0/lib/ruby/gems/2.0.0/gems/rcodetools-0.8.5.0/rcodetools.el .emacs.d/elisp/
+;; --------------------------------------------------
+(require &#39;rcodetools)
+(setq rct-find-tag-if-available nil)
+(defun ruby-mode-hook-rcodetools ()
+;;  (define-key ruby-mode-map &amp;quot;\M-\C-i&amp;quot; &#39;rct-complete-symbol)
+  (define-key ruby-mode-map &amp;quot;\C-c\C-t&amp;quot; &#39;ruby-toggle-buffer)
+    (define-key ruby-mode-map &amp;quot;\C-c\C-d&amp;quot; &#39;xmp)
+      (define-key ruby-mode-map &amp;quot;\C-c\C-f&amp;quot; &#39;rct-ri))
+      (add-hook &#39;ruby-mode-hook &#39;ruby-mode-hook-rcodetools)
+
+;; --------------------------------------------------
+;; inf-ruby
+;; [description] irbをemacsから利用する。M-x run-ruby (C-c C-s)
+;; el-getでインストールするとerrorがでて、rsenseが動かなくなったので、自分でrecipeを用意すること
+;; http://d.hatena.ne.jp/a666666/20090703/1246609986
+;; --------------------------------------------------
+(autoload &#39;run-ruby &amp;quot;inf-ruby&amp;quot; &amp;quot;Run an inferior Ruby process&amp;quot;)
+(autoload &#39;inf-ruby-keys &amp;quot;inf-ruby&amp;quot; &amp;quot;Set local key defs for inf-ruby in ruby-mode&amp;quot;)
+(add-hook &#39;ruby-mode-hook &#39;(lambda () (inf-ruby-keys)))
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>el-get.elでauto-complete.elをインストールする</title>
+      <link>http://tatsuyano.github.io/2013/03/19/emacs-el-get-auto-complete/</link>
+      <pubDate>Tue, 19 Mar 2013 06:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/03/19/emacs-el-get-auto-complete/</guid>
+      <description>
+
+&lt;h2 id=&#34;el-getにインストールされているパッケージリストが古かったので-レシピを更新:0a033ac6f46da56833c9f2f6b2fddbb8&#34;&gt;el-getにインストールされているパッケージリストが古かったので、レシピを更新&lt;/h2&gt;
+
+&lt;p&gt;パッケージリストには、auto-complete.elがあるのですが、レシピが古くインストールしてもディレクトリの中は空なので、レシピを新たに設定します。&lt;/p&gt;
+
+&lt;p&gt;また、auto-complete.el は popup.el と fuzzy.el というelispが必須なのですが、今回 popup.el のレシピを用意し、auto-complete とは別にインストールする必要があります。&lt;br /&gt;
+※ とりあえず fuzzy.el は別途インストールしなくても動いているので、fuzzy.el は保留。&lt;/p&gt;
+
+&lt;h2 id=&#34;レシピの追加:0a033ac6f46da56833c9f2f6b2fddbb8&#34;&gt;レシピの追加&lt;/h2&gt;
+
+&lt;p&gt;10-el-get.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(setq el-get-dir &amp;quot;~/.emacs.d/elisp/el-get/&amp;quot;)
+
+(unless (require &#39;el-get nil &#39;noerror)
+  (with-current-buffer
+    (url-retrieve-synchronously
+      &amp;quot;https://raw.github.com/dimitri/el-get/master/el-get-install.el&amp;quot;)
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(setq el-get-sources
+  &#39;(
+    (:name init-loader
+      :type http
+      :url &amp;quot;https://raw.github.com/gist/1021706/init-loader.el&amp;quot;
+      :description &amp;quot;[My Recipes] Split management init.el. &amp;quot;)
+    (:name popup ;; &amp;lt;- 追加
+      :type github
+      :website &amp;quot;https://github.com/auto-complete/popup-el&amp;quot;
+      :description &amp;quot;[My Recipes] This section describes the basic data structures and operations of popups.&amp;quot;
+      :pkgname &amp;quot;auto-complete/popup-el&amp;quot;)
+    (:name auto-complete ;; &amp;lt;- 追加
+      :type github
+      :website &amp;quot;https://github.com/auto-complete/auto-complete&amp;quot;
+      :description &amp;quot;[My Recipes] Auto Complete Mode renews an old completion interface and provides an environment that makes users could be more concentrate on their own works.&amp;quot;
+      :pkgname &amp;quot;auto-complete/auto-complete&amp;quot;)
+    ))
+(el-get &#39;sync)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;インストール:0a033ac6f46da56833c9f2f6b2fddbb8&#34;&gt;インストール&lt;/h2&gt;
+
+&lt;p&gt;これで、auto-complete.el と popup.el のレシピが更新されたので、M-x el-get-list-packages　でインストールします。&lt;/p&gt;
+
+&lt;h2 id=&#34;設定:0a033ac6f46da56833c9f2f6b2fddbb8&#34;&gt;設定&lt;/h2&gt;
+
+&lt;p&gt;12-auto-complete.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(require &#39;auto-complete-config)
+(add-to-list &#39;ac-dictionary-directories &amp;quot;~/.emacs.d/elisp/el-get/auto-complete/dict&amp;quot;)
+(ac-config-default)
+(setq ac-use-menu-map t)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>el-get.elでパッケージ管理を行う (el-get.elのインストール)</title>
+      <link>http://tatsuyano.github.io/2013/03/19/emacs-el-get/</link>
+      <pubDate>Tue, 19 Mar 2013 05:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/03/19/emacs-el-get/</guid>
+      <description>
+
+&lt;p&gt;今までパッケージを手動でインストールしていて、自分が何のパッケージをインストールしたかを&lt;br /&gt;
+把握できなくなってきていたので、el-get.elでパッケージ管理をすることにしました。&lt;/p&gt;
+
+&lt;h2 id=&#34;el-get-elでのパッケージ管理の特徴:4cbf5b901a7d5944163eceb69a0b8758&#34;&gt;el-get.elでのパッケージ管理の特徴&lt;/h2&gt;
+
+&lt;p&gt;自分がel-get.elでいいなあと思ったのは、以下の２つ&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;自分がどのパッケージをインストールしているのかを簡単に把握できること&lt;/li&gt;
+&lt;li&gt;レシピといって、パッケージごとのインストール方法を柔軟に設定できること&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;emacsのバージョン:4cbf5b901a7d5944163eceb69a0b8758&#34;&gt;emacsのバージョン&lt;/h2&gt;
+
+&lt;p&gt;emacsのバージョンは homebrew でインストールした「24.1.1」です。&lt;/p&gt;
+
+&lt;h2 id=&#34;emacs-dの構成:4cbf5b901a7d5944163eceb69a0b8758&#34;&gt;emacs.dの構成&lt;/h2&gt;
+
+&lt;p&gt;今回、今使っているemacs.dを捨てて、一から作り直すことにしました。&lt;/p&gt;
+
+&lt;p&gt;.emacs.d&lt;br /&gt;
+├── conf &amp;hellip; init-loaderで分割したファイルを入れる&lt;br /&gt;
+└── elisp &amp;hellip; 手動でパッケージを入れた場合はここに直接入れる&lt;br /&gt;
+│　　    ├── el-get       &amp;hellip; el-get.elでインストールしたパッケージをディレクトリ単位で入れていく&lt;br /&gt;
+│　　    └── auto-install &amp;hellip; auto-installでインストールした場合&lt;br /&gt;
+│&lt;br /&gt;
+└── init.el &amp;hellip; .emacs.elの代わり。load-pathの設定など&lt;/p&gt;
+
+&lt;p&gt;今回は .emacs.el は使わずに代わりに .emacs.d 直下に init.el というファイルを作成します。&lt;br /&gt;
+また、できるかぎり el-get.el でパッケージ管理を行なっていき、インストールできなかった場合は auto-install でインストールを行うことにします。&lt;br /&gt;
+auto-install でもインストールできなかった場合は、elispディレクトリ直下に手動でインストールしていきます。&lt;/p&gt;
+
+&lt;p&gt;今後のインストール方法(パッケージ管理)の優先度&lt;br /&gt;
+1.el-get &amp;gt; 2.auto-install &amp;gt; 3.手動&lt;/p&gt;
+
+&lt;h2 id=&#34;el-get-elのインストール:4cbf5b901a7d5944163eceb69a0b8758&#34;&gt;el-get.elのインストール&lt;/h2&gt;
+
+&lt;p&gt;まずは el-get.el 本体のインストールから。事前に上記の .emacs.d の構成を作っておくこと。&lt;br /&gt;
+el-get.el でインストールしたパッケージは、.emacs.d/elisp/el-get/ 直下に入れていきます。&lt;br /&gt;
+init.el に以下の設定を入れて、emacsを起動させると自動でインストールが始まります。&lt;/p&gt;
+
+&lt;p&gt;init.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(setq load-path
+  (append
+    (list
+      (expand-file-name &amp;quot;~/.emacs.d/&amp;quot;)
+      (expand-file-name &amp;quot;~/.emacs.d/elisp/&amp;quot;)
+      (expand-file-name &amp;quot;~/.emacs.d/elisp/el-get/el-get/&amp;quot;)
+      (expand-file-name &amp;quot;~/.emacs.d/elisp/auto-install/&amp;quot;)
+    )
+    load-path))
+
+(unless (require &#39;el-get nil &#39;noerror)
+  (with-current-buffer
+    (url-retrieve-synchronously
+      &amp;quot;https://raw.github.com/dimitri/el-get/master/el-get-install.el&amp;quot;)
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(el-get &#39;sync)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://shishithefool.blogspot.jp/2012/04/el-get-emacs.html&#34;&gt;el-get を使って Emacs でパッケージ管理&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://shibayu36.hatenablog.com/entry/2013/03/14/081524&#34;&gt;el-getを使ってみる(インストール編)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/dimitri/el-get&#34;&gt;github dimitri/el-get&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>coffee-modeでauto-completeを使えるようにする</title>
+      <link>http://tatsuyano.github.io/2013/03/19/coffee-mode-used-ac-dict/</link>
+      <pubDate>Tue, 19 Mar 2013 04:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/03/19/coffee-mode-used-ac-dict/</guid>
+      <description>
+
+&lt;p&gt;まずは coffee-mode.el を el-get で通常通りにインストールします。&lt;/p&gt;
+
+&lt;h2 id=&#34;auto-complete-で補完に使うdict-辞書-について:2538bac7ceee9429f96840d33dd3dcf5&#34;&gt;auto-complete で補完に使うdict(辞書)について&lt;/h2&gt;
+
+&lt;p&gt;補完をするときに参照している辞書は、.emacs.d/elisp/el-get/auto-complete/dict/ 配下にあります。&lt;br /&gt;
+デフォルトでは、coffee-mode 用のdictがないので、js2-mode 用に公開されていた辞書をインストールします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd .emacs.d/elisp/el-get/auto-complete/dict/
+wget https://raw.github.com/sandai/dotfiles/master/.emacs.d/ac-dict/js2-mode
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;設定:2538bac7ceee9429f96840d33dd3dcf5&#34;&gt;設定&lt;/h2&gt;
+
+&lt;p&gt;coffee-mode でauto-complete を使えるようにし、指定した辞書で補完するようにします。&lt;/p&gt;
+
+&lt;p&gt;52-coffee-mode.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(require &#39;coffee-mode)
+
+;; デフォルトだとインデントが８スペースなので、２スペースに変更
+;; http://qiita.com/items/a8d96ae95a1838500e37
+(defun coffee-custom ()
+  &amp;quot;coffee-mode-hook&amp;quot;
+  (set (make-local-variable &#39;tab-width) 2)
+  (setq coffee-tab-width 2))
+(add-hook &#39;coffee-mode-hook
+  &#39;(lambda() (coffee-custom)))
+
+;; auto-complete
+(add-to-list &#39;ac-modes &#39;coffee-mode) ;; coffee-modeでACを使えるようにする
+
+;; coffee-modeで、追加したjs2-modeのdict(辞書)で補完するようにする
+;; wget https://raw.github.com/sandai/dotfiles/master/.emacs.d/ac-dict/js2-mode
+(add-hook &#39;coffee-mode-hook
+  &#39;(lambda ()
+    (add-to-list &#39;ac-dictionary-files &amp;quot;~/.emacs.d/elisp/el-get/auto-complete/dict/js2-mode&amp;quot;)
+))
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>el-get.elでauto-install.elをインストールする</title>
+      <link>http://tatsuyano.github.io/2013/03/19/emacs-el-get-auto-install/</link>
+      <pubDate>Tue, 19 Mar 2013 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/03/19/emacs-el-get-auto-install/</guid>
+      <description>
+
+&lt;p&gt;まずは &lt;a href=&#34;http://tatsuyano.github.io/2013/03/19/emacs-el-get/&#34;&gt;el-get.el のインストール&lt;/a&gt; が完了していることが前提になります。&lt;/p&gt;
+
+&lt;h4 id=&#34;インストール:f24d91dad4bdb702ecb1f4d733e2ca17&#34;&gt;インストール&lt;/h4&gt;
+
+&lt;p&gt;まずは M-x el-get-list-packages で利用できるパッケージを一覧表示します。&lt;br /&gt;
+次に インストールしたいパッケージに「i」を押してチェックをいれ、「x」を押すと自動でインストールが始まります。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/emacs-install-auto-install_001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;インストールしたパッケージは、 (setq el-get-dir &amp;ldquo;~/.emacs.d/elisp/el-get/&amp;ldquo;) で指定したディレクトリ直下にディレクトリ単位にインストールされます。&lt;/p&gt;
+
+&lt;p&gt;またインストールしたパッケージを削除する場合は、M-x el-get-remove で削除します。&lt;/p&gt;
+
+&lt;h4 id=&#34;auto-installでインストールしたパッケージの置場所:f24d91dad4bdb702ecb1f4d733e2ca17&#34;&gt;auto-installでインストールしたパッケージの置場所&lt;/h4&gt;
+
+&lt;p&gt;el-get.el でインストールしたパッケージと、auto-install.el でインストールしたパッケージを分けて管理したいので、&lt;br /&gt;
+auto-install用のディレクトリとパスの設定をします。&lt;/p&gt;
+
+&lt;p&gt;.emacs.d&lt;br /&gt;
+└── elisp&lt;br /&gt;
+　　├── auto-install &amp;hellip; auto-installでインストールしたパッケージの置場所&lt;br /&gt;
+　　└── el-get &amp;hellip; el-getでインストールしたパッケージの置場所&lt;br /&gt;
+　　　　　├── auto-install &amp;hellip; auto-install.elの本体。本体はel-getでインストールしたため&lt;br /&gt;
+　　　　　└── el-get &amp;hellip; el-get.el自身もまた、el-getに管理されている&lt;/p&gt;
+
+&lt;h4 id=&#34;auto-installの設定:f24d91dad4bdb702ecb1f4d733e2ca17&#34;&gt;auto-installの設定&lt;/h4&gt;
+
+&lt;p&gt;init.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(setq load-path
+  (append
+  (list
+  ...
+  (expand-file-name &amp;quot;~/.emacs.d/elisp/auto-install/&amp;quot;) ;; &amp;lt;- パスの追加
+  )
+  load-path))
+  ...
+  (require &#39;auto-install)
+  (setq auto-install-directory &amp;quot;~/.emacs.d/elisp/auto-install/&amp;quot;) ;; auto-installでインストールしたパッケージの置場所を指定
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

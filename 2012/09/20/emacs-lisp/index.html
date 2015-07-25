@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Emacs-Lispの変数の扱いについて -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Emacs-Lispの変数の扱いについて</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Thu, Sep 20, 2012
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>やさしいEmacs-Lisp講座(改訂版)の勉強メモ。</p>
+
+<h2 id="動的スコープ-p21:4636d84465454932621e4d9744069728">動的スコープ(P21)</h2>
+
+<p>変数(let*以外)は動的スコープとして扱われる。<br />
+つまり一度変数を宣言すると、その変数はどこからでも参照できてしまう。</p>
+
+<h2 id="変数名の衝突-p19:4636d84465454932621e4d9744069728">変数名の衝突(P19)</h2>
+
+<p>Emacs-Lispは処理系全体(読み込んでいるすべてのプログラム)で一つの名前空間しかない。<br />
+なのでグローバル変数にはパッケージ固有のプレフィックスをつける。</p>
+
+<h2 id="defvar-p19:4636d84465454932621e4d9744069728">defvar(P19)</h2>
+
+<p>defvarで変数を宣言すると、その変数の値は、defvarで再度値を代入しても更新されない(しかしsetqなどで値の代入された場合は更新されてしまう)。<br />
+Emacs-Lispでは「定数宣言」のように使っていく。</p>
+
+<pre><code class="language-scheme">(defvar dvar 1 &quot;実験用&quot;) ;; -&gt; 1
+(defvar dvar 2)         ;; -&gt; 1 値が上書きされない
+(setq dvar 3)           ;; -&gt; 3 defvar以外で宣言(代入)された場合は上書きされてしまう。
+</code></pre>
+
+<h2 id="set-setq-p18:4636d84465454932621e4d9744069728">set,setq(P18)</h2>
+
+<p>変数の代入(宣言)を行う。setqのほうは同時に複数の変数を代入できる。</p>
+
+<pre><code class="language-scheme">(set 'foo 5)
+(setq aa 3 bb 2 cc 4)
+</code></pre>
+
+<h2 id="let-p20:4636d84465454932621e4d9744069728">let(P20)</h2>
+
+<p>let式の中で初めて宣言された変数は、let式外(グローバル領域)では参照できない。<br />
+関数内だけで参照したい(ローカル変数として使いたい)場合に用いる。<br />
+グローバル変数をlet式内で一時的に変えたい場合に用いる。<br />
+本体すべてを評価したあとで、最後に評価した値を返す。</p>
+
+<p>;書式&mdash;&mdash;&mdash;&mdash;&mdash;<br />
+;(let (変数リスト)　|<br />
+;  本体) 　　　　　|<br />
+; &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;</p>
+
+<pre><code class="language-scheme">(setq foo 5);; -&gt; 5
+
+(let ((foo 3) (fuga foo))
+  fuga);; -&gt; 5 fugaがグローバル変数のfooで初期化されるため
+
+(let ((foo 3))
+  foo);; -&gt; 3 let式のfooで初期化されるため
+
+foo  ;; -&gt; 5 let式で値が更新(代入)されても、値に影響されない
+fuga ;; -&gt; error let式内で宣言された変数のため
+</code></pre>
+
+<h2 id="let-p21:4636d84465454932621e4d9744069728">let*(P21)</h2>
+
+<pre><code class="language-scheme">(let* ((foo 3) (fuga foo))
+  fuga);; -&gt; 3 fugaがlet式のfooで初期化されるため
+
+(let* ((foo 3))
+  foo);; -&gt; 3 let式のfooで初期化されるため
+</code></pre>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

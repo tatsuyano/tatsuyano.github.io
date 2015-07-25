@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ci on blog.10rane.com</title>
+    <link>http://tatsuyano.github.io/tags/ci/</link>
+    <description>Recent content in Ci on blog.10rane.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Fri, 13 Mar 2015 02:00:00 +0900</lastBuildDate>
+    <atom:link href="http://tatsuyano.github.io/tags/ci/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Werckerを使ってHerokuにデプロイする</title>
+      <link>http://tatsuyano.github.io/2015/03/13/deploying-to-heroku-using-wercker/</link>
+      <pubDate>Fri, 13 Mar 2015 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/03/13/deploying-to-heroku-using-wercker/</guid>
+      <description>
+
+&lt;p&gt;Bitbucket(プライベートリポジトリ)に用意したアプリケーション(Rails)を
+WerckerでBuildし、HerokuにDeployした時の備忘録です。&lt;/p&gt;
+
+&lt;h2 id=&#34;前提:6460fcf230fa2284bc2f384bc9d671a0&#34;&gt;前提&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Bitbucketにアプリケーションが用意済み&lt;/li&gt;
+&lt;li&gt;Werckerにアカウントを持っていて、Bitbacketと連携済み&lt;/li&gt;
+&lt;li&gt;Herokuにアカウントを持っていて、Bitbacketと連携済み&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;bitbacketのリポジトリをwerckerに登録する:6460fcf230fa2284bc2f384bc9d671a0&#34;&gt;BitbacketのリポジトリをWerckerに登録する&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;プロバイダを選択します。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;リポジトリを選択します。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;リポジトリへの接続方法を選択します。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;wercker.yml&lt;/code&gt;の内容が自動生成されます。&lt;code&gt;wercker.yml&lt;/code&gt;は後で新規に作成するので、ここではコピーせずに次に進みます。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_04.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Make my app public&lt;/code&gt;に&lt;span id=&#39;make_my_app_public&#39;&gt;チェック&lt;/span&gt;を入れると、後ほど出てくる&lt;code&gt;badge&lt;/code&gt;をクリックしたさいに、deploy情報を公開できるようになります(今回はチェックしません)。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_05.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;これで、WerckerにBitbacketのリポジトリの登録が完了しました。&lt;/p&gt;
+
+&lt;h2 id=&#34;wercker-ymlを作成し-アプリケーションをbuildする:6460fcf230fa2284bc2f384bc9d671a0&#34;&gt;wercker.ymlを作成し、アプリケーションをBuildする&lt;/h2&gt;
+
+&lt;p&gt;WerckerでアプリケーションをBuild、Deployするための設定は、&lt;code&gt;wercker.yml&lt;/code&gt;に記載します。&lt;code&gt;wercker.yml&lt;/code&gt;は、アプリケーションのRootディレクトリ直下(Gemfileなどが置いてある階層)に置いてください。&lt;/p&gt;
+
+&lt;p&gt;wercker.yml
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;box: wercker/ruby
+ services:
+     - wercker/postgresql
+ build:
+     steps:
+       - bundle-install
+       - rails-database-yml:
+           service: postgresql
+       - script:
+           name: echo ruby information
+           code: |
+               echo &amp;ldquo;ruby version $(ruby &amp;ndash;version) running!&amp;rdquo;
+               echo &amp;ldquo;from location $(which ruby)&amp;rdquo;
+               echo -p &amp;ldquo;gem list: $(gem list)&amp;rdquo;
+       - script:
+           name: Set up db
+           code: RAILS_ENV=test bundle exec rake db:schema:load
+       - script:
+           name: Run RSpec
+           code: bundle exec rspec
+ deploy:
+     steps:
+         - heroku-deploy:
+             install-toolbelt: true
+         - script:
+             name: Update database
+             code: heroku run rake db:migrate &amp;ndash;app $APP_NAME
+         - script:
+             name: Update assets
+             code: heroku run rake add_static_assets &amp;ndash;app $APP_NAME
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;生成したwercker.ymlを、Bitbacketに&lt;code&gt;git push&lt;/code&gt;すると、Wercker上に自動でBuildされます。
+&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ git add wercker.yml
+$ git commit -m &amp;lsquo;Add wercker.yml&amp;rsquo;
+$ git push origin master
+&lt;/pre&gt;&lt;/code&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;deploy先-heroku-の設定:6460fcf230fa2284bc2f384bc9d671a0&#34;&gt;Deploy先(Heroku)の設定&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Buildが終わったので、次にDeploy(Heroku)の設定を行います。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_06.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;WerckerにHerokuのAPIキーを設定します。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_07.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Heroku account page&lt;/code&gt;をクリック先のページ(Heroku)からKeyをコピーします。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_08.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Deploy target name&lt;/code&gt;に適当な名前を設定します。また、&lt;code&gt;auto deploy ...&lt;/code&gt;のチェックボックスをONにすると、２回目以降のBuild時に、自動でDeployされるようになります。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_09.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Create new Heroku app&lt;/code&gt;を押下し、アプリケーション名と、Regionを設定します。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_10.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;先ほど作成したwercker.ymlで使っている変数名を設定します。
+今回は&lt;code&gt;APP_NAME&lt;/code&gt;という変数に、先ほどのアプリケーション名を設定します。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_11.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Deployの設定が終わったら、次にBuildのログのリンクを押下してください。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_12.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Deploy to&lt;/code&gt;ボタンに先ほど設定した&lt;code&gt;Deploy target name(production)&lt;/code&gt;が表示されます。このボタンをクリックするとDeployが開始されます。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_13.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;readme-mdにbadgeを追加する:6460fcf230fa2284bc2f384bc9d671a0&#34;&gt;README.mdにbadgeを追加する&lt;/h2&gt;
+
+&lt;p&gt;GithubのREADMEによくついている例のあれです。あるとなんとないかっこいいのでつけましょう。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#39;#make_my_app_public&#39;&gt;リポジトリをWerckerに登録した&lt;/a&gt;さいにあった&lt;code&gt;Make my app public&lt;/code&gt;のチェックをONにした状態で、このbadgeをクリックすると、BuildとDeployのログが確認できるようになります。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_14.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;こんな簡単に登録できて、しかも無料(今のところ)なんて、Werckerすごくいいですね。以上、お疲れ様でした。&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:6460fcf230fa2284bc2f384bc9d671a0&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.mah-lab.com/2014/01/08/rails-wercker-heroku-deploy/&#34;&gt;Githubのプライベートリポジトリでも無料で使えるCI、Werckerを使ってrails newからHerokuのデプロイまでやってみる&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://razokulover.hateblo.jp/entry/2014/05/21/000306&#34;&gt;bitbucketとwerckerで０円CIをする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/tsumekoara/items/62cfa777b108acb5659f&#34;&gt;RailsアプリをWerckerを通してHerokuに上げる際に -bash: heroku: command not found とかなった場合の対応&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>WerckerのBuild結果をSlackに通知する</title>
+      <link>http://tatsuyano.github.io/2015/03/13/notification-build-results-of-wercker-to-slack/</link>
+      <pubDate>Fri, 13 Mar 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/03/13/notification-build-results-of-wercker-to-slack/</guid>
+      <description>
+
+&lt;p&gt;Werckerに登録したアプリケーションのBuild結果をSlackのwebHookという機能を使うことで、Slackに通知することができるようになります。&lt;/p&gt;
+
+&lt;h2 id=&#34;slackにwebhookを追加する:5b40b8b3e2b3d99797e44fdca35fc89e&#34;&gt;SlackにWebHookを追加する&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;サイドメニューの  Configure Integrations を押下してください。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/notification-build-results-of-wercker-to-slack_01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Incoming WebHooks&lt;/code&gt;を追加してください。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/notification-build-results-of-wercker-to-slack_02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;どのチャンネルに追加するか選択してください。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/notification-build-results-of-wercker-to-slack_03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;URLをコピーし、&lt;code&gt;Save Settings&lt;/code&gt;を押下します。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/notification-build-results-of-wercker-to-slack_04.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;werckerにslackのtokenを設定する:5b40b8b3e2b3d99797e44fdca35fc89e&#34;&gt;WerckerにSlackのTOKENを設定する&lt;/h2&gt;
+
+&lt;p&gt;先ほどコピーしたURLの一番後ろについているパラーメータがSLACK_TOKENになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;https://hooks.slack.com/services/aaaaa/bbbbb/[SLACK-TOKEN]&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;SLACK_TOKEN&lt;/code&gt;は&lt;code&gt;Protected&lt;/code&gt;にチェックした状態でSAVEしてください。&lt;code&gt;Protected&lt;/code&gt;をチェックすると、ログ上で値が非表示になります。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/notification-build-results-of-wercker-to-slack_05.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;wercker-ymlに-after-steps-を追加:5b40b8b3e2b3d99797e44fdca35fc89e&#34;&gt;wercker.ymlに&lt;code&gt;after-steps&lt;/code&gt;を追加&lt;/h2&gt;
+
+&lt;p&gt;Build後(build: after-steps)に、Slackに通知するようwercker.ymlを設定します。&lt;code&gt;subdomain&lt;/code&gt;はSlackのURL&lt;code&gt;http://hoge.slack.com&lt;/code&gt;の&lt;code&gt;hoge&lt;/code&gt;の部分にあたります。
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;box: wercker/ruby
+ services:
+     - wercker/postgresql
+ build:
+     steps:
+       - bundle-install
+       - rails-database-yml:
+           service: postgresql
+       - script:
+           name: echo ruby information
+           code: |
+               echo &amp;ldquo;ruby version $(ruby &amp;ndash;version) running!&amp;rdquo;
+               echo &amp;ldquo;from location $(which ruby)&amp;rdquo;
+               echo -p &amp;ldquo;gem list: $(gem list)&amp;rdquo;
+       - script:
+           name: Set up db
+           code: RAILS_ENV=test bundle exec rake db:schema:load
+       - script:
+           name: Run RSpec
+           code: bundle exec rspec
+     # ここから追加 &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;
+     after-steps:
+       - sherzberg/slack-notify:
+           subdomain: hoge
+           token: $SLACK_TOKEN
+           channel: &amp;ldquo;#general&amp;rdquo;
+           username: wercker
+           icon_url: &lt;a href=&#34;https://avatars3.githubusercontent.com/u/1695193?s=140&#34;&gt;https://avatars3.githubusercontent.com/u/1695193?s=140&lt;/a&gt;
+     # ここまで&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;
+ deploy:
+     steps:
+         - heroku-deploy:
+             install-toolbelt: true
+         - script:
+             name: Update database
+             code: heroku run rake db:migrate &amp;ndash;app $APP_NAME
+         - script:
+             name: Update assets
+             code: heroku run rake add_static_assets &amp;ndash;app $APP_NAME
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;wercker.yml を更新したので&lt;code&gt;git push&lt;/code&gt;してください。
+正しく設定できれていれば、下記のようなメッセージがSlackに通知されます。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/notification-build-results-of-wercker-to-slack_06.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:5b40b8b3e2b3d99797e44fdca35fc89e&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/tbpgr/items/7705995c9f679d97a382&#34;&gt;Wercker|ビルド結果をSlackに通知する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/sherzberg/wercker-step-slack-notify&#34;&gt;wercker-step-slack-notify:github&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

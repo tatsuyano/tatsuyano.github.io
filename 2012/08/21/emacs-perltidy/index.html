@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>perltidyをインストールし、emacsでも使えるように設定する -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Perltidyをインストールし、emacsでも使えるように設定する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Aug 21, 2012
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> <a href="http://tatsuyano.github.io/tags/perl" >perl</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="はじめに:14bf98b614540e06f6b830ab8bbf49f8">はじめに</h2>
+
+<p>perltidyとはperlのソースを指定したフォーマットに整形してくれるツールです。</p>
+
+<h2 id="インストール:14bf98b614540e06f6b830ab8bbf49f8">インストール</h2>
+
+<p>私の環境はCentOSなので、<del datetime="2012-09-04T06:43:23+00:00">yumでインストールします。</del><br />
+macとCentOS両方同じ方法でインストールしたいので、Perlモジュールのperltidyを使用することにします。</p>
+
+<pre><code>cpanm Perl::Tidy
+</code></pre>
+
+<h2 id="フォーマットを指定する:14bf98b614540e06f6b830ab8bbf49f8">フォーマットを指定する</h2>
+
+<p>ホームディレクトリに「.perltidyrc」というファイルを生成し、フォーマットを指定します。<br />
+以下の設定は、書籍「Perl Best Practices」のものらしいです。。</p>
+
+<pre><code>cat &gt; .perltidyrc
+-l=78   # Max line width is 78 cols
+-i=4    # Indent level is 4 cols
+-ci=4   # Continuation indent is 4 cols
+-st     # Output to STDOUT
+-se     # Errors to STDERR
+-vt=2   # Maximal vertical tightness
+-cti=0  # No extra indentation for closing brackets
+-pt=1   # Medium parenthesis tightness
+-bt=1   # Medium brace tightness
+-sbt=1  # Medium square brace tightness
+-bbt=1  # Medium block brace tightness
+-nsfs   # No space before semicolons
+-nolq   # Don't outdent long quoted strings
+-wbb=&quot;% + - * / x != == &gt;= &lt;= =~ !~ &lt; &gt; | &amp; &gt;= &lt; = **= += *= &amp;= &lt;&lt;= &amp;&amp;= -= /= |= &gt;&gt;= ||= .= %= ^= x=&quot;
+        # Break before all operators
+</code></pre>
+
+<h2 id="使用例:14bf98b614540e06f6b830ab8bbf49f8">使用例</h2>
+
+<p>コマンドとして単体で使うには以下のように使ってください。</p>
+
+<pre><code>perltidy hoge.pl
+</code></pre>
+
+<h2 id="emacsの設定:14bf98b614540e06f6b830ab8bbf49f8">.emacsの設定</h2>
+
+<pre><code class="language-scheme">;; perl tidy
+;; sudo yum -y install perltidy
+
+;; リージョン内のperlソースを整形する。
+(defun perltidy-region ()
+  &quot;Run perltidy on the current region.&quot;
+      (interactive)
+          (save-excursion
+                (shell-command-on-region (point) (mark) &quot;perltidy -q&quot; nil t)))
+                (global-set-key &quot;\C-ct&quot; 'perltidy-region)
+
+;; ソースすべてを整形する。
+(defun perltidy-defun ()
+  &quot;Run perltidy on the current defun.&quot;
+    (interactive)
+      (save-excursion (mark-defun) (perltidy-region)))
+      (global-set-key &quot;\C-c\C-t&quot; 'perltidy-defun)
+</code></pre>
+
+<h2 id="参考サイト:14bf98b614540e06f6b830ab8bbf49f8">参考サイト</h2>
+
+<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/supermassiveblackhole/20100723/1279874404">UbuntuでEmacsからPerlの整形ツールperltidyを使う設定</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

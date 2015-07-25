@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Amazon LinuxにMigemoをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Amazon LinuxにMigemoをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Aug 27, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>migemoを使うと、日本語の文章をローマ字で検索できるようになります。</p>
+
+<h3 id="作業の流れ:615ab6bd9b063aad980b072d8bbfc916">作業の流れ</h3>
+
+<ol>
+<li><code>RPM</code>で<code>nkf</code>をインストール</li>
+<li><code>ghq</code>で<code>cmigemo</code>のインストール</li>
+<li><code>cask</code>で<code>migemo.el</code>をインストール</li>
+<li><code>init.el</code>に<code>migemo</code>の設定を行う</li>
+</ol>
+
+<h3 id="rpmでnkfをインストール:615ab6bd9b063aad980b072d8bbfc916">RPMでnkfをインストール</h3>
+
+<p>migemoをインストールするには<code>nkf</code>が必要です。<code>nkf</code>がないと下記のようなエラーが出ます。
+<a href="https://github.com/koron/cmigemo/blob/master/configure#L49">ERROR: Require qkc or nkf installed for encode filter.</a></p>
+
+<p>ただAmazon Linuxのyumには、nkfパッケージがないので、RPMでインストールします。</p>
+
+<pre><code>$ sudo bash
+# cd /tmp/
+# wget http://mirror.centos.org/centos/6/os/x86_64/Packages/nkf-2.0.8b-6.2.el6.x86_64.rpm
+# rpm -ivh nkf-2.0.8b-6.2.el6.x86_64.rpm
+
+# which nkf
+/usr/bin/nkf
+</code></pre>
+
+<h3 id="ghqでcmigemoのインストール:615ab6bd9b063aad980b072d8bbfc916">ghqでcmigemoのインストール</h3>
+
+<p><code>migemo</code>は元々rubyで実装されていたらしいのですが、今はC言語で実装された<code>cmigemo</code>をインストールします。</p>
+
+<pre><code>$ ghq get https://github.com/koron/cmigemo.git
+$ cd $HOME/src/github.com/koron/cmigemo
+$ ./configure
+$ make gcc
+$ make gcc-dict
+$ sudo make gcc-install
+
+$ which cmigemo
+/usr/local/bin/cmigemo
+</code></pre>
+
+<h4 id="cmigemoが正常にインストールされているか確認:615ab6bd9b063aad980b072d8bbfc916">cmigemoが正常にインストールされているか確認</h4>
+
+<pre><code>$ cmigemo -d /usr/local/share/migemo/utf-8/migemo-dict
+</code></pre>
+
+<p>適当なローマ字(toukyoなど)を入力すると正規表現を生成される -&gt; 正常にインストールされている</p>
+
+<pre><code>migemo_open(&quot;/usr/local/share/migemo/utf-8/migemo-dict&quot;)=0x21d3010
+clock()=0.090000
+QUERY: toukyo
+PATTERN: (ﾄｳｷｮ|トウキョ|等距離|登極|当(局|協会)|東[教京]|とうきょ|ｔｏｕｋｙｏ|toukyo)
+</code></pre>
+
+<h3 id="caskでmigemo-elをインストール:615ab6bd9b063aad980b072d8bbfc916">caskでmigemo.elをインストール</h3>
+
+<p>~/emacs.d/Cask</p>
+
+<pre><code>(depends-on &quot;migemo&quot;)
+</code></pre>
+
+<p><code>cask</code>コマンドでインストール</p>
+
+<pre><code>$ cd ~/.emacs.d
+$ cask
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/archives/gnu/archive-contents
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/archives/marmalade/archive-contents
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/archives/melpa/archive-contents
+Making version-control local to migemo-autoloads.el while let-bound!
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/migemo-20140823.2003/migemo-autoloads.el
+</code></pre>
+
+<h3 id="init-elにmigemoの設定を行う:615ab6bd9b063aad980b072d8bbfc916">init.elにmigemoの設定を行う</h3>
+
+<p>~/.emacs.d/init.el</p>
+
+<pre><code>(require 'migemo)
+(setq migemo-command &quot;/usr/local/bin/cmigemo&quot;)
+(setq migemo-options '(&quot;-q&quot; &quot;--emacs&quot;))
+(setq migemo-dictionary &quot;/usr/local/share/migemo/utf-8/migemo-dict&quot;)
+(setq migemo-user-dictionary nil)
+(setq migemo-coding-system 'utf-8-unix)
+(setq migemo-regex-dictionary nil)
+(load-library &quot;migemo&quot;)
+(migemo-init)
+</code></pre>
+
+<p>これで<code>C-s</code>でミニバッファに <code>[MIGEMO] I-search</code> と表示され日本語インクリメンタルサーチが可能になります。すごい！</p>
+
+<h3 id="参考サイト:615ab6bd9b063aad980b072d8bbfc916">参考サイト</h3>
+
+<ul>
+<li><a href="http://tkuchiki.hatenablog.com/entry/2012/12/01/004833">Amazon EC2（Amazon Linux AMI) にnkf をインストールする手順</a></li>
+<li><a href="http://deris.hatenablog.jp/entry/20120812/1344731592">c/migemoをインストールしてvimから使う方法</a></li>
+<li><a href="http://weblog.ymt2.net/blog/html/2013/08/23/install_migemo_to_emacs_24_3_1.html">migemo を emacs 24.3.1 にインストールしたときのメモ, Mac OS X</a></li>
+</ul>
+
+<h3 id="関連する記事:615ab6bd9b063aad980b072d8bbfc916">関連する記事</h3>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/08/20/install-cask/">Caskをインストールする</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

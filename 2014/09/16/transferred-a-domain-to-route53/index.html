@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Route53にドメインを移管する -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Route53にドメインを移管する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Sep 16, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/aws" >aws</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>Route53のDNSを使うようにしたので、続けてドメインも移管したいと思います。</p>
+
+<h3 id="authcodeの取得:1f4cf55a40853aaa1040625edf216e8c">AuthCodeの取得</h3>
+
+<p>value-domainから<code>AuthCode</code>を取得します。</p>
+
+<p>まずは<code>AuthCode</code>を取得する前に、whois代行を利用している場合は
+先に自分の情報に変更します。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_1.jpg" alt="" /></p>
+
+<p>whois情報を自分の情報に変更後、一度saveをし、
+再度同じページを開くと、画面下側に<code>AuthCode</code>が表示されています。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_2.jpg" alt="" /></p>
+
+<h3 id="ドメインの移管:1f4cf55a40853aaa1040625edf216e8c">ドメインの移管</h3>
+
+<p>ドメインの移管時にドメインが利用している<code>NS</code>を入力するので、事前に確認しておきます。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_3.jpg" alt="" /></p>
+
+<p>次にドメインがRoute53で移管できるか確認します。
+ちなみに<code>.com</code>ドメインの移管料は$12.00でした。</p>
+
+<p><em>移管をすると、ドメインの利用期間が1年伸びます</em></p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_4.jpg" alt="" /></p>
+
+<p>whois情報を登録します。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_5.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_6.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_7.jpg" alt="" /></p>
+
+<p>「Thank you for transferring your domain to Route 53」とメッセージがでれば完了です。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_8.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_9.jpg" alt="" /></p>
+
+<p>登録完了後、数日後に確認メールが来るのでaccept(許可)してください。<br />
+ちなみに移管が完了するまでに、7日かかりました。。</p>
+
+<p>以上で完了です。お疲れ様でした。</p>
+
+<h3 id="参考サイト:1f4cf55a40853aaa1040625edf216e8c">参考サイト</h3>
+
+<ul>
+<li><a href="http://yoshidashingo.hatenablog.com/entry/2014/08/01/132312">Amazon Route 53にドメインを移管してみた</a></li>
+<li><a href="http://server-domain.info/reportd/transfer-value-domain-onamae-com.html">Value Domainからお名前.comへドメインを移管してみた</a></li>
+</ul>
+
+<h3 id="関連する記事:1f4cf55a40853aaa1040625edf216e8c">関連する記事</h3>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/09/11/using-the-dns-of-route53/">Route53のDNSを使う</a></li>
+<li><a href="http://blog.10rane.com/2014/07/21/start-aws/">aws はじめました。</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Js on blog.10rane.com</title>
+    <link>http://tatsuyano.github.io/tags/js/</link>
+    <description>Recent content in Js on blog.10rane.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Mon, 08 Jun 2015 02:00:00 +0900</lastBuildDate>
+    <atom:link href="http://tatsuyano.github.io/tags/js/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Jsのスコープについて</title>
+      <link>http://tatsuyano.github.io/2015/06/08/for-the-scope-of-the-js/</link>
+      <pubDate>Mon, 08 Jun 2015 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/06/08/for-the-scope-of-the-js/</guid>
+      <description>
+
+&lt;h2 id=&#34;グローバルスコープとローカルスコープしかない:12cd6967166e7d3f6ae4d2a16d321c1d&#34;&gt;グローバルスコープとローカルスコープしかない&lt;/h2&gt;
+
+&lt;p&gt;Jsには2種類のスコープしかない。グローバルスコープ内で宣言した変数をグローバル変数、ローカルスコープ内で宣言した変数をローカル変数という。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;スクリプト全体(トップレベル)で有効なグローバル変数
+
+&lt;ul&gt;
+&lt;li&gt;プログラム終了時までメモリを確保してしまう&lt;/li&gt;
+&lt;li&gt;多用すると、名前がバッティングする可能性がある
+&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;関数内でのみ有効なローカル変数
+
+&lt;ul&gt;
+&lt;li&gt;関数終了時にメモリが開放される&lt;/li&gt;
+&lt;li&gt;宣言時に&lt;code&gt;var&lt;/code&gt;をつけないと、*グローバル変数*として認識されてしまう&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var hoge = &#39;global&#39;;  // =&gt; グローバル変数
+
+function func () {
+  var fuga = &#39;local&#39;; // =&gt; ローカル変数、必ずvarをつける
+  console.log(fuga);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+また、他言語のようにブロックスコープは存在しない。
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;if (true) {
+  var hoge = &#39;block&#39;;
+}
+
+console.log(hoge); // =&gt; block ブロック内で宣言した変数も参照できてしまう
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+## 変数の巻き上げ(hoisting)
+
+Jsには「変数の巻き上げ」という概念がある。
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var hoge = &#39;global&#39;;
+
+function func() {
+  console.log(hoge); // =&gt; undefined なぜか global と出力されない
+
+  var hoge = &#39;local&#39;;
+  console.log(hoge); // =&gt; local 期待どおりの出力
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;一回目の&lt;code&gt;console.log(hoge);&lt;/code&gt;で、なぜか&lt;code&gt;undefined&lt;/code&gt;が出力されている。これが「変数の巻き上げ」の挙動。&lt;/p&gt;
+
+&lt;p&gt;何が起きているかというと、Jsでは、&lt;em&gt;関数内のどこで変数宣言をしても、関数の先頭で、宣言のみしたと認識されてしまうため。&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;つまり上記のコードは以下のように処理されている。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var hoge = &#39;global&#39;;
+
+function func() {
+  var hoge; // 初期値は入っていない。宣言のみ
+  console.log(hoge); // =&gt; 初期値が入っていないので、undefined
+
+  hoge = &#39;local&#39;;
+  console.log(hoge); // =&gt; 値が入っているので、local
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;これを防ぐには、変数宣言は、*関数の先頭*で行うようにする。&lt;/p&gt;
+
+&lt;h2 id=&#34;まとめ:12cd6967166e7d3f6ae4d2a16d321c1d&#34;&gt;まとめ&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;グローバル変数は多用しない&lt;/li&gt;
+&lt;li&gt;変数宣言時は、必ず var をつける&lt;/li&gt;
+&lt;li&gt;ローカル変数は、関数の先頭で宣言する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;参考サイト:12cd6967166e7d3f6ae4d2a16d321c1d&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tacamy.hatenablog.com/entry/2012/12/30/191125&#34;&gt;JavaScript のスコープを理解する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://itpro.nikkeibp.co.jp/atcl/column/14/091700069/091700002/&#34;&gt;JavaScriptのスコープを理解しよう&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://analogic.jp/hoisting/&#34;&gt;知らないと怖い「変数の巻き上げ」とは？&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;関連記事:12cd6967166e7d3f6ae4d2a16d321c1d&#34;&gt;関連記事&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/08/for-function-of-js/&#34;&gt;Jsの関数について&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Jsの関数について</title>
+      <link>http://tatsuyano.github.io/2015/06/08/for-function-of-js/</link>
+      <pubDate>Mon, 08 Jun 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/06/08/for-function-of-js/</guid>
+      <description>
+
+&lt;p&gt;Jsには主に「Function文」と「Function式(関数リテラル)」という２つの関数の宣言方法がある。
+※本当は「Functionコンストラクタ」という方法もあるが、あまり実用的ではないので省略。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;// Function文
+function func () {
+  console.log(&#39;statements&#39;);
+}
+
+// Function式
+var func = function func() {
+  console.log(&#39;expression&#39;);
+};
+
+//関数の呼び出し方法は同じ
+func();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+違いは評価のタイミング。「Function文」は関数が静的な構造として宣言される。つまり、Jsの実行環境がコードを解析するタイミングで関数が静的に登録され、これにより「関数をどこで定義していても呼び出せる」ようになります。
+
+
+&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;func(); // =&gt; 宣言前に読み出してもエラーにならない
+
+function func () {
+  console.log(&#39;statements&#39;);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+逆に「Function式」は、変数に代入された段階で評価される。そのため、宣言後に呼び出さないとエラーになる。
+
+&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;func(); // =&gt; TypeError: undefined is not a function
+
+var func = function func () {
+  console.log(&#39;expression&#39;);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+## 無名関数
+
+「無名関数」とは、Function式の関数名を省略した形
+。Function式を使う場合は、主に無名関数が使われる。
+
+&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;// 無名関数
+var func = function () {
+  console.log(&#39;expression&#39;);
+};
+
+func();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+## 即時関数
+
+「即時関数」とは、関数を()で囲んだ状態で実行することで、関数宣言と同時にその関数を実行する書き方です。
+
+&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;// 即時関数
+(function () {
+  console.log(&#39;Hello&#39;);
+})();
+
+// ()();の代わりに、().call(this);とも書ける
+(function () {
+  console.log(&#39;Hello&#39;);
+}).call(this);
+
+// 即時関数に引数を渡す場合
+(function (val,val2) {
+  console.log(val + &#39; &#39; + val2);
+})(&#39;Hello&#39;,&#39;World&#39;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;即時関数を使うことで、関数内で宣言した変数のスコープは、関数内でしか使えないようになる。
+つまり、ブロックスコープと同じ効果となる。&lt;/p&gt;
+
+&lt;h2 id=&#34;まとめ:faca702768e957c2e4fade9d48317c0a&#34;&gt;まとめ&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;変数宣言は無名関数を使う&lt;/li&gt;
+&lt;li&gt;即時関数を使えば、ブロックスコープと同じ効果が得られる&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;参考サイト:faca702768e957c2e4fade9d48317c0a&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://itpro.nikkeibp.co.jp/atcl/column/14/091700069/091700001/&#34;&gt;現代プログラマの必須知識、JavaScript&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/amachang/20080208/1202448348&#34;&gt;(function(){})() と function(){}()&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;関連記事:faca702768e957c2e4fade9d48317c0a&#34;&gt;関連記事&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/08/for-the-scope-of-the-js/&#34;&gt;Jsのスコープについて&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>webpackを使ってes6-promiseを読み込む</title>
+      <link>http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/</link>
+      <pubDate>Wed, 03 Jun 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/</guid>
+      <description>
+
+&lt;p&gt;最近勉強中のPromiseですが、現段階(15/06/03)ではIE11に対応していません。
+PromiseをIEに対応させるためには、es6-promiseというNode.jsのライブラリをフロントエンドで読み込む必要があります。&lt;/p&gt;
+
+&lt;p&gt;しかしNode.jsのライブラリは、そのままではフロントエンドで使えないので、
+webpackでフロントエンド向けにBuildする必要があります。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;-webpackは他にも多くの機能がありますが、ここではNode.jsのモジュールをフロントエンドで使うため方法のみにフォーカスします。-&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;webpackを使うための準備:bf105b025d29d59e69f389ae56581628&#34;&gt;webpackを使うための準備&lt;/h3&gt;
+
+&lt;p&gt;まずは本体のインストール。
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install webpack -g
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;p&gt;次に適当なディレクトリを作成します。
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ mkdir webpack-sample &amp;amp;&amp;amp; cd webpack-sample
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;p&gt;今回使うライブラリ(es6-promise)をディレクトリにインストールします。
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install es6-promise
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;p&gt;ライブラリはglobalではなく、ディレクトリ直下(/webpack-sample/node_modules)にインストールしてください。&lt;/p&gt;
+
+&lt;h3 id=&#34;jsのbuild方法:bf105b025d29d59e69f389ae56581628&#34;&gt;JsのBuild方法&lt;/h3&gt;
+
+&lt;p&gt;次に(Node.jsの)ライブラリを読み込むJs(main.js)をビルドします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ webpack main.js bundle.js
+Hash: de7b4a8a87c6e52d026f
+Version: webpack 1.9.10
+Time: 109ms
+    Asset     Size  Chunks             Chunk Names
+bundle.js  40.1 kB       0  [emitted]  main
+   [0] ./main.js 255 bytes {0} [built]
+   + 6 hidden modules
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+BuildしたJs(bundle.js)は、main.jsが依存しているライブラリ(es6-promise等)も含んだ一つのファイルに圧縮されます。
+このJsのみをHTMLに読み込むだけで、Node.jsが利用できるようになります。
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;&amp;lt;script&amp;nbsp;src=&amp;quot;bundle.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+&lt;b&gt;main.js&lt;/b&gt;
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;&#39;use strict&#39;
+var Promise = require(&#39;es6-promise&#39;).Promise;
+
+var promise = function(code) {
+    return new Promise(function (resolve,reject) {
+        resolve(&#39;Hello Promise !!&#39;);
+    });
+}
+
+promise().then(function (result) {
+    console.log(result);
+});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+### 確認
+
+今回は、node.jsのhttp-serverを使って確認しようと思います。
+
+* [Node.jsのhttp-serverっていうコマンドラインのウェブサーバーが便利](https://firegoby.jp/archives/5706)
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install -g http-server
+$ http-server -p 4000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;サーバー起動し、IEのconsoleにメッセージが表示されれば、確認OKです。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/use-webpack-to-read-the-es6-promise_01.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:bf105b025d29d59e69f389ae56581628&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://webpack.github.io/&#34;&gt;webpack&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jakearchibald/es6-promise&#34;&gt;es6-promise&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://ameblo.jp/ca-1pixel/entry-11884453208.html&#34;&gt;RequireJS等はもう古い。WebPackとは？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://thujikun.github.io/blog/2014/12/07/webpack/&#34;&gt;Webpackを使い倒す&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.twopipe.com/front-end/2014/12/22/react-webpack-env.html&#34;&gt;ReactとStylusをwebpackで使うための開発環境構築&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:bf105b025d29d59e69f389ae56581628&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/&#34;&gt;Promiseを使って、非同期処理を任意のタイミングで実行する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Promiseを使って、非同期処理を任意のタイミングで実行する</title>
+      <link>http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/</link>
+      <pubDate>Tue, 02 Jun 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/</guid>
+      <description>
+
+&lt;p&gt;Promiseを使って、非同期処理を任意の順番で実行するサンプル。
+ES5でも順番を指定して実行する事ができるが、Promiseを使うと綺麗に実装できる。&lt;/p&gt;
+
+&lt;p&gt;&lt;script src=&#34;http://gist-it.appspot.com/https://github.com/tatsuyano/study-es6promise/blob/master/sample01-nodejs.js&#34;&gt;
+&lt;/script&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:4211bdcec880eb9ef23695a021bec295&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://azu.github.io/promises-book/&#34;&gt;JavaScript Promiseの本&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.html5rocks.com/ja/tutorials/es6/promises/&#34;&gt;JavaScript Promises&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jakearchibald/es6-promise&#34;&gt;es6-promise&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://babeljs.io/repl/&#34;&gt;Babel repl&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:4211bdcec880eb9ef23695a021bec295&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/&#34;&gt;webpackを使ってes6-promiseを読み込む&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

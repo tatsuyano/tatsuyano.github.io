@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>VagrantとVirtualBoxのインストール -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>VagrantとVirtualBoxのインストール</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Jul 21, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/vagrant" >vagrant</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>今回はVagrantが1.5.4、VirtualBoxが4.3.10をインストール</p>
+
+<ul>
+<li><a href="http://www.vagrantup.com/downloads.html">DOWNLOAD VAGRANT</a></li>
+<li><a href="https://www.virtualbox.org/wiki/Downloads">Download VirtualBox</a></li>
+</ul>
+
+<h2 id="boxのインストール:691a8f9bf65a866d03438cfc2d34fceb">BOXのインストール</h2>
+
+<p>新しくできた<a href="https://vagrantcloud.com/discover/featured">VAGRANT CLOUD</a>にあるBOXをインストール</p>
+
+<pre><code>$ vagrant add chef/centos-6.5
+1) virtualbox
+2) hyperv
+Enter your choice: 1
+</code></pre>
+
+<h2 id="仮想マシンを作る:691a8f9bf65a866d03438cfc2d34fceb">仮想マシンを作る</h2>
+
+<h3 id="まずは設定ファイルを置くためのディレクトリを掘る:691a8f9bf65a866d03438cfc2d34fceb">まずは設定ファイルを置くためのディレクトリを掘る</h3>
+
+<pre><code>$ mkdir -p ~/Vagrant/CentOS65
+$ cd /Vagrant/CentOS65
+</code></pre>
+
+<h3 id="インストールされているboxの確認:691a8f9bf65a866d03438cfc2d34fceb">インストールされているBOXの確認</h3>
+
+<pre><code>$ vagrant box list
+$ chef/centos-6.5 (virtualbox, 1.0.0)
+</code></pre>
+
+<h3 id="初期化と起動:691a8f9bf65a866d03438cfc2d34fceb">初期化と起動</h3>
+
+<pre><code>$ vagrant init chef/centos-6.5
+$ vagrant up
+</code></pre>
+
+<h3 id="仮想マシンへの接続:691a8f9bf65a866d03438cfc2d34fceb">仮想マシンへの接続</h3>
+
+<pre><code>$ vagrant ssh
+</code></pre>
+
+<h3 id="仮想マシンのipを固定にする:691a8f9bf65a866d03438cfc2d34fceb">仮想マシンのIPを固定にする</h3>
+
+<p>Vagrantfileのconfig.vm.networkをコメントインする</p>
+
+<pre><code>$ grep -ir &quot;private_network&quot; ~/Vagrant/Centos65/Vagrantfile
+/$HOME/Vagrant/Centos65/Vagrantfile:  # config.vm.network &quot;private_network&quot;, ip: &quot;192.168.33.10&quot;
+$ vagrant reload
+</code></pre>
+
+<h3 id="sshの設定を保存し-ホスト名でログインできるようにする:691a8f9bf65a866d03438cfc2d34fceb">SSHの設定を保存し、ホスト名でログインできるようにする</h3>
+
+<pre><code>$ cd ~/Vagrant/Centos65
+$ vagrant ssh-config &gt;&gt; ~/.ssh/config
+ssh default &lt;- 追加した状態だとhost名が'default'なので、後で変える
+</code></pre>
+
+<h3 id="それ以外のコマンド:691a8f9bf65a866d03438cfc2d34fceb">それ以外のコマンド</h3>
+
+<p>仮想マシンの削除</p>
+
+<pre><code>$ vagrant box remove chef/centos-6.5
+</code></pre>
+
+<p>ステータスの確認</p>
+
+<pre><code>$ vagrant status
+</code></pre>
+
+<h2 id="参考サイト:691a8f9bf65a866d03438cfc2d34fceb">参考サイト</h2>
+
+<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
+
+<ul>
+<li><a href="http://qiita.com/inouet/items/b36638adc2b5772db457">Vagrant セットアップ (Mac)</a></li>
+<li><a href="http://shindolog.hatenablog.com/entry/2013/04/15/235731">Vagrant のコマンドをメモしておく</a></li>
+</ul>
+
+<h4 id="関連する記事:691a8f9bf65a866d03438cfc2d34fceb">関連する記事</h4>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/07/21/start-aws/">aws はじめました。</a></li>
+<li><a href="http://blog.10rane.com/2014/07/21/install-vagrant-and-virtualbox/">VagrantとVirtualBoxのインストール</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

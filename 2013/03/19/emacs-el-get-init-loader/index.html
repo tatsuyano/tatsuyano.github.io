@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>el-get.elでinit-loader.elをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>El-Get.Elでinit-Loader.Elをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Mar 19, 2013
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h4 id="インストールしたいパッケージが-el-get-のパッケージリストにない場合:13a2c021518d9b0bbded7970921ba69f">インストールしたいパッケージが、el-get のパッケージリストにない場合</h4>
+
+<p>自分でレシピを作成(設定)し、パッケージリストに追加します。リストに追加する方法は２つあります。</p>
+
+<ul>
+<li>レシピ(rcpファイル)を作成し .emacs.d/elisp/el-get/el-get/recipes/ 以下にファイルを置く方法</li>
+<li>init.el などに直接設定を記述する方法</li>
+</ul>
+
+<p>どちらも設定する内容は一緒なので、今回は直接設定することにします。設定する内容は主に以下のようになります。</p>
+
+<pre><code>(:name {パッケージ名}
+       :type {パッケージ配布方法: elpa, emacswiki, git, svn, http, ...}
+       :url {パッケージURL}
+       :after {後処理} ...)
+</code></pre>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/koshigoeb/20110503/1304425417">el-getありきのinit.elに書き換えてみた</a></li>
+</ul>
+
+<h4 id="最新のinit-loader-el:13a2c021518d9b0bbded7970921ba69f">最新のinit-loader.el</h4>
+
+<p>init-loader.elの最新ファイルは 現在<a href="https://gist.github.com/zqwell/1021706">gist</a> にあるので、<br />
+まずは <a href="http://blog.10rane.com/tech/2013/03/19/gist-raw-url/">rawファイル</a>のURLを確認します。</p>
+
+<p><a href="https://raw.github.com/gist/1021706/init-loader.el">https://raw.github.com/gist/1021706/init-loader.el</a></p>
+
+<h4 id="レシピの追加:13a2c021518d9b0bbded7970921ba69f">レシピの追加</h4>
+
+<p>init.el</p>
+
+<pre><code class="language-scheme">(setq el-get-dir &quot;~/.emacs.d/elisp/el-get/&quot;)
+
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+    (url-retrieve-synchronously
+      &quot;https://raw.github.com/dimitri/el-get/master/el-get-install.el&quot;)
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(setq el-get-sources
+      '(
+      (:name init-loader
+      :type http
+      :url &quot;https://raw.github.com/gist/1021706/init-loader.el&quot;
+      :description &quot;[My Recipes] Split management init.el.&quot;)
+      ))
+(el-get 'sync)
+</code></pre>
+
+<h4 id="インストール:13a2c021518d9b0bbded7970921ba69f">インストール</h4>
+
+<p>レシピが正しい場合、 M-x el-get-list-packages で init-loader が追加されているので、インストールできます。</p>
+
+<h4 id="init-elの分割:13a2c021518d9b0bbded7970921ba69f">init.elの分割</h4>
+
+<p>今まで、init.elにすべて記述していた内容をパッケージごとに分割します。</p>
+
+<p>conf<br />
+├── 00-basic.el<br />
+├── 01-truncate-lines.el<br />
+├── 10-el-get.el<br />
+├── 11-auto-install.el<br />
+└── 12-auto-complete.el</p>
+
+<p>init.el</p>
+
+<pre><code class="language-scheme">(setq load-path
+  (append
+  (list
+  (expand-file-name &quot;~/.emacs.d/&quot;)
+  (expand-file-name &quot;~/.emacs.d/elisp/&quot;)
+  (expand-file-name &quot;~/.emacs.d/elisp/el-get/init-loader/&quot;)
+  (expand-file-name &quot;~/.emacs.d/elisp/el-get/el-get/&quot;)
+  (expand-file-name &quot;~/.emacs.d/elisp/auto-install/&quot;)
+  )
+  load-path))
+
+(require 'init-loader)
+(init-loader-load &quot;~/.emacs.d/conf&quot;)
+</code></pre>
+
+<p>10-el-get.el</p>
+
+<pre><code class="language-scheme">(setq el-get-dir &quot;~/.emacs.d/elisp/el-get/&quot;)
+
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+    (url-retrieve-synchronously
+    &quot;https://raw.github.com/dimitri/el-get/master/el-get-install.el&quot;)
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(setq el-get-sources
+      '(
+      (:name init-loader
+      :type http
+      :url &quot;https://raw.github.com/gist/1021706/init-loader.el&quot;
+      :description &quot;[My Recipes] Split management init.el.&quot;)
+      ))
+
+(el-get 'sync)
+</code></pre>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

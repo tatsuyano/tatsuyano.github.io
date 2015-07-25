@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>MAMP環境でのCakePHPのmysql.sockの指定方法 -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>MAMP環境でのCakePHPのmysql.Sockの指定方法</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Feb 4, 2013
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/php" >php</a> <a href="http://tatsuyano.github.io/tags/mysql" >mysql</a> <a href="http://tatsuyano.github.io/tags/mac" >mac</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="worning:3f05be670dddf031e8b273ab46ea1cc7">worning</h2>
+
+<p>MacにMAMPをインストールし、CakePHPの「bakeコンソール」でModelクラスを作成したさいに、mysql.sockの指定箇所が違うよと警告された</p>
+
+<pre><code>Warning Error: PDO::__construct(): [2002] No such file or directory (trying to connect via unix:///var/mysql/mysql.sock) in [/Applications/MAMP/htdocs/bake/lib/Cake/Model/Datasource/Database/Mysql.php, line 149]
+
+Error: Database connection &quot;SQLSTATE[HY000] [2002] No such file or directory&quot; is missing, or could not be created.
+#0 /Applications/MAMP/htdocs/bake/lib/Cake/Model/Datasource/DboSource.php(260): Mysql-&gt;connect()
+</code></pre>
+
+<p>MAMPを使っているので、mysql.sockは「/Applications/MAMP/tmp/mysql/mysql.sock」作成されている。<br />
+たぶん解決方法としては３つあって、<br />
+1.sockファイルをworiningに書いてある「/var/mysql/mysql.sock」に生成するようMysql側の設定をいじる。<br />
+2.「/var/mysql/mysql.sock」に「/Applications/MAMP/tmp/mysql/mysql.sock」のリンクを貼ってしまう。<br />
+3.たぶん「app/Config/database.php」に現在生成されているmysql.sockの場所を指定する。</p>
+
+<p>どう考えても「３」が正しいやり方だと思うけど、なかなかそれっぽい情報が引っかからなかったがやっとあった。</p>
+
+<p><a href="http://stackoverflow.com/questions/1688705/cakephp-console-bake-on-mac-os-with-mamp-database-connection-error">Cakephp console (bake) on Mac OS with Mamp : database connection error</a></p>
+
+<pre><code class="language-php">
+public $default = array(
+    'datasource' => 'Database/Mysql',
+    'persistent' => false,
+    'host' => 'localhost',
+    'login' => 'USERNAME',
+    'password' => 'PASSWORD',
+    'database' => 'DATABASE',
+    'encoding' => 'utf8',
+    'unix_socket' => '/Applications/MAMP/tmp/mysql/mysql.sock' # <- this
+    );
+</code></pre>
+
+<p>2.x系から、socketの指定がデフォルトと違う場合に上記のように設定する模様。</p>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

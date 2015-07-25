@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>RailsでPostgreSQLを使う -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>RailsでPostgreSQLを使う</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Mar 9, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/heroku" >heroku</a> <a href="http://tatsuyano.github.io/tags/rails" >rails</a> <a href="http://tatsuyano.github.io/tags/postgresql" >postgresql</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>アプリをHerokuにdeployしたらSQLエラーが出てしまったので、
+ローカルでの開発もPostgreSQLを使ってみようと思います。</p>
+
+<h2 id="postgresqlのインストール:75b64ddf54d76b23d517b111450a597c">PostgreSQLのインストール</h2>
+
+<p>ちなみにインストール先のOSはamazon-linuxです。
+<pre><code class='language-bash'>$ sudo yum -y install postgresql93
+$ sudo yum -y install postgresql93-devel
+$ sudo yum -y install postgresql93-server</p>
+
+<p>$ psql &ndash;version
+psql (PostgreSQL) 9.3.6</p>
+
+<h1 id="データベースの初期化:75b64ddf54d76b23d517b111450a597c">データベースの初期化</h1>
+
+<p>$ sudo /etc/init.d/postgresql93 initdb</p>
+
+<h1 id="データベースの起動:75b64ddf54d76b23d517b111450a597c">データベースの起動</h1>
+
+<p>$ sudo /etc/init.d/postgresql93 start</p>
+
+<h1 id="サーバー起動時にpostgresの起動設定:75b64ddf54d76b23d517b111450a597c">サーバー起動時にpostgresの起動設定</h1>
+
+<p>$ sudo chkconfig postgresql93 on
+</code></pre>
+<br></p>
+
+<h3 id="postgresqlアカウントの設定:75b64ddf54d76b23d517b111450a597c">PostgreSQLアカウントの設定</h3>
+
+<p>まずは PostgreSQL にスーパーユーザ(postgres)で接続し、パスワードを設定します。
+<pre><code class='language-bash'>$ sudo -u postgres psql
+postgres=# alter role postgres with password &lsquo;hogehoge&rsquo;;  # alter role [user_name] with password &lsquo;[password]&lsquo;;
+</code></pre>
+<br></p>
+
+<h3 id="データベースの作成:75b64ddf54d76b23d517b111450a597c">データベースの作成</h3>
+
+<p>わかりやすいようにデータベース名とRailsのアプリ名(myapp)を同じにします。
+ついでにテスト(RSpec)用のデータベースも作成しておきます。
+<pre><code class='language-ruby'>postgres=# create database myapp owner postgres; # create database [database_name] owner [user_name];
+postgres=# create database myapp_test owner postgres;
+</code></pre>
+<br></p>
+
+<h3 id="アクセス権限の設定:75b64ddf54d76b23d517b111450a597c">アクセス権限の設定</h3>
+
+<p>Rails から PostgreSQL に接続するために、<code>pg_hba.conf</code>の設定を変更します。</p>
+
+<p>/var/lib/pgsql93/data/pg_hba.conf
+<pre><code class='language-bash'># TYPE  DATABASE  USER  ADDRESS   METHOD
+#local   all       all             peer  &lt;= コメントアウト
+local   all       all             md5   &lt;= コメントイン
+</code></pre>
+変更後は、PostreSQL と Nginx を再起動
+<pre><code class='language-bash'>$ sudo /etc/init.d/postgresql93 restart
+$ sudo /etc/init.d/nginx restart
+</code></pre>
+<br></p>
+
+<h2 id="rails側の設定:75b64ddf54d76b23d517b111450a597c">Rails側の設定</h2>
+
+<p>アプリを作成する前に、PostgreSQL を初めて使う場合は、先に<code>pg gem</code>をインストールしておきます。
+<pre><code class='language-bash'>$ gem install pg
+</code></pre>
+<br></p>
+
+<h3 id="アプリの作成:75b64ddf54d76b23d517b111450a597c">アプリの作成</h3>
+
+<p><code>-d</code>パラメータでDBでPostgreSQLに指定する</p>
+
+<p><pre><code class='language-bash'>$ rails new myapp -T -d postgresql
+</code></pre>
+<br></p>
+
+<h3 id="接続先情報の設定:75b64ddf54d76b23d517b111450a597c">接続先情報の設定</h3>
+
+<p>先ほど作成したデータベースとアカウントの情報を設定します。</p>
+
+<p>config/database.yml
+<pre><code class='language-ruby'> default: &amp;default
+   adapter: postgresql
+   encoding: unicode
+   pool: 5</p>
+
+<p>development:
+   &lt;&lt;: *default
+   database: myapp
+   username: postgres
+   password: hogehoge</p>
+
+<p>test:
+   &lt;&lt;: *default
+   database: myapp_test
+   username: postgres
+   password: hogehoge
+</code></pre>
+<br></p>
+
+<p>###(おまけ) PostgeSQLのコマンド</p>
+
+<ul>
+<li>データベース一覧を取得する &hellip; \l</li>
+<li>データベースを選択する     &hellip; \c [データベース名]</li>
+<li>テーブル一覧を取得する     &hellip; \z</li>
+<li>テーブルスキーマを取得する &hellip; \d [テーブル名]</li>
+<li>ユーザ(Role)の一覧         &hellip; \du</li>
+<li>パスワードの変更           &hellip; alter role [ロール名] with password &lsquo;[新しいパスワード]&lsquo;;</li>
+<li>データベースの作成         &hellip; create database [データベース名] owner [ロール名];</li>
+<li>データベースの削除         &hellip; drop database [データベース名];</li>
+</ul>
+
+<h3 id="参考サイト:75b64ddf54d76b23d517b111450a597c">参考サイト</h3>
+
+<ul>
+<li><a href="http://www.workabroad.jp/posts/1079">RubyonRailsでsqliteでなくてPostgresqlを使う時</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>jqをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Jqをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Thu, Sep 25, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/linux" >linux</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p><a href="http://shibayu36.hatenablog.com/entry/2014/09/22/211719">こちらのサイト</a>を参考に、<code>jq</code>をインストールしてみました。<br />
+思っていた以上に必要なライブラリがあって、ちょっと時間がかかりました。</p>
+
+<h4 id="libtoolとflexのインストール:e1aa39b645b7967617fbe829bb703a8a">libtoolとflexのインストール</h4>
+
+<pre><code class="language-bash">$ sudo yum -y install libtool flex
+</code></pre>
+
+<h4 id="bisonのインストール:e1aa39b645b7967617fbe829bb703a8a">bisonのインストール</h4>
+
+<p>バージョン3.0以上が必要です。<br />
+<code>configure: error: You need bison version 3.0 or greater.</code><br />
+初めは<code>yum</code>でインストールしましたが、バージョンが2.4.1だったので、手動で<code>make</code>しました。</p>
+
+<pre><code class="language-bash">$ sudo bash
+# cd /usr/local/src
+# wget http://ftp.gnu.org/gnu/bison/bison-3.0.2.tar.gz
+# tar xvzf bison-3.0.2.tar.gz
+# cd bison-3.0.2
+# ./configure
+# make
+# make install
+# ln -s /usr/local/bin/bison /usr/bin/bison
+</code></pre>
+
+<h4 id="bisonにyaccコマンドをaliasする:e1aa39b645b7967617fbe829bb703a8a">bisonにyaccコマンドをaliasする</h4>
+
+<pre><code class="language-bash">$ alias yacc='bison'
+/usr/bin/bison
+</code></pre>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/16420756/make-file-yacc-command-not-found-and-y-tab-c-error-127-after-installing-biso">yacc command not found and y.tab.c error 127 after installing bison</a></li>
+</ul>
+
+<h4 id="鬼車のインストール:e1aa39b645b7967617fbe829bb703a8a">鬼車のインストール</h4>
+
+<p><code>oniguruma-5.9.5</code>のインストール。<code>ruby</code>に標準に入っているものではなく、単体版が必要な模様。</p>
+
+<pre><code class="language-bash">$ sudo bash
+# cd /tmp/
+# wget http://www.geocities.jp/kosako3/oniguruma/archive/onig-5.9.5.tar.gz
+# tar xvzf onig-5.9.5.tar.gz
+# cd onig-5.9.5
+# ./configure --prefix=/usr
+# make
+# make install
+# ldconfig
+</code></pre>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/IT7C/20100828/1283007564">CentOS 5.5に正規表現ライブラリ 鬼車 4.7.1 をインストールしてみる。</a></li>
+</ul>
+
+<h3 id="jqのインストール:e1aa39b645b7967617fbe829bb703a8a">jqのインストール</h3>
+
+<p>やっと<code>jq</code>のインストールです。ソースが<code>git</code>にあるので今回も<code>ghq</code>で取得します。</p>
+
+<pre><code class="language-bash">$ ghq get https://github.com/stedolan/jq.git
+$ sudo bash
+# autoreconf -i
+# ./configure
+# make
+# make install
+</code></pre>
+
+<p>環境によっては、他にも必要なライブラリがあると思いますので、<a href="http://stedolan.github.io/jq/download/">本家サイト</a>を確認してください。</p>
+
+<p><em>To build it from a git clone, you’ll need to install a few packages first:</em><br />
+<em>Flex</em><br />
+<em>Bison</em><br />
+<em>GCC</em><br />
+<em>Make</em><br />
+<em>Autotools</em></p>
+
+<p>インストールが正常に終わったら、下記のコマンドで違いを確認してみてください。<br />
+お疲れ様でした。</p>
+
+<pre><code class="language-bash">$ curl 'https://api.github.com/repos/stedolan/jq/commits?per_page=5'
+</code></pre>
+
+<p>pretty化</p>
+
+<pre><code class="language-bash">$ curl 'https://api.github.com/repos/stedolan/jq/commits?per_page=5' | jq '.'
+</code></pre>
+
+<h3 id="参考サイト:e1aa39b645b7967617fbe829bb703a8a">参考サイト</h3>
+
+<ul>
+<li><a href="http://shibayu36.hatenablog.com/entry/2014/09/22/211719">curlとjqで簡単にAPIの調査をする</a></li>
+<li><a href="http://stackoverflow.com/questions/16420756/make-file-yacc-command-not-found-and-y-tab-c-error-127-after-installing-biso">yacc command not found and y.tab.c error 127 after installing bison</a></li>
+<li><a href="http://d.hatena.ne.jp/IT7C/20100828/1283007564">CentOS 5.5に正規表現ライブラリ 鬼車 4.7.1 をインストールしてみる。</a></li>
+<li><a href="http://stedolan.github.io/jq/download/">jq:Download jq</a></li>
+<li><a href="http://stedolan.github.io/jq/tutorial/">jq:Tutorial</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

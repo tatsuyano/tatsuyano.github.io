@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>iterm2 &#43; tmux に乗り換えた -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Iterm2 &#43; Tmux に乗り換えた</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Sun, Jan 27, 2013
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/mac" >mac</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>今まで頑なにTotalTerminal + KeyRemap4MacBookを使って来た私ですが、ついに乗り換えることにしました。<br />
+理由はKeyRemap4MacBookをバージョンアップしたら、一部のkey bindが使えなくなってしまったから。まあいい機会なので乗り換えたいと思います。</p>
+
+<h2 id="iterm2のバージョン:591bddd21d8821b8395d80ad9e332964">iterm2のバージョン</h2>
+
+<p><a href="http://code.google.com/p/iterm2/downloads/list">iterm2の公式ページ</a>からダウンロード</p>
+
+<p><img src="http://blog.10rane.com/tech/wp-content/uploads/2013/02/01_iterm2.png" alt="" /></p>
+
+<p>ダウンロードしたファイル解凍してみるとなぜか「tmux-for-iTerm2-20130122.tar.gz」というファイルも入っている。</p>
+
+<p><img src="http://blog.10rane.com/tech/wp-content/uploads/2013/02/02_iterm2.png" alt="" /></p>
+
+<p><a href="http://code.google.com/p/iterm2/wiki/TmuxIntegration">iterm2の公式wiki</a>で調べてみると、tmuxを使う場合、この「iTerm2用のtmux」じゃないと細かい挙動が期待どおりに動かないっぽい（適当）。<br />
+なので、このタイミングでScreenからtmuxにも乗り換えてみることにした。</p>
+
+<h2 id="brewでlibevnetのインストール:591bddd21d8821b8395d80ad9e332964">brewでlibevnetのインストール</h2>
+
+<p>まず、こちらのサイト「<a href="http://d.hatena.ne.jp/kmn23/20120215/1329323332">Lionにiterm2とtmux と libeventをインストールする</a>」を参考にlibenventをインストール。</p>
+
+<pre><code>brew update
+brew install libevent
+</code></pre>
+
+<h2 id="tmuxのインストール:591bddd21d8821b8395d80ad9e332964">tmuxのインストール</h2>
+
+<p>さきほどダウンロードしたファイルを解凍し、make &amp; install</p>
+
+<pre><code>tar xvzf tmux-for-iTerm2-20130122.tar.gz
+cd tmux
+./configure
+make
+make clean
+sudo make install
+</code></pre>
+
+<p>念のためtmuxのインストール先を確認</p>
+
+<pre><code>which tmux
+/usr/local/bin/tmux
+</code></pre>
+
+<h2 id="iterm2の初期設定:591bddd21d8821b8395d80ad9e332964">iterm2の初期設定</h2>
+
+<p>今まで、KeyRemap4MacBookでcmdとoptionを入れ替えていて、操作上はcmdにmetaキーが割り振ってある感じにして使っていたんですが、このタイミングでoptionにmetaキーを割り当てることにしました。<br />
+ただ、それ以外の操作はできるかぎりTotalTerminalと同じようにしたいので、その設定をしていきます。</p>
+
+<h3 id="バックグラウンドを白にし-透過させる:591bddd21d8821b8395d80ad9e332964">バックグラウンドを白にし、透過させる</h3>
+
+<p>Preferences &gt; Profiles &gt; Colors &gt; Background</p>
+
+<p><img src="http://blog.10rane.com/tech/wp-content/uploads/2013/02/03_iterm2.png" alt="" /></p>
+
+<p>Preferences &gt; Profiles &gt; Window &gt; Transparency</p>
+
+<p><img src="http://blog.10rane.com/tech/wp-content/uploads/2013/02/04_iterm2.png" alt="" /></p>
+
+<h3 id="画面の上部からターミナルをショートカットで表示できるようにする:591bddd21d8821b8395d80ad9e332964">画面の上部からターミナルをショートカットで表示できるようにする</h3>
+
+<p>Preferences &gt; Profiles &gt; Window &gt; Setting for New Window &gt; Style &gt; Top of Screen<br />
+Preferences &gt; Profiles &gt; Window &gt; Setting for New Window &gt; Space &gt; All Spaces<br />
+Preferences &gt; Profiles &gt; Window &gt; Setting for New Window &gt; Rows  &gt; 70</p>
+
+<p><img src="http://blog.10rane.com/tech/wp-content/uploads/2013/02/04_iterm2.png" alt="" /></p>
+
+<p>Preferences &gt; Keys &gt; Hot key &gt; Show/hide iTerm2 with a system-wide hotkey</p>
+
+<p><img src="http://blog.10rane.com/tech/wp-content/uploads/2013/02/05_iterm2.png" alt="" /></p>
+
+<h3 id="metaキーをoptionに割り当てる:591bddd21d8821b8395d80ad9e332964">metaキーをoptionに割り当てる</h3>
+
+<p>Preferences &gt; Profiles &gt; Keys &gt; Left option  &gt; +Esc<br />
+Preferences &gt; Profiles &gt; Keys &gt; Right option &gt; +Esc</p>
+
+<p><img src="http://blog.10rane.com/tech/wp-content/uploads/2013/02/06_iterm2.png" alt="" /></p>
+
+<h3 id="cmd-w-ですぐにターミナルを終了しないようにする:591bddd21d8821b8395d80ad9e332964">cmd + w ですぐにターミナルを終了しないようにする</h3>
+
+<p>Preferences &gt; Profiles &gt; Session &gt; Always prompt before closing</p>
+
+<p><img src="http://blog.10rane.com/tech/wp-content/uploads/2013/02/07_iterm2.png" alt="" /></p>
+
+<h2 id="参考サイト:591bddd21d8821b8395d80ad9e332964">参考サイト</h2>
+
+<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/kmn23/20120215/1329323332">Lionにiterm2とtmux と libeventをインストールする</a></li>
+<li><a href="http://weboo-returns.com/blog/using-iterm2-as-visor/">iTerm2 を Visor のように使う方法</a></li>
+<li><a href="http://blog.bungu-do.jp/archives/3434">MacのiTerm2でEmacsを使用するときのMetaキー設定</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

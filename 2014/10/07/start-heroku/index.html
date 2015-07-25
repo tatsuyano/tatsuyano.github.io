@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>herokuことはじめ -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Herokuことはじめ</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Oct 7, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/heroku" >heroku</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>まずは<a href="https://www.heroku.com/">heroku</a>アカウントを作成します。<br />
+2段階認証にも対応しているので、設定したほうがいいと思います。</p>
+
+<h4 id="heroku-toolbeltのインストール:0f14ad6159787e3a37913d50c16c6864">heroku-toolbeltのインストール</h4>
+
+<p>CentOS(AmazonLinux)に、<code>herokuコマンド</code>をインストールします。</p>
+
+<pre><code class="language-bash">$ wget -qO- https://toolbelt.heroku.com/install.sh | sh
+</code></pre>
+
+<p>$HOME/.zshrc</p>
+
+<pre><code class="language-bash">if [ -d /usr/local/heroku ]; then
+  export PATH=/usr/local/heroku/bin:$PATH
+fi
+</code></pre>
+
+<pre><code class="language-bash">$ source $HOME/.zshrc
+
+$ which heroku
+/usr/local/heroku/bin/heroku
+</code></pre>
+
+<ul>
+<li><a href="http://qiita.com/tsumekoara/items/ea5e1b144620ffc4acca">Vagrant 上の CentOS 6.5 から Heroku を使うには</a></li>
+</ul>
+
+<h4 id="herokuに公開鍵を登録:0f14ad6159787e3a37913d50c16c6864">herokuに公開鍵を登録</h4>
+
+<p>秘密鍵を作成</p>
+
+<pre><code class="language-bash">$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/Home/hoge/.ssh/id_rsa): /Home/hoge/.ssh/heroku_rsa
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /Home/hoge/.ssh/heroku_rsa.
+Your public key has been saved in /Home/hoge/.ssh/heroku_rsa.pub.
+</code></pre>
+
+<p>$HOME/.ssh/config</p>
+
+<pre><code class="language-bash">Host heroku.com
+    HostName heroku.com
+    IdentityFile ~/.ssh/heroku_rsa
+    IdentitiesOnly yes
+</code></pre>
+
+<p>herokuにログインし、公開鍵をアップロード</p>
+
+<pre><code class="language-bash">$ heroku login
+
+$ heroku keys:add
+Found existing public key: /Home/hoge/.ssh/heroku_rsa.pub
+Uploading SSH public key /Home/hoge/.ssh/heroku_rsa.pub... done
+</code></pre>
+
+<ul>
+<li><a href="https://devcenter.heroku.com/articles/keys">Managing Your SSH Keys</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

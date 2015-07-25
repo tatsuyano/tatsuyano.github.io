@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>GhostにGoogle Analyticsに設置しアクセス元IPを取得する -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>GhostにGoogle Analyticsに設置しアクセス元IPを取得する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Sun, Aug 10, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/blog" >blog</a> <a href="http://tatsuyano.github.io/tags/nginx" >nginx</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>アクセス元IPを取得するには、Google Analyticsのデフォルト設定ではできません。
+IPを取得、集計するには</p>
+
+<ol>
+<li>Google Analyticsにdimensionを設定し、アクセス元IPを集計できるようにする</li>
+<li>PHPを使って、blogの参照時のIPを取得する</li>
+<li>取得したIPをdimensionに渡す</li>
+<li>集計結果をGoogle Analyticsで参照できるよう、カスタムレポートを作成する</li>
+</ol>
+
+<p>という手順で対応します。</p>
+
+<h4 id="この記事で紹介するシステム構成:a7cce1dfba537a1b6e65b0790dc867f9">この記事で紹介するシステム構成</h4>
+
+<ul>
+<li>CentOS6</li>
+<li>Ghost</li>
+<li>Nginx</li>
+</ul>
+
+<p>何はともあれ、まずは<a href="http://www.google.com/intl/ja_jp/analytics/">GoogleAnalytics</a>を導入してください。</p>
+
+<ul>
+<li><a href="http://viral-community.com/wordpress/google-analytics-setting-864/">初心者必見！【Google Analytics(アナリティクス)】の導入と使い方</a></li>
+<li><a href="http://www.ghostforbeginners.com/how-to-add-google-analytics-to-ghost/">How to Add Google Analytics to Ghost</a></li>
+</ul>
+
+<h4 id="google-analyticsにdimensionを設定し-アクセス元ipを集計できるようにする:a7cce1dfba537a1b6e65b0790dc867f9">Google Analyticsにdimensionを設定し、アクセス元IPを集計できるようにする</h4>
+
+<p>Analyticsが提供していない値(今回でいうところのアクセス元IP)を集計するには、dimension(変数)を設定し、その変数に値を代入することで、集計することができるようになります。</p>
+
+<p><code>アナリティクス設定 &gt; カスタム定義 &gt; カスタム ディメンション</code>
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/get-access-ip-installed-google-analytics-to-ghost01.png" alt="" /></p>
+
+<p><code>新しいカスタム ディメンション &gt; カスタム ディメンションを編集 &gt; 保存</code>
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/get-access-ip-installed-google-analytics-to-ghost02.png" alt="" /></p>
+
+<p>保存すると<code>dimension1</code>という変数がAnalyticsに設定されます。</p>
+
+<h4 id="phpを使って-blogが参照された時のipを取得する:a7cce1dfba537a1b6e65b0790dc867f9">PHPを使って、blogが参照された時のIPを取得する</h4>
+
+<p>このblogにはGhostを動かすための最小の設定しかしていなかったので、まずはNginx上でPHPが動く環境を整えます。</p>
+
+<pre><code># yum -y install php php-fpm
+</code></pre>
+
+<p>次に、事前に用意したdomainをバーチャルホスト(VH)に割り振り、そのVHに対してPHPが動くように設定します。</p>
+
+<p>/etc/nginx/conf.d/php.conf</p>
+
+<p>````
+server {
+    listen       80;
+    server_name  ga.10rane.com;</p>
+
+<pre><code>location / {
+      root   /var/www/html;
+      index  index.html index.htm index.php;
+}
+
+location ~ \.php$ {
+      root           html;
+      fastcgi_pass   127.0.0.1:9000;
+      fastcgi_index  index.php;
+      fastcgi_param  SCRIPT_FILENAME  /var/www/html$fastcgi_script_name;
+      include        fastcgi_params;
+}
+</code></pre>
+
+<p>}</p>
+
+<pre><code>
+php-fpmの起動のおよびNginxの再起動
+
+    # /etc/init.d/php-fpm start
+    # chkconfig php-fpm on
+    # /etc/init.d/nginx restart
+
+`/var/www/html/`配下に、アクセス元IPを取得するスクリプトを配置します。  
+このスクリプト自体はPHPですが、ブラウザ上からはJsとして認識させたいので、
+`header`には`header(&quot;Content-type: application/x-javascript&quot;);`を設定します。
+
+/var/www/html/remote_addr.php
+
+</code></pre>
+
+<p>&lt;?php
+header(&ldquo;Content-type: application/x-javascript&rdquo;);
+echo &ldquo;var remote_addr = &lsquo;&rdquo; . $_SERVER[&lsquo;REMOTE_ADDR&rsquo;] . &ldquo;&lsquo;;&rdquo;;
+?&gt;
+```</p>
+
+<p><code>http://ga.10rane.com/remote_addr.php</code>にアクセスし、自分(アクセス元)のIPが参照されれば完了です。</p>
+
+<ul>
+<li><a href="http://qiita.com/utano320/items/36b6eac2bbd5bb5657f6">CentOSにてnginxでPHPを動かす</a></li>
+<li><a href="http://ysklog.net/javascript/1870.html">javascriptでPHPファイルを実行してそれを出力する方法</a></li>
+<li><a href="http://lfll.blog73.fc2.com/blog-entry-258.html">Google AnalyticsでIPアドレスを表示できるタグ「analyticsIP」を公開</a></li>
+</ul>
+
+<h4 id="取得したipをdimensionに渡す:a7cce1dfba537a1b6e65b0790dc867f9">取得したIPをdimensionに渡す</h4>
+
+<p>先ほど作成したソースで、変数<code>remote_addr</code>にIPを代入するようにしたので、
+今度は<code>remote_addr</code>をAnalyticsの<code>dimension1</code>に代入します。</p>
+
+<p>変更前のタグ</p>
+
+<pre><code>&lt;script&gt;
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-****', 'auto');
+  ga('send', 'pageview');
+&lt;/script&gt;
+</code></pre>
+
+<p>変更後のタグ。Analyticsのタグより前に先ほど用意したスクリプト(PHPファイル)をJsとして読み込んでいます。</p>
+
+<pre><code>&lt;script type=&quot;text/javascript&quot; src=&quot;//ga.10rane.com/remote_addr.php&quot;&gt;&lt;/script&gt;
+&lt;noscript&gt;&lt;img src=&quot;//ga.10rane.com/remote_addr.php&quot;&gt;&lt;/noscript&gt;
+&lt;script&gt;
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-****', 'auto');
+  ga('set', 'dimension1', remote_addr);
+  ga('send', 'pageview');
+&lt;/script&gt;
+</code></pre>
+
+<p>ghostの再起動。このブログは<code>forever</code>で管理しているので、以下のように再起動します。</p>
+
+<pre><code>$ cd src/ghost/
+$ forever stop index.js
+$ NODE_ENV=production forever start index.js
+</code></pre>
+
+<h4 id="集計結果をgoogle-analyticsで参照できるよう-カスタムレポートを作成する:a7cce1dfba537a1b6e65b0790dc867f9">集計結果をGoogle Analyticsで参照できるよう、カスタムレポートを作成する</h4>
+
+<p><code>カスタム &gt; 新しいカスタム レポート &gt;</code>
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/get-access-ip-installed-google-analytics-to-ghost03.png" alt="" /></p>
+
+<p><code>ディメンションを追加 &gt; カスタムディメンション &gt; remote_addr(自分で設定した名前)</code>
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/get-access-ip-installed-google-analytics-to-ghost04.png" alt="" /></p>
+
+<p><code>カスタム &gt; 設定したカスタムレポート</code>
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/get-access-ip-installed-google-analytics-to-ghost05.png" alt="" /></p>
+
+<p>集計結果は翌日反映されるので、明日以降にIPの集計が確認できれば成功です。</p>
+
+<p>お疲れ様でした。</p>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

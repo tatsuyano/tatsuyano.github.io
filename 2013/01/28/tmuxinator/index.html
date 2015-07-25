@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>tmuxinatorのインストール -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Tmuxinatorのインストール</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Jan 28, 2013
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/linux" >linux</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="rubygemsからtmuxinatorのインストール:e5099a13c3d99a0364a2c4d3a34bb28a">RubyGemsからtmuxinatorのインストール</h2>
+
+<p>念のため、RubyGemsをupdateしてからインストール</p>
+
+<pre><code>gem update
+gem install tmuxinator
+</code></pre>
+
+<p>tmuxinatorがインストールされているか確認</p>
+
+<pre><code>gem which tmuxinator
+usr/local/Cellar/ruby/1.9.3-p0/lib/ruby/gems/1.9.1/gems/tmuxinator-0.5.0/lib/tmuxinator.rb
+</code></pre>
+
+<h2 id="メッセージに従い-初期設定:e5099a13c3d99a0364a2c4d3a34bb28a">メッセージに従い、初期設定</h2>
+
+<pre><code>echo &quot;[[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] &amp;&amp; source $HOME/.tmuxinator/scripts/tmuxinator&quot; &gt;&gt; ~/.zshrc
+source ~/.zshrc
+</code></pre>
+
+<h2 id="shell-editorの確認:e5099a13c3d99a0364a2c4d3a34bb28a">$SHELL、$EDITORの確認</h2>
+
+<p>設定が必須なので確認</p>
+
+<pre><code>echo $EDITOR $SHELL
+emacs /bin/bash
+</code></pre>
+
+<h2 id="tmuxinatorを移動させる:e5099a13c3d99a0364a2c4d3a34bb28a">.tmuxinatorを移動させる</h2>
+
+<p>他のdotfile同様、Dropboxのディレクトリ配下に移動させ、リンクをはる。<br />
+ただし「.tmuxinator」をリネームして「tmuxinator」としてはいけない。<br />
+隠しファイルでないと、再度「.tmuxinator」というディレクトリが作成されてしまう。</p>
+
+<pre><code>mv .tmuxinator Dropbox/dotfile/
+ln -s Dropbox/dotfile/.tmuxinator .tmuxinator
+</code></pre>
+
+<h2 id="rubygemsの環境変数をbash-profileに設定:e5099a13c3d99a0364a2c4d3a34bb28a">RubyGemsの環境変数をbash_profileに設定</h2>
+
+<pre><code>cat .bash_profile
+export GEM_BIN=$(ruby -e 'require &quot;rubygems&quot;; puts Gem::bindir')
+export PATH=$GEM_BIN:$PATH
+
+source .bash_profile
+</code></pre>
+
+<p>環境変数の確認</p>
+
+<pre><code>printenv | grep ruby
+GEM_BIN=/usr/local/Cellar/ruby/1.9.3-p0/bin
+PATH=/usr/local/Cellar/ruby/1.9.3-p0/bin:....
+</code></pre>
+
+<h2 id="tmuxinatorのプロジェクトを作成:e5099a13c3d99a0364a2c4d3a34bb28a">tmuxinatorのプロジェクトを作成</h2>
+
+<pre><code>mux new php
+# ~/.tmuxinator/php.yml
+# you can make as many tabs as you wish...
+
+project_name: php
+project_root: ~/
+tabs:
+  - doc:
+        layout: main-vertical
+        panes:
+          - emacs Dropbox/doc/memo.md
+          - #empty, will just run plain bash
+          - sql: ./mysql -uroot -proot
+          - hoge: ssh hoge
+</code></pre>
+
+<p>作成したプロジェクトの実行</p>
+
+<pre><code>mux php
+</code></pre>
+
+<p>プロジェクトを変更、反映するには、一度tmuxのセッションを閉じる</p>
+
+<h2 id="参考にしたサイト:e5099a13c3d99a0364a2c4d3a34bb28a">参考にしたサイト</h2>
+
+<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/akishin999/20121204/1354621657">tmux + tmuxinator が便利</a></li>
+<li><a href="http://rh7.hateblo.jp/entry/20110220/1298209273">カッとなってUbuntu/DebianでRubygems実行コマンドのパスを通した</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

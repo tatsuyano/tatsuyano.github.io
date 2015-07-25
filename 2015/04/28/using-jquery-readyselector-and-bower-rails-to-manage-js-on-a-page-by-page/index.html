@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>jquery-readyselectorとbower-railsを使って、ページ単位でJsを管理する -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Jquery-Readyselectorとbower-Railsを使って、ページ単位でJsを管理する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Apr 28, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/rails" >rails</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>ページごとに読み込むJsを制限したいなあと思って、ググってみたところいろいろ出てくる。
+ただ、今回はできるかぎりシンプルにやりたかったので<code>jquery-readyselector</code>というJqueryプラグインを使うことにした。</p>
+
+<p>このプラグインはBowerで管理されている(Node)モジュールみたいなので、まずは<code>bower-rails</code>をインストールして、
+<code>bower-rails</code>経由で<code>jquery-readyselector</code>をインストールすることにした。</p>
+
+<p><em>bower-railsを使うには、事前にBowerをインストールしておく必要がある</em></p>
+
+<h2 id="bower-railsのインストール:81d2c341e61d33f963f82806634eede6">bower-railsのインストール</h2>
+
+<p>まずはGemfileの設定し、インストール。</p>
+
+<pre><code class="language-bash">$ cat Gemfile
+gem "bower-rails"
+
+$ bundle install
+</code></pre>
+<br>
+
+次に、Nodeモジュールを管理するための設定ファイル(Gemfileみたいなもの)の形式を決める。
+
+形式はjson形式の`bower.json`の場合か
+
+<pre><code class="language-bash">$ rails g bower_rails:initialize json
+      create  bower.json
+      create  config/initializers/bower_rails.rb
+</code></pre>
+
+<p>DSL形式の<code>Bowerfile</code>のどちらか選べる。今回はこちらの方法を選択。</p>
+
+<pre><code class="language-bash">$  rails g bower_rails:initialize
+      create  Bowerfile
+      create  config/initializers/bower_rails.rb
+</code></pre>
+<br>
+
+`bower-rails`の設定は`config/initializers/bower_rails.rb`で行う。
+今回は特に設定なし(デフォルトのまま)。
+
+<pre><code class="language-bash">BowerRails.configure do |bower_rails|
+   # Tell bower-rails what path should be considered as root. Defaults to Dir.pwd
+   # bower_rails.root_path = Dir.pwd
+
+   # Invokes rake bower:install before precompilation. Defaults to false
+   # bower_rails.install_before_precompile = true
+
+   # Invokes rake bower:resolve before precompilation. Defaults to false
+   # bower_rails.resolve_before_precompile = true
+
+   # Invokes rake bower:clean before precompilation. Defaults to false
+   # bower_rails.clean_before_precompile = true
+
+   # Invokes rake bower:install:deployment instead rake bower:install. Defaults to false
+   # bower_rails.use_bower_install_deployment = true
+end
+</code></pre>
+<br>
+## jquery-readyselectorのインストール
+
+まずはインストールするNodeモジュールを設定し、インストールの実行。
+
+<pre><code class="language-ruby">$ cat Bowerfile
+asset 'jquery-readyselector'
+
+$ bundle exec rake bower:install
+</code></pre>
+
+<p>すると<code>vendor/assets</code>配下に<code>bower_components</code>というディレクトリが生成され、
+その中にNodeモジュールがインストールされる。</p>
+
+<pre><code class="language-bash">$ ll vendor/assets/bower_components/
+query-readyselector/
+...
+</code></pre>
+
+<p><code>bower-rails</code>でインストールしたNodeモジュールは、<code>bower-rails</code>側で管理したかったので、gitignore した。</p>
+
+<p><pre><code class="language-ruby">$ cat .gitignore
+vendor/assets/bower_components/*
+</code></pre>
+<br></p>
+
+<p>インストールしたNodeモジュールのpathを設定する。</p>
+
+<p><pre><code class="language-ruby">$ cat config/application.rb
+config.assets.paths &lt;&lt; Rails.root.join(&lsquo;vendor&rsquo;, &lsquo;assets&rsquo;, &lsquo;bower_components&rsquo;)
+</code></pre>
+<br></p>
+
+<p>次に<code>jquery-readyselector</code>を<code>application.js</code>に読み込む。</p>
+
+<p><pre><code class="language-ruby">$ cat app/assets/javascripts/application.js
+//= require jquery-readyselector
+//= require_tree .
+</code></pre>
+<br></p>
+
+<p>最後にbodyタグに、アクセスされた時の<code>コントローラ名</code>と<code>アクション名</code>をclassに設定するようにする。</p>
+
+<p><pre><code class="language-ruby">$ emacs app/views/layouts/application.html.erb
+<body class="<%= controller_name -%> &lt;%= action_name -%&gt;&ldquo;&gt;
+</code></pre>
+<br></p>
+
+<h2 id="ページ別にjsが読み込まれているか確認:81d2c341e61d33f963f82806634eede6">ページ別にJsが読み込まれているか確認</h2>
+
+<p>まずは適当なページ(<a href="http://localhost:3000/books)を用意する。">http://localhost:3000/books)を用意する。</a></p>
+
+<p><pre><code class="language-bash">$ rails g scaffold Book title:string price:integer
+&hellip;
+app/assets/javascripts/books.coffee
+&hellip;</p>
+
+<p>$ rake db:migrate
+</code></pre>
+<br></p>
+
+<p>次に生成されたJs(coffee)に、ページ単位(action単位)にコードを書く。
+<code>http://localhost:3000/books</code>にアクセスした時のみ、<code>alert</code>がでれば成功。
+<pre><code class="language-bash">$ emacs app/assets/javascripts/books.coffee
+$(&lsquo;.books.index&rsquo;).ready -&gt;
+  alert(&lsquo;book#index&rsquo;)
+</code></pre>
+<br></p>
+
+<h3 id="参考サイト:81d2c341e61d33f963f82806634eede6">参考サイト</h3>
+
+<ul>
+<li><a href="http://blog.mah-lab.com/2014/04/14/bower-rails/">Railsで外部JavaScriptライブラリなどのAssetを管理するなら、bower-railsが便利</a></li>
+<li><a href="https://github.com/rharriso/bower-rails">bower-rails</a></li>
+<li><a href="http://blog.hello-world.jp.net/javascript/1673/">bodyにclassを付けて特定のページでのみjsが動作するようにする</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

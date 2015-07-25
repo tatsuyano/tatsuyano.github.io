@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Rails4をherokuにdeployする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Rails4をherokuにdeployする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Thu, Feb 19, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/heroku" >heroku</a> <a href="http://tatsuyano.github.io/tags/rails" >rails</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>備忘のため、Rails4をheroku上にdeployする方法をメモしておきます。</p>
+
+<p><em>herokuのアカウントの作成、及び鍵の設定は終っているものとします。</em></p>
+
+<pre><code class='language-ruby'>$ ruby  -v 2.2.0p0
+$ rails -v 4.2.0
+</code></pre>
+<br>
+
+## サンプルアプリの作成
+
+まずはherokuにdeployするアプリを生成
+
+<pre><code class='language-ruby'>$ rails new heroku-rails
+$ cd heroku-rails
+</code></pre>
+<br>
+
+herokuではsqlite3はサポートされていないので、productionからは外すようにする。今回productionで使うDBは、heroku標準のpostgressを選択。
+また、Rail4から`rails_12factor`が必須になったらしいので設定。
+
+Gemfile
+<pre><code class='language-ruby'>group :development do
+  gem 'sqlite3'
+end
+group :production do
+  gem 'pg'
+  gem 'rails_12factor'
+end
+</code></pre>
+<br>
+
+開発環境では、postgressを使っていないので、`--without production`をつけて
+productionでのみ必要なGemは開発環境には入れないようにする。
+
+<pre><code class='language-ruby'>$ bundle install --without production
+</code></pre>
+<br>
+
+開発環境でも`pg`を使う場合は、以下のようにpostgress本体と、develをインストールする。
+
+<pre><code class='language-ruby'>$ sudo yum install -y postgresql-devel
+$ sudo yum install -y postgresql
+$ gem install pg
+</code></pre>
+<br>
+
+ここまでで空のアプリができたので、いったん`git commit`。
+
+<pre><code class='language-ruby'>$ git init
+$ git add .
+$ git commit -m 'initial commit'
+</code></pre>
+<br>
+
+次にherokuにログインし、`heroku create`してheroku上にアプリを生成する。
+この時、アプリ名を指定しなければ、適当な名前で生成される(後から変更可)。
+*アプリ名はURLに含まれるため、heroku全体でユニークである必要がある*
+
+<pre><code class='language-ruby'>$ heroku login
+$ heroku create <アプリ名>
+$ git push heroku master  # この段階でheroku上にdeployされる。
+</code></pre>
+<br>
+
+ちなみに`git commit`する前に`heroku create`すると、herokuのremote-urlが設定されないので、
+その場合は、自分で設定する必要がある。
+
+<pre><code class='language-ruby'>$ git remote set-url heroku  https://git.heroku.com/<アプリ名>.git
+</code></pre>
+<br>
+
+アプリの情報は、`heroku app:info`で確認ができる。
+
+<pre><code class='language-ruby'>$ heroku apps:info
+=== fast-stream-xxxx
+Addons:        heroku-postgresql:hobby-dev
+Dynos:         1
+Git URL:       https://git.heroku.com/fast-stream-xxxx.git
+Owner Email:   xxxxxx@xxxx.com
+Region:        us
+Repo Size:     24k
+Slug Size:     27M
+Stack:         cedar-14
+Web URL:       https://fast-stream-xxxx.herokuapp.com/
+Workers:       0
+</code></pre>
+<br>
+
+しかし、作成したアプリのURLをたたくと、以下のようなエラーが出る。
+
+![](https://dl.dropboxusercontent.com/u/159938/blog_images/deploy-the-rails4-to-heroku_01.png)
+
+heroku上のアプリでは、いつものRailsのTOP画面は出てこない。
+
+ここまでの状態で、heroku上で動いているのを確認したい場合は、
+仮のTOPページを生成してgit commitし、再度`heroku push origin master`してdeployすると確認できる。
+
+<pre><code class='language-ruby'>$ cat >> public/index.html
+index.html
+</code></pre>
+<br>
+
+## herokuでDBを使う　
+
+`scaffold`で、DBにアクセスする機能を実装してみる。
+開発環境で、`rake db:migrate`した場合は、herokuでも`migrate`する必要がある。
+
+<pre><code class='language-ruby'>$ rails g scaffold Book title:string price:integer
+$ rake db:migrate
+$ git add .
+$ git commit -m 'rails g scaffold Book title:string price:integer'
+
+$ git push heroku master
+$ heroku run rake db:migrate　# <= This!
+</code></pre>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/deploy-the-rails4-to-heroku_02.png" alt="" /></p>
+
+<h2 id="twitterbootstrapのglyphiconを使う:69d872b5ac14e5d9ddb41de50a34f0aa">TwitterBootStrapのGlyphiconを使う</h2>
+
+<p>BootStrapのGlyphiconを使ったアプリをherokuにdeployしても、そのままでは使えない。
+使うためには、production環境(heroku)でも、assets.compileを有効にする必要がある。</p>
+
+<p>config/environments/production.rb
+<pre><code class='language-ruby'>#config.assets.compile = false
+ config.assets.compile = true
+</code></pre>
+<br></p>
+
+<h2 id="参考サイト:69d872b5ac14e5d9ddb41de50a34f0aa">参考サイト</h2>
+
+<ul>
+<li><a href="http://railsgirls.jp/heroku/">Heroku に Rails アプリをアップ</a></li>
+<li><a href="http://qiita.com/tstomoki/items/cd2391e028dc44dd6f40">Railsで簡単なアプリをscaffoldで作ってHerokuにデプロイするまで</a></li>
+<li><a href="http://blog.machacks.net/2014/01/21/heroku%E3%81%A7rails%E3%82%A2%E3%83%97%E3%83%AA%E3%82%92%E5%85%AC%E9%96%8B%E3%81%97%E3%82%88%E3%81%86%E3%81%A8%E3%81%97%E3%81%A6%E8%BA%93%E3%81%84%E3%81%9F%E6%89%80/">HerokuでRailsアプリを公開しようとして躓いた所</a></li>
+<li><a href="http://tatsuyano.github.io/2015/02/18/introduced-bootstrap3-to-rails4/">Rails4でBootstrap3を導入</a></li>
+<li><a href="http://stackoverflow.com/questions/20588786/glyphicon-works-locally-but-not-on-heroku">Glyphicon works locally but not on Heroku</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

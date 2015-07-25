@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Nodejs on blog.10rane.com</title>
+    <link>http://tatsuyano.github.io/tags/nodejs/</link>
+    <description>Recent content in Nodejs on blog.10rane.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Wed, 03 Jun 2015 01:00:00 +0900</lastBuildDate>
+    <atom:link href="http://tatsuyano.github.io/tags/nodejs/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>webpackを使ってes6-promiseを読み込む</title>
+      <link>http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/</link>
+      <pubDate>Wed, 03 Jun 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/</guid>
+      <description>
+
+&lt;p&gt;最近勉強中のPromiseですが、現段階(15/06/03)ではIE11に対応していません。
+PromiseをIEに対応させるためには、es6-promiseというNode.jsのライブラリをフロントエンドで読み込む必要があります。&lt;/p&gt;
+
+&lt;p&gt;しかしNode.jsのライブラリは、そのままではフロントエンドで使えないので、
+webpackでフロントエンド向けにBuildする必要があります。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;-webpackは他にも多くの機能がありますが、ここではNode.jsのモジュールをフロントエンドで使うため方法のみにフォーカスします。-&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;webpackを使うための準備:bf105b025d29d59e69f389ae56581628&#34;&gt;webpackを使うための準備&lt;/h3&gt;
+
+&lt;p&gt;まずは本体のインストール。
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install webpack -g
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;p&gt;次に適当なディレクトリを作成します。
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ mkdir webpack-sample &amp;amp;&amp;amp; cd webpack-sample
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;p&gt;今回使うライブラリ(es6-promise)をディレクトリにインストールします。
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install es6-promise
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;p&gt;ライブラリはglobalではなく、ディレクトリ直下(/webpack-sample/node_modules)にインストールしてください。&lt;/p&gt;
+
+&lt;h3 id=&#34;jsのbuild方法:bf105b025d29d59e69f389ae56581628&#34;&gt;JsのBuild方法&lt;/h3&gt;
+
+&lt;p&gt;次に(Node.jsの)ライブラリを読み込むJs(main.js)をビルドします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ webpack main.js bundle.js
+Hash: de7b4a8a87c6e52d026f
+Version: webpack 1.9.10
+Time: 109ms
+    Asset     Size  Chunks             Chunk Names
+bundle.js  40.1 kB       0  [emitted]  main
+   [0] ./main.js 255 bytes {0} [built]
+   + 6 hidden modules
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+BuildしたJs(bundle.js)は、main.jsが依存しているライブラリ(es6-promise等)も含んだ一つのファイルに圧縮されます。
+このJsのみをHTMLに読み込むだけで、Node.jsが利用できるようになります。
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;&amp;lt;script&amp;nbsp;src=&amp;quot;bundle.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+&lt;b&gt;main.js&lt;/b&gt;
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;&#39;use strict&#39;
+var Promise = require(&#39;es6-promise&#39;).Promise;
+
+var promise = function(code) {
+    return new Promise(function (resolve,reject) {
+        resolve(&#39;Hello Promise !!&#39;);
+    });
+}
+
+promise().then(function (result) {
+    console.log(result);
+});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+### 確認
+
+今回は、node.jsのhttp-serverを使って確認しようと思います。
+
+* [Node.jsのhttp-serverっていうコマンドラインのウェブサーバーが便利](https://firegoby.jp/archives/5706)
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install -g http-server
+$ http-server -p 4000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;サーバー起動し、IEのconsoleにメッセージが表示されれば、確認OKです。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/use-webpack-to-read-the-es6-promise_01.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:bf105b025d29d59e69f389ae56581628&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://webpack.github.io/&#34;&gt;webpack&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jakearchibald/es6-promise&#34;&gt;es6-promise&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://ameblo.jp/ca-1pixel/entry-11884453208.html&#34;&gt;RequireJS等はもう古い。WebPackとは？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://thujikun.github.io/blog/2014/12/07/webpack/&#34;&gt;Webpackを使い倒す&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.twopipe.com/front-end/2014/12/22/react-webpack-env.html&#34;&gt;ReactとStylusをwebpackで使うための開発環境構築&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:bf105b025d29d59e69f389ae56581628&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/&#34;&gt;Promiseを使って、非同期処理を任意のタイミングで実行する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Promiseを使って、非同期処理を任意のタイミングで実行する</title>
+      <link>http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/</link>
+      <pubDate>Tue, 02 Jun 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/</guid>
+      <description>
+
+&lt;p&gt;Promiseを使って、非同期処理を任意の順番で実行するサンプル。
+ES5でも順番を指定して実行する事ができるが、Promiseを使うと綺麗に実装できる。&lt;/p&gt;
+
+&lt;p&gt;&lt;script src=&#34;http://gist-it.appspot.com/https://github.com/tatsuyano/study-es6promise/blob/master/sample01-nodejs.js&#34;&gt;
+&lt;/script&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:4211bdcec880eb9ef23695a021bec295&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://azu.github.io/promises-book/&#34;&gt;JavaScript Promiseの本&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.html5rocks.com/ja/tutorials/es6/promises/&#34;&gt;JavaScript Promises&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jakearchibald/es6-promise&#34;&gt;es6-promise&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://babeljs.io/repl/&#34;&gt;Babel repl&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:4211bdcec880eb9ef23695a021bec295&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/&#34;&gt;webpackを使ってes6-promiseを読み込む&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>anyenvをインストールする</title>
+      <link>http://tatsuyano.github.io/2014/08/19/install-anyenv/</link>
+      <pubDate>Tue, 19 Aug 2014 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/08/19/install-anyenv/</guid>
+      <description>
+
+&lt;p&gt;以前導入したanyenvのインストール方法を忘れないようメモしておきます。&lt;/p&gt;
+
+&lt;p&gt;anyenvは ruby、perl、python、nodejs、php(phpenv) のバージョン管理を一元化してくれるツールです。これでhome直下がずいぶんスッキリ。素敵です。&lt;/p&gt;
+
+&lt;h3 id=&#34;インストール:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;インストール&lt;/h3&gt;
+
+&lt;p&gt;ダウンロード&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git clone https://github.com/riywo/anyenv ~/.anyenv
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;$HOME/.zshrc&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ echo &#39;export PATH=&amp;quot;$HOME/.anyenv/bin:$PATH&amp;quot;&#39; &amp;gt;&amp;gt; ~/.zshrc
+$ echo &#39;eval &amp;quot;$(anyenv init - zsh)&amp;quot;&#39; &amp;gt;&amp;gt; ~/.zshrc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;私は&lt;code&gt;oh-my-zsh&lt;/code&gt;を使っているので、実際は&lt;code&gt;~/.zshrc&lt;/code&gt;ではなく、&lt;code&gt;~/.oh-my-zsh/custom/main.zsh&lt;/code&gt;に設定しています。&lt;/p&gt;
+
+&lt;p&gt;シェルを再実行し、anyenvの設定を反映させます。&lt;br /&gt;
+&lt;code&gt;source $HOME/.zshrc&lt;/code&gt; でも結構です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ exec $SHELL -l
+$ which anyenv
+~/.anyenv/bin/anyenv
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/luckypool/items/f1e756e9d3e9786ad9ea&#34;&gt;anyenvで開発環境を整える&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/DQNEO/items/ebf50c39f83970f1127c&#34;&gt;completions/plenv.bash:16: command not found: completeの対処法&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;rubyのインストール:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;rubyのインストール&lt;/h3&gt;
+
+&lt;p&gt;とりあえずanyenv経由でrubyをインストールします。
+rubyをインストールするには、事前にOpenSSL系のライブラリが必要なのでインストールしておきます。&lt;/p&gt;
+
+&lt;p&gt;また&lt;a href=&#34;http://blog.10rane.com/2014/09/01/set-up-ruby-mode-of-emacs/&#34;&gt;別記事&lt;/a&gt;で紹介している&lt;code&gt;robe&lt;/code&gt;を使うには、&lt;code&gt;read-line&lt;/code&gt;が必要なので、入れておきます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo yum -y install openssl-devel
+$ sudo yum -y install readline-devel
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://futurismo.biz/archives/1389&#34;&gt;CentOSに rbenv 経路で Ruby 2.0.0-p195を入れようとしたら、エラー&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;まずはrbenvはインストールします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ anyenv install rbenv
+$ anyenv versions
+rbenv:
+* system (set by /home/$USER/.anyenv/envs/rbenv/version)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;バージョンは2.1.0を入れてみます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ rbenv install 2.1.0
+$ rbenv global 2.1.0
+
+$ anyenv versions
+rbenv:
+system
+* 2.1.0 (set by /home/$USER/.anyenv/envs/rbenv/version)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;反映されない時は&lt;/em&gt;&lt;code&gt;source $HOME/.zshrc&lt;/code&gt;&lt;em&gt;で設定を読み込み直して下さい。&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;試しに&lt;code&gt;bundler&lt;/code&gt;をインストールしてみます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ which gem
+/home/$USER/.anyenv/envs/rbenv/shims/gem
+$ gem install bundler
+$ which bundle
+/home/$USER/.anyenv/envs/rbenv/shims/bundle
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;pythonのインストール:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;pythonのインストール&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo yum -y install patch
+$ anyenv install pyenv
+$ pyenv install 3.3.3
+$ pyenv global 3.3.3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;node-jsのインストール:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;node.jsのインストール&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;$ anyenv install ndenv
+$ ndenv install v0.10.26
+$ ndenv global v0.10.26
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;他の言語も流れは同じです。&lt;br /&gt;
+お疲れ様でした。&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/luckypool/items/f1e756e9d3e9786ad9ea&#34;&gt;anyenvで開発環境を整える&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/DQNEO/items/ebf50c39f83970f1127c&#34;&gt;completions/plenv.bash:16: command not found: completeの対処法&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2014/12/04/how-to-install-and-setup-phpenv/&#34;&gt;phpenvを導入する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>uglify-js</title>
+      <link>http://tatsuyano.github.io/2013/03/14/uglify-js/</link>
+      <pubDate>Thu, 14 Mar 2013 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/03/14/uglify-js/</guid>
+      <description>
+
+&lt;pre&gt;&lt;code&gt;npm install -g uglify-js
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;パラメータの-gは「global」の意味。「global」はnodeのインストールディレクトリ、&lt;br /&gt;
+そうでなければカレントパッケージのルートかカレントワーキングディレクトリ。&lt;/p&gt;
+
+&lt;h2 id=&#34;npmの参考サイト:92f440448a468cdfe1fe1ea456af8f60&#34;&gt;npmの参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://npmjs.org/doc/config.html&#34;&gt;Manage the npm configuration file&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://kysnm.hatenablog.com/entry/20111225/1324828008&#34;&gt;npm についてまとめてみる&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;uglify-jsの使い方:92f440448a468cdfe1fe1ea456af8f60&#34;&gt;uglify-jsの使い方&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;-b, &amp;ndash;beautify     整形(軽量化の逆)&lt;/li&gt;
+&lt;li&gt;-o,&amp;ndash;output &lt;file&gt; 出力ファイルの指定&lt;/li&gt;
+&lt;li&gt;&amp;ndash;overwrite        軽量化後のコードで入力ファイルを上書きします&lt;/li&gt;
+&lt;li&gt;&amp;ndash;unsafe           コードをより短い表現に変換&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;uglifyjs -o min.js jquery-1.9.1.js
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>nvmとnpmをインストールする</title>
+      <link>http://tatsuyano.github.io/2013/03/07/nvm-vpm/</link>
+      <pubDate>Thu, 07 Mar 2013 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/03/07/nvm-vpm/</guid>
+      <description>
+
+&lt;p&gt;&lt;a href=&#34;https://github.com/creationix/nvm&#34;&gt;nvm(Node Version Manager)&lt;/a&gt; とは、node.js本体のバージョン管理するツール。&lt;br /&gt;
+&lt;a href=&#34;https://npmjs.org/&#34;&gt;npm(Node Packaged Modules)&lt;/a&gt; とは、node.jsで作ったパッケージを管理するツール。&lt;br /&gt;
+nvmをインストールするとnpmも自動でインストールされる。&lt;/p&gt;
+
+&lt;h2 id=&#34;nvmのインストール:62e930a18105a784dc9149751609f7b3&#34;&gt;nvmのインストール&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone git://github.com/creationix/nvm.git .nvm
+source .nvm/nvm.sh  # nvmで使う環境変数などを設定する
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;node-js本体のインストール:62e930a18105a784dc9149751609f7b3&#34;&gt;node.js本体のインストール&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;nvm ls-remote # 現在までにリリースされているバージョンの確認
+nvm install v0.10.0
+
+nvm ls # インストールしてあるバージョンと、現在設定してあるバージョンを確認
+v0.9.4 v0.8.14 v0.10.0
+current:  v0.10.0
+
+nvm use 0.10.0 # 毎回使うバージョンを指定する必要がある
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;node.jsを使うためには、ターミナルを立ち上げるたびに、nvm.shの読み込みと、nodeのバージョンを指定しないといけない。&lt;br /&gt;
+なので、事前に zshrcに設定しておく。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cat &amp;gt;&amp;gt; .zshrc
+[[ -s $HOME/.nvm/nvm.sh ]] &amp;amp;&amp;amp; source $HOME/.nvm/nvm.sh
+[[ -s $HOME/.nvm/nvm.sh ]] &amp;amp;&amp;amp; nvm use 0.10.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;coffeescriptなどのnpm-node-packaged-modules-のインストール方法:62e930a18105a784dc9149751609f7b3&#34;&gt;CoffeeScriptなどのnpm(Node Packaged Modules)のインストール方法&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install -g coffee-script
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;インストールには、「ローカルインストール」と「グローバルインストール(パラメータに「g」をつける）」がある。&lt;br /&gt;
+ローカルインストールすると&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm bin
+/Users/hoge/node_modules/.bin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;にインストールされ、「g」をつけてグローバルインストールにすると、&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm bin -g
+/Users/hoge/.nvm/v0.10.0/bin
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;にインストールされるので、通常は「g」をつけてインストールすること。&lt;/p&gt;
+
+&lt;p&gt;またCoffeeScriptなどパッケージの実際のソースは、$HOME/.npm/配下にインストールされる。&lt;br /&gt;
+/Users/hoge/.nvm/v0.10.0/bin/配下には、リンクが貼られている。&lt;/p&gt;
+
+&lt;h2 id=&#34;npm-を移動させ-シムリンクで管理することはできない:62e930a18105a784dc9149751609f7b3&#34;&gt;.npm を移動させ、シムリンクで管理することはできない&lt;/h2&gt;
+
+&lt;p&gt;いつものように、Dropbox/dotfile/配下にディレクトリを移動させ、$HOME　直下にリンクを貼って管理したかったが、&lt;br /&gt;
+.npmディレクトリを移動させると、Not Foundなどのエラーがでてきてしまうので、.nvmと.npmはDropboxで共有しないようにする。&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:62e930a18105a784dc9149751609f7b3&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tmlife.net/programming/javascript/npm-node-js-require-module-memo.html&#34;&gt;npm と Node.js 上で require を使ったモジュール読み込みの仕組みについてメモ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://kysnm.hatenablog.com/entry/20111225/1324828008&#34;&gt;npm についてまとめてみる&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://npmjs.org/doc/config.html&#34;&gt;Manage the npm configuration file&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

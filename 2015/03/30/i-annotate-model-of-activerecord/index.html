@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>ActiveRecordのモデルに注釈を付ける -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>ActiveRecordのモデルに注釈を付ける</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Mar 30, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/rails" >rails</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p><code>annotate</code> を使うと、<code>rake db:migrate</code> をしたタイミングで、自動でmodelクラスの先頭に、スキーマ情報のコメントを挿入してくれるようになります。</p>
+
+<h2 id="設定:a1e5d470e580a2d5bea32d3397647cd9">設定</h2>
+
+<p>まずはインストール。Gemfileに追加後 <code>bundle install</code> します。</p>
+
+<pre><code class="language-ruby">cat Gemfile
+gem 'annotate'
+
+$ bundle install
+</code></pre>
+<br>
+
+`rake db:migrate`をしたタイミングで自動で、スキーマ情報を挿入するためには、
+`annotate:install` します。
+
+<pre><code class="language-bash">$ rails g annotate:install
+      create  lib/tasks/auto_annotate_models.rake
+</code></pre>
+
+<p>自動で挿入したくない場合は、<code>annotate:install</code>はせずに、modelクラスを更新した都度、<code>bundle exec annotate</code>を行って下さい。
+<pre><code class="language-bash">$ bundle exec annotate
+</code></pre>
+<br></p>
+
+<h2 id="確認:a1e5d470e580a2d5bea32d3397647cd9">確認</h2>
+
+<p>試しにbooksモデルを作成し、コメントが挿入されるか確認してみます。</p>
+
+<p><pre><code class="language-bash">$ rails g scaffold Book title:string price:integer
+$ rake db:migrate
+== 20150330032832 CreateBooks: migrating ======================================
+&ndash; create_table(:books)
+   -&gt; 0.0090s
+   == 20150330032832 CreateBooks: migrated (0.0094s) =============================</p>
+
+<p>Annotated (1): Book
+</code></pre>
+<br></p>
+
+<p>modelクラスにスキーマ情報が挿入されていることを確認できます。</p>
+
+<p><pre><code class="language-ruby">$ cat app/models/book.rb</p>
+
+<h1 id="schema-information:a1e5d470e580a2d5bea32d3397647cd9">== Schema Information</h1>
+
+<p>#</p>
+
+<h1 id="table-name-books:a1e5d470e580a2d5bea32d3397647cd9">Table name: books</h1>
+
+<p>#</p>
+
+<h1 id="id-integer-not-null-primary-key:a1e5d470e580a2d5bea32d3397647cd9">id         :integer          not null, primary key</h1>
+
+<h1 id="title-string:a1e5d470e580a2d5bea32d3397647cd9">title      :string</h1>
+
+<h1 id="price-integer:a1e5d470e580a2d5bea32d3397647cd9">price      :integer</h1>
+
+<h1 id="created-at-datetime-not-null:a1e5d470e580a2d5bea32d3397647cd9">created_at :datetime         not null</h1>
+
+<h1 id="updated-at-datetime-not-null:a1e5d470e580a2d5bea32d3397647cd9">updated_at :datetime         not null</h1>
+
+<p>#</p>
+
+<p>class Book &lt; ActiveRecord::Base
+end
+</code></pre>
+<br></p>
+
+<p>カラムを追加、変更後も自動でスキーマ情報が更新されます。</p>
+
+<p><pre><code class="language-ruby">$ rails g migration AddAuthorsToBooks author:string
+$ cat db/migrate/20150330024524_add_authors_to_books.rb
+class AddAuthorsToBooks &lt; ActiveRecord::Migration
+  def change
+    add_column :books, :author, :string
+  end
+end</p>
+
+<p>$ rake db:migrate
+$ cat app/models/book.rb</p>
+
+<h1 id="schema-information-1:a1e5d470e580a2d5bea32d3397647cd9">== Schema Information</h1>
+
+<p>#</p>
+
+<h1 id="table-name-books-1:a1e5d470e580a2d5bea32d3397647cd9">Table name: books</h1>
+
+<p>#</p>
+
+<h1 id="id-integer-not-null-primary-key-1:a1e5d470e580a2d5bea32d3397647cd9">id         :integer          not null, primary key</h1>
+
+<h1 id="title-string-1:a1e5d470e580a2d5bea32d3397647cd9">title      :string</h1>
+
+<h1 id="price-integer-1:a1e5d470e580a2d5bea32d3397647cd9">price      :integer</h1>
+
+<h1 id="created-at-datetime-not-null-1:a1e5d470e580a2d5bea32d3397647cd9">created_at :datetime         not null</h1>
+
+<h1 id="updated-at-datetime-not-null-1:a1e5d470e580a2d5bea32d3397647cd9">updated_at :datetime         not null</h1>
+
+<h1 id="author-string-this:a1e5d470e580a2d5bea32d3397647cd9">author     :string　　　     # &lt;= This!</h1>
+
+<p>#</p>
+
+<p>class Book &lt; ActiveRecord::Base
+end
+</code></pre>
+<br></p>
+
+<h2 id="参考サイト:a1e5d470e580a2d5bea32d3397647cd9">参考サイト</h2>
+
+<ul>
+<li><a href="http://sue445.hatenablog.com/entry/2015/03/29/012855">Railsアプリやgem作る時にいつも入れているgem一覧</a></li>
+<li><a href="https://github.com/ctran/annotate_models">annotate_models:github</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

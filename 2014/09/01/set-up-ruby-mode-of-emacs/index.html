@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>emacsのruby環境をセットアップする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Emacsのruby環境をセットアップする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Sep 1, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/rspec" >rspec</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>最近<code>cask</code>に切り替えたので、ruby環境も一から作り直したいと思います。
+オムニ補完には、今までは<code>Rsense</code>を使っていましたが、今回は<code>robe</code>というパッケージと使ってみたいと思います。<br />
+<em>対象のEmacsのバージョンは24.3.1になります</em></p>
+
+<h3 id="今回インストールするパッケージ:a38f072717c64d469504de0db33dd425">今回インストールするパッケージ</h3>
+
+<ul>
+<li>ruby-mode</li>
+<li>ruby-end</li>
+<li>ruby-block</li>
+<li>inf-ruby</li>
+<li>robe</li>
+<li>auto-complete</li>
+<li>rvenv 　　　　　　# 2015/02/23追記</li>
+<li>smart-newline　# 2015/02/23追記</li>
+<li>rspec-mode 　　# 2015/02/23追記</li>
+</ul>
+
+<h3 id="ruby-mode-ruby-end-ruby-blockをインストール:a38f072717c64d469504de0db33dd425">ruby-mode,ruby-end,ruby-blockをインストール</h3>
+
+<p>まずは基本的なところから。
+Emacs24だと<code>ruby-electric</code>がうまく動かなかったので、
+今回はインストールしませんでしたが、<code>ruby-end</code>だけで事足りました。</p>
+
+<p>~/.emacs/Cask</p>
+
+<pre><code>;; Ruby
+(depends-on &quot;ruby-mode&quot;)
+(depends-on &quot;ruby-end&quot;)
+(depends-on &quot;ruby-block&quot;)
+</code></pre>
+
+<p>~/.emacs.d/init_loader/03_ruby.el</p>
+
+<pre><code>;; --------------------------------------------------
+;; ruby-mode
+;; http://shibayu36.hatenablog.com/entry/2013/03/18/192651
+;; --------------------------------------------------
+(autoload 'ruby-mode &quot;ruby-mode&quot;
+  &quot;Mode for editing ruby source files&quot; t)
+(add-to-list 'auto-mode-alist '(&quot;\\.rb$&quot; . ruby-mode))
+(add-to-list 'auto-mode-alist '(&quot;Capfile$&quot; . ruby-mode))
+(add-to-list 'auto-mode-alist '(&quot;Gemfile$&quot; . ruby-mode))
+(add-to-list 'interpreter-mode-alist '(&quot;ruby&quot; . ruby-mode)) ;; shebangがrubyの場合、ruby-modeを開く
+
+;; ruby-modeのインデントを改良する
+(setq ruby-deep-indent-paren-style nil)
+(defadvice ruby-indent-line (after unindent-closing-paren activate)
+  (let ((column (current-column))
+        indent offset)
+    (save-excursion
+      (back-to-indentation)
+      (let ((state (syntax-ppss)))
+        (setq offset (- column (current-column)))
+        (when (and (eq (char-after) ?\))
+                   (not (zerop (car state))))
+          (goto-char (cadr state))
+          (setq indent (current-indentation)))))
+    (when indent
+      (indent-line-to indent)
+      (when (&gt; offset 0) (forward-char offset)))))
+
+;; --------------------------------------------------
+;; ruby-end
+;; endや括弧などを自動挿入する
+;; http://blog.livedoor.jp/ooboofo3/archives/53748087.html
+;; --------------------------------------------------
+(require 'ruby-end)
+(add-hook 'ruby-mode-hook
+  '(lambda ()
+    (abbrev-mode 1)
+    (electric-pair-mode t)
+    (electric-indent-mode t)
+    (electric-layout-mode t)))
+
+;; --------------------------------------------------
+;; ruby-block
+;; endにカーソルを合わせると、そのendに対応する行をハイライトする
+;; --------------------------------------------------
+(require 'ruby-block)
+(ruby-block-mode t)
+(setq ruby-block-highlight-toggle t)
+</code></pre>
+
+<h3 id="auto-completeのインストール:a38f072717c64d469504de0db33dd425">auto-completeのインストール</h3>
+
+<p><code>cask</code>でインストールすると、辞書が格納されるディレクトリ(dict)のパスが
+<code>~/.emacs.d/.cask/24.3.1/elpa/auto-complete-20140824.1658/dict&quot;</code>になりました。</p>
+
+<p>~/.emacs/Cask</p>
+
+<pre><code>;; Auto-complete
+(depends-on &quot;auto-complete&quot;)
+(depends-on &quot;fuzzy&quot;)
+(depends-on &quot;popup&quot;)
+</code></pre>
+
+<p>~/.emacs.d/init_loader/02_auto-complete.el</p>
+
+<pre><code>(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories &quot;~/.emacs.d/.cask/24.3.1/elpa/auto-complete-20140824.1658/dict&quot;)
+(ac-config-default)
+(setq ac-use-menu-map t)
+</code></pre>
+
+<h3 id="robeのインストール:a38f072717c64d469504de0db33dd425">robeのインストール</h3>
+
+<p>ここからが本題のrobeのインストールです。
+<code>robe</code>を使うには、<code>pry</code>という<code>Gem</code>が必要になりますが、
+<code>pry</code>を使うためには、<code>read-line</code>ライブラリをインストール時にオプション指定したRubyが必要になります。</p>
+
+<p>今回すでに、<code>read-line</code>が入っていない状態でRubyをインストールしていたので、
+再度インストールし直したいと思います。</p>
+
+<h4 id="pryのインストール:a38f072717c64d469504de0db33dd425">pryのインストール</h4>
+
+<pre><code>$ gem install pry
+$ source $HOME/.zshrc
+
+$ which pry
+$HOME/.anyenv/envs/rbenv/shims/pry
+</code></pre>
+
+<p><code>read-line</code>ライブラリを読み込めないため、<code>pry</code>が実行できない</p>
+
+<pre><code> $ pry
+ Sorry, you can't use Pry without Readline or a compatible library.
+ Possible solutions:
+  * Rebuild Ruby with Readline support using `--with-readline`
+  * Use the rb-readline gem, which is a pure-Ruby port of Readline
+  * Use the pry-coolline gem, a pure-ruby alternative to Readline
+</code></pre>
+
+<ul>
+<li><a href="http://qiita.com/Tamadon/items/347baf2ba89ccde89624">Pry起動時にエラーが出る場合の対処法</a></li>
+<li><a href="http://labs.timedia.co.jp/2011/12/rubyist-should-use-pry.html">Rubyistよ、irbを捨ててPryを使おう</a></li>
+</ul>
+
+<h4 id="readlineのインストールとrubyの再インストール:a38f072717c64d469504de0db33dd425">readlineのインストールとRubyの再インストール</h4>
+
+<pre><code>$ sudo yum -y install readline-devel
+$ rbenv uninstall 2.1.0
+$ rbenv install 2.1.0
+</code></pre>
+
+<p><em>注意</em><br />
+Ruby本体の再インストールをしたため、<code>pry</code>や<code>bundle</code>なども削除されていますので、
+再度インストールしてください。</p>
+
+<pre><code>$ gem install pry pry-doc bundler
+$ source $HOME/.zshrc
+</code></pre>
+
+<h4 id="emacsの設定:a38f072717c64d469504de0db33dd425">emacsの設定</h4>
+
+<p><code>robe</code>は内部で<code>inf-ruby</code>を使っているので、<code>robe</code>をインストールすると、
+<code>inf-ruby</code>も自動でインストールされます。</p>
+
+<p>~/.emacs/Cask</p>
+
+<pre><code>(depends-on &quot;robe&quot;)
+</code></pre>
+
+<p>~/.emacs.d/init_loader/03_ruby.el</p>
+
+<pre><code>;; --------------------------------------------------
+;; robe
+;; http://codeout.hatenablog.com/entry/2014/02/04/210237
+;; --------------------------------------------------
+(add-hook 'ruby-mode-hook 'robe-mode)
+(autoload 'robe-mode &quot;robe&quot; &quot;Code navigation, documentation lookup and completion for Ruby&quot; t nil)
+(autoload 'ac-robe-setup &quot;ac-robe&quot; &quot;auto-complete robe&quot; nil nil)
+(add-hook 'robe-mode-hook 'ac-robe-setup)
+</code></pre>
+
+<h4 id="robeの起動方法:a38f072717c64d469504de0db33dd425">robeの起動方法</h4>
+
+<p><code>robe</code>を利用するには、</p>
+
+<ol>
+<li><code>M-x inf-ruby</code>を実行し、裏で<code>irb(pry)</code>を起動させ、</li>
+<li><code>M-x robe-start</code>で初めて<code>robe</code>が使えるようになります。</li>
+</ol>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/set-up-ruby-mode-of-emacs_01.jpg" alt="" /></p>
+
+<h4 id="gemfileを用意してirb-pry-を裏で自動に起動させる:a38f072717c64d469504de0db33dd425">Gemfileを用意してirb(pry)を裏で自動に起動させる</h4>
+
+<p>編集したいファイルと同じディレクトリに<code>pry</code>のための<code>Gemfile</code>を用意しておけば、
+<code>M-x robe-start</code>だけで<code>robe</code>をつかうことができます。</p>
+
+<pre><code>$ bundle init
+</code></pre>
+
+<p>Gemfile</p>
+
+<pre><code>source &quot;https://rubygems.org&quot;
+
+gem &quot;pry&quot;
+gem &quot;pry-doc&quot;,       &quot;&gt;= 0.6.0&quot;
+gem &quot;method_source&quot;, &quot;&gt;= 0.8.2&quot;
+</code></pre>
+
+<ul>
+<li><a href="https://github.com/dgutov/robe#dependencies">robe:Dependencies</a></li>
+</ul>
+
+<h3 id="rbenvのパスを通す:a38f072717c64d469504de0db33dd425">rbenvのパスを通す</h3>
+
+<p><em>2015/02/23 追記</em></p>
+
+<p>Emacsにrbenvのパスを通してくれます。</p>
+
+<p>~/.emacs.d/initloader/03_ruby.el
+<pre><code class='language-ruby'> (require &lsquo;rbenv)
+ (global-rbenv-mode)
+ (setq rbenv-installation-dir &ldquo;~/.anyenv/envs/rbenv&rdquo;)
+</code></pre></p>
+
+<ul>
+<li><a href="http://block-given.hatenablog.com/entry/2014/11/12/005657">モダンなEmacsを求めて (6) Rubyについて</a></li>
+</ul>
+
+<h3 id="smart-newlineを導入する:a38f072717c64d469504de0db33dd425">smart-newlineを導入する</h3>
+
+<p><em>2015/02/23 追記</em></p>
+
+<p>改行をよしなにやってくれます。素敵です。</p>
+
+<p>~/.emacs.d/initloader/03_ruby.el
+<pre><code class='language-ruby'> (add-hook &lsquo;ruby-mode-hook
+   (lambda ()
+   (smart-newline-mode t)))
+</code></pre></p>
+
+<ul>
+<li><a href="http://ainame.hateblo.jp/entry/2013/12/08/162032">smart-newline.elという拡張</a></li>
+</ul>
+
+<h3 id="rspec-modeを導入する:a38f072717c64d469504de0db33dd425">rspec-modeを導入する</h3>
+
+<p><em>2015/02/23 追記</em></p>
+
+<p>テストとその対象のコードを簡単に切り替えてくれたり、カーソルのある行だけのテストを実行してくれる。
+キーバインドにカンマが入っていることに注意。</p>
+
+<p>~/.emacs.d/initloader/03ruby.el
+<pre><code class='language-ruby'> ;; C-c , v RSpec実行
+ ;; C-c , s カ-ソルが当たっているサンプルを実行
+ ;; C-c , t Specとソースを切り替える
+ (require &lsquo;rspec-mode)
+ (custom-set-variables &lsquo;(rspec-use-rake-flag nil))
+</code></pre></p>
+
+<ul>
+<li><a href="http://futurismo.biz/archives/2266">EmacsでRSpec環境をめちゃガチャパワーアップしたまとめ</a></li>
+</ul>
+
+<p>お疲れ様でした。</p>
+
+<h3 id="参考サイト:a38f072717c64d469504de0db33dd425">参考サイト</h3>
+
+<ul>
+<li><a href="http://shibayu36.hatenablog.com/entry/2013/03/18/192651">emacsのruby環境を整えています</a></li>
+<li><a href="http://blog.livedoor.jp/ooboofo3/archives/53748087.html">Emacs24 で ruby-electric的なruby-modeを実現するには</a></li>
+<li><a href="http://codeout.hatenablog.com/entry/2014/02/04/210237">auto-complete + rsense の代わりに auto-complete + robe をつかう</a></li>
+<li><a href="http://qiita.com/Tamadon/items/347baf2ba89ccde89624">Pry起動時にエラーが出る場合の対処法</a></li>
+<li><a href="http://labs.timedia.co.jp/2011/12/rubyist-should-use-pry.html">Rubyistよ、irbを捨ててPryを使おう</a></li>
+<li><a href="https://github.com/dgutov/robe#dependencies">robe:Dependencies</a></li>
+</ul>
+
+<h3 id="関連する記事:a38f072717c64d469504de0db33dd425">関連する記事</h3>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/08/19/install-anyenv/">anyenvをインストールする</a></li>
+<li><a href="http://blog.10rane.com/2014/08/28/how-to-install-and-setup-initloader-in-cask/">init-loaderをCaskでインストールする</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

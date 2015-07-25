@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>anything.elをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Anything.Elをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Aug 20, 2012
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="はじめに:cc1838a00ee4e47d68da4d0b43c6ed3c">はじめに</h2>
+
+<p>すでにauto-intall.elがインストールされている前提で話をすすめます。<br />
+auto-installのインストール手順は<a href="http://tatsuyano.github.io/2012/08/20/emacs-auto-install/">こちら</a>をご覧ください。</p>
+
+<p>##インストール手順</p>
+
+<p>emacsを起動し、</p>
+
+<pre><code>M-x auto-install-batch &lt;RET&gt;
+Extension name: anything &lt;RET&gt;
+</code></pre>
+
+<p>auto-isntall-batchを実行、次にインストールしたいパッケージ名(anything)を入力します。<br />
+すると自動で複数ソースのダウンロードが始まります。<br />
+ダウンロードし終わると「モード行」に</p>
+
+<pre><code>Type C-c C-c to continue; Type C-c C-d for view diff; Type C-c C-q to quit.
+</code></pre>
+
+<p>というメッセージが出てくるので、「C-c C-c」と入力し、ダウンロードしたソースを順番にコンパイルしていきます。<br />
+すべてコンパイルし終えると、以下のようなメッセージが表示され、インストールが完了します。</p>
+
+<pre><code>Installation is completed.
+</code></pre>
+
+<h2 id="インストールされるソース一覧:cc1838a00ee4e47d68da4d0b43c6ed3c">インストールされるソース一覧</h2>
+
+<pre><code class="language-scheme">cd .emacs.d/elisp/
+tree
+.
+├── anything-auto-install.el
+├── anything-auto-install.elc
+├── anything-complete.el
+├── anything-complete.elc
+├── anything-config.el
+├── anything-config.elc
+├── anything-grep.el
+├── anything-grep.elc
+├── anything-gtags.el
+├── anything-gtags.elc
+├── anything-ipa.el
+├── anything-ipa.elc
+├── anything-match-plugin.el
+├── anything-match-plugin.elc
+├── anything-menu.el
+├── anything-menu.elc
+├── anything-migemo.el
+├── anything-migemo.elc
+├── anything-obsolete.el
+├── anything-obsolete.elc
+├── anything-show-completion.el
+├── anything-show-completion.elc
+├── anything-startup.el
+├── anything-startup.elc
+├── anything.el
+├── anything.elc
+├── descbinds-anything.el
+├── descbinds-anything.elc
+├── ipa.el
+└── ipa.elc
+</code></pre>
+
+<h2 id="参考サイト:cc1838a00ee4e47d68da4d0b43c6ed3c">参考サイト</h2>
+
+<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/rubikitch/20091221/autoinstall">auto-install.elでEmacsLispパッケージを自動インストール -&gt; anything.el関連を一括インストール</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

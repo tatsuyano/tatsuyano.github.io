@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>daemontoolsのインストール -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Daemontoolsのインストール</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Jul 29, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/middleware" >middleware</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>ダウンロード</p>
+
+<pre><code># mkdir -p /package
+# chmod 1755 /package
+# cd /package
+
+# wget http://cr.yp.to/daemontools/daemontools-0.76.tar.gz
+# tar zxvf daemontools-0.76.tar.gz
+</code></pre>
+
+<p>インストールスクリプトの修正</p>
+
+<p>/package/admin/daemontools-0.76/src/conf-cc</p>
+
+<pre><code>gcc -O2 -Wimplicit -Wunused -Wcomment -Wchar-subscripts -Wuninitialized -Wshadow -Wcast-qual -Wcast-align -Wwrite-strings #&lt;- 削除
+gcc -O2 --include /usr/include/errno.h #&lt;-書き換え
+</code></pre>
+
+<p>インストール</p>
+
+<pre><code># cd /admin/daemontools-0.76
+# /package/install
+</code></pre>
+
+<p>daemontools本体の起動設定
+/etc/init/svscan.conf</p>
+
+<pre><code>start on runlevel [12345]
+respawn
+exec /usr/local/bin/svscanboot
+</code></pre>
+
+<ul>
+<li><a href="http://itochin2.hatenablog.com/entry/2014/01/26/151224">CentOS6.4にmemcachedを入れた。</a></li>
+<li><a href="http://gihyo.jp/dev/feature/01/memcached/0005?page=1">memcachedの運用と互換アプリケーション</a></li>
+<li><a href="http://www.unixuser.org/~euske/doc/daemontools/myfaq/faq-3.html">私家版 daemontools FAQ) 3. トラブルシューティング</a><br /></li>
+</ul>
+
+<h4 id="daemontoolsのコマンド:862733573a98f4e98da780723d159505">daemontoolsのコマンド</h4>
+
+<p>ややこしいのですが、実際のコマンドは、<code>/package/admin/daemontools/command</code>にあります。</p>
+
+<p><code>/usr/local/bin</code> =&gt; <code>/command</code> =&gt; <code>/package.../command</code><br />
+の順番にシンボリックリンクが貼ってあります。</p>
+
+<h3 id="監視用スクリプトの作成:862733573a98f4e98da780723d159505">監視用スクリプトの作成</h3>
+
+<p>memcachedを監視するためのスクリプトを作成します。</p>
+
+<pre><code># chmod +x /var/memcached/run
+# ln -s /var/memcached /service/memcached
+# /etc/init.d/memcached stop
+</code></pre>
+
+<p>/var/memcached/run</p>
+
+<pre><code>#!/bin/sh
+
+if [ -f /etc/sysconfig/memcached ];then
+        . /etc/sysconfig/memcached
+fi
+
+exec 2&gt;&amp;1
+exec /usr/bin/memcached -p $PORT -u $USER  -m $CACHESIZE -c $MAXCONN
+$OPTIONS
+</code></pre>
+
+<p>daemontoolsの起動</p>
+
+<pre><code>sh -c 'svscan /service &amp;'
+</code></pre>
+
+<p>daemontoolsを起動すると、監視対象のmemcachedが起動されます。</p>
+
+<pre><code># ps aux|grep [m]em
+root     10011  0.0  0.0   4048   348 ?        S    07:52   0:00 supervise memcached
+apache   10012  0.0  0.1 316772  1104 ?        Sl   07:52   0:00 /usr/bin/memcached -p 11211 -u apache -m 64 -c 1024
+</code></pre>
+
+<h3 id="daemontoolsのコマンド-1:862733573a98f4e98da780723d159505">daemontoolsのコマンド</h3>
+
+<p>監視対象の起動、停止</p>
+
+<pre><code># svc -d /service/memcached   #=&gt; down
+# svc -u /service/memcached   #=&gt; up
+# svc -t /service/memcached   #=&gt; restart
+</code></pre>
+
+<p>状態の確認</p>
+
+<pre><code>svstat /service/memcached
+ /service/memcached: down 216 seconds, normally up
+</code></pre>
+
+<p>お疲れ様でした。</p>
+
+<h4 id="関連する記事:862733573a98f4e98da780723d159505">関連する記事</h4>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/07/29/install-memcached/">memcachedのインストール</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

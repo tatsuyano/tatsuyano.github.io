@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>aws はじめました。 -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Aws はじめました。</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Jul 21, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/aws" >aws</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>現在AWSの無料キャンペーンをやっているので、試してみました。</p>
+
+<h2 id="awsのアカウント作成:d726b6a1995770a0563910c631db8cb1">AWSのアカウント作成</h2>
+
+<p>こちらAmazonのサイトに詳細な説明があるので、省略。</p>
+
+<ul>
+<li><a href="http://aws.amazon.com/jp/register-flow/">無料アカウント作成の流れ</a></li>
+</ul>
+
+<h2 id="インスタンスの作成:d726b6a1995770a0563910c631db8cb1">インスタンスの作成</h2>
+
+<p>まずはEC2のコンソール画面を開きます。
+<img width="70%" src="https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_0.png" /></p>
+
+<h3 id="regionの選択:d726b6a1995770a0563910c631db8cb1">REGIONの選択</h3>
+
+<p>レスポンスが気になるので、REGIONは「Tokyo」に。真ん中あたりの「Launch Instance」で作成画面に遷移します。
+<img width="70%" src="https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_1.png" /></p>
+
+<h3 id="image-ami-の選択:d726b6a1995770a0563910c631db8cb1">Image(AMI)の選択</h3>
+
+<p>「Free tier only」が無料Image(AMI)なので、「Amazon Linux」を選択。
+<img width="70%" src="https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_2.png" /></p>
+
+<h3 id="instanceの選択:d726b6a1995770a0563910c631db8cb1">Instanceの選択</h3>
+
+<p>こちらも無料の「Micro instances」を選択。
+<img width="70%" src="https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_3.png" /></p>
+
+<h3 id="instanceにtagをつける:d726b6a1995770a0563910c631db8cb1">InstanceにTagをつける</h3>
+
+<p>とりあえず Name というkeyに、「amz_tokyo」というvalueをつけました。
+<img width="70%" src="https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_4.png" /></p>
+
+<h3 id="firewallの設定:d726b6a1995770a0563910c631db8cb1">firewallの設定</h3>
+
+<p>allow(許可)の条件を設定する模様。固定IPがあるので、SSHにIPを指定します。
+とりあえずHTTPとping(Custom ICMP Rule)も設定しました。
+<img width="70%" src="https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_5.png" /></p>
+
+<h3 id="秘密鍵の作成-及びダウンロード:d726b6a1995770a0563910c631db8cb1">秘密鍵の作成、及びダウンロード</h3>
+
+<p>最後に秘密鍵を作成しダウンロードします。
+<img width="70%" src="https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_6.png" /></p>
+
+<p>DLした秘密鍵のpermissionを600にしてください。</p>
+
+<pre><code>$ chmod 600 .ssh/amz_tokyo.pem
+</code></pre>
+
+<h2 id="dns経由で-ssh接続:d726b6a1995770a0563910c631db8cb1">DNS経由で、ssh接続</h2>
+
+<p>ユーザは「ec2-user」、接続先IPは、public DNSのURLを指定します。
+<img width="70%" src="https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_9.png" /></p>
+
+<pre><code>$ ssh -i .ssh/amz_tokyo.pem ec2-user@ec2-xxxx-xxxx-.ap-northeast-1.compute.amazonaws.com
+</code></pre>
+
+<pre><code>   __|  __|_  )
+   _|  (     /   Amazon Linux AMI
+  ___|\___|___|
+</code></pre>
+
+<h2 id="dnsから固定ip-elastic-ips-に変更する:d726b6a1995770a0563910c631db8cb1">DNSから固定IP(Elastic Ips)に変更する</h2>
+
+<h3 id="elastic-ips-eip-の料金について:d726b6a1995770a0563910c631db8cb1">Elastic Ips(EIP)の料金について</h3>
+
+<p>インスタンスが「起動」しているIPに対してEIPを割り当てても無料だが、
+「停止」しているインスタンスに対して、EIPを割り当てたまま放置しておくと1hに$0.01課金されるので注意。</p>
+
+<h3 id="instanceを指定し-固定ipと紐付ける:d726b6a1995770a0563910c631db8cb1">Instanceを指定し、固定IPと紐付ける</h3>
+
+<p><img width="70%" src="https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_7.png" />
+<img width="70%" src="https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_8.png" /></p>
+
+<h3 id="firewallの再設定:d726b6a1995770a0563910c631db8cb1">firewallの再設定</h3>
+
+<p>固定IPに変更したので、先ほど設定したfirewallの設定が再度行う。</p>
+
+<ul>
+<li><a href="http://www.happyquality.com/2013/06/21/2675.htm">EC2でpingを許可する</a></li>
+</ul>
+
+<h3 id="pingでレスポンスの測定:d726b6a1995770a0563910c631db8cb1">pingでレスポンスの測定</h3>
+
+<p>「Tokyo」以外のREGIONと比較しないと意味がないが、計測方法をメモ。
+下記のコマンドは 64byteのリクエストを10回投げて、レスポンスが帰ってくるまで計測結果。</p>
+
+<pre><code>$ ping -c 10 54.178.xxx.xxx
+PING 54.178.xxx.xxx (54.178.xxx.xxx): 56 data bytes
+64 bytes from 54.178.xxx.xxx: icmp_seq=0 ttl=56 time=14.303 ms
+...
+--- 54.178.xxx.xxx ping statistics ---
+10 packets transmitted, 10 packets received, 0.0% packet loss
+round-trip min/avg/max/stddev = 14.269/15.842/19.001/1.569 ms  -&gt; avg = 15.842ms
+</code></pre>
+
+<h2 id="コマンドラインツールのインストール:d726b6a1995770a0563910c631db8cb1">コマンドラインツールのインストール</h2>
+
+<p>まだ試していないが、とりあえずインストールだけしてみた。</p>
+
+<ul>
+<li><a href="http://halucolor.blogspot.jp/2014/02/macawsaws.html">awsのコマンドラインツールをインストール</a></li>
+<li><a href="http://aws.amazon.com/jp/cli/">AWS コマンドラインインターフェイス</a></li>
+<li><a href="http://d.hatena.ne.jp/rx7/20130813/p1">AWS Command Line Interface(awscli)を使ってみた</a></li>
+</ul>
+
+<h4 id="関連する記事:d726b6a1995770a0563910c631db8cb1">関連する記事</h4>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/07/21/install-vagrant-and-virtualbox/">VagrantとVirtualBoxのインストール</a></li>
+<li><a href="http://blog.10rane.com/2014/07/21/install-vagrant-aws-plugin/">vagrant-aws-pluginをインストール</a></li>
+<li><a href="http://blog.10rane.com/2014/09/11/using-the-dns-of-route53/">Route53のDNSを使う</a></li>
+<li><a href="http://blog.10rane.com/2014/09/16/transferred-a-domain-to-route53/">Route53にドメインを移管する</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

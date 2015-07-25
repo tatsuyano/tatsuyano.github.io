@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>nvmとnpmをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Nvmとnpmをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Thu, Mar 7, 2013
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/nodejs" >nodejs</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p><a href="https://github.com/creationix/nvm">nvm(Node Version Manager)</a> とは、node.js本体のバージョン管理するツール。<br />
+<a href="https://npmjs.org/">npm(Node Packaged Modules)</a> とは、node.jsで作ったパッケージを管理するツール。<br />
+nvmをインストールするとnpmも自動でインストールされる。</p>
+
+<h2 id="nvmのインストール:62e930a18105a784dc9149751609f7b3">nvmのインストール</h2>
+
+<pre><code>git clone git://github.com/creationix/nvm.git .nvm
+source .nvm/nvm.sh  # nvmで使う環境変数などを設定する
+</code></pre>
+
+<h2 id="node-js本体のインストール:62e930a18105a784dc9149751609f7b3">node.js本体のインストール</h2>
+
+<pre><code>nvm ls-remote # 現在までにリリースされているバージョンの確認
+nvm install v0.10.0
+
+nvm ls # インストールしてあるバージョンと、現在設定してあるバージョンを確認
+v0.9.4 v0.8.14 v0.10.0
+current:  v0.10.0
+
+nvm use 0.10.0 # 毎回使うバージョンを指定する必要がある
+</code></pre>
+
+<p>node.jsを使うためには、ターミナルを立ち上げるたびに、nvm.shの読み込みと、nodeのバージョンを指定しないといけない。<br />
+なので、事前に zshrcに設定しておく。</p>
+
+<pre><code>cat &gt;&gt; .zshrc
+[[ -s $HOME/.nvm/nvm.sh ]] &amp;&amp; source $HOME/.nvm/nvm.sh
+[[ -s $HOME/.nvm/nvm.sh ]] &amp;&amp; nvm use 0.10.0
+</code></pre>
+
+<h2 id="coffeescriptなどのnpm-node-packaged-modules-のインストール方法:62e930a18105a784dc9149751609f7b3">CoffeeScriptなどのnpm(Node Packaged Modules)のインストール方法</h2>
+
+<pre><code>npm install -g coffee-script
+</code></pre>
+
+<p>インストールには、「ローカルインストール」と「グローバルインストール(パラメータに「g」をつける）」がある。<br />
+ローカルインストールすると</p>
+
+<pre><code>npm bin
+/Users/hoge/node_modules/.bin
+</code></pre>
+
+<p>にインストールされ、「g」をつけてグローバルインストールにすると、</p>
+
+<pre><code>npm bin -g
+/Users/hoge/.nvm/v0.10.0/bin
+</code></pre>
+
+<p>にインストールされるので、通常は「g」をつけてインストールすること。</p>
+
+<p>またCoffeeScriptなどパッケージの実際のソースは、$HOME/.npm/配下にインストールされる。<br />
+/Users/hoge/.nvm/v0.10.0/bin/配下には、リンクが貼られている。</p>
+
+<h2 id="npm-を移動させ-シムリンクで管理することはできない:62e930a18105a784dc9149751609f7b3">.npm を移動させ、シムリンクで管理することはできない</h2>
+
+<p>いつものように、Dropbox/dotfile/配下にディレクトリを移動させ、$HOME　直下にリンクを貼って管理したかったが、<br />
+.npmディレクトリを移動させると、Not Foundなどのエラーがでてきてしまうので、.nvmと.npmはDropboxで共有しないようにする。</p>
+
+<h2 id="参考サイト:62e930a18105a784dc9149751609f7b3">参考サイト</h2>
+
+<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
+
+<ul>
+<li><a href="http://tmlife.net/programming/javascript/npm-node-js-require-module-memo.html">npm と Node.js 上で require を使ったモジュール読み込みの仕組みについてメモ</a></li>
+<li><a href="http://kysnm.hatenablog.com/entry/20111225/1324828008">npm についてまとめてみる</a></li>
+<li><a href="https://npmjs.org/doc/config.html">Manage the npm configuration file</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

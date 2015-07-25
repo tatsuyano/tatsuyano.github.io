@@ -1,0 +1,654 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Heroku on blog.10rane.com</title>
+    <link>http://tatsuyano.github.io/tags/heroku/</link>
+    <description>Recent content in Heroku on blog.10rane.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Wed, 13 May 2015 01:00:00 +0900</lastBuildDate>
+    <atom:link href="http://tatsuyano.github.io/tags/heroku/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Rails4の非公開情報をdotenvで管理する</title>
+      <link>http://tatsuyano.github.io/2015/05/13/dotenv-manages-secret-of-rails4/</link>
+      <pubDate>Wed, 13 May 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/05/13/dotenv-manages-secret-of-rails4/</guid>
+      <description>
+
+&lt;p&gt;TwitterのAPIキーなど、公開したくない情報をどこに設定すればいいか調べたところ、
+&lt;code&gt;config/secrets.yml&lt;/code&gt;に設定して、&lt;code&gt;.gitignore&lt;/code&gt;して使うようなので、設定してみました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;# config/secrets.yml
+development:
+  twitter_api_key: hogefuga.....
+
+# 呼び出し側
+key = Rails.application.secrets.twitter_api_key
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+しかしherokuを利用する場合、この`secrets.yml`というファイル自体必須なので、`.gitignore`するわけにはいきません。
+
+* [How to solve error &#34;Missing secret_key_base   for production environment&#34; on
+Heroku](http://stackoverflow.com/questions/23180650/how-to-solve-error-missing-secret-key-base-for-production-environment-on-h)
+
+## dotenv-railsの設定
+
+そこで検討した結果、`dotenv-rails`というGemを使うことにしました。
+このGemを使うと、アプリケーションごとに環境変数(非公開情報)が設定できるようになり、
+`secrets.yml`に公開したくない情報を設定しなくても良くなります。
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;# Gemfile
+gem &#39;dotenv-rails&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;まず、アプリケーションのディレクトリの直下に&lt;code&gt;.env&lt;/code&gt;というファイルを作成し、環境変数を設定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;# .env
+TWITTER_API_KEY=&#34;hogehoge&#34;
+TWITTER_API_SECRET=&#34;fugafuga&#34;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;読み出す時は、以下のように指定します。
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;puts ENV[&amp;lsquo;TWITTER_API_KEY&amp;rsquo;] # =&amp;gt; &amp;ldquo;hogehoge&amp;rdquo;
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;p&gt;最後に&lt;code&gt;.env&lt;/code&gt;ファイルを&lt;code&gt;.gitignore&lt;/code&gt;します。&lt;br /&gt;
+以上で完了です。&lt;/p&gt;
+
+&lt;h2 id=&#34;herokuに環境変数を設定する:51a96cd6c0e962b72bbcd741a4bc7fd0&#34;&gt;herokuに環境変数を設定する&lt;/h2&gt;
+
+&lt;p&gt;ちなみに、herokuに環境変数を設定するには以下のように指定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ heroku config:add TWITTER_API_KEY=&amp;ldquo;hogehoge&amp;rdquo;    &amp;ndash;app アプリ名
+$ heroku config:add TWITTER_API_SECRET=&amp;ldquo;fugafuga&amp;rdquo; &amp;ndash;app アプリ名
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:51a96cd6c0e962b72bbcd741a4bc7fd0&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://xoyip.hatenablog.com/entry/2014/04/09/214405&#34;&gt;Rails4.1のsecrets.ymlはfigaroと違うの？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://railsguides.jp/security.html#%E5%88%A9%E7%94%A8%E7%92%B0%E5%A2%83%E3%81%AE%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3&#34;&gt;Rails セキュリティガイド 10 利用環境のセキュリティ
+&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://jangajan.com/blog/2014/10/05/secrets-dot-yml-on-heroku-in-rails4-dot-1/&#34;&gt;Rails4.1でherokuへのデプロイに失敗(Missing &amp;lsquo;secret_key_base&amp;rsquo;)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://t4traw.github.io/20141215/study-rails-secrets-yml.html&#34;&gt;RailsチュートリアルをRails(4.1)で勉強する：secret_key_baseからsecrets.yml&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/closer/items/f8d8ba00ae86d7051764&#34;&gt;環境によって変わる設定値はdotenvを使うと便利&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Werckerを使ってHerokuにデプロイする</title>
+      <link>http://tatsuyano.github.io/2015/03/13/deploying-to-heroku-using-wercker/</link>
+      <pubDate>Fri, 13 Mar 2015 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/03/13/deploying-to-heroku-using-wercker/</guid>
+      <description>
+
+&lt;p&gt;Bitbucket(プライベートリポジトリ)に用意したアプリケーション(Rails)を
+WerckerでBuildし、HerokuにDeployした時の備忘録です。&lt;/p&gt;
+
+&lt;h2 id=&#34;前提:6460fcf230fa2284bc2f384bc9d671a0&#34;&gt;前提&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Bitbucketにアプリケーションが用意済み&lt;/li&gt;
+&lt;li&gt;Werckerにアカウントを持っていて、Bitbacketと連携済み&lt;/li&gt;
+&lt;li&gt;Herokuにアカウントを持っていて、Bitbacketと連携済み&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;bitbacketのリポジトリをwerckerに登録する:6460fcf230fa2284bc2f384bc9d671a0&#34;&gt;BitbacketのリポジトリをWerckerに登録する&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;プロバイダを選択します。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;リポジトリを選択します。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;リポジトリへの接続方法を選択します。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;wercker.yml&lt;/code&gt;の内容が自動生成されます。&lt;code&gt;wercker.yml&lt;/code&gt;は後で新規に作成するので、ここではコピーせずに次に進みます。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_04.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Make my app public&lt;/code&gt;に&lt;span id=&#39;make_my_app_public&#39;&gt;チェック&lt;/span&gt;を入れると、後ほど出てくる&lt;code&gt;badge&lt;/code&gt;をクリックしたさいに、deploy情報を公開できるようになります(今回はチェックしません)。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_05.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;これで、WerckerにBitbacketのリポジトリの登録が完了しました。&lt;/p&gt;
+
+&lt;h2 id=&#34;wercker-ymlを作成し-アプリケーションをbuildする:6460fcf230fa2284bc2f384bc9d671a0&#34;&gt;wercker.ymlを作成し、アプリケーションをBuildする&lt;/h2&gt;
+
+&lt;p&gt;WerckerでアプリケーションをBuild、Deployするための設定は、&lt;code&gt;wercker.yml&lt;/code&gt;に記載します。&lt;code&gt;wercker.yml&lt;/code&gt;は、アプリケーションのRootディレクトリ直下(Gemfileなどが置いてある階層)に置いてください。&lt;/p&gt;
+
+&lt;p&gt;wercker.yml
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;box: wercker/ruby
+ services:
+     - wercker/postgresql
+ build:
+     steps:
+       - bundle-install
+       - rails-database-yml:
+           service: postgresql
+       - script:
+           name: echo ruby information
+           code: |
+               echo &amp;ldquo;ruby version $(ruby &amp;ndash;version) running!&amp;rdquo;
+               echo &amp;ldquo;from location $(which ruby)&amp;rdquo;
+               echo -p &amp;ldquo;gem list: $(gem list)&amp;rdquo;
+       - script:
+           name: Set up db
+           code: RAILS_ENV=test bundle exec rake db:schema:load
+       - script:
+           name: Run RSpec
+           code: bundle exec rspec
+ deploy:
+     steps:
+         - heroku-deploy:
+             install-toolbelt: true
+         - script:
+             name: Update database
+             code: heroku run rake db:migrate &amp;ndash;app $APP_NAME
+         - script:
+             name: Update assets
+             code: heroku run rake add_static_assets &amp;ndash;app $APP_NAME
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;生成したwercker.ymlを、Bitbacketに&lt;code&gt;git push&lt;/code&gt;すると、Wercker上に自動でBuildされます。
+&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ git add wercker.yml
+$ git commit -m &amp;lsquo;Add wercker.yml&amp;rsquo;
+$ git push origin master
+&lt;/pre&gt;&lt;/code&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;deploy先-heroku-の設定:6460fcf230fa2284bc2f384bc9d671a0&#34;&gt;Deploy先(Heroku)の設定&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Buildが終わったので、次にDeploy(Heroku)の設定を行います。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_06.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;WerckerにHerokuのAPIキーを設定します。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_07.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Heroku account page&lt;/code&gt;をクリック先のページ(Heroku)からKeyをコピーします。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_08.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Deploy target name&lt;/code&gt;に適当な名前を設定します。また、&lt;code&gt;auto deploy ...&lt;/code&gt;のチェックボックスをONにすると、２回目以降のBuild時に、自動でDeployされるようになります。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_09.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Create new Heroku app&lt;/code&gt;を押下し、アプリケーション名と、Regionを設定します。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_10.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;先ほど作成したwercker.ymlで使っている変数名を設定します。
+今回は&lt;code&gt;APP_NAME&lt;/code&gt;という変数に、先ほどのアプリケーション名を設定します。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_11.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Deployの設定が終わったら、次にBuildのログのリンクを押下してください。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_12.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&lt;code&gt;Deploy to&lt;/code&gt;ボタンに先ほど設定した&lt;code&gt;Deploy target name(production)&lt;/code&gt;が表示されます。このボタンをクリックするとDeployが開始されます。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_13.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;readme-mdにbadgeを追加する:6460fcf230fa2284bc2f384bc9d671a0&#34;&gt;README.mdにbadgeを追加する&lt;/h2&gt;
+
+&lt;p&gt;GithubのREADMEによくついている例のあれです。あるとなんとないかっこいいのでつけましょう。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#39;#make_my_app_public&#39;&gt;リポジトリをWerckerに登録した&lt;/a&gt;さいにあった&lt;code&gt;Make my app public&lt;/code&gt;のチェックをONにした状態で、このbadgeをクリックすると、BuildとDeployのログが確認できるようになります。
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploying-to-heroku-using-wercker_14.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;こんな簡単に登録できて、しかも無料(今のところ)なんて、Werckerすごくいいですね。以上、お疲れ様でした。&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:6460fcf230fa2284bc2f384bc9d671a0&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.mah-lab.com/2014/01/08/rails-wercker-heroku-deploy/&#34;&gt;Githubのプライベートリポジトリでも無料で使えるCI、Werckerを使ってrails newからHerokuのデプロイまでやってみる&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://razokulover.hateblo.jp/entry/2014/05/21/000306&#34;&gt;bitbucketとwerckerで０円CIをする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/tsumekoara/items/62cfa777b108acb5659f&#34;&gt;RailsアプリをWerckerを通してHerokuに上げる際に -bash: heroku: command not found とかなった場合の対応&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>RailsでPostgreSQLを使う</title>
+      <link>http://tatsuyano.github.io/2015/03/09/i-use-postgresql-with-rails/</link>
+      <pubDate>Mon, 09 Mar 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/03/09/i-use-postgresql-with-rails/</guid>
+      <description>
+
+&lt;p&gt;アプリをHerokuにdeployしたらSQLエラーが出てしまったので、
+ローカルでの開発もPostgreSQLを使ってみようと思います。&lt;/p&gt;
+
+&lt;h2 id=&#34;postgresqlのインストール:75b64ddf54d76b23d517b111450a597c&#34;&gt;PostgreSQLのインストール&lt;/h2&gt;
+
+&lt;p&gt;ちなみにインストール先のOSはamazon-linuxです。
+&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ sudo yum -y install postgresql93
+$ sudo yum -y install postgresql93-devel
+$ sudo yum -y install postgresql93-server&lt;/p&gt;
+
+&lt;p&gt;$ psql &amp;ndash;version
+psql (PostgreSQL) 9.3.6&lt;/p&gt;
+
+&lt;h1 id=&#34;データベースの初期化:75b64ddf54d76b23d517b111450a597c&#34;&gt;データベースの初期化&lt;/h1&gt;
+
+&lt;p&gt;$ sudo /etc/init.d/postgresql93 initdb&lt;/p&gt;
+
+&lt;h1 id=&#34;データベースの起動:75b64ddf54d76b23d517b111450a597c&#34;&gt;データベースの起動&lt;/h1&gt;
+
+&lt;p&gt;$ sudo /etc/init.d/postgresql93 start&lt;/p&gt;
+
+&lt;h1 id=&#34;サーバー起動時にpostgresの起動設定:75b64ddf54d76b23d517b111450a597c&#34;&gt;サーバー起動時にpostgresの起動設定&lt;/h1&gt;
+
+&lt;p&gt;$ sudo chkconfig postgresql93 on
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;postgresqlアカウントの設定:75b64ddf54d76b23d517b111450a597c&#34;&gt;PostgreSQLアカウントの設定&lt;/h3&gt;
+
+&lt;p&gt;まずは PostgreSQL にスーパーユーザ(postgres)で接続し、パスワードを設定します。
+&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ sudo -u postgres psql
+postgres=# alter role postgres with password &amp;lsquo;hogehoge&amp;rsquo;;  # alter role [user_name] with password &amp;lsquo;[password]&amp;lsquo;;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;データベースの作成:75b64ddf54d76b23d517b111450a597c&#34;&gt;データベースの作成&lt;/h3&gt;
+
+&lt;p&gt;わかりやすいようにデータベース名とRailsのアプリ名(myapp)を同じにします。
+ついでにテスト(RSpec)用のデータベースも作成しておきます。
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;postgres=# create database myapp owner postgres; # create database [database_name] owner [user_name];
+postgres=# create database myapp_test owner postgres;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;アクセス権限の設定:75b64ddf54d76b23d517b111450a597c&#34;&gt;アクセス権限の設定&lt;/h3&gt;
+
+&lt;p&gt;Rails から PostgreSQL に接続するために、&lt;code&gt;pg_hba.conf&lt;/code&gt;の設定を変更します。&lt;/p&gt;
+
+&lt;p&gt;/var/lib/pgsql93/data/pg_hba.conf
+&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;# TYPE  DATABASE  USER  ADDRESS   METHOD
+#local   all       all             peer  &amp;lt;= コメントアウト
+local   all       all             md5   &amp;lt;= コメントイン
+&lt;/code&gt;&lt;/pre&gt;
+変更後は、PostreSQL と Nginx を再起動
+&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ sudo /etc/init.d/postgresql93 restart
+$ sudo /etc/init.d/nginx restart
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;rails側の設定:75b64ddf54d76b23d517b111450a597c&#34;&gt;Rails側の設定&lt;/h2&gt;
+
+&lt;p&gt;アプリを作成する前に、PostgreSQL を初めて使う場合は、先に&lt;code&gt;pg gem&lt;/code&gt;をインストールしておきます。
+&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ gem install pg
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;アプリの作成:75b64ddf54d76b23d517b111450a597c&#34;&gt;アプリの作成&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;-d&lt;/code&gt;パラメータでDBでPostgreSQLに指定する&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ rails new myapp -T -d postgresql
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;接続先情報の設定:75b64ddf54d76b23d517b111450a597c&#34;&gt;接続先情報の設定&lt;/h3&gt;
+
+&lt;p&gt;先ほど作成したデータベースとアカウントの情報を設定します。&lt;/p&gt;
+
+&lt;p&gt;config/database.yml
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt; default: &amp;amp;default
+   adapter: postgresql
+   encoding: unicode
+   pool: 5&lt;/p&gt;
+
+&lt;p&gt;development:
+   &amp;lt;&amp;lt;: *default
+   database: myapp
+   username: postgres
+   password: hogehoge&lt;/p&gt;
+
+&lt;p&gt;test:
+   &amp;lt;&amp;lt;: *default
+   database: myapp_test
+   username: postgres
+   password: hogehoge
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;###(おまけ) PostgeSQLのコマンド&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;データベース一覧を取得する &amp;hellip; \l&lt;/li&gt;
+&lt;li&gt;データベースを選択する     &amp;hellip; \c [データベース名]&lt;/li&gt;
+&lt;li&gt;テーブル一覧を取得する     &amp;hellip; \z&lt;/li&gt;
+&lt;li&gt;テーブルスキーマを取得する &amp;hellip; \d [テーブル名]&lt;/li&gt;
+&lt;li&gt;ユーザ(Role)の一覧         &amp;hellip; \du&lt;/li&gt;
+&lt;li&gt;パスワードの変更           &amp;hellip; alter role [ロール名] with password &amp;lsquo;[新しいパスワード]&amp;lsquo;;&lt;/li&gt;
+&lt;li&gt;データベースの作成         &amp;hellip; create database [データベース名] owner [ロール名];&lt;/li&gt;
+&lt;li&gt;データベースの削除         &amp;hellip; drop database [データベース名];&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;参考サイト:75b64ddf54d76b23d517b111450a597c&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.workabroad.jp/posts/1079&#34;&gt;RubyonRailsでsqliteでなくてPostgresqlを使う時&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rails4をherokuにdeployする</title>
+      <link>http://tatsuyano.github.io/2015/02/19/deploy-the-rails4-to-heroku/</link>
+      <pubDate>Thu, 19 Feb 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/02/19/deploy-the-rails4-to-heroku/</guid>
+      <description>
+
+&lt;p&gt;備忘のため、Rails4をheroku上にdeployする方法をメモしておきます。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;herokuのアカウントの作成、及び鍵の設定は終っているものとします。&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ ruby  -v 2.2.0p0
+$ rails -v 4.2.0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+## サンプルアプリの作成
+
+まずはherokuにdeployするアプリを生成
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ rails new heroku-rails
+$ cd heroku-rails
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+herokuではsqlite3はサポートされていないので、productionからは外すようにする。今回productionで使うDBは、heroku標準のpostgressを選択。
+また、Rail4から`rails_12factor`が必須になったらしいので設定。
+
+Gemfile
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;group :development do
+  gem &#39;sqlite3&#39;
+end
+group :production do
+  gem &#39;pg&#39;
+  gem &#39;rails_12factor&#39;
+end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+開発環境では、postgressを使っていないので、`--without production`をつけて
+productionでのみ必要なGemは開発環境には入れないようにする。
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ bundle install --without production
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+開発環境でも`pg`を使う場合は、以下のようにpostgress本体と、develをインストールする。
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ sudo yum install -y postgresql-devel
+$ sudo yum install -y postgresql
+$ gem install pg
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+ここまでで空のアプリができたので、いったん`git commit`。
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ git init
+$ git add .
+$ git commit -m &#39;initial commit&#39;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+次にherokuにログインし、`heroku create`してheroku上にアプリを生成する。
+この時、アプリ名を指定しなければ、適当な名前で生成される(後から変更可)。
+*アプリ名はURLに含まれるため、heroku全体でユニークである必要がある*
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ heroku login
+$ heroku create &lt;アプリ名&gt;
+$ git push heroku master  # この段階でheroku上にdeployされる。
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+ちなみに`git commit`する前に`heroku create`すると、herokuのremote-urlが設定されないので、
+その場合は、自分で設定する必要がある。
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ git remote set-url heroku  https://git.heroku.com/&lt;アプリ名&gt;.git
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+アプリの情報は、`heroku app:info`で確認ができる。
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ heroku apps:info
+=== fast-stream-xxxx
+Addons:        heroku-postgresql:hobby-dev
+Dynos:         1
+Git URL:       https://git.heroku.com/fast-stream-xxxx.git
+Owner Email:   xxxxxx@xxxx.com
+Region:        us
+Repo Size:     24k
+Slug Size:     27M
+Stack:         cedar-14
+Web URL:       https://fast-stream-xxxx.herokuapp.com/
+Workers:       0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+しかし、作成したアプリのURLをたたくと、以下のようなエラーが出る。
+
+![](https://dl.dropboxusercontent.com/u/159938/blog_images/deploy-the-rails4-to-heroku_01.png)
+
+heroku上のアプリでは、いつものRailsのTOP画面は出てこない。
+
+ここまでの状態で、heroku上で動いているのを確認したい場合は、
+仮のTOPページを生成してgit commitし、再度`heroku push origin master`してdeployすると確認できる。
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ cat &gt;&gt; public/index.html
+index.html
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+## herokuでDBを使う　
+
+`scaffold`で、DBにアクセスする機能を実装してみる。
+開発環境で、`rake db:migrate`した場合は、herokuでも`migrate`する必要がある。
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ rails g scaffold Book title:string price:integer
+$ rake db:migrate
+$ git add .
+$ git commit -m &#39;rails g scaffold Book title:string price:integer&#39;
+
+$ git push heroku master
+$ heroku run rake db:migrate　# &lt;= This!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploy-the-rails4-to-heroku_02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;twitterbootstrapのglyphiconを使う:69d872b5ac14e5d9ddb41de50a34f0aa&#34;&gt;TwitterBootStrapのGlyphiconを使う&lt;/h2&gt;
+
+&lt;p&gt;BootStrapのGlyphiconを使ったアプリをherokuにdeployしても、そのままでは使えない。
+使うためには、production環境(heroku)でも、assets.compileを有効にする必要がある。&lt;/p&gt;
+
+&lt;p&gt;config/environments/production.rb
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;#config.assets.compile = false
+ config.assets.compile = true
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:69d872b5ac14e5d9ddb41de50a34f0aa&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://railsgirls.jp/heroku/&#34;&gt;Heroku に Rails アプリをアップ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/tstomoki/items/cd2391e028dc44dd6f40&#34;&gt;Railsで簡単なアプリをscaffoldで作ってHerokuにデプロイするまで&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.machacks.net/2014/01/21/heroku%E3%81%A7rails%E3%82%A2%E3%83%97%E3%83%AA%E3%82%92%E5%85%AC%E9%96%8B%E3%81%97%E3%82%88%E3%81%86%E3%81%A8%E3%81%97%E3%81%A6%E8%BA%93%E3%81%84%E3%81%9F%E6%89%80/&#34;&gt;HerokuでRailsアプリを公開しようとして躓いた所&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/02/18/introduced-bootstrap3-to-rails4/&#34;&gt;Rails4でBootstrap3を導入&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/20588786/glyphicon-works-locally-but-not-on-heroku&#34;&gt;Glyphicon works locally but not on Heroku&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>herokuことはじめ</title>
+      <link>http://tatsuyano.github.io/2014/10/07/start-heroku/</link>
+      <pubDate>Tue, 07 Oct 2014 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/10/07/start-heroku/</guid>
+      <description>
+
+&lt;p&gt;まずは&lt;a href=&#34;https://www.heroku.com/&#34;&gt;heroku&lt;/a&gt;アカウントを作成します。&lt;br /&gt;
+2段階認証にも対応しているので、設定したほうがいいと思います。&lt;/p&gt;
+
+&lt;h4 id=&#34;heroku-toolbeltのインストール:0f14ad6159787e3a37913d50c16c6864&#34;&gt;heroku-toolbeltのインストール&lt;/h4&gt;
+
+&lt;p&gt;CentOS(AmazonLinux)に、&lt;code&gt;herokuコマンド&lt;/code&gt;をインストールします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ wget -qO- https://toolbelt.heroku.com/install.sh | sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;$HOME/.zshrc&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;if [ -d /usr/local/heroku ]; then
+  export PATH=/usr/local/heroku/bin:$PATH
+fi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ source $HOME/.zshrc
+
+$ which heroku
+/usr/local/heroku/bin/heroku
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/tsumekoara/items/ea5e1b144620ffc4acca&#34;&gt;Vagrant 上の CentOS 6.5 から Heroku を使うには&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;herokuに公開鍵を登録:0f14ad6159787e3a37913d50c16c6864&#34;&gt;herokuに公開鍵を登録&lt;/h4&gt;
+
+&lt;p&gt;秘密鍵を作成&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/Home/hoge/.ssh/id_rsa): /Home/hoge/.ssh/heroku_rsa
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /Home/hoge/.ssh/heroku_rsa.
+Your public key has been saved in /Home/hoge/.ssh/heroku_rsa.pub.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;$HOME/.ssh/config&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;Host heroku.com
+    HostName heroku.com
+    IdentityFile ~/.ssh/heroku_rsa
+    IdentitiesOnly yes
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;herokuにログインし、公開鍵をアップロード&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ heroku login
+
+$ heroku keys:add
+Found existing public key: /Home/hoge/.ssh/heroku_rsa.pub
+Uploading SSH public key /Home/hoge/.ssh/heroku_rsa.pub... done
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://devcenter.heroku.com/articles/keys&#34;&gt;Managing Your SSH Keys&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>herokuでfuelphpをデプロイ</title>
+      <link>http://tatsuyano.github.io/2014/10/07/deploying-the-fuelphp-in-heroku/</link>
+      <pubDate>Tue, 07 Oct 2014 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/10/07/deploying-the-fuelphp-in-heroku/</guid>
+      <description>
+
+&lt;p&gt;まずはherokuの準備をしてください。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/10/07/start-heroku/&#34;&gt;herokuことはじめ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;herokuにデプロイするアプリを、github上に用意してください。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/10/06/git-management-of-fuelphp/&#34;&gt;fuelphpアプリのgit管理&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;herokuにアプリを登録:d97ffc7c51a6f7d385101bece8ee02c7&#34;&gt;herokuにアプリを登録&lt;/h4&gt;
+
+&lt;p&gt;今回は sample-of-chat という名前のアプリを登録します。
+アプリ名はわかりやすいように、リポジトリと同じ名前がいいと思います。
+また、アプリ名がURLになるので、注意してください。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;http://sample-of-chat.herokuapp.com&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ cd sample-of-chat
+$ heroku create sample-of-chat
+
+git remote -v
+heroku  git@heroku.com:sample-of-chat.git (fetch)
+heroku  git@heroku.com:sample-of-chat.git (push)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;webサーバーと&lt;code&gt;DocumentRoot&lt;/code&gt;を指定するファイル&lt;code&gt;Procfile&lt;/code&gt;を作成します。
+webサーバーは&lt;code&gt;apache&lt;/code&gt;か&lt;code&gt;nginx&lt;/code&gt;から選択します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ cd sample-of-chat
+$ cat &gt; Procfile
+web: vendor/bin/heroku-php-apache2 public/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://devcenter.heroku.com/articles/custom-php-settings#setting-the-document-root&#34;&gt;Setting the document root&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;次に、&lt;code&gt;.gitignore&lt;/code&gt;から&lt;code&gt;composer.lock&lt;/code&gt;をコメントアウトし、&lt;br /&gt;
+&lt;code&gt;composer.json&lt;/code&gt;に設定(&lt;code&gt;bin-dir&lt;/code&gt;)を追加します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;&#34;config&#34;: {
+    &#34;bin-dir&#34;: &#34;vendor/bin&#34;,
+    &#34;vendor-dir&#34;: &#34;fuel/vendor&#34;
+},
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;herokuにデプロイ:d97ffc7c51a6f7d385101bece8ee02c7&#34;&gt;herokuにデプロイ&lt;/h4&gt;
+
+&lt;p&gt;herokuに&lt;code&gt;push&lt;/code&gt;することで、デプロイが行われます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;git push heroku master
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;これでデプロイ完了です。デプロイが完了すると、&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;http://sample-of-chat.herokuapp.com&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;にアクセスが可能になります。&lt;/p&gt;
+
+&lt;p&gt;またデプロイされたアプリは、一定時間アクセスがないと、自動で&lt;code&gt;sleep&lt;/code&gt;状態になります。&lt;/p&gt;
+
+&lt;h4 id=&#34;関連する記事:d97ffc7c51a6f7d385101bece8ee02c7&#34;&gt;関連する記事&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/10/07/start-heroku/&#34;&gt;herokuことはじめ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/10/06/git-management-of-fuelphp/&#34;&gt;fuelphpアプリのgit管理&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;参考にしたサイト:d97ffc7c51a6f7d385101bece8ee02c7&#34;&gt;参考にしたサイト&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://exfreeter.hatenablog.com/entry/2013/12/09/235902&#34;&gt;Herokuの使い方まとめ(2013年12月時点、Rails使用)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://spicy-space.hatenablog.com/entry/2014/06/22/013708&#34;&gt;HerokuがPHPに正式対応したのでFuelPHP動かしてみた&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://devcenter.heroku.com/articles/custom-php-settings#setting-the-document-root&#34;&gt;Setting the document root&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>rails_configで定数を管理する -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Rails_configで定数を管理する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Apr 8, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/rails" >rails</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>環境ごとに定数を管理したい時は、rails-config を使うのが便利。</p>
+
+<h2 id="インストール:e91232af01f36657038a0d2a2f32b7bd">インストール</h2>
+
+<p>Gemfileに下記を追加し<code>bundle install</code></p>
+
+<pre><code class="language-ruby"># Gemfile
+gem 'rails_config'
+</code></pre>
+
+<p><code>bundle install</code>後、rails_config の初期設定を実行</p>
+
+<pre><code class="language-bash">$ rails g rails_config:install
+      create  config/initializers/rails_config.rb
+      create  config/settings.yml
+      create  config/settings.local.yml
+      create  config/settings
+      create  config/settings/development.yml
+      create  config/settings/production.yml
+      create  config/settings/test.yml
+      append  .gitignore
+</code></pre>
+<br>
+
+## 環境ごとに読み込まれるファイル
+
+<table border=1>
+  <tr>
+    <th>環境(env)</th>
+    <th>ファイル名</th>
+  </tr>
+  <tr>
+    <td>共通</td>
+    <td>config/settings.yml</td>
+  </tr>
+  <tr>
+    <td>(ローカルの)開発環境</td>
+    <td>config/settings.local.yml</td>
+  </tr>
+  <tr>
+    <td>開発環境</td>
+    <td>config/settings/development.yml</td>
+  </tr>
+  <tr>
+    <td>テスト環境</td>
+    <td>config/settings/test.yml</td>
+  </tr>
+  <tr>
+    <td>本番環境</td>
+    <td>config/settings/production.yml</td>
+  </tr>
+</table>
+
+開発環境で同じ定数を読み込む場合、優先度は下記の順番でなります。
+
+1. `config/settings.local.yml`
+2. `config/settings/development.yml`
+3. `config/settings.yml`
+
+ちなみにこの`config/settings.local.yml`は、gitignore の対象ファイルです。  
+※ `rails g rails_config:install`実行時に追加されます。
+
+<pre><code class="language-ruby">config/settings.local.yml
+config/settings/*.local.yml
+config/environments/*.local.yml
+</code></pre>
+<br>
+
+## 定数の出力
+
+例えば`config/settings.local.yml`を、以下のように設定した場合
+
+<pre><code class="language-ruby">site:
+  url: 'http://hoge.jp'
+  desc: 'hogehoge'
+</code></pre>
+
+<p>View側の出力は以下のようになります。</p>
+
+<p><pre><code class="language-ruby">&lt;%= Settings.site.desc %&gt; # hogehoge
+</code></pre>
+ちなみにプリフィックスの<code>Settings</code>は、<code>config/initializers/rails_config.rb</code>で変更できます。</p>
+
+<h2 id="参考サイト:e91232af01f36657038a0d2a2f32b7bd">参考サイト</h2>
+
+<ul>
+<li><a href="http://qiita.com/yumiyon/items/32c6afb5e2e5b7ff369e">Railsで定数を環境ごとに管理するrails_config</a></li>
+<li><a href="http://blog.hello-world.jp.net/ruby/2268/">Railsで定数を一元管理する</a></li>
+<li><a href="https://github.com/railsconfig/rails_config">railsconfig/rails_config</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

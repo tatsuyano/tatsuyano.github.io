@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>vagrant-aws-pluginをインストール -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Vagrant-Aws-Pluginをインストール</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Jul 21, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/vagrant" >vagrant</a> <a href="http://tatsuyano.github.io/tags/aws" >aws</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>vagrant-awsプラグインを使うことで、コマンドラインで
+インスタンスの作成、起動ができるようになります。</p>
+
+<h3 id="vagrant-aws-plugin-のインストール:fd8b071654156cd5d19727f6c2bcdb56">vagrant-aws(plugin)のインストール</h3>
+
+<pre><code>$ vagrant plugin install vagrant-aws
+Installing the 'vagrant-aws' plugin. This can take a few minutes...
+Installed the plugin 'vagrant-aws (0.4.1)'!
+</code></pre>
+
+<h3 id="インストールされているpluginの確認:fd8b071654156cd5d19727f6c2bcdb56">インストールされているpluginの確認</h3>
+
+<pre><code>$ vagrant plugin list
+vagrant-aws (0.4.1)
+vagrant-login (1.0.1, system)
+vagrant-share (1.0.1, system)
+</code></pre>
+
+<h3 id="boxのインストール:fd8b071654156cd5d19727f6c2bcdb56">BOXのインストール</h3>
+
+<pre><code>$ vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box
+==&gt; box: Adding box 'dummy' (v0) for provider:
+    box: Downloading: https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box
+    ==&gt; box: Successfully added box 'dummy' (v0) for 'aws'!
+$ vagrant box list
+chef/centos-6.5 (virtualbox, 1.0.0)
+dummy           (aws, 0)
+</code></pre>
+
+<h3 id="aws用のディレクトリを作成-初期化:fd8b071654156cd5d19727f6c2bcdb56">aws用のディレクトリを作成 &amp; 初期化</h3>
+
+<pre><code>$ mkdir -p Vagrant/Aws
+$ cd Vagrant/Aws
+$ vagrant init dummy
+A `Vagrantfile` has been placed in this directory. You are now
+ready to `vagrant up` your first virtual environment! Please read
+the comments in the Vagrantfile as well as documentation on
+`vagrantup.com` for more information on using Vagrant.
+</code></pre>
+
+<h3 id="access-key-idとsecret-access-keyの設定:fd8b071654156cd5d19727f6c2bcdb56">Access_Key_IDとSecret_Access_Keyの設定</h3>
+
+<p>自分のアカウントのIDとKeyを設定するか、
+もしくはIAMでユーザを作成し、そのユーザのIDとKeyを設定する</p>
+
+<h4 id="自分のアカウントのidとkey:fd8b071654156cd5d19727f6c2bcdb56">自分のアカウントのIDとKey</h4>
+
+<p><img width="70%" src="https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_12.png" /></p>
+
+<h4 id="iamのidとkey:fd8b071654156cd5d19727f6c2bcdb56">IAMのIDとKey</h4>
+
+<p><img width="70%" src="https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_10.png" />
+<img width="70%" src="https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_11.png" /></p>
+
+<h3 id="vagrantfileの設定:fd8b071654156cd5d19727f6c2bcdb56">Vagrantfileの設定</h3>
+
+<pre><code>VAGRANTFILE_API_VERSION = &quot;2&quot;
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = &quot;dummy&quot;
+  config.vm.provider :aws do |aws, override|
+    aws.access_key_id = 'XXXX'
+    aws.secret_access_key = 'XXXX'
+    aws.region = &quot;ap-northeast-1&quot; # Tokyo
+    aws.ami = 'ami-c9562fc8' # Amazon Linux AMI 2014.03.1
+    aws.instance_type = 't1.micro'
+    aws.security_groups = ['XXXX'] # 複数設定可
+    aws.keypair_name = 'XXXX' # 事前に作成した秘密鍵
+    aws.tags = {
+      'Name' =&gt; 'XXXX'
+    }
+    override.ssh.username = &quot;ec2-user&quot;
+    override.ssh.private_key_path = 'DLした秘密鍵のフルパス'
+  end
+end
+</code></pre>
+
+<h3 id="インスタンスの起動:fd8b071654156cd5d19727f6c2bcdb56">インスタンスの起動</h3>
+
+<pre><code>$ vagrant up --provider=aws
+</code></pre>
+
+<h3 id="インスタンスへの接続:fd8b071654156cd5d19727f6c2bcdb56">インスタンスへの接続</h3>
+
+<pre><code>$ vagrant ssh
+</code></pre>
+
+<h3 id="参考サイト:fd8b071654156cd5d19727f6c2bcdb56">参考サイト</h3>
+
+<ul>
+<li><a href="http://qiita.com/Humangas/items/2997cc6701aa90687c04">Vagrantで AWS EC2インスタンス（RHEL5.5）を作成する</a></li>
+<li><a href="http://qiita.com/yuma_iwasaki/items/817d54cf075a67778a0a">vagrant-awsを使用する際のVagrantファイル詳細</a></li>
+<li><a href="http://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/IAM_Introduction.html">IAM とは?</a></li>
+<li><a href="http://qiita.com/tuboc/items/38da97cb96b2ebc69f88#1-5">EC2インスタンス作成＆最初にしたこと</a></li>
+</ul>
+
+<h4 id="関連する記事:fd8b071654156cd5d19727f6c2bcdb56">関連する記事</h4>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/07/21/install-vagrant-and-virtualbox/">VagrantとVirtualBoxのインストール</a></li>
+<li><a href="http://blog.10rane.com/2014/07/21/start-aws/">aws はじめました。</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

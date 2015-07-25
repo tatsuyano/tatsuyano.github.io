@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>emacsでのRuby環境(Rsenseでオムニ補完) -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>EmacsでのRuby環境(Rsenseでオムニ補完)</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Mar 26, 2013
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>今更ですが、最近yugaiさんの「初めてのRuby」を読み始めています。すごく読みやすくて楽しいです。<br />
+そこでemacsのRuby環境もちゃんと用意することにしました。</p>
+
+<h2 id="rsenseとは:53938f802e6679a03d75b4e3e59e202e">Rsenseとは</h2>
+
+<p>Rsenseは、rubyコードのオムニ補完(文脈を解析して行う補完)をしてくれるツールです。<br />
+emacsでのrubyのコード補完は、他にもauto-complete(単体)、auto-complete-ruby、rcodetools などあります。<br />
+※ Rsense は Java Runtime Environment (JRE) 1.5以上が必要です。JREはOSXに標準でインストールされています。</p>
+
+<h2 id="rsense-のインストール:53938f802e6679a03d75b4e3e59e202e">Rsense のインストール</h2>
+
+<p>本家サイトから最新版をwgetします。<br />
+※ emacs には el-get.le を事前にインストールしておいてください。</p>
+
+<pre><code>wget http://cx4a.org/pub/rsense/rsense-0.3.tar.bz2
+tar xvzf rsense-0.3.tar.bz2
+
+mkdir .emacs.d/opt
+mv rsense-0.3 .emacs.d/opt/
+</code></pre>
+
+<h2 id="rsenseの作成:53938f802e6679a03d75b4e3e59e202e">.rsenseの作成</h2>
+
+<p>次に Rsense に Rubyの環境変数を指定するための ~/.rsense を作成します。</p>
+
+<pre><code>cd $HOME/.emacs.d/opt/rsense-0.3/
+chmod +x ./bin/rsense
+bin/rsense version
+&gt;&gt; RSense 0.3 # &lt;- 今回インストールしたRsenseのバージョン
+
+# $HOME 直下に ~/.rsenseファイルを作成、環境変数が設定されている
+ruby ./etc/config.rb &gt; ~/.rsense
+</code></pre>
+
+<h2 id="java-runtime-が正しく動くか確認:53938f802e6679a03d75b4e3e59e202e">Java Runtime が正しく動くか確認</h2>
+
+<p>生成した ~/.rsense の環境変数が正しく設定されていないと Java Runtime が動きません。<br />
+下記のコマンドで、まずJava Runtimeが正常に動くか確認してください。</p>
+
+<pre><code>cd $HOME/.emacs.d/opt/rsense-0.3/
+bin/rsense server # &lt;- 環境変数がおかしいと、この段階でエラーが出るのでパスを修正する
+
+java -cp lib/jruby.jar:lib/antlr-runtime-3.2.jar:lib/rsense.jar org.cx4a.rsense.Main version
+RSense 0.3 # &lt;- 正常値
+</code></pre>
+
+<p>本家サイトに<a href="http://cx4a.org/software/rsense/manual.ja.html#.E3.83.88.E3.83.A9.E3.83.96.E3.83.AB.E3.82.B7.E3.83.A5.E3.83.BC.E3.83.86.E3.82.A3.E3.83.B3.E3.82.B0">トラブルシューティング</a>があるのでうまく動かない場合は、確認にしてみてください。</p>
+
+<h2 id="emacs-に-rsense-の設定を追加:53938f802e6679a03d75b4e3e59e202e">.emacs に Rsense の設定を追加</h2>
+
+<p>.emacs.d/conf/54-ruby.el</p>
+
+<pre><code class="language-scheme">(setq rsense-home (expand-file-name &quot;~/.emacs.d/opt/rsense-0.3&quot;))
+(add-to-list 'load-path (concat rsense-home &quot;/etc&quot;))
+(require 'rsense)
+(add-hook 'ruby-mode-hook
+  (lambda ()
+    (add-to-list 'ac-sources 'ac-source-rsense-method)
+    (add-to-list 'ac-sources 'ac-source-rsense-constant)))
+</code></pre>
+
+<p>Rsenseが正しく動いているか確認</p>
+
+<pre><code>M-x rsense-version # =&gt; Rsense 3.0
+</code></pre>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/emacs_rsense_001.png" alt="" /></p>
+
+<h2 id="リファレンスの追加:53938f802e6679a03d75b4e3e59e202e">リファレンスの追加</h2>
+
+<p>リファレンスを追加することで、オムニ補完中にリファレンスを表示することができる。</p>
+
+<pre><code>cd $HOME/.emacs.d/opt/rsense-0.3/doc
+wget ruby-refm-1.9.3-dynamic-snapshot.tar.gz
+tar xvzf ruby-refm-1.9.3-dynamic-snapshot.tar.gz
+</code></pre>
+
+<h3 id="emacs-に設定追加:53938f802e6679a03d75b4e3e59e202e">.emacs に設定追加</h3>
+
+<p>.emacs.d/conf/54-ruby.el</p>
+
+<pre><code class="language-scheme">(setq rsense-rurema-home (concat rsense-home &quot;/doc/ruby-refm-1.9.3-dynamic-snapshot&quot;))
+(setq rsense-rurema-refe &quot;refe-1_9_3&quot;)
+</code></pre>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/emacs_rsense_002.png" alt="" /></p>
+
+<h2 id="参考サイト:53938f802e6679a03d75b4e3e59e202e">参考サイト</h2>
+
+<ul>
+<li><a href="http://kayakaya.net/d/20100321.html">Rsenseを動かしてみた</a></li>
+<li><a href="http://cx4a.org/software/rsense/manual.ja.html#.E3.83.88.E3.83.A9.E3.83.96.E3.83.AB.E3.82.B7.E3.83.A5.E3.83.BC.E3.83.86.E3.82.A3.E3.83.B3.E3.82.B0">本家サイト トラブルシューティング</a></li>
+<li><a href="http://tcnksm.sakura.ne.jp/blog/2012/05/07/">Emacs で ruby の自動入力補完とリファレンスの表示</a></li>
+<li><a href="http://cx4a.org/software/rsense/manual.ja.html#Ruby.E3.83.AA.E3.83.95.E3.82.A1.E3.83.AC.E3.83.B3.E3.82.B9.E3.83.9E.E3.83.8B.E3.83.A5.E3.82.A2.E3.83.AB">本家サイト Rubyリファレンスマニュアル</a></li>
+</ul>
+
+<h2 id="ruby-block-ruby-electric-のインストール:53938f802e6679a03d75b4e3e59e202e">ruby-block、ruby-electric のインストール</h2>
+
+<p>ruby-block は、end に対応する行をハイライトしてくれるパッケージです。<br />
+ruby-electric は、括弧などを自動挿入してくれます。</p>
+
+<p>こちらは el-get に初めから recipe があるので、M-x el-get-list-package でインストールします。</p>
+
+<p>.emacs.d/conf/54-ruby.el</p>
+
+<pre><code class="language-scheme">(require 'ruby-block)
+(ruby-block-mode t)
+(setq ruby-block-highlight-toggle t)
+
+(require 'ruby-electric)
+(add-hook 'ruby-mode-hook '(lambda () (ruby-electric-mode t)))
+(setq ruby-electric-expand-delimiters-list nil)
+</code></pre>
+
+<h2 id="参考サイト-1:53938f802e6679a03d75b4e3e59e202e">参考サイト</h2>
+
+<ul>
+<li><a href="http://shibayu36.hatenablog.com/entry/2013/03/18/192651">emacsのruby環境を整えています</a></li>
+</ul>
+
+<h2 id="inf-ruby-のインストール:53938f802e6679a03d75b4e3e59e202e">inf-ruby のインストール</h2>
+
+<p>irb を emacs 上から利用することができます。M-x run-ruby (C-c C-s)<br />
+el-get でインストールすると error がでて、Rsense が動かなくなったので、自分で recipe を用意します。</p>
+
+<p>.emacs.d/conf/10-el-get.el</p>
+
+<pre><code class="language-scheme">(setq el-get-dir &quot;~/.emacs.d/elisp/el-get/&quot;)
+
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+    (url-retrieve-synchronously
+    &quot;https://raw.github.com/dimitri/el-get/master/el-get-install.el&quot;)
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(setq el-get-sources
+  '(
+  (:name inf-ruby
+    :type http
+    :url &quot;https://raw.github.com/ruby/ruby/trunk/misc/inf-ruby.el&quot;
+    :description &quot;[My Recipes] Inferior Ruby Mode&quot;)
+    ))
+(el-get 'sync)
+</code></pre>
+
+<p>.emacs.d/conf/54-ruby.el</p>
+
+<pre><code class="language-scheme">(autoload 'run-ruby &quot;inf-ruby&quot; &quot;Run an inferior Ruby process&quot;)
+(autoload 'inf-ruby-keys &quot;inf-ruby&quot; &quot;Set local key defs for inf-ruby in ruby-mode&quot;)
+(add-hook 'ruby-mode-hook '(lambda () (inf-ruby-keys)))
+</code></pre>
+
+<h2 id="参考サイト-2:53938f802e6679a03d75b4e3e59e202e">参考サイト</h2>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/a666666/20090703/1246609986">Emacs から irb を使いやすくするために inf-ruby.el の設定を追加した</a></li>
+</ul>
+
+<h2 id="rcodetools-のインストール:53938f802e6679a03d75b4e3e59e202e">rcodetools のインストール</h2>
+
+<p>コード補完や xmp(画面出力の結果をコメントにしてソースに自動で記載してくれる) など、便利な機能が追加されます。<br />
+自分は補完は Rsense で行なっているので、xmp のみ使っています。</p>
+
+<pre><code>gem install rcodetools
+cp -a .rbenv/versions/2.0.0-p0/lib/ruby/gems/2.0.0/gems/rcodetools-0.8.5.0/rcodetools.el .emacs.d/elisp/
+</code></pre>
+
+<p>.emacs.d/conf/54-ruby.el</p>
+
+<pre><code class="language-scheme">(require 'rcodetools)
+(setq rct-find-tag-if-available nil)
+(defun ruby-mode-hook-rcodetools ()
+;;  (define-key ruby-mode-map &quot;\M-\C-i&quot; 'rct-complete-symbol)
+  (define-key ruby-mode-map &quot;\C-c\C-t&quot; 'ruby-toggle-buffer)
+  (define-key ruby-mode-map &quot;\C-c\C-d&quot; 'xmp)
+  (define-key ruby-mode-map &quot;\C-c\C-f&quot; 'rct-ri))
+  (add-hook 'ruby-mode-hook 'ruby-mode-hook-rcodetools)
+</code></pre>
+
+<p>&rsquo; # =&gt;&rsquo; とコメントして、C-cC-d すると、</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/emacs_rsense_003.png" alt="" /></p>
+
+<h2 id="出力結果をコメントしてくれる:53938f802e6679a03d75b4e3e59e202e">出力結果をコメントしてくれる。</h2>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/emacs_rsense_004.png" alt="" /></p>
+
+<h2 id="参考サイト-3:53938f802e6679a03d75b4e3e59e202e">参考サイト</h2>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/authorNari/20090523/1243051306">rcodetoolsが素晴らしすぎる件</a></li>
+</ul>
+
+<h2 id="最終的な-emacsd:53938f802e6679a03d75b4e3e59e202e">最終的な.emacsd</h2>
+
+<p>※ el-get の recipe は省略してます。</p>
+
+<p>.emacs.d/conf/54-ruby.el</p>
+
+<pre><code class="language-scheme">;; --------------------------------------------------
+;; ruby-mode
+;; http://shibayu36.hatenablog.com/entry/2013/03/18/192651
+;; --------------------------------------------------
+(autoload 'ruby-mode &quot;ruby-mode&quot;
+  &quot;Mode for editing ruby source files&quot; t)
+  (add-to-list 'auto-mode-alist '(&quot;\\.rb$&quot; . ruby-mode))
+  (add-to-list 'auto-mode-alist '(&quot;Capfile$&quot; . ruby-mode))
+  (add-to-list 'auto-mode-alist '(&quot;Gemfile$&quot; . ruby-mode))
+
+;; --------------------------------------------------
+;; Rsense
+;; [description] オムニ補完
+;; http://kayakaya.net/d/20100321.html
+;; http://cx4a.org/software/rsense/manual.ja.html#.E3.83.88.E3.83.A9.E3.83.96.E3.83.AB.E3.82.B7.E3.83.A5.E3.83.BC.E3.83.86.E3.82.A3.E3.83.B3.E3.82.B0
+;; http://tcnksm.sakura.ne.jp/blog/2012/05/07/
+;; --------------------------------------------------
+(setq rsense-home (expand-file-name &quot;~/.emacs.d/opt/rsense-0.3&quot;))
+(add-to-list 'load-path (concat rsense-home &quot;/etc&quot;))
+(require 'rsense)
+(add-hook 'ruby-mode-hook
+  (lambda ()
+    (add-to-list 'ac-sources 'ac-source-rsense-method)
+    (add-to-list 'ac-sources 'ac-source-rsense-constant)))
+
+;; http://cx4a.org/software/rsense/manual.ja.html#Ruby.E3.83.AA.E3.83.95.E3.82.A1.E3.83.AC.E3.83.B3.E3.82.B9.E3.83.9E.E3.83.8B.E3.83.A5.E3.82.A2.E3.83.AB
+;; cd $HOME/.emacs.d/opt/rsense-0.3/doc &amp;&amp; wget ruby-refm-1.9.3-dynamic-snapshot.tar.gz
+(setq rsense-rurema-home (concat rsense-home &quot;/doc/ruby-refm-1.9.3-dynamic-snapshot&quot;))
+(setq rsense-rurema-refe &quot;refe-1_9_3&quot;)
+
+;; --------------------------------------------------
+;; ruby-block
+;; [description] endに対応する行のハイライト
+;; --------------------------------------------------
+(require 'ruby-block)
+(ruby-block-mode t)
+(setq ruby-block-highlight-toggle t)
+
+;; --------------------------------------------------
+;; ruby-electric
+;; [description] 括弧などを自動挿入
+;; --------------------------------------------------
+(require 'ruby-electric)
+(add-hook 'ruby-mode-hook '(lambda () (ruby-electric-mode t)))
+(setq ruby-electric-expand-delimiters-list nil)
+
+;; --------------------------------------------------
+;; rcodetools
+;; http://d.hatena.ne.jp/authorNari/20090523/1243051306
+;; gem install rcodetools
+;; cp -a .rbenv/versions/2.0.0-p0/lib/ruby/gems/2.0.0/gems/rcodetools-0.8.5.0/rcodetools.el .emacs.d/elisp/
+;; --------------------------------------------------
+(require 'rcodetools)
+(setq rct-find-tag-if-available nil)
+(defun ruby-mode-hook-rcodetools ()
+;;  (define-key ruby-mode-map &quot;\M-\C-i&quot; 'rct-complete-symbol)
+  (define-key ruby-mode-map &quot;\C-c\C-t&quot; 'ruby-toggle-buffer)
+    (define-key ruby-mode-map &quot;\C-c\C-d&quot; 'xmp)
+      (define-key ruby-mode-map &quot;\C-c\C-f&quot; 'rct-ri))
+      (add-hook 'ruby-mode-hook 'ruby-mode-hook-rcodetools)
+
+;; --------------------------------------------------
+;; inf-ruby
+;; [description] irbをemacsから利用する。M-x run-ruby (C-c C-s)
+;; el-getでインストールするとerrorがでて、rsenseが動かなくなったので、自分でrecipeを用意すること
+;; http://d.hatena.ne.jp/a666666/20090703/1246609986
+;; --------------------------------------------------
+(autoload 'run-ruby &quot;inf-ruby&quot; &quot;Run an inferior Ruby process&quot;)
+(autoload 'inf-ruby-keys &quot;inf-ruby&quot; &quot;Set local key defs for inf-ruby in ruby-mode&quot;)
+(add-hook 'ruby-mode-hook '(lambda () (inf-ruby-keys)))
+</code></pre>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

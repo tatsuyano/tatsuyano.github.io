@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>require_onceを使わず、Composerを使う -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Require_onceを使わず、Composerを使う</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Dec 2, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/php" >php</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>毎回<code>require_once</code>を書くのがだるかったので、ローカルのパッケージを自動で読み込む方法を調べてみたら、
+PHP5.3以上ならComposerが使えることを知ったので試してみた。</p>
+
+<p>ただ前提として読み込まれる側のソース(パッケージ)は、Gitなど
+バージョンコントロールシステム(vcs)で管理されている必要がある。</p>
+
+<h3 id="composer-のインストール:d79e389d4b88a2f77afff7061c12ad28">Composer のインストール</h3>
+
+<p>まずはComposerのインストールから。
+今回はすでにpathの通っている<code>/usr/local/bin</code>にインストールする。</p>
+
+<pre><code class="language-bash">$ sudo bash
+# cd /usr/local/bin
+# curl -sS https://getcomposer.org/installer | php
+
+$ which composer.phar
+/usr/local/bin/composer.phar
+</code></pre>
+<br>
+
+### ローカルパッケージの構成
+
+読み込まれる(require_onceされる)側の構成は以下のようにした。
+
+<pre><code class="language-bash">composer-test
+│
+├── composer.json
+└── src
+    └── Tatsuyano
+        ├── ParentClass
+        │   └── ChildClass.php
+        └── ParentClass.php
+</code></pre>
+
+<p>まずは作成したパッケージ(<code>composer-test</code>)をかならず<code>git commit</code>する。<br />
+というのも、たとえ読み込む側、読み込まれる側、両方が同じローカル環境内にあっても
+読み込む側は、Git 経由でソースを読み込む(インストールする)ので、
+<code>commit</code>した内容しか反映されない。</p>
+
+<h4 id="composer-json:d79e389d4b88a2f77afff7061c12ad28">composer.json</h4>
+
+<pre><code class="language-bash">{
+    "name": "composer-test/tatsuyano",
+    "description": "Composerを使ってのファイルのロードテスト",
+    "license": "MIT",
+    "autoload": {
+        "psr-0": {
+            "Tatsuyano\\": "src/"
+        }
+    }
+}
+</code></pre>
+<br>
+
+#### ParentClass.php
+
+<pre><code class="language-bash">namespace Tatsuyano;
+
+class ParentClass
+{
+    public static function name()
+    {
+        return "ParentClass";
+    }
+
+    public static function nameOfChild()
+    {
+        return ParentClass\ChildClass::name();
+    }
+
+    public static function child($class_name = 'ChildClass')
+    {
+        # namespaceを切ったクラスを生成する場合、'\'で区切る必要があるが
+        #クラスを動的に生成する場合は、sprintfで指定しないと
+        #シンタックスエラーになる
+        $class = sprintf("Tatsuyano\ParentClass\%s",$class_name);
+        return new $class();
+    }
+}
+</code></pre>
+
+<p>あえて<code>use</code>は使わずに namespace をすべて指定している。
+結局<code>use</code>を使いまくると<code>require_once</code>を使いまくるのと同じになってしまうのと、
+動的にクラスを生成したい場合、実装時にクラスを明示(<code>use</code>)できないため。</p>
+
+<h4 id="childclass-php:d79e389d4b88a2f77afff7061c12ad28">ChildClass.php</h4>
+
+<pre><code class="language-bash">namespace Tatsuyano\ParentClass;
+
+class ChildClass
+{
+    public static function name()
+    {
+        return "ChildClass";
+    }
+
+    public function say()
+    {
+        return "hello";
+    }
+}
+</code></pre>
+<br>
+
+### パッケージの読み込み
+
+読み込む側の構成は以下とする。
+
+<pre><code class="language-bash">.
+├── composer.json
+├── test.php #-> composer-testパッケージを利用する側のソース
+└── vendor #-> Composerでパッケージをインストールしたあとに生成される
+    ├── autoload.php
+    └── composer
+    └── composer-test #-> インストールされたパッケージ
+</code></pre>
+
+<p>パッケージを読み込む(インストール)には
+<pre><code class="language-bash">$ composer.pear update
+</code></pre></p>
+
+<p>ちなみに、<code>vendor</code>ディレクトリ以下にインストールしたソースを直接編集したあとに
+再度<code>$ composer.pear update</code>しても、編集したソースは更新(上書き)されない。</p>
+
+<h4 id="composer-json-1:d79e389d4b88a2f77afff7061c12ad28">composer.json</h4>
+
+<p><code>repositories/url</code>ディレクティブには、
+読み込まれる側の<code>composer.json</code>が入っているディレクトリを指定する。</p>
+
+<pre><code class="language-bash">{
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "/home/noguchi/src/git/composer-test/"
+        }
+    ],
+    "require": {
+        "composer-test/tatsuyano" : "dev-master"
+    }
+}
+</code></pre>
+
+<p>また、BitBucket の非公開リポジトリを設定することもできる。<br />
+<code>&quot;url&quot;: &quot;git@bitbucket.org:tatsuyano/composer-test.git&quot;</code></p>
+
+<h4 id="test-php-読み込む側のプログラム:d79e389d4b88a2f77afff7061c12ad28">test.php(読み込む側のプログラム)</h4>
+
+<p>インストールされたパッケージを使うには<code>include_once &quot;vendor/autoload.php&quot;</code>で。<br />
+まとめてソースを<code>include</code>することができる。</p>
+
+<p><pre><code class="language-bash">include_once &ldquo;vendor/autoload.php&rdquo;;</p>
+
+<p>use Tatsuyano\ParentClass;</p>
+
+<p>print ParentClass::name() . &ldquo;\n&rdquo;;
+print ParentClass::nameOfChild() . &ldquo;\n&rdquo;;</p>
+
+<p>$child = ParentClass::child();
+print $child-&gt;say() . &ldquo;\n&rdquo;;
+</code></pre>
+<br></p>
+
+<h3 id="参考サイト:d79e389d4b88a2f77afff7061c12ad28">参考サイト</h3>
+
+<ul>
+<li><a href="http://qiita.com/misogi@github/items/8d02f2eac9a91b4e6215">PHPで、spl_autoload_registerを使って、require_once地獄を脱出しよう</a></li>
+<li><a href="http://kore1server.com/182/Composer%E3%81%A7%E3%83%AD%E3%83%BC%E3%82%AB%E3%83%AB%E3%81%AE%E3%83%91%E3%83%83%E3%82%B1%E3%83%BC%E3%82%B8%E3%82%92%E5%8F%96%E3%82%8A%E8%BE%BC%E3%82%80">Composerでローカルのパッケージを取り込む</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

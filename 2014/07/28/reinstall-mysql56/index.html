@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>mysqlを5.1-&gt;5.6に再インストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Mysqlを5.1-&gt;5.6に再インストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Jul 28, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/mysql" >mysql</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>CentOS6の標準のyumでMysqlをインストールすると、バージョンが5.1だったので、再度yumで5.6を入れなおす。</p>
+
+<h3 id="mysql5-6の性能:4a3d2890074119b8e4386ccd19b01070">mysql5.6の性能</h3>
+
+<ul>
+<li><a href="http://thinkit.co.jp/story/2013/11/19/4670">MySQL 5.6での機能強化点 - パフォーマンスと使い勝手を大きく向上</a></li>
+<li><a href="http://nippondanji.blogspot.jp/2012/10/mysql-56.html">開発スピードアクセル全開ぶっちぎり！日本よ、これがMySQL 5.6だッ！！</a></li>
+<li><a href="http://d.hatena.ne.jp/hirose31/20121003/134924992">MySQL 5.1-&gt;5.6のmy.cnfの差分とか</a></li>
+</ul>
+
+<h3 id="yumでインストールしたmysqlのパッケージの確認:4a3d2890074119b8e4386ccd19b01070">yumでインストールしたmysqlのパッケージの確認</h3>
+
+<pre><code>$ rpm -qa | grep mysql
+mysql-libs-5.1.73-3.el6_5.x86_64
+mysql-server-5.1.73-3.el6_5.x86_64
+php-mysqlnd-5.5.10-1.el6.remi.1.x86_64 # &lt;- これはphp5.5のパッケージ
+mysql-5.1.73-3.el6_5.x86_64
+</code></pre>
+
+<h3 id="依存関係の解消:4a3d2890074119b8e4386ccd19b01070">依存関係の解消</h3>
+
+<p>ただmysql-libsはcronやpostfixが使用しているため、先に依存関係を解消する必要がある</p>
+
+<pre><code>$ wget ftp://ftp.jaist.ac.jp/pub/mysql//Downloads/MySQL-5.6/MySQL-shared-compat-5.6.17-1.el6.x86_64.rpm
+
+$ rpm -Uvh MySQL-shared-compat-5.6.17-1.el6.x86_64.rpm
+準備中...                ########################################### [100%]
+1:MySQL-shared-compat    ########################################### [100%]
+警告: /etc/my.cnf は /etc/my.cnf.rpmsave として保存されました。
+</code></pre>
+
+<p>MySQL-shared-compatは、mysql-libsと同等のライブラリを提供し、mysql-libsを置き換えてくれる</p>
+
+<h3 id="パッケージの削除:4a3d2890074119b8e4386ccd19b01070">パッケージの削除</h3>
+
+<pre><code>yum remove mysql*
+</code></pre>
+
+<p>削除されたパッケージ</p>
+
+<pre><code>==========================
+Package
+=========================
+Removing:
+  mysql
+  mysql-community-release
+  mysql-server
+
+Transaction Summary
+==========================
+Remove        3 Package(s)
+</code></pre>
+
+<ul>
+<li><a href="http://www.kakiro-web.com/linux/mysql-install.html">CentOS6.5 64bitにMySQL5.6.17をRPMからインストール</a></li>
+</ul>
+
+<h3 id="mysql5-6用のrpmを追加し-再度インストールする:4a3d2890074119b8e4386ccd19b01070">mysql5.6用のrpmを追加し、再度インストールする</h3>
+
+<pre><code>yum install http://dev.mysql.com/get/mysql-community-release-el6-5.noarch.rpm
+yum install mysql mysql-devel mysql-server
+</code></pre>
+
+<p>インストールされたパッケージ</p>
+
+<pre><code>$ rpm -qa | grep mysql
+mysql-community-server-5.6.19-2.el6.x86_64
+mysql-community-release-el6-5.noarch
+php-mysqlnd-5.5.10-1.el6.remi.1.x86_64
+mysql-community-common-5.6.19-2.el6.x86_64
+mysql-community-client-5.6.19-2.el6.x86_64
+mysql-community-devel-5.6.19-2.el6.x86_64
+mysql-community-libs-5.6.19-2.el6.x86_64
+</code></pre>
+
+<ul>
+<li><a href="http://blog.ybbo.net/2014/01/22/%E3%80%90%E3%82%B7%E3%83%B3%E3%83%97%E3%83%AB%E3%80%91centos6%E3%81%ABmysql5-6%E3%82%92yum%E3%81%A7%E7%B0%A1%E5%8D%98%E3%81%AB%E3%82%A4%E3%83%B3%E3%82%B9%E3%83%88%E3%83%BC%E3%83%AB%E3%81%99%E3%82%8B/">CentOS6にMySQL5.6をyumで簡単にインストールする手順</a></li>
+</ul>
+
+<h3 id="create-table-でsqlエラーが出る:4a3d2890074119b8e4386ccd19b01070">create table でSQLエラーが出る</h3>
+
+<p>Mysql5.6から、インストール時に強制的にsql_modeを設定するになった関係で、今まで動いていたSQLがエラーになる</p>
+
+<pre><code>BLOB/TEXT column 'hoge' can't have a default value
+Field 'updated_at' doesn't have a default value
+</code></pre>
+
+<p>この<code>STRICT_TRANS_TABLES</code>が有効になっていると、text型やdatetime型に初期値を設定しているとエラーになる模様</p>
+
+<pre><code># mysql -uroot -e 'SELECT @@GLOBAL.sql_mode;'
++--------------------------------------------+
+| @@GLOBAL.sql_mode                          |
++--------------------------------------------+
+| STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION |
++--------------------------------------------+
+</code></pre>
+
+<h3 id="sql-modeの設定を変える:4a3d2890074119b8e4386ccd19b01070">sql_modeの設定を変える</h3>
+
+<p>/etc/my.cnf</p>
+
+<pre><code># Recommended in standard MySQL setup
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+</code></pre>
+
+<p>この部分をコメントアウトし、mysqlを再起動すると、sql_modeが変更された</p>
+
+<pre><code># mysql -uroot -e 'SELECT @@GLOBAL.sql_mode;'
++------------------------+
+| @@GLOBAL.sql_mode      |
++------------------------+
+| NO_ENGINE_SUBSTITUTION |
++------------------------+
+</code></pre>
+
+<p>コメントアウトしたのに、なぜ<code>NO_ENGINE_SUBSTITUTION</code>が消えないのか不思議だ(別の場所にもmy.cnfがあるのだろう)が、
+とりあえずこれでエラーがでなくなる。</p>
+
+<p>ちなみに、sql_modeの設定をナシにしたい場合は、下記のように設定する</p>
+
+<pre><code># Recommended in standard MySQL setup
+sql_mode=''
+</code></pre>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/oranie/20130402/1364906656">MySQL5.6で今までのVerでは問題無かったSQL文がエラーになった場合の対処法</a></li>
+<li><a href="http://d.hatena.ne.jp/ozuma/20130323/1364002513">CentOS 6.4にMySQL 5.5をrpmインストール</a></li>
+<li><a href="http://www.seeds-std.co.jp/seedsblog/1035.html">MySQL5.6にしていくつかのSQLでエラーが出るようになった</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

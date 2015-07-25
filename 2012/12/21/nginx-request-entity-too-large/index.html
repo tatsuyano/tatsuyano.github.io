@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>nginxのファイルのアップロードサイズを変更する　413 Request Entity Too Large -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Nginxのファイルのアップロードサイズを変更する　413 Request Entity Too Large</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Fri, Dec 21, 2012
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/nginx" >nginx</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>サイズの大きなファイルをアップロードしようとするとタイトルのエラーが出るので、その対処方法。</p>
+
+<h2 id="nginx-conf:251fe1633e5a45e2b9c809336377c9e6">nginx.conf</h2>
+
+<p>まずはnginx.confファイルに「client_max_body_size 20M;」を追加。<br />
+私はリバースプロキシを利用しているので、2箇所に記述。</p>
+
+<pre><code class="language-scheme">server {
+   listen       80;
+      server_name blog.10rane.com;
+
+   client_max_body_size 20M; # 413 Request Entity Too Large
+   .....
+
+server {
+   listen       8080;
+      server_name blog.10rane.com;
+
+   client_max_body_size 20M; # 413 Request Entity Too Large
+   .....
+</code></pre>
+
+<h2 id="php-ini:251fe1633e5a45e2b9c809336377c9e6">php.ini</h2>
+
+<p>php.iniは3箇所の変更。</p>
+
+<pre><code class="language-php"># emacs /etc/php.ini
+upload_max_filesize = 20M
+post_max_size = 20M
+memory_limit = 128M
+</code></pre>
+
+<h2 id="再起動:251fe1633e5a45e2b9c809336377c9e6">再起動</h2>
+
+<p>nginx、fast-cgi両方を再起動。</p>
+
+<pre><code>/etc/init.d/nginx restart
+/etc/init.d/php-fastcgi restart
+</code></pre>
+
+<h2 id="参考サイト:251fe1633e5a45e2b9c809336377c9e6">参考サイト</h2>
+
+<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
+
+<ul>
+<li><a href="http://weble.org/2012/05/28/nginx-error-413-request-entity-too-large-%E3%81%A8%E5%87%BA%E3%82%8B%E5%A0%B4%E5%90%88%E3%81%AF%E6%9C%80%E5%A4%A7%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%B5%E3%82%A4%E3%82%BA%E3%82%92">nginx error – 413 Request Entity Too Large と出る場合は最大ファイルサイズを変更する</a></li>
+<li><a href="http://se-suganuma.blogspot.jp/2012/04/fileuploadnginxphpini.html">FileをUploadするためのnginxとphp.iniの設定</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

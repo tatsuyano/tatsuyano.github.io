@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Caskをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Caskをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Aug 20, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>やろうやろうと思ってやっていなかったCaskを導入しようと思います。
+今ままでは主に<code>el-get</code>を中心に使っていたのですが、
+どのパッケージをインストールしたかとか、環境の切り替えが少し面倒でした。</p>
+
+<p>今回導入する<code>Cask</code>はrubyのBundlerチックに管理してくれるため、上記の問題を解決してくれます。</p>
+
+<p><em>Caskのインストールにはpythonが必要です。</em>
+<em>インストールされていない場合、<a href="http://blog.10rane.com/2014/08/19/install-anyenv/">anyenv</a>でpythonをインストールしてください</em></p>
+
+<h3 id="emacs-24のインストール:01206951a7ce81840a3c5d243aea0541">Emacs 24のインストール</h3>
+
+<p><code>Cask</code>は Emacs 24以上が必須です。
+今回うっかりyum経由でEmacsをインストールしていたため、バージョンが23.1.1.だったので
+いったん削除し、再度バージョン24以上のEmacsをインストールします。</p>
+
+<p>yumでインストールしたEmacs 23を削除</p>
+
+<pre><code># yum list installed | grep emacs
+# yum -y remove emacs.x86_64 emacs-common.x86_64
+</code></pre>
+
+<p>make &amp; install</p>
+
+<pre><code># yum install gcc make ncurses-devel
+# wget http://ftp.jaist.ac.jp/pub/GNU/emacs/emacs-24.3.tar.gz
+
+# tar zxvfp emacs-24.3.tar.gz
+# cd emacs-24.3
+# ./configure -without-x -without-selinux
+# make
+# make install
+</code></pre>
+
+<p>バージョンの確認</p>
+
+<pre><code>$ emacs --version
+GNU Emacs 24.3.1
+Copyright (C) 2013 Free Software Foundation, Inc.
+</code></pre>
+
+<ul>
+<li><a href="http://www.beard-bear.com/blog/archives/123">CentOS6.5にEmacs24.3をインストール</a></li>
+</ul>
+
+<h3 id="caskのインストール:01206951a7ce81840a3c5d243aea0541">Caskのインストール</h3>
+
+<pre><code>$ curl -fsSkL https://raw.github.com/cask/cask/master/go | python
+Successfully installed Cask!  Now, add the cask binary to your $PATH:
+  export PATH=&quot;$HOME/.cask/bin:$PATH&quot;
+</code></pre>
+
+<p>~/.zshrc</p>
+
+<pre><code>echo &gt;&gt; export PATH=&quot;$HOME/.cask/bin:$PATH&quot; &gt;&gt; ~/.zshrc
+source $HOME/.zshrc
+</code></pre>
+
+<p>インストールするパッケージのリストは<code>Cask</code>という名前のファイルに設定します。<code>Cask</code>ファイルを作るには、<code>cask init</code>で生成されます。
+パッケージのインストール先は<code>.cask</code>ディレクトリです。</p>
+
+<pre><code>$ cd ~/.emacs.d/
+$ cask init
+</code></pre>
+
+<p>ディレクトリ構成</p>
+
+<pre><code>~/.emacs.d
+ ├── ac-comphist.dat
+ ├── auto-save-list
+ ├── .cask #&lt;= パッケージがインストールされるディレクトリ
+ ├── Cask
+ └── init.el
+</code></pre>
+
+<p>~/.emacs.d/Cask</p>
+
+<pre><code>(source gnu)
+(source marmalade)
+(source melpa)
+
+(depends-on &quot;markdown-mode&quot;)
+
+;; Ruby
+(depends-on &quot;ruby-block&quot;)
+(depends-on &quot;ruby-compilation&quot;)
+(depends-on &quot;ruby-end&quot;)
+(depends-on &quot;ruby-interpolation&quot;)
+(depends-on &quot;ruby-mode&quot;)
+(depends-on &quot;ruby-test-mode&quot;)
+(depends-on &quot;ruby-tools&quot;)
+(depends-on &quot;inf-ruby&quot;)
+</code></pre>
+
+<p>~/.emacs.d/init.el</p>
+
+<pre><code>;; Emacs package system
+(require 'cask &quot;~/.cask/cask.el&quot;)
+(cask-initialize)
+</code></pre>
+
+<p>パッケージのインストール</p>
+
+<pre><code>$ cd ~/.emacs.d
+$ cask
+</code></pre>
+
+<p>Caskファイルの精査はまた今度行おうと思います。
+とりあえずCaskをインストールまでをまとめました。</p>
+
+<p>お疲れ様でした。</p>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/naoya/20140424/1398318293">Cask</a></li>
+<li><a href="http://d.hatena.ne.jp/syohex/20140424/1398310931">package.elから Caskに切り替えました</a></li>
+<li><a href="http://gongo.hatenablog.com/entry/2014/05/09/230836">Emacs のパッケージ管理を package.el + el-get から Cask + pallet に乗り換えました</a></li>
+<li><a href="http://cask.github.io/usage.html">Cask Usage</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

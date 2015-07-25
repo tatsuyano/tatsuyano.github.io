@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Rails4でBootstrap3を導入(sass版) -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Rails4でBootstrap3を導入(Sass版)</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Mar 31, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/rails" >rails</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>以前、<code>twitter-bootstrap-rails</code> をつかって<a href="http://tatsuyano.github.io/2015/02/18/introduced-bootstrap3-to-rails4/">Bootstrap3を導入</a>という記事を書いたんですが、
+Twitter社が提供している<code>bootstrap-sass</code>のほうが導入が簡単だったので、今後はこちらを使っていきたいと思います。</p>
+
+<h2 id="設定:1d26c675b81c51ae89761728b91077a7">設定</h2>
+
+<p>まずはGemfileの設定から。</p>
+
+<p><pre><code class="language-ruby">cat Gemfile
+gem &lsquo;bootstrap-sass&rsquo;, &lsquo;~&gt; 3.3.4&rsquo;
+gem &lsquo;sass-rails&rsquo;, &lsquo;&gt;= 3.2&rsquo;</p>
+
+<p>$ bundle install
+</code></pre>
+<br></p>
+
+<p><code>application.css</code> を削除し、新たに <code>application.sass</code> を生成します。</p>
+
+<p><pre><code class="language-bash">$ rm app/assets/stylesheets/application.css
+$ cat &gt; app/assets/stylesheets/application.scss
+@import &ldquo;bootstrap-sprockets&rdquo;;
+@import &ldquo;bootstrap&rdquo;;
+</code></pre>
+<br></p>
+
+<p><code>application.js</code> の設定を変更します。読み込み順に注意してください。</p>
+
+<p><pre><code class="language-bash">$ cat &gt; app/assets/javascripts/application.js
+//= require jquery
+//= require bootstrap-sprockets
+</code></pre>
+<br></p>
+
+<p>これでGlyphicons(Webフォント)も使えるようになります。便利ですね。</p>
+
+<h2 id="参考サイト:1d26c675b81c51ae89761728b91077a7">参考サイト</h2>
+
+<ul>
+<li><a href="https://github.com/twbs/bootstrap-sass">twbs/bootstrap-sass</a></li>
+<li><a href="http://qiita.com/masamitsu-konya/items/e3630046774ac1fbd346">全部はいらないよね？bootstrap-sassをカスタマイズして使う方法</a></li>
+</ul>
+
+<h2 id="関連する記事:1d26c675b81c51ae89761728b91077a7">関連する記事</h2>
+
+<ul>
+<li><a href="http://tatsuyano.github.io/2015/02/18/introduced-bootstrap3-to-rails4/">Rails4でBootstrap3を導入</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

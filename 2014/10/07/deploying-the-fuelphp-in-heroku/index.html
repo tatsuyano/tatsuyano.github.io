@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>herokuでfuelphpをデプロイ -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Herokuでfuelphpをデプロイ</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Oct 7, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/php" >php</a> <a href="http://tatsuyano.github.io/tags/heroku" >heroku</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>まずはherokuの準備をしてください。</p>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/10/07/start-heroku/">herokuことはじめ</a></li>
+</ul>
+
+<p>herokuにデプロイするアプリを、github上に用意してください。</p>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/10/06/git-management-of-fuelphp/">fuelphpアプリのgit管理</a></li>
+</ul>
+
+<h4 id="herokuにアプリを登録:d97ffc7c51a6f7d385101bece8ee02c7">herokuにアプリを登録</h4>
+
+<p>今回は sample-of-chat という名前のアプリを登録します。
+アプリ名はわかりやすいように、リポジトリと同じ名前がいいと思います。
+また、アプリ名がURLになるので、注意してください。</p>
+
+<p><code>http://sample-of-chat.herokuapp.com</code></p>
+
+<pre><code class="language-bash">$ cd sample-of-chat
+$ heroku create sample-of-chat
+
+git remote -v
+heroku  git@heroku.com:sample-of-chat.git (fetch)
+heroku  git@heroku.com:sample-of-chat.git (push)
+</code></pre>
+
+<p>webサーバーと<code>DocumentRoot</code>を指定するファイル<code>Procfile</code>を作成します。
+webサーバーは<code>apache</code>か<code>nginx</code>から選択します。</p>
+
+<pre><code class="language-bash">$ cd sample-of-chat
+$ cat > Procfile
+web: vendor/bin/heroku-php-apache2 public/
+</code></pre>
+
+<ul>
+<li><a href="https://devcenter.heroku.com/articles/custom-php-settings#setting-the-document-root">Setting the document root</a></li>
+</ul>
+
+<p>次に、<code>.gitignore</code>から<code>composer.lock</code>をコメントアウトし、<br />
+<code>composer.json</code>に設定(<code>bin-dir</code>)を追加します。</p>
+
+<pre><code class="language-bash">"config": {
+    "bin-dir": "vendor/bin",
+    "vendor-dir": "fuel/vendor"
+},
+</code></pre>
+
+<h4 id="herokuにデプロイ:d97ffc7c51a6f7d385101bece8ee02c7">herokuにデプロイ</h4>
+
+<p>herokuに<code>push</code>することで、デプロイが行われます。</p>
+
+<pre><code class="language-bash">git push heroku master
+</code></pre>
+
+<p>これでデプロイ完了です。デプロイが完了すると、</p>
+
+<p><code>http://sample-of-chat.herokuapp.com</code></p>
+
+<p>にアクセスが可能になります。</p>
+
+<p>またデプロイされたアプリは、一定時間アクセスがないと、自動で<code>sleep</code>状態になります。</p>
+
+<h4 id="関連する記事:d97ffc7c51a6f7d385101bece8ee02c7">関連する記事</h4>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/10/07/start-heroku/">herokuことはじめ</a></li>
+<li><a href="http://blog.10rane.com/2014/10/06/git-management-of-fuelphp/">fuelphpアプリのgit管理</a></li>
+</ul>
+
+<h4 id="参考にしたサイト:d97ffc7c51a6f7d385101bece8ee02c7">参考にしたサイト</h4>
+
+<ul>
+<li><a href="http://exfreeter.hatenablog.com/entry/2013/12/09/235902">Herokuの使い方まとめ(2013年12月時点、Rails使用)</a></li>
+<li><a href="http://spicy-space.hatenablog.com/entry/2014/06/22/013708">HerokuがPHPに正式対応したのでFuelPHP動かしてみた</a></li>
+<li><a href="https://devcenter.heroku.com/articles/custom-php-settings#setting-the-document-root">Setting the document root</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CoffeeScriptの勉強 その２(構文) -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>CoffeeScriptの勉強 その２(構文)</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Fri, Mar 8, 2013
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/coffeescript" >coffeescript</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h4 id="hello-world:be823534c456d353d4dbe36bf961ffec">Hello World</h4>
+
+<p>$ emacs test.coffee
+<pre><code class="language-bash">hello = -&gt;
+        console.log(&ldquo;Hello World!&rdquo;)</p>
+
+<p>hello()
+</code></pre></p>
+
+<p>コンパイル coffee -&gt; js。 test.jsというJsファイルが生成される</p>
+
+<pre><code class="language-bash">$ coffee -c test.coffee
+</code></pre>
+
+<p>生成したJsの実行</p>
+
+<pre><code class="language-bash">$ node test.js
+Hello World!
+</code></pre>
+
+<p>生成されたJsの中身</p>
+
+<pre><code class="language-bash">(function() {
+    var hello;
+    hello = function() {
+    return console.log("Hello World!");
+ };
+ hello();
+}).call(this);
+</code></pre>
+
+<p>コンパイルせずに直接実行</p>
+
+<pre><code class="language-bash">$ coffee test.coffee
+Hello World!
+</code></pre>
+
+<p>coffee &lt;ファイル名&gt; と入力するのが面倒なので、zshのaliasを設定する</p>
+
+<p>emacs $HOME/.zshrc
+<pre><code class="language-bash">alias -s coffee=coffee</p>
+
+<p>source $HOME/.zshrc
+</code></pre></p>
+
+<p>今後は、ファイル名を入力するだけで実行される</p>
+
+<pre><code class="language-bash">$ ./test.coffee
+Hello World!
+</code></pre>
+
+<h4 id="オプション:be823534c456d353d4dbe36bf961ffec">オプション</h4>
+
+<ul>
+<li>-c (&ndash;compile) .coffee から .js にコンパイルします。</li>
+<li>-b (&ndash;bare)    外側の (function(){ &hellip; }).call(this); を取り除きます。</li>
+<li>-w (&ndash;watch)   ソースファイルを監視して、ファイルが変更されるたびにコンパイルを実行します。</li>
+</ul>
+
+<h4 id="構文:be823534c456d353d4dbe36bf961ffec">構文</h4>
+
+<ul>
+<li>var での変数宣言が不要</li>
+<li>関数の定義(function)の代わりに -&gt; を使う</li>
+<li>式の終わりや行末にセミコロンを必ずしも置かなくてもよい</li>
+<li>インデントでブロックを表現する</li>
+<li>引数を取る関数の場合、() を省略して書くこともできる</li>
+</ul>
+
+<h4 id="コメントアウト:be823534c456d353d4dbe36bf961ffec">コメントアウト</h4>
+
+<pre><code class="language-bash"># 1行コメント
+# コンパイル時には消される
+
+###
+複数行コメント
+コンパイル時にも残る
+###
+</code></pre>
+
+<h4 id="関数:be823534c456d353d4dbe36bf961ffec">関数</h4>
+
+<p>-&gt; を使って定義します。引数を取る場合は -&gt; を (var1, var2) -&gt; のようにして引数を並べます。<br />
+関数内の最後の値が自動的にreturnされます。</p>
+
+<pre><code class="language-bash">square = (x) -> x * x
+</code></pre>
+
+<p>コンパイル結果 ↓</p>
+
+<pre><code class="language-bash">square = function(x) {
+  return x * x;
+};
+</code></pre>
+
+<p>例) 引数がないので、()を省略
+<pre><code class="language-bash">hello = -&gt; &ldquo;Hello World!&rdquo;
+hello()
+</code></pre></p>
+
+<h4 id="if文:be823534c456d353d4dbe36bf961ffec">if文</h4>
+
+<ul>
+<li><p>複数行の場合
+<pre><code class="language-bash">fib = (n) -&gt;
+if n &lt; 2
+ n
+else
+ fib(n-1) + fib(n-2)
+</code></pre></p></li>
+
+<li><p>一行の場合
+<pre><code class="language-bash">fib = (n) -&gt; if n &lt; 2 then n else fib(n-1) + fib(n-2)
+</code></pre></p></li>
+</ul>
+
+<h4 id="変数展開:be823534c456d353d4dbe36bf961ffec">変数展開</h4>
+
+<p>&rdquo; &ldquo; でくくった文字列の中では #{変数名} で変数の値を埋め込むことができます。
+<pre><code class="language-bash">name = &ldquo;Nao&rdquo;
+console.log &ldquo;My name is #{name}!&rdquo;
+</code></pre></p>
+
+<h4 id="演算子:be823534c456d353d4dbe36bf961ffec">演算子</h4>
+
+<pre><code class="language-bash">|Coffee | Js |
+|:------|:---|
+| is    | ===|
+| isnt  | !==|
+| not   | !  |
+| and   | && |
+| or    | || |
+</code></pre>
+
+<h4 id="参考サイト:be823534c456d353d4dbe36bf961ffec">参考サイト</h4>
+
+<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
+
+<ul>
+<li><a href="http://tech.kayac.com/archive/coffeescript-tutorial.html">今日から始めるCoffeeScript</a></li>
+<li><a href="http://minghai.github.com/library/coffeescript/index.html">The Little Book on CoffeeScript</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

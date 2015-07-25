@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>fuelphpのエラー文言を日本語化する -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Fuelphpのエラー文言を日本語化する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Jul 29, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/php" >php</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h4 id="config-phpに設定を追加:c686d533785df368c7d44ebfce4543f8">config.phpに設定を追加</h4>
+
+<p>app/config/config.php</p>
+
+<pre><code>//'language'           =&gt; 'en', // Default language
+//'language_fallback'  =&gt; 'en', // Fallback language when file isn't available for default language
+//'locale'             =&gt; 'en_US', // PHP set_locale() setting, null to not set
+'language'           =&gt; 'ja',
+'language_fallback'  =&gt; 'en',
+'locale'             =&gt; 'ja_JP.UTF-8',
+</code></pre>
+
+<h4 id="langディレクトリに日本語用のディレクトリを作成:c686d533785df368c7d44ebfce4543f8">langディレクトリに日本語用のディレクトリを作成</h4>
+
+<pre><code>mkdir app/lang/ja
+touch app/lang/ja/validation.php
+</code></pre>
+
+<p>validation.phpの設定は core/lang/en/validation.php を参照
+設定されているkey(メソッド)は、core/classes/validation.phpで設定されている</p>
+
+<pre><code>&lt;?php
+return array(
+    'required'         =&gt; '「:label」は必須です',
+    'min_length'       =&gt; '「:label」は:param:1文字以上で入力してください',
+    'max_length'       =&gt; '「:label」は:param:1文字以内で入力してください',
+    'exact_length'     =&gt; '「:label」は:param:1文字で入力してください',
+    'match_value'      =&gt; '「:label」は「:param:1」と一致していません',
+    'match_pattern'    =&gt; '「:label」はパターン「:param:1」と一致しません',
+    'match_field'      =&gt; '「:label」は「:param:1」と一致していません',
+    'valid_email'      =&gt; '「:label」はメールアドレスが不正です',
+    'valid_emails'     =&gt; '「:label」に不正なメールアドレスが含まれてます',
+    'valid_url'        =&gt; '「:label」は不正なURLです',
+    'valid_ip'         =&gt; '「:label」は不正なIPアドレスです',
+    'numeric_min'      =&gt; '「:label」は:param:1以上で入力してください',
+    'numeric_max'      =&gt; '「:label」は:param:1以内で入力してください',
+    'valid_string'     =&gt; '「:label」は:param:1で入力する必要があります',
+);
+</code></pre>
+
+<h3 id="自前のvalidation-helperクラス-を作成する:c686d533785df368c7d44ebfce4543f8">自前のvalidation(helperクラス)を作成する</h3>
+
+<pre><code>mkdir app/classes/helper
+touch app/classes/helper/myvalidation.php
+</code></pre>
+
+<p>app/classes/helper/myvalidation.php</p>
+
+<pre><code>&lt;?php
+class Helper_MyValidation
+{
+    /**
+     * 数字をチェックするバリデーション
+     *
+     * @param  string val
+     * @return bool   numeric or blank is 'true'.
+     */
+    public static function _validation_numeric_only($val)
+    {
+        mb_regex_encoding(&quot;UTF-8&quot;);
+        return preg_match(&quot;/^[\d]*$/&quot;, $val) === 1;
+    }
+}
+</code></pre>
+
+<h4 id="自作したメソッドのアラートを登録する:c686d533785df368c7d44ebfce4543f8">自作したメソッドのアラートを登録する</h4>
+
+<pre><code>cat fuel/app/lang/ja/validation.php | grep numeric_only
+'numeric_only'     =&gt; '「:label」は数字のみで入力してください',
+</code></pre>
+
+<h4 id="controllerで自作のバリデーションの呼び出し:c686d533785df368c7d44ebfce4543f8">controllerで自作のバリデーションの呼び出し</h4>
+
+<p>app/classes/controller/hoge.php</p>
+
+<pre><code>public function action_create()
+{
+  $val = Validation::forge();
+  $val-&gt;add_callable('Helper_MyValidation');
+  $val-&gt;add_field('name','名前','required|min_length[2]|max_length[30]');
+  $val-&gt;add_field('email','Email','required|valid_email');
+  $val-&gt;add_field('tel','電話番号','numeric_only');
+</code></pre>
+
+<h3 id="どこでバリデーションを呼ぶべきか:c686d533785df368c7d44ebfce4543f8">どこでバリデーションを呼ぶべきか</h3>
+
+<p>modelかcontroller どちらに実装すべきかは迷いましたが、今回はcontrollerに実装するようにしました。
+理由はfieldsetを使わないからです。</p>
+
+<p>fieldsetは便利ですが、どうしても細かいところに手が届かないのと、デザイナーさんと分業するには、少し勝手が悪いかなあと思いました。</p>
+
+<h3 id="参考サイト:c686d533785df368c7d44ebfce4543f8">参考サイト</h3>
+
+<ul>
+<li><a href="http://fuelphp.jp/docs/1.7/classes/validation/validation.html">Validation クラス</a></li>
+<li><a href="http://raining.bear-life.com/fuelphp/%E3%83%90%E3%83%AA%E3%83%87%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%AE%E3%83%AB%E3%83%BC%E3%83%AB%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B">バリデーションのルールを追加する</a></li>
+</ul>
+
+<h3 id="関連する記事:c686d533785df368c7d44ebfce4543f8">関連する記事</h3>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/07/29/fuelphp-use-agent-class/">fuelphpでAgentClassを設定する</a></li>
+<li><a href="http://blog.10rane.com/2014/07/28/use-the-redis-in-fuelphp/">fuelphpでredisを使う</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

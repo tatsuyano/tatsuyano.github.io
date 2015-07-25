@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Jsのスコープについて -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Jsのスコープについて</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Jun 8, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/js" >js</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="グローバルスコープとローカルスコープしかない:12cd6967166e7d3f6ae4d2a16d321c1d">グローバルスコープとローカルスコープしかない</h2>
+
+<p>Jsには2種類のスコープしかない。グローバルスコープ内で宣言した変数をグローバル変数、ローカルスコープ内で宣言した変数をローカル変数という。</p>
+
+<ul>
+<li>スクリプト全体(トップレベル)で有効なグローバル変数
+
+<ul>
+<li>プログラム終了時までメモリを確保してしまう</li>
+<li>多用すると、名前がバッティングする可能性がある
+<br></li>
+</ul></li>
+<li>関数内でのみ有効なローカル変数
+
+<ul>
+<li>関数終了時にメモリが開放される</li>
+<li>宣言時に<code>var</code>をつけないと、*グローバル変数*として認識されてしまう</li>
+</ul></li>
+</ul>
+
+<pre><code class="language-javascript">var hoge = 'global';  // => グローバル変数
+
+function func () {
+  var fuga = 'local'; // => ローカル変数、必ずvarをつける
+  console.log(fuga);
+}
+</code></pre>
+<br>
+
+また、他言語のようにブロックスコープは存在しない。
+
+<pre><code class="language-javascript">if (true) {
+  var hoge = 'block';
+}
+
+console.log(hoge); // => block ブロック内で宣言した変数も参照できてしまう
+</code></pre>
+<br>
+
+## 変数の巻き上げ(hoisting)
+
+Jsには「変数の巻き上げ」という概念がある。
+
+<pre><code class="language-javascript">var hoge = 'global';
+
+function func() {
+  console.log(hoge); // => undefined なぜか global と出力されない
+
+  var hoge = 'local';
+  console.log(hoge); // => local 期待どおりの出力
+}
+</code></pre>
+
+<p>一回目の<code>console.log(hoge);</code>で、なぜか<code>undefined</code>が出力されている。これが「変数の巻き上げ」の挙動。</p>
+
+<p>何が起きているかというと、Jsでは、<em>関数内のどこで変数宣言をしても、関数の先頭で、宣言のみしたと認識されてしまうため。</em></p>
+
+<p>つまり上記のコードは以下のように処理されている。</p>
+
+<pre><code class="language-javascript">var hoge = 'global';
+
+function func() {
+  var hoge; // 初期値は入っていない。宣言のみ
+  console.log(hoge); // => 初期値が入っていないので、undefined
+
+  hoge = 'local';
+  console.log(hoge); // => 値が入っているので、local
+}
+</code></pre>
+
+<p>これを防ぐには、変数宣言は、*関数の先頭*で行うようにする。</p>
+
+<h2 id="まとめ:12cd6967166e7d3f6ae4d2a16d321c1d">まとめ</h2>
+
+<ul>
+<li>グローバル変数は多用しない</li>
+<li>変数宣言時は、必ず var をつける</li>
+<li>ローカル変数は、関数の先頭で宣言する</li>
+</ul>
+
+<h2 id="参考サイト:12cd6967166e7d3f6ae4d2a16d321c1d">参考サイト</h2>
+
+<ul>
+<li><a href="http://tacamy.hatenablog.com/entry/2012/12/30/191125">JavaScript のスコープを理解する</a></li>
+<li><a href="http://itpro.nikkeibp.co.jp/atcl/column/14/091700069/091700002/">JavaScriptのスコープを理解しよう</a></li>
+<li><a href="http://analogic.jp/hoisting/">知らないと怖い「変数の巻き上げ」とは？</a></li>
+</ul>
+
+<h2 id="関連記事:12cd6967166e7d3f6ae4d2a16d321c1d">関連記事</h2>
+
+<ul>
+<li><a href="http://tatsuyano.github.io/2015/06/08/for-function-of-js/">Jsの関数について</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

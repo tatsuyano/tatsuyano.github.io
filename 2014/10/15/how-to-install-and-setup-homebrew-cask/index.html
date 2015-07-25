@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Homebrew CaskでMacアプリをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Homebrew CaskでMacアプリをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Oct 15, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/mac" >mac</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>Emacsの<code>Cask</code>のように、インストールしたMacアプリをファイルに記述して、一括管理できる方法を探していたところ、
+<code>Homebrew Cask</code>というものを見つけました。</p>
+
+<p><code>Homebrew Cask</code>はHomebrewの拡張で、コマンドラインでMacアプリをインストールできるようになります。
+また、Homebrewの拡張なので、<code>Brewfile</code>を使って、アプリも一括インストール(管理)できるようになります。</p>
+
+<h4 id="homebrew-caskのインストール:a5eb851712b682a06ffb00332a1d80ae">Homebrew Caskのインストール</h4>
+
+<p>念のため、先にHomebrew本体、インストール済みのコマンドをアップデートします。</p>
+
+<p><pre><code class="language-bash">$ sudo -E bash</p>
+
+<h1 id="brew-update:a5eb851712b682a06ffb00332a1d80ae">brew update</h1>
+
+<h1 id="brew-upgrade:a5eb851712b682a06ffb00332a1d80ae">brew upgrade</h1>
+
+<h1 id="brew-tap-phinze-homebrew-cask:a5eb851712b682a06ffb00332a1d80ae">brew tap phinze/homebrew-cask</h1>
+
+<h1 id="brew-install-brew-cask:a5eb851712b682a06ffb00332a1d80ae">brew install brew-cask</h1>
+
+<p></code></pre>
+<br></p>
+
+<h4 id="macアプリの検索:a5eb851712b682a06ffb00332a1d80ae">Macアプリの検索</h4>
+
+<p><code>search</code>に続けて、検索文字を入力すれば、絞り込み検索ができます。</p>
+
+<p><pre><code class="language-bash"># brew cask search
+</code></pre>
+<br></p>
+
+<h4 id="macアプリの-単体-インストール-アンインストール:a5eb851712b682a06ffb00332a1d80ae">Macアプリの(単体)インストール、アンインストール</h4>
+
+<p>デフォルトだと、インストール先は/Users/hoge/Application 配下になります。
+変更する場合は、<code>HOMEBREW_CASK_OPTS</code>を設定してください。</p>
+
+<p><pre><code class="language-bash"># export HOMEBREW_CASK_OPTS=&ldquo;&ndash;appdir=/Applications&rdquo;</p>
+
+<h1 id="brew-cask-install-github:a5eb851712b682a06ffb00332a1d80ae">brew cask install github</h1>
+
+<h1 id="brew-cask-uninstall-github:a5eb851712b682a06ffb00332a1d80ae">brew cask uninstall github</h1>
+
+<p></code></pre>
+<br></p>
+
+<h4 id="brewfileでのインストール:a5eb851712b682a06ffb00332a1d80ae">Brewfileでのインストール</h4>
+
+<p>Macアプリ以外にもHomebrewでインストールしたコマンドもインストール(管理)できます。</p>
+
+<p><pre><code class="language-bash"># brew bundle
+</code></pre>
+<br></p>
+
+<p>こちらにgitにあげた私の<code>Brewfile</code>を貼っておきます。<code>gist-it</code>を使うと、
+gistではなく、gitに上げたファイルも読み込めるようになりました。</p>
+
+<p><script src="http://gist-it.appspot.com/github/tatsuyano/dotfiles/blob/master/mac/Brewfile"></script>
+<br></p>
+
+<h4 id="参考サイト:a5eb851712b682a06ffb00332a1d80ae">参考サイト</h4>
+
+<ul>
+<li><a href="http://nanapi.co.jp/blog/2014/03/05/homebrew-cask/">homebrew-caskを使って簡単にMacの環境構築をしよう！</a></li>
+<li><a href="http://qiita.com/paming/items/15ec3543cc094d411428">Homebrewで*.dmgなアプリをインストールしたい→それhomebrew-caskで出来るよ</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

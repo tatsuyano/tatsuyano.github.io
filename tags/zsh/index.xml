@@ -1,0 +1,410 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Zsh on blog.10rane.com</title>
+    <link>http://tatsuyano.github.io/tags/zsh/</link>
+    <description>Recent content in Zsh on blog.10rane.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Thu, 21 Aug 2014 01:00:00 +0900</lastBuildDate>
+    <atom:link href="http://tatsuyano.github.io/tags/zsh/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>pecoで接続先hostを選ぶスクリプトを書いた</title>
+      <link>http://tatsuyano.github.io/2014/08/21/select-host-for-peco/</link>
+      <pubDate>Thu, 21 Aug 2014 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/08/21/select-host-for-peco/</guid>
+      <description>
+
+&lt;p&gt;pecoを使って、sshするhostを選択するスクリプトを書きました。&lt;/p&gt;
+
+&lt;p&gt;.oh-my-zsh/custom/peco.zsh&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;function peco-select-host () {
+    host=$(grep -iE &#39;^host\s+(\w|\d)+&#39; ~/.ssh/config | awk &#39;{print $2}&#39; | peco)
+
+    if [ -n &amp;quot;$host&amp;quot; ]; then
+        ssh $host
+    fi
+}
+alias hs=peco-select-host
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;元々ある&lt;code&gt;~/.ssh/config&lt;/code&gt;をgrepしてhost名を渡してるだけ。&lt;br /&gt;
+1、2文字のキーバインド(ストローク？)がなかったので、aliasで&lt;code&gt;hs&lt;/code&gt;にしました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ hs
+QUERY&amp;gt;
+clgit
+support
+test01
+ghost    #&amp;lt;-接続先のhostを選ぶ
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;peco楽しいですね。お疲れ様でした。&lt;/p&gt;
+
+&lt;h4 id=&#34;関連する記事:c729515682ab26a58fb1a624c7927aa0&#34;&gt;関連する記事&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/02/installed-the-peco-to-centos/&#34;&gt;流行りのpecoをcentosにインストールしました&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/14/updating-the-package-go/&#34;&gt;goパッケージ(peco)のバージョンを上げる&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>zshをバージョン5 に上げる</title>
+      <link>http://tatsuyano.github.io/2014/08/19/install-zsh5/</link>
+      <pubDate>Tue, 19 Aug 2014 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/08/19/install-zsh5/</guid>
+      <description>
+
+&lt;p&gt;yumでインストールするとバージョンが4.3だったので、makeしてインストールしました。&lt;/p&gt;
+
+&lt;p&gt;まずはmakeするために必要なライブラリのインストール&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# yum -y install gcc ncurses-devel
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ダウンロード&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# wget http://www.zsh.org/pub/zsh-5.0.5.tar.bz2
+# tar jxvf zsh-5.0.5.tar.bz2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;make &amp;amp; install&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# cd zsh-5.0.5
+# ./configure
+# make
+# make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;インストールが正常に終わったら、zshを登録します。&lt;/p&gt;
+
+&lt;p&gt;shellの登録 &amp;amp; 変更&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# echo /usr/local/bin/zsh &amp;gt;&amp;gt; /etc/shells
+# chsh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;/usr/local/bin/zsh以外にインストールされている可能性があるので、確認してください&lt;/em&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ zsh --version
+zsh 5.0.5 (x86_64-unknown-linux-gnu)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ログイン時にzshが起動するようbashrcに追加する。&lt;/p&gt;
+
+&lt;p&gt;~/.bashrc&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Use zsh
+if [ -f /usr/local/bin/zsh ]; then
+    exec /usr/local/bin/zsh
+fi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;一度ログアウトし、ログイン後shellがzshに切り替わっていれば完了です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$echo $0
+/usr/local/bin/zsh   
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tzono.com/wiki/index.php?linux%2Fzsh&#34;&gt;linux/zsh&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://tkuchiki.hatenablog.com/entry/2014/05/08/222135&#34;&gt;現在の shell を shellscript の中から確認する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;お疲れ様でした。&lt;/p&gt;
+
+&lt;h4 id=&#34;関連する記事:8403d3785f94a15561a9ce234d03172d&#34;&gt;関連する記事&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/06/install-oh-my-zsh/&#34;&gt;oh-my-zshをインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>oh-my-zshをインストールする</title>
+      <link>http://tatsuyano.github.io/2014/08/06/install-oh-my-zsh/</link>
+      <pubDate>Wed, 06 Aug 2014 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/08/06/install-oh-my-zsh/</guid>
+      <description>
+
+&lt;p&gt;今まで設定が面倒で試していなかった&lt;a href=&#34;https://github.com/robbyrussell/oh-my-zsh&#34;&gt;oh-my-zsh&lt;/a&gt;をインストールしてみました。下記の方法で、mac、centosともに対応可能です。&lt;/p&gt;
+
+&lt;h3 id=&#34;oh-my-zshをインストールする:3944f0646c6d5b7fe433d7bd3dbfa39d&#34;&gt;oh-my-zshをインストールする&lt;/h3&gt;
+
+&lt;p&gt;すでにzshはインストールされているものとします。&lt;br /&gt;
+また、今ある&lt;code&gt;$HOME/.zshrc&lt;/code&gt;はインストール時に上書きされてしまうので事前に退避してください。&lt;br /&gt;
+インストールするとHOME直下に&lt;code&gt;.oh-my-zsh&lt;/code&gt;というディレクトリが作成され&lt;code&gt;.zshrc&lt;/code&gt;が上書きされます。&lt;/p&gt;
+
+&lt;p&gt;インストール&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -L http://install.ohmyz.sh | sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;インストールが終わったので、いったん&lt;code&gt;sorce .zshrc&lt;/code&gt;して、oh-my-zshを使ってみます。promptが変更されたはずです。&lt;/p&gt;
+
+&lt;p&gt;oh-my-zshは、themeとplugin(複数選択可)という単位でzshを管理しています。
+初期設定はthemeが&lt;code&gt;robbyrussell&lt;/code&gt;、pluginが&lt;code&gt;git&lt;/code&gt;です。&lt;/p&gt;
+
+&lt;p&gt;oh-my-zshのディレクトリ構成&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.
+├── custom      ... 自分が設定したzshrcを入れる
+│   └── plugins ... 自分で作ったpluginを入れる
+├── lib
+├── log         ... zsh_historyなどを入れる
+├── plugins     ... gitなどソフトウェア単位の設定ファイルが入っている
+├── templates   ... zshrcのテンプレートファイルが入っている
+├── themes      ... promptなど見た目の設定ファイルが入っている
+└── tools
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;customに自分の設定ファイルを入れる:3944f0646c6d5b7fe433d7bd3dbfa39d&#34;&gt;customに自分の設定ファイルを入れる&lt;/h4&gt;
+
+&lt;p&gt;整理されていませんが、とりあえず&lt;code&gt;custom&lt;/code&gt;ディレクトリに入れてみます。&lt;br /&gt;
+因みに拡張子は&lt;code&gt;.zsh&lt;/code&gt;で、ファイル名は自由です。&lt;/p&gt;
+
+&lt;p&gt;main.zsh&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export LC_ALL=en_US.UTF-8
+export LANG=ja_JP.UTF-8
+export EDITOR=emacs
+
+bindkey -e                        # emacsライクなキーバインド
+autoload -U compinit              # 強力な補完機能
+compinit -u                       # このあたりを使わないとzsh使ってる意味なし
+
+setopt autopushd                  # cdの履歴を表示
+setopt pushd_ignore_dups          # 同ディレクトリを履歴に追加しない
+setopt auto_cd                    # 自動的にディレクトリ移動
+
+## 履歴
+HISTFILE=~/.oh-my-zsh/log/.zsh_history
+HISTSIZE=10000                    # ファイルサイズ
+SAVEHIST=10000                    # saveする量
+setopt hist_ignore_dups           # 重複を記録しない
+setopt hist_reduce_blanks         # スペース排除
+setopt share_history              # 履歴ファイルを共有
+setopt EXTENDED_HISTORY           # zshの開始終了を記録
+
+export PATH=/usr/local/bin:$PATH
+export PATH=$PATH:$HOME/Dropbox/dotfile/mybin
+
+## zsh-syntax-highlighting
+source $HOME/Dropbox/dotfile/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+## anyenv
+export PATH=&amp;quot;$HOME/.anyenv/bin:$PATH&amp;quot;
+eval &amp;quot;$(anyenv init - zsh)&amp;quot;
+
+## z.sh
+_Z_CMD=j
+source $HOME/Dropbox/dotfile/z/z.sh
+precmd() { _z --add &amp;quot;$(pwd -P)&amp;quot; }
+
+## peco(for oh-my-zsh)
+function peco-select-history() {
+    local tac
+    if which tac &amp;gt; /dev/null; then
+        tac=&amp;quot;tac&amp;quot;
+    else
+        tac=&amp;quot;tail -r&amp;quot;
+    fi
+    BUFFER=$(\history -n 1 | \
+        eval $tac | \
+        peco --query &amp;quot;$LBUFFER&amp;quot;)
+    CURSOR=$#BUFFER
+    zle clear-screen
+}
+zle -N peco-select-history
+bindkey &#39;^r&#39; peco-select-history
+
+## alias
+alias mysql=&amp;quot;mysql --pager=&#39;less -S -n -i -F -X&#39;&amp;quot;
+function tmr(){ tmux new -s $1 || tmux attach -d -t $1; }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;文字化けへの対処法:3944f0646c6d5b7fe433d7bd3dbfa39d&#34;&gt;文字化けへの対処法&lt;/h3&gt;
+
+&lt;p&gt;どうもoh-my-zshがlocateをブランクに設定してしまうようなので、
+適当な箇所(私は&lt;code&gt;/custom/main.zsh&lt;/code&gt;)に、以下の設定を追加しました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export LC_ALL=en_US.UTF-8
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/uchiko/items/f6b1528d7362c9310da0&#34;&gt;oh-my-zsh の環境で、peco-select-history が動かない&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;pecoが動かなくなる問題への対処法:3944f0646c6d5b7fe433d7bd3dbfa39d&#34;&gt;pecoが動かなくなる問題への対処法&lt;/h3&gt;
+
+&lt;p&gt;以下のように変更することで対応しました。&lt;/p&gt;
+
+&lt;p&gt;変更前&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;## peco
+for f (~/Dropbox/dotfile/peco_sources/*) source &amp;quot;${f}&amp;quot; # load peco sources
+bindkey &#39;^r&#39; peco-select-history
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;変更後&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;## peco(for oh-my-zsh)
+function peco-select-history() {
+    local tac
+    if which tac &amp;gt; /dev/null; then
+        tac=&amp;quot;tac&amp;quot;
+    else
+        tac=&amp;quot;tail -r&amp;quot;
+    fi
+    BUFFER=$(\history -n 1 | \
+        eval $tac | \
+        peco --query &amp;quot;$LBUFFER&amp;quot;)
+    CURSOR=$#BUFFER
+    zle clear-screen
+}
+zle -N peco-select-history
+bindkey &#39;^r&#39; peco-select-history
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/huydx@github/items/a045d33ec23350c730af&#34;&gt;oh-my-zshの言語問題&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;themeの変更:3944f0646c6d5b7fe433d7bd3dbfa39d&#34;&gt;themeの変更&lt;/h3&gt;
+
+&lt;p&gt;oh-my-zshには複数の&lt;a href=&#34;https://github.com/robbyrussell/oh-my-zsh/wiki/Themes&#34;&gt;theme&lt;/a&gt;が用意されています。
+今回は&lt;a href=&#34;https://gist.github.com/agnoster/3712874&#34;&gt;agnoster&lt;/a&gt;というthemeを使ってみます。&lt;/p&gt;
+
+&lt;p&gt;.zshrc&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;##ZSH_THEME=&amp;quot;robbyrussell&amp;quot;
+ZSH_THEME=&amp;quot;agnoster&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;agnoster&lt;/code&gt;はデフォルトでは入っていないので、別途インストールします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd .oh-my-zsh/themes/
+wget https://gist.githubusercontent.com/agnoster/3712874/raw/c3107c06c04fb42b0ca27b0a81b15854819969c6/agnoster.zsh-theme
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;promptの見た目を少しだけ変更しました。&lt;/p&gt;
+
+&lt;p&gt;agnoster.zsh-theme&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;##prompt_segment black default &amp;quot;%(!.%{%F{yellow}%}.)$user@%m&amp;quot;
+prompt_segment black default &amp;quot;%(!.%{%F{yellow}%}.)$user&amp;quot;
+
+#prompt_segment blue black &#39;%~&#39;
+prompt_segment blue black &#39;%1~&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;変更したので&lt;code&gt;source $HOME/.zshrc&lt;/code&gt;を忘れずに実行します。&lt;/p&gt;
+
+&lt;h4 id=&#34;macにpowerlineフォントをインストールする:3944f0646c6d5b7fe433d7bd3dbfa39d&#34;&gt;macにpowerlineフォントをインストールする&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;agnoster&lt;/code&gt;は、powerline系のフォントを使うことを前提としています。&lt;/p&gt;
+
+&lt;p&gt;まずは&lt;code&gt;/Library/Fonts/&lt;/code&gt;以下に、
+&lt;a href=&#34;https://gist.github.com/qrush/1595572&#34;&gt;Inconsolata-dz-Powerline.otf&lt;/a&gt;ページにある&lt;code&gt;Inconsolata-dz-Powerline.otf&lt;/code&gt;、&lt;code&gt;Menlo-Powerline.otf&lt;/code&gt;、&lt;code&gt;mensch-Powerline.otf&lt;/code&gt;をダウンロードします。&lt;/p&gt;
+
+&lt;p&gt;ダウンロード後、iTerm2のフォントを変更し、再起動させます。
+ここまで、ひと通りの設定が完了しました。&lt;/p&gt;
+
+&lt;p&gt;お疲れ様でした。&lt;/p&gt;
+
+&lt;h4 id=&#34;関連する記事:3944f0646c6d5b7fe433d7bd3dbfa39d&#34;&gt;関連する記事&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/06/install-ricky-powerline-for-mac/&#34;&gt;Ricky for powerlineをmacにインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Ricky for powerlineをmacにインストールする</title>
+      <link>http://tatsuyano.github.io/2014/08/06/install-ricky-powerline-for-mac/</link>
+      <pubDate>Wed, 06 Aug 2014 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/08/06/install-ricky-powerline-for-mac/</guid>
+      <description>
+
+&lt;p&gt;agnosterは&lt;code&gt;powerline.otf&lt;/code&gt;にある依存文字を使うことを前提しているので、
+macにpowerline系のフォントをインストールします。&lt;/p&gt;
+
+&lt;p&gt;少しややこしいのですが、元々powerlineというフォントはvimで使う用？だったので
+ググるとよくvim-powerlineとかがヒットしますが同じもののようです。&lt;/p&gt;
+
+&lt;p&gt;また、既存のフォントをpowerline化(既存のフォントに依存文字を使えるようにする)することもできます。&lt;/p&gt;
+
+&lt;p&gt;今回は、今使っているRictyをそのまま使いたかったので、
+新たに&lt;code&gt;Ricty for powerline&lt;/code&gt;というフォントをbrewでインストールしてみました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew update
+brew uninstall ricty
+brew tap sanemat/font
+brew install --vim-powerline ricty
+cp -f /usr/local/Cellar/ricty/3.2.3/share/fonts/Ricty*.ttf ~/Library/Fonts/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/osakanafish/items/731dc31168e3330dbcd0&#34;&gt;homebrewを使ってiTerm2でRicty for powerline設定した&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;インストールが完了したら、iTermのフォントの設定を変更して、iTermを再起動してください。&lt;/p&gt;
+
+&lt;p&gt;お疲れ様でした。&lt;/p&gt;
+
+&lt;h4 id=&#34;関連する記事:6fca2851ceced0539c2a5ff6938f09f8&#34;&gt;関連する記事&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/06/install-oh-my-zsh/&#34;&gt;oh-my-zshをインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>autojumpからzに乗り換えた</title>
+      <link>http://tatsuyano.github.io/2014/08/04/autojump-to-z/</link>
+      <pubDate>Mon, 04 Aug 2014 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/08/04/autojump-to-z/</guid>
+      <description>
+
+&lt;p&gt;&lt;code&gt;autojump&lt;/code&gt;を今まで使っていたが、zshrcを編集していたらエラーを吐くようになったので、
+このタイミングで&lt;code&gt;z&lt;/code&gt;に乗り換えてみた&lt;/p&gt;
+
+&lt;h4 id=&#34;インストール:5765885c35481b7e1a5e78571c51e23b&#34;&gt;インストール&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd .dotfile
+git clone https://github.com/rupa/z.git .zsh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;.zshrc&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;_Z_CMD=j
+source ~/.dotfile/.zsh/z.sh
+precmd() {
+  _z --add &amp;quot;$(pwd -P)&amp;quot;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;キーバインドは&lt;code&gt;j&lt;/code&gt;に変更。
+ホーム直下に&lt;code&gt;.z&lt;/code&gt;というファイルが作成され、そのファイルに履歴が溜まっていく&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/rupa/z&#34;&gt;z&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://project-p.jp/halt/?p=1724&#34;&gt;AUTOJUMPよりZ.SHのほうがPYTHONなしで動いて良いよ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

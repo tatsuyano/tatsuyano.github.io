@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>init-loaderをCaskでインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Init-LoaderをCaskでインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Thu, Aug 28, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>最近<code>cask</code>に乗り換えたので、<code>init-loader.el</code>も再度設定し直しました。</p>
+
+<h3 id="init-loaderのインストール:af05674282cdca3f015095d80d55db77">init-loaderのインストール</h3>
+
+<p>まずはCaskファイルに設定し、<code>cask</code>コマンドで<code>init-loader</code>をインストールします。</p>
+
+<p>~/.emacs.d/Cask</p>
+
+<pre><code>;; Setup
+(depends-on &quot;init-loader&quot;)
+</code></pre>
+
+<p>次に設定ファイル(elisp)を格納するディレクトリ、<code>init_loader</code>を作成します。</p>
+
+<pre><code>mkdir $HOME/.emacs.d/init_loader
+</code></pre>
+
+<p>先ほど作成したディレクトリを<code>init-loader</code>がロードするように設定します。</p>
+
+<p>~/.emacs.d/init.el</p>
+
+<pre><code>;; init-loader
+(custom-set-variables
+ '(init-loader-show-log-after-init 'error-only))
+ (init-loader-load (concat user-emacs-directory &quot;init_loader&quot;))
+</code></pre>
+
+<h3 id="init-loaderで読み込むファイル:af05674282cdca3f015095d80d55db77">init-loaderで読み込むファイル</h3>
+
+<p>とりあえずinit-loaderで読み込むファイルは以下のように設定しました。
+まだすべて<code>cask</code>に移行しきれていないので、順々に対応していきたいと思います。</p>
+
+<pre><code>init_loader
+│
+├── 01_basic.el
+├── 02_helm.el
+└── 02_migemo.el
+</code></pre>
+
+<p>お疲れ様でした。</p>
+
+<h3 id="参考サイト:af05674282cdca3f015095d80d55db77">参考サイト</h3>
+
+<ul>
+<li><a href="https://github.com/syohex/dot_files/tree/master/emacs">syohex/dotfiles/emacs</a></li>
+</ul>
+
+<h3 id="関連する記事:af05674282cdca3f015095d80d55db77">関連する記事</h3>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/08/20/install-cask/">Caskをインストールする</a></li>
+<li><a href="http://blog.10rane.com/2014/08/27/how-to-install-and-setup-migemo-on-amazon-linux/">Amazon LinuxにMigemoをインストールする</a></li>
+<li><a href="http://blog.10rane.com/2014/08/28/how-to-install-and-setup-helm-in-cask/">HelmをCaskでインストールする</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Route53のDNSを使う -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Route53のDNSを使う</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Thu, Sep 11, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/aws" >aws</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>BlogをEC2で運用しているので、せっかくなのでネームサーバーもAmazonが提供しているRoute53 を使ってみたいと思います。
+料金が少し気になるところですが、個人のサイトなら100円/月ぐらい見ておけばよさそうです(未確認)。</p>
+
+<ul>
+<li><a href="http://www.lancork.net/2014/05/amazon-route53-monthly-cost/">個人サイトでAmazon Route 53を一ヶ月間使った場合の料金</a></li>
+<li><a href="http://aws.amazon.com/jp/route53/pricing/">Amazon Route 53 料金表</a></li>
+</ul>
+
+<p>今回変更するドメイン(10rane.com)はvalue-domainで管理しています。
+作業の流れとしては、以下になります。</p>
+
+<ol>
+<li>Route53にレコードを登録</li>
+<li>レジストラ(value-domain)に設定しているネームサーバーを変更</li>
+</ol>
+
+<h3 id="変更前のネームサーバーの状態を確認:41103ae6f2f5c979c26ff43dc235d329">変更前のネームサーバーの状態を確認</h3>
+
+<p>value-domainのネームサーバーを利用していることがわかります。</p>
+
+<pre><code>$ nslookup -type=any 10rane.com
+10rane.com      nameserver = ns1.value-domain.com.
+10rane.com      nameserver = ns2.value-domain.com.
+10rane.com
+        origin = ns1.value-domain.com
+        mail addr = hostmaster.10rane.com
+        serial = 1410401066
+        refresh = 16384
+        retry = 2048
+        expire = 1048576
+        minimum = 2560
+        Name:   10rane.com
+        Address: 49.212.146.214
+</code></pre>
+
+<p>　</p>
+
+<pre><code>$ dig 10rane.com ns
+;; ANSWER SECTION:
+10rane.com.             1124    IN      NS      ns2.value-domain.com.
+10rane.com.             1124    IN      NS      ns1.value-domain.com.
+
+$ dig 10rane.com soa
+;; ANSWER SECTION:
+10rane.com.             802     IN      SOA     ns1.value-domain.com. hostmaster.10rane.com. 1410401066 16384 2048 1048576 2560
+</code></pre>
+
+<h3 id="route53でzoneの設定:41103ae6f2f5c979c26ff43dc235d329">Route53でZoneの設定</h3>
+
+<p>まずは<code>Zone</code>の設定をします。<code>Zone</code>を設定すると<code>NS</code>と<code>SOA</code>のレコードが自動で作成されます。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/route53_1.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/route53_2.jpg" alt="" /></p>
+
+<p>次にサブドメインの<code>A</code>レコードを登録します。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/route53_3.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/route53_4.jpg" alt="" /></p>
+
+<h3 id="ネームサーバーの変更:41103ae6f2f5c979c26ff43dc235d329">ネームサーバーの変更</h3>
+
+<p>レジストラ(value-domain)に設定しているネームサーバーをRoute53のネームサーバーに切り替えます。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/route53_5.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/route53_6.jpg" alt="" /></p>
+
+<h3 id="変更後のネームサーバーの状態を確認:41103ae6f2f5c979c26ff43dc235d329">変更後のネームサーバーの状態を確認</h3>
+
+<p>1,2時間くらいで、DNSが切り替わります。</p>
+
+<pre><code>$ nslookup -type=any 10rane.com
+10rane.com      nameserver = ns-918.awsdns-50.net.
+10rane.com      nameserver = ns-1101.awsdns-09.org.
+10rane.com      nameserver = ns-1918.awsdns-47.co.uk.
+10rane.com      nameserver = ns-157.awsdns-19.com.
+10rane.com
+        origin = ns-918.awsdns-50.net
+        mail addr = awsdns-hostmaster.amazon.com
+        serial = 1
+        refresh = 7200
+        retry = 900
+        expire = 1209600
+        minimum = 86400
+</code></pre>
+
+<p>　</p>
+
+<pre><code>$ dig 10rane.com ns
+10rane.com.             86400   IN      NS      ns-157.awsdns-19.com.
+10rane.com.             86400   IN      NS      ns-918.awsdns-50.net.
+10rane.com.             86400   IN      NS      ns-1918.awsdns-47.co.uk.
+10rane.com.             86400   IN      NS      ns-1101.awsdns-09.org.
+
+$ dig 10rane.com soa
+10rane.com.             888     IN      SOA     ns-918.awsdns-50.net. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400
+</code></pre>
+
+<h3 id="参考サイト:41103ae6f2f5c979c26ff43dc235d329">参考サイト</h3>
+
+<ul>
+<li><a href="http://qiita.com/SatoHiroyuki/items/7d45bd98a477f021cc82">Route53 : ValueDomain</a></li>
+<li><a href="http://www.dondari.com/%E3%81%AF%E3%81%98%E3%82%81%E3%81%A6%E3%81%AERoute_53">はじめてのRoute 53</a></li>
+<li><a href="http://blog.serverworks.co.jp/tech/2013/03/08/route53_basic/">営業でも簡単！Route 53の基本設定</a></li>
+</ul>
+
+<h3 id="関連する記事:41103ae6f2f5c979c26ff43dc235d329">関連する記事</h3>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/09/16/transferred-a-domain-to-route53/">Route53にドメインを移管する</a></li>
+<li><a href="http://blog.10rane.com/2014/07/21/start-aws/">aws はじめました。</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

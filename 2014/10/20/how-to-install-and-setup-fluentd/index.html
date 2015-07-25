@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>fluentdをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Fluentdをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Oct 20, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/middleware" >middleware</a> <a href="http://tatsuyano.github.io/tags/fluentd" >fluentd</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>blogのアクセス数がほんの少し増えてきたので、fluentd(フルーエントディ) をインストールしてみます。
+今回、fluentd をインストールする環境は、以下になります。</p>
+
+<ul>
+<li>AmazonLinux</li>
+<li>nginx</li>
+<li>ruby 2.1.0 (anyenv)</li>
+</ul>
+
+<h3 id="fluentd-を導入すると何ができるか:511d6dc5b146a16fbd94311c42c263c7">fluentd を導入すると何ができるか</h3>
+
+<p>fluentd はログなどを取得し、取得したデータを整形して elasticsearch + kibana などに渡すことで、データを簡単に可視化することができます。</p>
+
+<h3 id="fluentdをgem経由でインストールする:511d6dc5b146a16fbd94311c42c263c7">fluentdをgem経由でインストールする</h3>
+
+<p>まずは<a href="http://docs.fluentd.org/articles/install-by-gem">公式</a>どおりに<code>gem</code>でインストールしてみます。</p>
+
+<p><em>注意</em><br />
+<a href="http://eure.jp/blog/fluentd_elasticsearch_kibana">こちら</a>の記事を参考に、<a href="#yum_install">yum経由でインストール</a>も行いました。</p>
+
+<pre><code class="language-bash">$ gem install fluentd --no-ri --no-rdoc
+</code></pre>
+<br>
+
+メモリが割り当てられない？というエラーが出ました。
+
+<pre><code class="language-bash">ERROR:  Error installing fluentd:
+        ERROR: Failed to build gem native extension.
+
+    $HOME/.anyenv/envs/rbenv/versions/2.1.0/bin/ruby extconf.rb
+    Cannot allocate memory - $HOME/.anyenv/envs/rbenv/versions/2.1.0/bin/ruby extconf.rb 2>&1
+
+Gem files will remain installed in $HOME/.anyenv/envs/rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/gems/yajl-ruby-1.2.1 for inspection.
+Results logged to $HOME/.anyenv/envs/rbenv/versions/2.1.0/lib/ruby/gems/2.1.0/extensions/x86_64-linux/2.1.0-static/yajl-ruby-1.2.1/gem_make.out
+</code></pre>
+<br>
+
+試しに`aws-sdk`をインストールしてから、再度インストールしてみたらうまくいきました。
+
+<pre><code class="language-bash">$ gem install aws-sdk
+$ gem install fluentd --no-ri --no-rdoc
+
+$ source $HOME/.zshrc
+$ fluentd --version
+fluentd 0.10.55
+</code></pre>
+<br>
+
+#### セットアップ
+
+次はセットアップを行います。
+指定した`fluent`のホームディレクトリ直下に`fluent.conf`というファイルが生成されます。
+
+<pre><code class="language-bash">$ fluentd --setup app/fluent
+Installed app/fluent/fluent.conf.
+
+$ tree app/fluent
+app/fluent
+├── fluent.conf
+└── plugin
+</code></pre>
+<br>
+
+#### 起動方法
+
+試しに公式どおりに起動してみます。
+`-vv`でトレースモード、`&`でバッググラウンドで起動します。
+起動後にjsonを`fluent-cat`に渡して、`debug`タグの設定(stdout)どおり出力します。
+
+<pre><code class="language-bash">$ fluentd -c app/fluent/fluent.conf -vv &
+[1] 22209
+
+$ echo '{"json":"message"}' | fluent-cat debug.test
+
+2014-10-20 05:48:01 +0000 [trace]: plugin/in_forward.rb:189:initialize: accepted fluent socket from '127.0.0.1:44260': object_id=69925032642500
+2014-10-20 05:48:01 +0000 debug.test: {"json":"message"}
+2014-10-20 05:48:01 +0000 [trace]: plugin/in_forward.rb:245:on_close: closed fluent socket object_id=69925032642500
+</code></pre>
+<br>
+
+### Nginxのログをfluentdに流す
+
+`fluent.conf`には、ログの入力方法`<source>`と、出力方法`<match>`を設定することができます。
+
+<a name="conf">app/fluent/fluent.conf</a>
+
+<pre><code class="language-bash"># access_log
+&lt;source>
+  type tail
+  path /var/log/nginx/access.log
+  format ltsv
+  time_key time_local
+  time_format %d/%b/%Y:%H:%M:%S %z
+  pos_file /var/tmp/nginx_access_log.pos
+  tag nginx.access
+ &lt;/source>
+ &lt;match nginx.access>
+  type elasticsearch
+  host localhost
+  port 9200
+  type_name access_log
+  logstash_format true
+  logstash_prefix nginx_access
+  logstash_dateformat %Y%m
+  buffer_type memory
+  buffer_chunk_limit 10m
+  buffer_queue_limit 10
+  flush_interval 1s
+  retry_limit 16
+  retry_wait 1s
+  &lt;/match>
+  
+ # error_log
+ &lt;source>
+  type tail
+  path /var/log/nginx/error.log
+  format /^(? &lt;time>[^ ]+ [^ ]+) \[(? &lt;log_level>.*)\] (? &lt;pid>\d*).(? &lt;tid>[^:]*): (? &lt;message>.*)$/
+  pos_file /var/tmp/nginx_error_log.pos
+  tag nginx.error
+ &lt;/source>
+ &lt;match nginx.error>
+  type elasticsearch
+  host localhost
+  port 9200
+  type_name error_log
+  logstash_format true
+  logstash_prefix nginx_error
+  logstash_dateformat %Y%m
+  buffer_type memory
+  buffer_chunk_limit 10m
+  buffer_queue_limit 10
+  flush_interval 1s
+  retry_limit 16
+  retry_wait 1s
+ &lt;/match>
+</code></pre>
+
+<p>今回、fluentd を自分の$HOME以下にインストールしているので、
+<code>path</code>に設定してあるログのパーミッションに注意してください。</p>
+
+<p>また、<code>format</code>をltsvに変更しているので、Nginx のログフォーマットも ltsv に合わせてください。</p>
+
+<h4 id="nginxのログをltsvに変更する:511d6dc5b146a16fbd94311c42c263c7">Nginxのログをltsvに変更する</h4>
+
+<p>/etc/nginx/nginx.conf</p>
+
+<pre><code class="language-bash">log_format  ltsv  "remote_addr:$remote_addr\t"
+                  "remote_user:$remote_user\t"
+                  "time_local:$time_local\t"
+                  "request:$request\t"
+                  "status:$status\t"
+                  "body_bytes_sent:$body_bytes_sent\t"
+                  "http_refer:$http_referer\t"
+                  "http_user_agent:$http_user_agent";
+
+access_log  /var/log/nginx/access.log  ltsv;
+</code></pre>
+<br>
+
+現在生成されている`access.log`を削除し、Nginx の再起動、及び fluentd を(バックエンドで)起動します。
+
+<pre><code class="language-bash">$ sudo rm /var/log/nginx/access.log
+$ sudo /etc/init.d/nginx restart
+
+$ fluentd -c app/fluent/fluent.conf -vv &
+</code></pre>
+
+<p>/tmp/nginx.logが更新されていれば成功です。</p>
+
+<h3 id="a-name-yum-install-yum経由でのインストール:511d6dc5b146a16fbd94311c42c263c7"><a name="yum_install">yum経由でのインストール</h3>
+
+<p>トレジャーデータ社が用意したyumリポジトリを使い、td-agent(fluentd) をインストールします。</p>
+
+<p><pre><code class="language-bash">$ sudo bash</p>
+
+<h1 id="cat-etc-yum-repos-d-treasuredata-repo:511d6dc5b146a16fbd94311c42c263c7">cat &gt; /etc/yum.repos.d/treasuredata.repo</h1>
+
+<p>[treasuredata]
+name=TreasureData
+baseurl=<a href="http://packages.treasure-data.com/redhat/$basearch">http://packages.treasure-data.com/redhat/$basearch</a>
+gpgcheck=0</p>
+
+<p>$ sudo yum -y install td-agent
+$ sudo chkconfig td-agent on
+</code></pre>
+<br></p>
+
+<h4 id="fluentd-プラグインインストール:511d6dc5b146a16fbd94311c42c263c7">fluentd プラグインインストール</h4>
+
+<p>anyenvで管理していないrubyをupdateするのは少し気が引けます。。</p>
+
+<p><pre><code class="language-bash">$ sudo /usr/lib64/fluent/ruby/bin/fluent-gem update
+$ sudo /usr/lib64/fluent/ruby/bin/fluent-gem install fluent-plugin-config-expander
+$ sudo /usr/lib64/fluent/ruby/bin/fluent-gem install fluent-plugin-elasticsearch
+</code></pre>
+<br></p>
+
+<h4 id="configファイル:511d6dc5b146a16fbd94311c42c263c7">configファイル</h4>
+
+<p>td-agentのconfigファイルは<code>/etc/td-agent/td-agent.conf</code>にあるので、
+<a href="#conf">以前作ったconfigファイル</a>で上書きします。</p>
+
+<p>すでに<code>posファイル</code>が生成されている場合は、削除してください。</p>
+
+<p><pre><code class="language-bash">$ sudo cp $HOME/app/fluentd/fluent.conf /etc/td-agent/td-agent.conf
+$ sudo rm /var/tmp/nginx_access_log.pos
+$ sudo rm /var/tmp/nginx_error_log
+</code></pre>
+<br></p>
+
+<h4 id="起動-停止:511d6dc5b146a16fbd94311c42c263c7">起動、停止</h4>
+
+<p><pre><code class="language-bash">$ sudo /etc/init.d/td-agent start
+$ sudo /etc/init.d/td-agent stop
+</code></pre>
+<br></p>
+
+<h3 id="参考記事:511d6dc5b146a16fbd94311c42c263c7">参考記事</h3>
+
+<ul>
+<li><a href="http://docs.fluentd.org/articles/install-by-gem">Installing Fluentd Using Ruby Gem</a></li>
+<li><a href="http://lab.bizreach.co.jp/66/">AWS（Amazon Linux）にfluentdをいれてみた</a></li>
+<li><a href="http://blog.excale.net/index.php/archives/2682">NginxのアクセスログをLTSV形式にしてfluentdで回収する</a></li>
+<li><a href="http://knowledge.sakura.ad.jp/tech/1336/">柔軟なログ収集を可能にする「fluentd」入門</a></li>
+<li><a href="http://docs.fluentd.org/ja/articles/common-log-formats">Common Log Formats and How To Parse Them</a></li>
+<li><a href="http://eure.jp/blog/fluentd_elasticsearch_kibana/">今日から始めるfluentd × Elasticsearch × kibana – カジュアルな解析・高速化</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>fuelphpでAgentClassを設定する -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>FuelphpでAgentClassを設定する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Jul 29, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/php" >php</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>ブラウザの識別やモバイルフォンとPCの識別をするには、fuelではAgentクラスを使用する。</p>
+
+<p>AgentクラスはPHPのget_browser関数を利用する。</p>
+
+<p>get_browser関数は、UA情報を<a href="http://tempdownloads.browserscap.com/">Browser Capabilities Project</a>というサイトから取得する。
+fuelではこのサイトからUA情報を取得(キャッシュ化し2回目のアクセスからキャッシュを参照)し、識別する。</p>
+
+<h4 id="configファイルにua情報-サイト-の取得先urlなどを設定:46b9b5ce7f3c77f59a7ac57dcd96ae9b">configファイルにUA情報(サイト)の取得先URLなどを設定</h4>
+
+<p>fuel/app/config/config.php</p>
+
+<pre><code>'browscap' =&gt; array(
+    'enabled' =&gt; true,
+    'url'     =&gt; 'http://browsers.garykeith.com/stream.asp?BrowsCapINI',
+    'method' =&gt; 'wrapper',
+    'file'   =&gt; '/tmp/php_browscap.ini',
+),
+</code></pre>
+
+<h4 id="キャッシュの保存先について:46b9b5ce7f3c77f59a7ac57dcd96ae9b">キャッシュの保存先について</h4>
+
+<p>fuelでは fuel/app/cache にキャシュを保存している</p>
+
+<pre><code>cache
+└── fuel
+    └── agent
+            ├── browscap.cache
+            └── browscap_file.cache
+</code></pre>
+
+<p>キャッシュ周りで権限エラーがでたので、権限を<code>777</code>にする</p>
+
+<pre><code>chmod -R 777 fuel/app/cache/
+</code></pre>
+
+<h4 id="agentクラスの実装:46b9b5ce7f3c77f59a7ac57dcd96ae9b">Agentクラスの実装</h4>
+
+<pre><code>Agent::is_mobiledevice();
+</code></pre>
+
+<h3 id="参考サイト:46b9b5ce7f3c77f59a7ac57dcd96ae9b">参考サイト</h3>
+
+<ul>
+<li><a href="http://btt.hatenablog.com/entry/2012/07/04/001254">FuelPHPのAgentクラスと拡張</a></li>
+<li><a href="http://fuelphp.com/docs/classes/agent/config.html">Agent Class</a></li>
+<li><a href="http://fuelphp.seesaa.net/article/279094100.html">FuelPHPのAgentクラスによる端末振り分けが簡単すぎる</a></li>
+</ul>
+
+<h3 id="関連する記事:46b9b5ce7f3c77f59a7ac57dcd96ae9b">関連する記事</h3>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/07/29/fuelphp-validation/">fuelphpのエラー文言を日本語化する</a></li>
+<li><a href="http://blog.10rane.com/2014/07/28/use-the-redis-in-fuelphp/">fuelphpでredisを使う</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

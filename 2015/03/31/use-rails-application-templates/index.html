@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>アプリケーションテンプレートを使って、プロジェクトのひな形を作る -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>アプリケーションテンプレートを使って、プロジェクトのひな形を作る</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Mar 31, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/rails" >rails</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>Railsアプリを作っていると、ある程度決まったRuby Gemを使うようになってきたり、
+同じ設定(config周りとか)を繰り返すようになってきます。</p>
+
+<p>そこでRailsのアプリケーションテンプレート機能を使うと、
+そういった決まった作業をコード化することができるようになります。</p>
+
+<p>今回は、主にデータベースをPostgreSQL、テストFWをRSpec、CSSFWにTwitterBootStrapの初期設定を行い、最後に<code>git commit -m 'Initial commit'</code>するまでのアプリケーションテンプレートを作ってみたいと思います。</p>
+
+<h2 id="作業の流れ:c7250590061089d461e23945943d79e3">作業の流れ</h2>
+
+<ol>
+<li>templateファイルを作成</li>
+<li>templateファイルをGitHubなどにpush</li>
+<li>templateファイルを使って、Railsアプリを作ってみる</li>
+</ol>
+
+<h2 id="template-rb:c7250590061089d461e23945943d79e3">template.rb</h2>
+
+<p>コードを実際見てもらえばわかるように、templateファイルといっても特別なものではなく、
+Gemfileと同じように、必要なGemを指定し、実際の作業を明文化したファイルになります。</p>
+
+<p>※ 最新のソースは<a href="https://github.com/tatsuyano/rails-template">こちら</a></p>
+
+<pre><code class="language-ruby"># -*- coding: utf-8 -*-
+
+@app_name = app_name
+
+gem 'rails', '4.2.0'
+gem 'pg'
+gem 'sass-rails', '~> 5.0'
+gem 'uglifier', '>= 1.3.0'
+gem 'coffee-rails', '~> 4.1.0'
+gem 'jquery-rails'
+gem 'turbolinks'
+gem 'jbuilder', '~> 2.0'
+gem 'annotate' # modelクラスにスキーマ情報の注釈をつける
+gem 'bootstrap-sass' # bootstrap
+
+gem_group :development, :test do
+  gem 'spring'
+  gem 'pry-rails'
+  gem 'pry-byebug'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'rspec-rails'
+  gem 'guard-rspec'                        # railsでguardを使うためのGem
+  gem 'spring-commands-rspec' , '~> 1.0.2' # springでキャッシュした状態でguardを使うためのGem
+  gem "factory_girl_rails" , "~> 4.4.1"    # テストデータの作成
+end
+
+gem_group :test do
+  gem 'byebug'
+  gem 'web-console', '~> 2.0'
+  gem 'shoulda-matchers', require: false # rspecで使うmatcher
+  gem "faker" , "~> 1.4.3"              # 名前やメールアドレス、その他のプレースホルダをファクトリに提供
+  gem "database_cleaner" , "~> 1.3.0"   # まっさらな状態で各specが実行できるように、テストデータベースのデータを掃除
+#  gem "capybara" , "~> 2.4.3"           # ユーザとWebアプリケーションのやりとりをプログラム上でシミュレートできる
+#  gem "launchy" , "~> 2.4.2"            # 好きなタイミングでデフォルトのwebブラウザを開く
+#  gem "selenium-webdriver" , "~> 2.43.0"# ブラウザ上でJavaScriptを利用する機能をCapybaraでテストできる
+end
+
+gem_group :production do
+  gem 'rails_12factor'
+end
+
+# rspec initalize setting
+run 'bundle install'
+run 'rm -rf test'
+generate 'rspec:install'
+
+# guard initalize setting
+run 'bundle exec spring binstub rspec'
+run 'bundle exec guard init rspec'
+
+# rm unused files
+run "rm README.rdoc"
+
+# database
+run 'rm config/database.yml'
+
+database_yml = <<-FILE
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+development:
+  <<: *default
+  database: #{@app_name}
+  username: postgres
+  password: postgres
+test:
+  <<: *default
+  database: #{@app_name}_test
+  username: postgres
+  password: postgres
+FILE
+  
+File.open("config/database.yml","w") do |file|
+  file.puts database_yml
+end
+
+run 'bundle exec rake db:create'
+run 'rails g annotate:install'
+
+# config/application
+environment "config.time_zone = 'Tokyo'"
+environment "config.active_record.default_timezone = :local"
+
+# bootstrap
+run "rm app/assets/stylesheets/application.css"
+run "rm app/assets/javascripts/application.js"
+
+File.open("app/assets/stylesheets/application.scss","w") do |file|
+  file.puts <<-SCSS
+@import "bootstrap-sprockets";
+@import "bootstrap";
+SCSS
+end
+
+File.open("app/assets/javascripts/application.js","w") do |file|
+  file.puts <<-JS
+//= require jquery
+//= require bootstrap-sprockets
+JS
+end
+
+# git initalize setting
+after_bundle do
+  git :init
+  git add: '.'
+  git commit: %Q{ -m 'Initial commit' }
+end
+</code></pre>
+<br>
+
+## 確認
+
+まずはテンプレートにエラーがないかに、Githubにpushする前に直接指定し`rails new`してみます。
+
+<pre><code class="language-bash">$ rails new app_name -m template.rb
+</code></pre>
+
+<p>エラーがでなければ、Githubにpushして、今後はURLを指定して<code>rails new</code>してください。</p>
+
+<p><pre><code class="language-bash">$ rails new app_name -m
+<a href="https://raw.githubusercontent.com/tatsuyano/rails-template/master/template.rb">https://raw.githubusercontent.com/tatsuyano/rails-template/master/template.rb</a>
+</code></pre>
+<br></p>
+
+<p>テンプレートを一度作るまでは面倒ですが、作業がコード化できるなど、メリットが大きいので作ることをおすすめします。</p>
+
+<h2 id="参考サイト:c7250590061089d461e23945943d79e3">参考サイト</h2>
+
+<ul>
+<li><a href="http://nanapi.co.jp/blog/2015/01/27/rails-template/">Rails Templateでプロジェクト作成を楽にしよう</a></li>
+<li><a href="http://qiita.com/tachiba/items/26b2e9dc271bd8e6907d">RailsのApplication templateを使って開発の初速をあげよう！</a></li>
+<li><a href="http://railsguides.jp/rails_application_templates.html">Rails のアプリケーションテンプレート</a></li>
+<li><a href="http://morizyun.github.io/blog/rails4-application-templates-heroku/">Rails 4.2 + Bootstrap の Application Template
+1コマンドでモダンRailsが！</a></li>
+<li><a href="https://github.com/tatsuyano/rails-template">tatsuyano/rails-template</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

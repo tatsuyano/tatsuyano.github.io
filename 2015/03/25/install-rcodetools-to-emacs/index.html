@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>emacsにrcodetoolsをインストールして、返り値をコメントに出力する -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Emacsにrcodetoolsをインストールして、返り値をコメントに出力する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Mar 25, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>返り値をコメントに出力したい場合、rcodetoolsのxmpfilterを使うことで可能になります。</p>
+
+<p><pre><code class='language-ruby'>3 + 4
+↓
+3 + 4 # =&gt; 7
+</code></pre>
+<br></p>
+
+<h2 id="インストール:ad54d5cd39040f18666c590ba2c4a628">インストール</h2>
+
+<p>まずはrcodetools本体をインストールします。</p>
+
+<p><pre><code class='language-bash'>$ gem install rcodetools
+</code></pre>
+<br></p>
+
+<p>次にインストールしたgemの中にある<code>rcodetools.el</code>をemacsのload-pathが通っている階層にコピーします。</p>
+
+<p><pre><code class='language-bash'>$ cp -a $HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/rcodetools-0.8.5.0/rcodetools.el $HOME/src/github.com/tatsuyano/dot.emacs.d/init_loader/
+</code></pre>
+<br></p>
+
+<h2 id="emacsの設定:ad54d5cd39040f18666c590ba2c4a628">emacsの設定</h2>
+
+<p>今回は、<code>M-p</code>にxmpfilterを割り当てます。</p>
+
+<p><pre><code class='language-ruby'>(require &lsquo;rcodetools)
+(define-key ruby-mode-map (kbd &ldquo;M-p&rdquo;) &lsquo;xmp)
+</code></pre>
+<br></p>
+
+<h2 id="操作方法:ad54d5cd39040f18666c590ba2c4a628">操作方法</h2>
+
+<ol>
+<li>まずは返り値を出力したい行で、<code>M-;(comment-dwim)</code>を2回実行すると「# =&gt;」というコメントがソースに出力されます。</li>
+<li>その状態で、<code>M-p(xmp)</code>を実行すると、コメントに返り値が出力されます。</li>
+</ol>
+
+<p>ちなみに<code>M-;</code>はAltを押しながら<code>;</code>を押下です。</p>
+
+<p><pre><code class='language-ruby'>3 + 4
+↓
+3 + 4 # =&gt;          1. comment-dwimを2回実行
+↓
+3 + 4 # =&gt; 7        2. xmpfilterを実行
+</code></pre>
+<br></p>
+
+<p>※ <em>環境によっては、<code>gems/rcodetools/bin/</code>をPATHに加える必要があるようなので、動かない場合は試してみてください。</em></p>
+
+<h2 id="参考サイト:ad54d5cd39040f18666c590ba2c4a628">参考サイト</h2>
+
+<ul>
+<li><a href="http://futurismo.biz/archives/2213">EmacsでRubyの開発環境をさらにめちゃガチャパワーアップしたまとめ</a></li>
+<li><a href="http://qiita.com/ironsand/items/ce7c02eb46fcc25a438b">Emacs で rcodetools を使って &ldquo;=&gt;&rdquo; で値を表示する</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

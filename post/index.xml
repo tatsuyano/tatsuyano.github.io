@@ -6,149 +6,1355 @@
     <description>Recent content in Posts on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Mon, 20 Aug 2012 02:29:52 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 08 Jun 2015 02:00:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/post/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>auto-complete.elをインストールする</title>
-      <link>http://tatsuyano.github.io/2012/08/20/emacs-auto-complete/</link>
-      <pubDate>Mon, 20 Aug 2012 02:29:52 +0900</pubDate>
+      <title>Jsのスコープについて</title>
+      <link>http://tatsuyano.github.io/2015/06/08/for-the-scope-of-the-js/</link>
+      <pubDate>Mon, 08 Jun 2015 02:00:00 +0900</pubDate>
       
-      <guid>http://tatsuyano.github.io/2012/08/20/emacs-auto-complete/</guid>
+      <guid>http://tatsuyano.github.io/2015/06/08/for-the-scope-of-the-js/</guid>
       <description>
 
-&lt;h2 id=&#34;はじめに:b592550574e7bf3db9d0845e8c853199&#34;&gt;はじめに&lt;/h2&gt;
+&lt;h2 id=&#34;グローバルスコープとローカルスコープしかない:12cd6967166e7d3f6ae4d2a16d321c1d&#34;&gt;グローバルスコープとローカルスコープしかない&lt;/h2&gt;
 
-&lt;p&gt;すでにauto-intall.elがインストールされている前提で話をすすめます。&lt;br /&gt;
-auto-installのインストール手順は&lt;a href=&#34;http://tatsuyano.github.io/2012/08/20/emacs-auto-install/&#34;&gt;こちら&lt;/a&gt;をご覧ください。&lt;/p&gt;
-
-&lt;p&gt;またauto-installを使わずに、手動でインストール、コンパイルしたい場合は、&lt;br /&gt;
-下記サイト(auto-complete.elの開発者さんが説明してくれています)をご参照ください。&lt;/p&gt;
+&lt;p&gt;Jsには2種類のスコープしかない。グローバルスコープ内で宣言した変数をグローバル変数、ローカルスコープ内で宣言した変数をローカル変数という。&lt;/p&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://dev.ariel-networks.com/wp/documents/aritcles/emacs/part9&#34;&gt;「Emacsのトラノマキ」連載第09回「auto-completeを使おう」&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;スクリプト全体(トップレベル)で有効なグローバル変数
+
+&lt;ul&gt;
+&lt;li&gt;プログラム終了時までメモリを確保してしまう&lt;/li&gt;
+&lt;li&gt;多用すると、名前がバッティングする可能性がある
+&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
+&lt;li&gt;関数内でのみ有効なローカル変数
+
+&lt;ul&gt;
+&lt;li&gt;関数終了時にメモリが開放される&lt;/li&gt;
+&lt;li&gt;宣言時に&lt;code&gt;var&lt;/code&gt;をつけないと、*グローバル変数*として認識されてしまう&lt;/li&gt;
+&lt;/ul&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&#34;インストール手順:b592550574e7bf3db9d0845e8c853199&#34;&gt;インストール手順&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var hoge = &#39;global&#39;;  // =&gt; グローバル変数
 
-&lt;p&gt;emacsを起動し、&lt;/p&gt;
+function func () {
+  var fuga = &#39;local&#39;; // =&gt; ローカル変数、必ずvarをつける
+  console.log(fuga);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
 
-&lt;pre&gt;&lt;code&gt;M-x auto-install-batch &amp;lt;RET&amp;gt;
-Extension name: auto-complete development version &amp;lt;RET&amp;gt;
+また、他言語のようにブロックスコープは存在しない。
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;if (true) {
+  var hoge = &#39;block&#39;;
+}
+
+console.log(hoge); // =&gt; block ブロック内で宣言した変数も参照できてしまう
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+## 変数の巻き上げ(hoisting)
+
+Jsには「変数の巻き上げ」という概念がある。
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var hoge = &#39;global&#39;;
+
+function func() {
+  console.log(hoge); // =&gt; undefined なぜか global と出力されない
+
+  var hoge = &#39;local&#39;;
+  console.log(hoge); // =&gt; local 期待どおりの出力
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;auto-isntall-batchを実行、次にインストールしたいパッケージ名(auto-complete development version)を入力します。&lt;br /&gt;
-すると自動で複数ソースのダウンロードが始まります。&lt;/p&gt;
+&lt;p&gt;一回目の&lt;code&gt;console.log(hoge);&lt;/code&gt;で、なぜか&lt;code&gt;undefined&lt;/code&gt;が出力されている。これが「変数の巻き上げ」の挙動。&lt;/p&gt;
 
-&lt;p&gt;ダウンロードし終わると「モード行」に&lt;/p&gt;
+&lt;p&gt;何が起きているかというと、Jsでは、&lt;em&gt;関数内のどこで変数宣言をしても、関数の先頭で、宣言のみしたと認識されてしまうため。&lt;/em&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;Type C-c C-c to continue; Type C-c C-d for view diff; Type C-c C-q to quit.
+&lt;p&gt;つまり上記のコードは以下のように処理されている。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var hoge = &#39;global&#39;;
+
+function func() {
+  var hoge; // 初期値は入っていない。宣言のみ
+  console.log(hoge); // =&gt; 初期値が入っていないので、undefined
+
+  hoge = &#39;local&#39;;
+  console.log(hoge); // =&gt; 値が入っているので、local
+}
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;というメッセージが出てくるので、「C-c C-c」と入力し、ダウンロードしたソースを順番にコンパイルしていきます。&lt;br /&gt;
-すべてコンパイルし終えると、以下のようなメッセージが表示され、インストールが完了します。&lt;/p&gt;
+&lt;p&gt;これを防ぐには、変数宣言は、*関数の先頭*で行うようにする。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;Installation is completed.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;emacsの設定:b592550574e7bf3db9d0845e8c853199&#34;&gt;emacsの設定&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;;; auto-complete
-(require &#39;auto-complete)
-(require &#39;auto-complete-config) ; 必須ではないですが一応
-(global-auto-complete-mode t)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;実行画面:b592550574e7bf3db9d0845e8c853199&#34;&gt;実行画面&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/auto-complete001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:b592550574e7bf3db9d0845e8c853199&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+&lt;h2 id=&#34;まとめ:12cd6967166e7d3f6ae4d2a16d321c1d&#34;&gt;まとめ&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://dev.ariel-networks.com/wp/documents/aritcles/emacs/part9&#34;&gt;「Emacsのトラノマキ」連載第09回「auto-completeを使おう」&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;グローバル変数は多用しない&lt;/li&gt;
+&lt;li&gt;変数宣言時は、必ず var をつける&lt;/li&gt;
+&lt;li&gt;ローカル変数は、関数の先頭で宣言する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;参考サイト:12cd6967166e7d3f6ae4d2a16d321c1d&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tacamy.hatenablog.com/entry/2012/12/30/191125&#34;&gt;JavaScript のスコープを理解する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://itpro.nikkeibp.co.jp/atcl/column/14/091700069/091700002/&#34;&gt;JavaScriptのスコープを理解しよう&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://analogic.jp/hoisting/&#34;&gt;知らないと怖い「変数の巻き上げ」とは？&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;関連記事:12cd6967166e7d3f6ae4d2a16d321c1d&#34;&gt;関連記事&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/08/for-function-of-js/&#34;&gt;Jsの関数について&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
     
     <item>
-      <title>auto-install.elをインストールする</title>
-      <link>http://tatsuyano.github.io/2012/08/20/emacs-auto-install/</link>
-      <pubDate>Mon, 20 Aug 2012 02:18:07 +0900</pubDate>
+      <title>Jsの関数について</title>
+      <link>http://tatsuyano.github.io/2015/06/08/for-function-of-js/</link>
+      <pubDate>Mon, 08 Jun 2015 01:00:00 +0900</pubDate>
       
-      <guid>http://tatsuyano.github.io/2012/08/20/emacs-auto-install/</guid>
+      <guid>http://tatsuyano.github.io/2015/06/08/for-function-of-js/</guid>
       <description>
 
-&lt;p&gt;anything.elやperl-completion.elを簡単にインストールできるauto-install.elをインストールします。&lt;/p&gt;
+&lt;p&gt;Jsには主に「Function文」と「Function式(関数リテラル)」という２つの関数の宣言方法がある。
+※本当は「Functionコンストラクタ」という方法もあるが、あまり実用的ではないので省略。&lt;/p&gt;
 
-&lt;h2 id=&#34;emacs-d以下の構成:a0b40df5cd99ebed008dd372837e9b1c&#34;&gt;emacs.d以下の構成&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;// Function文
+function func () {
+  console.log(&#39;statements&#39;);
+}
 
-&lt;p&gt;.emacs.d以下の構成は&lt;a href=&#34;http://typester.stfuawsc.com/slides/perlcasual2/start.html&#34;&gt;Perl Hacks on Emacs&lt;/a&gt;に習い、以下のようにします。&lt;/p&gt;
+// Function式
+var func = function func() {
+  console.log(&#39;expression&#39;);
+};
 
-&lt;pre&gt;&lt;code&gt;.emacs.d
-├── conf … init-loader.elで使う。
-├── elisp … auto-install.elでインストールしたソースや、手動でダウンロードしたソースの置場所。
-└── site … それ以外のライブラリの置場所。
+//関数の呼び出し方法は同じ
+func();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+違いは評価のタイミング。「Function文」は関数が静的な構造として宣言される。つまり、Jsの実行環境がコードを解析するタイミングで関数が静的に登録され、これにより「関数をどこで定義していても呼び出せる」ようになります。
+
+
+&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;func(); // =&gt; 宣言前に読み出してもエラーにならない
+
+function func () {
+  console.log(&#39;statements&#39;);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+逆に「Function式」は、変数に代入された段階で評価される。そのため、宣言後に呼び出さないとエラーになる。
+
+&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;func(); // =&gt; TypeError: undefined is not a function
+
+var func = function func () {
+  console.log(&#39;expression&#39;);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+## 無名関数
+
+「無名関数」とは、Function式の関数名を省略した形
+。Function式を使う場合は、主に無名関数が使われる。
+
+&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;// 無名関数
+var func = function () {
+  console.log(&#39;expression&#39;);
+};
+
+func();
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+## 即時関数
+
+「即時関数」とは、関数を()で囲んだ状態で実行することで、関数宣言と同時にその関数を実行する書き方です。
+
+&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;// 即時関数
+(function () {
+  console.log(&#39;Hello&#39;);
+})();
+
+// ()();の代わりに、().call(this);とも書ける
+(function () {
+  console.log(&#39;Hello&#39;);
+}).call(this);
+
+// 即時関数に引数を渡す場合
+(function (val,val2) {
+  console.log(val + &#39; &#39; + val2);
+})(&#39;Hello&#39;,&#39;World&#39;);
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;ダウンロード:a0b40df5cd99ebed008dd372837e9b1c&#34;&gt;ダウンロード&lt;/h2&gt;
+&lt;p&gt;即時関数を使うことで、関数内で宣言した変数のスコープは、関数内でしか使えないようになる。
+つまり、ブロックスコープと同じ効果となる。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;cd .emacs.d/elisp/
-wget http://www.emacswiki.org/emacs/download/auto-install.el
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;emacsの設定:a0b40df5cd99ebed008dd372837e9b1c&#34;&gt;.emacsの設定&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;;; emacs起動時に、読み込むソース(auto-installなど)の置場所を指定します。
-(add-to-list &#39;load-path &amp;quot;~/.emacs.d/elisp&amp;quot;)
-
-;; auto-installでインストールしたソースの置場所を指定します。
-(require &#39;auto-install)
-(setq auto-install-directory &amp;quot;~/.emacs.d/elisp/&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;参考サイト:a0b40df5cd99ebed008dd372837e9b1c&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+&lt;h2 id=&#34;まとめ:faca702768e957c2e4fade9d48317c0a&#34;&gt;まとめ&lt;/h2&gt;
 
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://typester.stfuawsc.com/slides/perlcasual2/start.html&#34;&gt;Perl Hacks on Emacs&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://yasuwagon.blogspot.jp/2011/02/auto-installel.html&#34;&gt;auto-install.el のインストール&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;変数宣言は無名関数を使う&lt;/li&gt;
+&lt;li&gt;即時関数を使えば、ブロックスコープと同じ効果が得られる&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;参考サイト:faca702768e957c2e4fade9d48317c0a&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://itpro.nikkeibp.co.jp/atcl/column/14/091700069/091700001/&#34;&gt;現代プログラマの必須知識、JavaScript&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/amachang/20080208/1202448348&#34;&gt;(function(){})() と function(){}()&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;関連記事:faca702768e957c2e4fade9d48317c0a&#34;&gt;関連記事&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/08/for-the-scope-of-the-js/&#34;&gt;Jsのスコープについて&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
     
     <item>
-      <title>スポニチフィットラン 皇居 RUNNING FESTA</title>
-      <link>http://tatsuyano.github.io/2012/08/05/suponichi-fitrun-running-festa/</link>
-      <pubDate>Sun, 05 Aug 2012 01:45:52 +0900</pubDate>
+      <title>webpackを使ってes6-promiseを読み込む</title>
+      <link>http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/</link>
+      <pubDate>Wed, 03 Jun 2015 01:00:00 +0900</pubDate>
       
-      <guid>http://tatsuyano.github.io/2012/08/05/suponichi-fitrun-running-festa/</guid>
-      <description>&lt;p&gt;先月（7月）、久々に皇居の10kmレース「スポニチフィットラン 皇居 RUNNING FESTA」に出場しました。
-タイムは以前出場時よりも、5kgの体重増と猛暑だったこともあり、約4分も遅くなってしまいました。。&lt;/p&gt;
+      <guid>http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/</guid>
+      <description>
 
-&lt;p&gt;今回はそのリベンジということで、2ヶ月連続で「スポニチフィットラン 皇居 RUNNING FESTA（第19回）」に出場しました。&lt;/p&gt;
+&lt;p&gt;最近勉強中のPromiseですが、現段階(15/06/03)ではIE11に対応していません。
+PromiseをIEに対応させるためには、es6-promiseというNode.jsのライブラリをフロントエンドで読み込む必要があります。&lt;/p&gt;
 
-&lt;p&gt;※今回写真は撮れなかったので、以前に撮影した写真を代用。&lt;/p&gt;
+&lt;p&gt;しかしNode.jsのライブラリは、そのままではフロントエンドで使えないので、
+webpackでフロントエンド向けにBuildする必要があります。&lt;/p&gt;
 
-&lt;p&gt;前日にバナナマンのライブを見たせいか寝付けず、結局朝の6時ぐらいに就寝。8時起床と最悪のコンディション。
-寝ぼけていたのか、受付＆着替える施設がある小川町ではなく、レース会場の竹橋に向かってしまい、急遽Uターン。&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;-webpackは他にも多くの機能がありますが、ここではNode.jsのモジュールをフロントエンドで使うため方法のみにフォーカスします。-&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;レース会場まで全力でダッシュしスタート2分前に着くといういい加減な気持ちでレースに参加。
-いちよスタートは切れたものの、運営者さんのご好意で自分だけ4分遅れでスタートさせてもらうという形になってしまい、
-大変迷惑をかけてしまいました。本当に反省しています。&lt;/p&gt;
+&lt;h3 id=&#34;webpackを使うための準備:bf105b025d29d59e69f389ae56581628&#34;&gt;webpackを使うための準備&lt;/h3&gt;
 
-&lt;p&gt;結局タイムは54分台というリベンジどころかさらに悪くなるという最悪な結果に。。
-まあ自業自得ということなのでしょう。以前はしっかりレース前の調整をしていたのですが、最近慣れてきたせいか
-すごくお座なりになってしまっているので、これを最後にしっかりコンディションを作れるよう調整をしようと思います。&lt;/p&gt;
+&lt;p&gt;まずは本体のインストール。
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install webpack -g
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;center&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/suponichi-fitrun-running-festa001.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;br&gt;&lt;br&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/suponichi-fitrun-running-festa002.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;/center&gt;&lt;/p&gt;
+&lt;p&gt;次に適当なディレクトリを作成します。
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ mkdir webpack-sample &amp;amp;&amp;amp; cd webpack-sample
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;p&gt;今回使うライブラリ(es6-promise)をディレクトリにインストールします。
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install es6-promise
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;p&gt;ライブラリはglobalではなく、ディレクトリ直下(/webpack-sample/node_modules)にインストールしてください。&lt;/p&gt;
+
+&lt;h3 id=&#34;jsのbuild方法:bf105b025d29d59e69f389ae56581628&#34;&gt;JsのBuild方法&lt;/h3&gt;
+
+&lt;p&gt;次に(Node.jsの)ライブラリを読み込むJs(main.js)をビルドします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ webpack main.js bundle.js
+Hash: de7b4a8a87c6e52d026f
+Version: webpack 1.9.10
+Time: 109ms
+    Asset     Size  Chunks             Chunk Names
+bundle.js  40.1 kB       0  [emitted]  main
+   [0] ./main.js 255 bytes {0} [built]
+   + 6 hidden modules
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+BuildしたJs(bundle.js)は、main.jsが依存しているライブラリ(es6-promise等)も含んだ一つのファイルに圧縮されます。
+このJsのみをHTMLに読み込むだけで、Node.jsが利用できるようになります。
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;&amp;lt;script&amp;nbsp;src=&amp;quot;bundle.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+&lt;b&gt;main.js&lt;/b&gt;
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;&#39;use strict&#39;
+var Promise = require(&#39;es6-promise&#39;).Promise;
+
+var promise = function(code) {
+    return new Promise(function (resolve,reject) {
+        resolve(&#39;Hello Promise !!&#39;);
+    });
+}
+
+promise().then(function (result) {
+    console.log(result);
+});
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+### 確認
+
+今回は、node.jsのhttp-serverを使って確認しようと思います。
+
+* [Node.jsのhttp-serverっていうコマンドラインのウェブサーバーが便利](https://firegoby.jp/archives/5706)
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install -g http-server
+$ http-server -p 4000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;サーバー起動し、IEのconsoleにメッセージが表示されれば、確認OKです。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/use-webpack-to-read-the-es6-promise_01.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:bf105b025d29d59e69f389ae56581628&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://webpack.github.io/&#34;&gt;webpack&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jakearchibald/es6-promise&#34;&gt;es6-promise&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://ameblo.jp/ca-1pixel/entry-11884453208.html&#34;&gt;RequireJS等はもう古い。WebPackとは？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://thujikun.github.io/blog/2014/12/07/webpack/&#34;&gt;Webpackを使い倒す&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.twopipe.com/front-end/2014/12/22/react-webpack-env.html&#34;&gt;ReactとStylusをwebpackで使うための開発環境構築&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:bf105b025d29d59e69f389ae56581628&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/&#34;&gt;Promiseを使って、非同期処理を任意のタイミングで実行する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Promiseを使って、非同期処理を任意のタイミングで実行する</title>
+      <link>http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/</link>
+      <pubDate>Tue, 02 Jun 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/</guid>
+      <description>
+
+&lt;p&gt;Promiseを使って、非同期処理を任意の順番で実行するサンプル。
+ES5でも順番を指定して実行する事ができるが、Promiseを使うと綺麗に実装できる。&lt;/p&gt;
+
+&lt;p&gt;&lt;script src=&#34;http://gist-it.appspot.com/https://github.com/tatsuyano/study-es6promise/blob/master/sample01-nodejs.js&#34;&gt;
+&lt;/script&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:4211bdcec880eb9ef23695a021bec295&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://azu.github.io/promises-book/&#34;&gt;JavaScript Promiseの本&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.html5rocks.com/ja/tutorials/es6/promises/&#34;&gt;JavaScript Promises&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/jakearchibald/es6-promise&#34;&gt;es6-promise&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://babeljs.io/repl/&#34;&gt;Babel repl&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:4211bdcec880eb9ef23695a021bec295&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/&#34;&gt;webpackを使ってes6-promiseを読み込む&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rails4の非公開情報をdotenvで管理する</title>
+      <link>http://tatsuyano.github.io/2015/05/13/dotenv-manages-secret-of-rails4/</link>
+      <pubDate>Wed, 13 May 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/05/13/dotenv-manages-secret-of-rails4/</guid>
+      <description>
+
+&lt;p&gt;TwitterのAPIキーなど、公開したくない情報をどこに設定すればいいか調べたところ、
+&lt;code&gt;config/secrets.yml&lt;/code&gt;に設定して、&lt;code&gt;.gitignore&lt;/code&gt;して使うようなので、設定してみました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;# config/secrets.yml
+development:
+  twitter_api_key: hogefuga.....
+
+# 呼び出し側
+key = Rails.application.secrets.twitter_api_key
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+しかしherokuを利用する場合、この`secrets.yml`というファイル自体必須なので、`.gitignore`するわけにはいきません。
+
+* [How to solve error &#34;Missing secret_key_base   for production environment&#34; on
+Heroku](http://stackoverflow.com/questions/23180650/how-to-solve-error-missing-secret-key-base-for-production-environment-on-h)
+
+## dotenv-railsの設定
+
+そこで検討した結果、`dotenv-rails`というGemを使うことにしました。
+このGemを使うと、アプリケーションごとに環境変数(非公開情報)が設定できるようになり、
+`secrets.yml`に公開したくない情報を設定しなくても良くなります。
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;# Gemfile
+gem &#39;dotenv-rails&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;まず、アプリケーションのディレクトリの直下に&lt;code&gt;.env&lt;/code&gt;というファイルを作成し、環境変数を設定します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;# .env
+TWITTER_API_KEY=&#34;hogehoge&#34;
+TWITTER_API_SECRET=&#34;fugafuga&#34;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;読み出す時は、以下のように指定します。
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;puts ENV[&amp;lsquo;TWITTER_API_KEY&amp;rsquo;] # =&amp;gt; &amp;ldquo;hogehoge&amp;rdquo;
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;p&gt;最後に&lt;code&gt;.env&lt;/code&gt;ファイルを&lt;code&gt;.gitignore&lt;/code&gt;します。&lt;br /&gt;
+以上で完了です。&lt;/p&gt;
+
+&lt;h2 id=&#34;herokuに環境変数を設定する:51a96cd6c0e962b72bbcd741a4bc7fd0&#34;&gt;herokuに環境変数を設定する&lt;/h2&gt;
+
+&lt;p&gt;ちなみに、herokuに環境変数を設定するには以下のように指定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ heroku config:add TWITTER_API_KEY=&amp;ldquo;hogehoge&amp;rdquo;    &amp;ndash;app アプリ名
+$ heroku config:add TWITTER_API_SECRET=&amp;ldquo;fugafuga&amp;rdquo; &amp;ndash;app アプリ名
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:51a96cd6c0e962b72bbcd741a4bc7fd0&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://xoyip.hatenablog.com/entry/2014/04/09/214405&#34;&gt;Rails4.1のsecrets.ymlはfigaroと違うの？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://railsguides.jp/security.html#%E5%88%A9%E7%94%A8%E7%92%B0%E5%A2%83%E3%81%AE%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3&#34;&gt;Rails セキュリティガイド 10 利用環境のセキュリティ
+&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://jangajan.com/blog/2014/10/05/secrets-dot-yml-on-heroku-in-rails4-dot-1/&#34;&gt;Rails4.1でherokuへのデプロイに失敗(Missing &amp;lsquo;secret_key_base&amp;rsquo;)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://t4traw.github.io/20141215/study-rails-secrets-yml.html&#34;&gt;RailsチュートリアルをRails(4.1)で勉強する：secret_key_baseからsecrets.yml&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/closer/items/f8d8ba00ae86d7051764&#34;&gt;環境によって変わる設定値はdotenvを使うと便利&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>jquery-readyselectorとbower-railsを使って、ページ単位でJsを管理する</title>
+      <link>http://tatsuyano.github.io/2015/04/28/using-jquery-readyselector-and-bower-rails-to-manage-js-on-a-page-by-page/</link>
+      <pubDate>Tue, 28 Apr 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/04/28/using-jquery-readyselector-and-bower-rails-to-manage-js-on-a-page-by-page/</guid>
+      <description>
+
+&lt;p&gt;ページごとに読み込むJsを制限したいなあと思って、ググってみたところいろいろ出てくる。
+ただ、今回はできるかぎりシンプルにやりたかったので&lt;code&gt;jquery-readyselector&lt;/code&gt;というJqueryプラグインを使うことにした。&lt;/p&gt;
+
+&lt;p&gt;このプラグインはBowerで管理されている(Node)モジュールみたいなので、まずは&lt;code&gt;bower-rails&lt;/code&gt;をインストールして、
+&lt;code&gt;bower-rails&lt;/code&gt;経由で&lt;code&gt;jquery-readyselector&lt;/code&gt;をインストールすることにした。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;bower-railsを使うには、事前にBowerをインストールしておく必要がある&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;bower-railsのインストール:81d2c341e61d33f963f82806634eede6&#34;&gt;bower-railsのインストール&lt;/h2&gt;
+
+&lt;p&gt;まずはGemfileの設定し、インストール。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ cat Gemfile
+gem &#34;bower-rails&#34;
+
+$ bundle install
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+次に、Nodeモジュールを管理するための設定ファイル(Gemfileみたいなもの)の形式を決める。
+
+形式はjson形式の`bower.json`の場合か
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ rails g bower_rails:initialize json
+      create  bower.json
+      create  config/initializers/bower_rails.rb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;DSL形式の&lt;code&gt;Bowerfile&lt;/code&gt;のどちらか選べる。今回はこちらの方法を選択。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$  rails g bower_rails:initialize
+      create  Bowerfile
+      create  config/initializers/bower_rails.rb
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+`bower-rails`の設定は`config/initializers/bower_rails.rb`で行う。
+今回は特に設定なし(デフォルトのまま)。
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;BowerRails.configure do |bower_rails|
+   # Tell bower-rails what path should be considered as root. Defaults to Dir.pwd
+   # bower_rails.root_path = Dir.pwd
+
+   # Invokes rake bower:install before precompilation. Defaults to false
+   # bower_rails.install_before_precompile = true
+
+   # Invokes rake bower:resolve before precompilation. Defaults to false
+   # bower_rails.resolve_before_precompile = true
+
+   # Invokes rake bower:clean before precompilation. Defaults to false
+   # bower_rails.clean_before_precompile = true
+
+   # Invokes rake bower:install:deployment instead rake bower:install. Defaults to false
+   # bower_rails.use_bower_install_deployment = true
+end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+## jquery-readyselectorのインストール
+
+まずはインストールするNodeモジュールを設定し、インストールの実行。
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$ cat Bowerfile
+asset &#39;jquery-readyselector&#39;
+
+$ bundle exec rake bower:install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;すると&lt;code&gt;vendor/assets&lt;/code&gt;配下に&lt;code&gt;bower_components&lt;/code&gt;というディレクトリが生成され、
+その中にNodeモジュールがインストールされる。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ ll vendor/assets/bower_components/
+query-readyselector/
+...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;bower-rails&lt;/code&gt;でインストールしたNodeモジュールは、&lt;code&gt;bower-rails&lt;/code&gt;側で管理したかったので、gitignore した。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$ cat .gitignore
+vendor/assets/bower_components/*
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;インストールしたNodeモジュールのpathを設定する。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$ cat config/application.rb
+config.assets.paths &amp;lt;&amp;lt; Rails.root.join(&amp;lsquo;vendor&amp;rsquo;, &amp;lsquo;assets&amp;rsquo;, &amp;lsquo;bower_components&amp;rsquo;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;次に&lt;code&gt;jquery-readyselector&lt;/code&gt;を&lt;code&gt;application.js&lt;/code&gt;に読み込む。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$ cat app/assets/javascripts/application.js
+//= require jquery-readyselector
+//= require_tree .
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;最後にbodyタグに、アクセスされた時の&lt;code&gt;コントローラ名&lt;/code&gt;と&lt;code&gt;アクション名&lt;/code&gt;をclassに設定するようにする。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$ emacs app/views/layouts/application.html.erb
+&lt;body class=&#34;&lt;%= controller_name -%&gt; &amp;lt;%= action_name -%&amp;gt;&amp;ldquo;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;ページ別にjsが読み込まれているか確認:81d2c341e61d33f963f82806634eede6&#34;&gt;ページ別にJsが読み込まれているか確認&lt;/h2&gt;
+
+&lt;p&gt;まずは適当なページ(&lt;a href=&#34;http://localhost:3000/books)を用意する。&#34;&gt;http://localhost:3000/books)を用意する。&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ rails g scaffold Book title:string price:integer
+&amp;hellip;
+app/assets/javascripts/books.coffee
+&amp;hellip;&lt;/p&gt;
+
+&lt;p&gt;$ rake db:migrate
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;次に生成されたJs(coffee)に、ページ単位(action単位)にコードを書く。
+&lt;code&gt;http://localhost:3000/books&lt;/code&gt;にアクセスした時のみ、&lt;code&gt;alert&lt;/code&gt;がでれば成功。
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ emacs app/assets/javascripts/books.coffee
+$(&amp;lsquo;.books.index&amp;rsquo;).ready -&amp;gt;
+  alert(&amp;lsquo;book#index&amp;rsquo;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:81d2c341e61d33f963f82806634eede6&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.mah-lab.com/2014/04/14/bower-rails/&#34;&gt;Railsで外部JavaScriptライブラリなどのAssetを管理するなら、bower-railsが便利&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/rharriso/bower-rails&#34;&gt;bower-rails&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.hello-world.jp.net/javascript/1673/&#34;&gt;bodyにclassを付けて特定のページでのみjsが動作するようにする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>rails_configで定数を管理する</title>
+      <link>http://tatsuyano.github.io/2015/04/08/manage-constant-in-rails_config/</link>
+      <pubDate>Wed, 08 Apr 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/04/08/manage-constant-in-rails_config/</guid>
+      <description>
+
+&lt;p&gt;環境ごとに定数を管理したい時は、rails-config を使うのが便利。&lt;/p&gt;
+
+&lt;h2 id=&#34;インストール:e91232af01f36657038a0d2a2f32b7bd&#34;&gt;インストール&lt;/h2&gt;
+
+&lt;p&gt;Gemfileに下記を追加し&lt;code&gt;bundle install&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# Gemfile
+gem &#39;rails_config&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;bundle install&lt;/code&gt;後、rails_config の初期設定を実行&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ rails g rails_config:install
+      create  config/initializers/rails_config.rb
+      create  config/settings.yml
+      create  config/settings.local.yml
+      create  config/settings
+      create  config/settings/development.yml
+      create  config/settings/production.yml
+      create  config/settings/test.yml
+      append  .gitignore
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+## 環境ごとに読み込まれるファイル
+
+&lt;table border=1&gt;
+  &lt;tr&gt;
+    &lt;th&gt;環境(env)&lt;/th&gt;
+    &lt;th&gt;ファイル名&lt;/th&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;共通&lt;/td&gt;
+    &lt;td&gt;config/settings.yml&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;(ローカルの)開発環境&lt;/td&gt;
+    &lt;td&gt;config/settings.local.yml&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;開発環境&lt;/td&gt;
+    &lt;td&gt;config/settings/development.yml&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;テスト環境&lt;/td&gt;
+    &lt;td&gt;config/settings/test.yml&lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+    &lt;td&gt;本番環境&lt;/td&gt;
+    &lt;td&gt;config/settings/production.yml&lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/table&gt;
+
+開発環境で同じ定数を読み込む場合、優先度は下記の順番でなります。
+
+1. `config/settings.local.yml`
+2. `config/settings/development.yml`
+3. `config/settings.yml`
+
+ちなみにこの`config/settings.local.yml`は、gitignore の対象ファイルです。  
+※ `rails g rails_config:install`実行時に追加されます。
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;config/settings.local.yml
+config/settings/*.local.yml
+config/environments/*.local.yml
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+## 定数の出力
+
+例えば`config/settings.local.yml`を、以下のように設定した場合
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;site:
+  url: &#39;http://hoge.jp&#39;
+  desc: &#39;hogehoge&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;View側の出力は以下のようになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;&amp;lt;%= Settings.site.desc %&amp;gt; # hogehoge
+&lt;/code&gt;&lt;/pre&gt;
+ちなみにプリフィックスの&lt;code&gt;Settings&lt;/code&gt;は、&lt;code&gt;config/initializers/rails_config.rb&lt;/code&gt;で変更できます。&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:e91232af01f36657038a0d2a2f32b7bd&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/yumiyon/items/32c6afb5e2e5b7ff369e&#34;&gt;Railsで定数を環境ごとに管理するrails_config&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.hello-world.jp.net/ruby/2268/&#34;&gt;Railsで定数を一元管理する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/railsconfig/rails_config&#34;&gt;railsconfig/rails_config&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Railsでページごとのscssを管理する方法</title>
+      <link>http://tatsuyano.github.io/2015/04/02/how-to-manage-the-page-specific-scss-in-rails/</link>
+      <pubDate>Thu, 02 Apr 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/04/02/how-to-manage-the-page-specific-scss-in-rails/</guid>
+      <description>
+
+&lt;p&gt;GitHubにある&lt;a href=&#34;https://github.com/twbs/bootstrap-sass/blob/master/README.md&#34;&gt;README.md&lt;/a&gt;を参考に、&lt;a href=&#34;http://tatsuyano.github.io/2015/03/31/introduced-bootstrap3-to-rails4-sass/&#34;&gt;bootstrap-sassをインストール&lt;/a&gt;してみました。&lt;/p&gt;
+
+&lt;h3 id=&#34;application-scssの設定:3d11fab9ca81505041753320d61d799c&#34;&gt;application.scssの設定&lt;/h3&gt;
+
+&lt;p&gt;すると&lt;code&gt;application.scss&lt;/code&gt;にimportするファイルは、&lt;code&gt;bootstrap&lt;/code&gt;と&lt;code&gt;bootstrap-sprockets&lt;/code&gt;の2ファイルのみとなっています。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;// &#39;bootstrap-sprockets&#39; must be imported before &#34;bootstrap&#34; and &#34;bootstrap/variables&#34;
+@import &#34;bootstrap-sprockets&#34;;
+@import &#34;bootstrap&#34;;&#34;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;そのため、このままですと、ページごとに用意したscssファイルを読み込むためには、
+毎回&lt;code&gt;application.scss&lt;/code&gt;にimportする必要がでてきてしまいます。&lt;/p&gt;
+
+&lt;h3 id=&#34;デフォルトのapplication-css:3d11fab9ca81505041753320d61d799c&#34;&gt;デフォルトのapplication.css&lt;/h3&gt;
+
+&lt;p&gt;通常、設定なしで &lt;code&gt;rails new&lt;/code&gt; を行うと、&lt;code&gt;application.css&lt;/code&gt; には、&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;$ cat app/assets/stylesheets/application.css
+/*
+ *= require_tree . # 指定されたディレクトリ以下のすべてを再帰的にインクルード(順番の保証なし)
+ *= require_self   # require_self呼び出しが行われたその場所にCSSファイルがあれば読み込みます
+ */
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;というディレクティブが設定され、stylesheetsディレクトリ以下にcssを置くと、
+自動で読み込まれる(順番は保証されない)ようになります。&lt;/p&gt;
+
+&lt;h3 id=&#34;railsでsassファイルをどう管理するべきか:3d11fab9ca81505041753320d61d799c&#34;&gt;RailsでSassファイルをどう管理するべきか&lt;/h3&gt;
+
+&lt;p&gt;いろいろ方法は有ると思うのですが、今回は&lt;a href=&#34;http://qiita.com/natsu871/items/53b38a2543df97df751d&#34;&gt;こちらの記事&lt;/a&gt;を参考に
+ディレクトリ構成を作ってみました。&lt;/p&gt;
+
+&lt;p&gt;まず、読み込み順を守る必要のあるファイル(&lt;code&gt;bootstrap&lt;/code&gt;と&lt;code&gt;bootstrap-sprockets&lt;/code&gt;)は、そのまま&lt;code&gt;application.scss&lt;/code&gt;に。&lt;br /&gt;
+ページ個々のscssに関しては、&lt;code&gt;app/assets/stylesheets/partials&lt;/code&gt;ディレクトリを生成し、そちらに配置しておきます。&lt;br /&gt;
+&lt;code&gt;partials&lt;/code&gt;ディレクトリでは、読み込み順が保証されないので、注意してください。
+&lt;pre&gt;&lt;code class=&#34;language-css&#34;&gt;# app/assets/stylesheets/application.scss
+@import &amp;ldquo;bootstrap-sprockets&amp;rdquo;;
+@import &amp;ldquo;bootstrap&amp;rdquo;;
+@import &amp;ldquo;partials/*&amp;ldquo;; // glob importing
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;p&gt;※ &lt;code&gt;sass-rails&lt;/code&gt;のバージョンが古いと、&lt;code&gt;glob importing&lt;/code&gt; には対応していないので、動かない場合はバージョンを上げてみて下さい。&lt;/p&gt;
+
+&lt;h3 id=&#34;partialsディレクトリにファイルがないとエラーになる:3d11fab9ca81505041753320d61d799c&#34;&gt;partialsディレクトリにファイルがないとエラーになる&lt;/h3&gt;
+
+&lt;p&gt;ただこのままの状態だと、partialsディレクトリにファイルがないので、&lt;code&gt;File to import not found or unreadable&lt;/code&gt;エラーが出てしまいます。
+それを防ぐために、とりあえずブランクのscssファイルをディレクトリに配置するようにしました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ touch app/assets/stylesheets/partials/blank.scss
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最後のブランクのscssを用意するのはかなり微妙ですが、
+ディレクトリに別のscssが用意された時点で、blank.scssを削除するなど対応する形で当面運用しようと思います。&lt;/p&gt;
+
+&lt;h3 id=&#34;application-jsの設定:3d11fab9ca81505041753320d61d799c&#34;&gt;application.jsの設定&lt;/h3&gt;
+
+&lt;p&gt;最低限必要なのは、下記のJsになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;//= require jquery
+//= require jquery_ujs
+//= require bootstrap-sprockets
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:3d11fab9ca81505041753320d61d799c&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://railsguides.jp/asset_pipeline.html&#34;&gt;RailsGuide::アセットパイプライン&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/twbs/bootstrap-sass&#34;&gt;twbs/bootstrap-sass&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/4778627/is-it-possible-to-import-a-whole-directory-in-sass-using-import&#34;&gt;Is it possible to import a whole directory in sass using
+@import?&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/natsu871/items/53b38a2543df97df751d&#34;&gt;Rails での適切な Sass の構成手法について（翻訳）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rails4でBootstrap3を導入(sass版)</title>
+      <link>http://tatsuyano.github.io/2015/03/31/introduced-bootstrap3-to-rails4-sass/</link>
+      <pubDate>Tue, 31 Mar 2015 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/03/31/introduced-bootstrap3-to-rails4-sass/</guid>
+      <description>
+
+&lt;p&gt;以前、&lt;code&gt;twitter-bootstrap-rails&lt;/code&gt; をつかって&lt;a href=&#34;http://tatsuyano.github.io/2015/02/18/introduced-bootstrap3-to-rails4/&#34;&gt;Bootstrap3を導入&lt;/a&gt;という記事を書いたんですが、
+Twitter社が提供している&lt;code&gt;bootstrap-sass&lt;/code&gt;のほうが導入が簡単だったので、今後はこちらを使っていきたいと思います。&lt;/p&gt;
+
+&lt;h2 id=&#34;設定:1d26c675b81c51ae89761728b91077a7&#34;&gt;設定&lt;/h2&gt;
+
+&lt;p&gt;まずはGemfileの設定から。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;cat Gemfile
+gem &amp;lsquo;bootstrap-sass&amp;rsquo;, &amp;lsquo;~&amp;gt; 3.3.4&amp;rsquo;
+gem &amp;lsquo;sass-rails&amp;rsquo;, &amp;lsquo;&amp;gt;= 3.2&amp;rsquo;&lt;/p&gt;
+
+&lt;p&gt;$ bundle install
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;application.css&lt;/code&gt; を削除し、新たに &lt;code&gt;application.sass&lt;/code&gt; を生成します。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ rm app/assets/stylesheets/application.css
+$ cat &amp;gt; app/assets/stylesheets/application.scss
+@import &amp;ldquo;bootstrap-sprockets&amp;rdquo;;
+@import &amp;ldquo;bootstrap&amp;rdquo;;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;application.js&lt;/code&gt; の設定を変更します。読み込み順に注意してください。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ cat &amp;gt; app/assets/javascripts/application.js
+//= require jquery
+//= require bootstrap-sprockets
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;これでGlyphicons(Webフォント)も使えるようになります。便利ですね。&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:1d26c675b81c51ae89761728b91077a7&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/twbs/bootstrap-sass&#34;&gt;twbs/bootstrap-sass&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/masamitsu-konya/items/e3630046774ac1fbd346&#34;&gt;全部はいらないよね？bootstrap-sassをカスタマイズして使う方法&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;関連する記事:1d26c675b81c51ae89761728b91077a7&#34;&gt;関連する記事&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/02/18/introduced-bootstrap3-to-rails4/&#34;&gt;Rails4でBootstrap3を導入&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>アプリケーションテンプレートを使って、プロジェクトのひな形を作る</title>
+      <link>http://tatsuyano.github.io/2015/03/31/use-rails-application-templates/</link>
+      <pubDate>Tue, 31 Mar 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/03/31/use-rails-application-templates/</guid>
+      <description>
+
+&lt;p&gt;Railsアプリを作っていると、ある程度決まったRuby Gemを使うようになってきたり、
+同じ設定(config周りとか)を繰り返すようになってきます。&lt;/p&gt;
+
+&lt;p&gt;そこでRailsのアプリケーションテンプレート機能を使うと、
+そういった決まった作業をコード化することができるようになります。&lt;/p&gt;
+
+&lt;p&gt;今回は、主にデータベースをPostgreSQL、テストFWをRSpec、CSSFWにTwitterBootStrapの初期設定を行い、最後に&lt;code&gt;git commit -m &#39;Initial commit&#39;&lt;/code&gt;するまでのアプリケーションテンプレートを作ってみたいと思います。&lt;/p&gt;
+
+&lt;h2 id=&#34;作業の流れ:c7250590061089d461e23945943d79e3&#34;&gt;作業の流れ&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;templateファイルを作成&lt;/li&gt;
+&lt;li&gt;templateファイルをGitHubなどにpush&lt;/li&gt;
+&lt;li&gt;templateファイルを使って、Railsアプリを作ってみる&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&#34;template-rb:c7250590061089d461e23945943d79e3&#34;&gt;template.rb&lt;/h2&gt;
+
+&lt;p&gt;コードを実際見てもらえばわかるように、templateファイルといっても特別なものではなく、
+Gemfileと同じように、必要なGemを指定し、実際の作業を明文化したファイルになります。&lt;/p&gt;
+
+&lt;p&gt;※ 最新のソースは&lt;a href=&#34;https://github.com/tatsuyano/rails-template&#34;&gt;こちら&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# -*- coding: utf-8 -*-
+
+@app_name = app_name
+
+gem &#39;rails&#39;, &#39;4.2.0&#39;
+gem &#39;pg&#39;
+gem &#39;sass-rails&#39;, &#39;~&gt; 5.0&#39;
+gem &#39;uglifier&#39;, &#39;&gt;= 1.3.0&#39;
+gem &#39;coffee-rails&#39;, &#39;~&gt; 4.1.0&#39;
+gem &#39;jquery-rails&#39;
+gem &#39;turbolinks&#39;
+gem &#39;jbuilder&#39;, &#39;~&gt; 2.0&#39;
+gem &#39;annotate&#39; # modelクラスにスキーマ情報の注釈をつける
+gem &#39;bootstrap-sass&#39; # bootstrap
+
+gem_group :development, :test do
+  gem &#39;spring&#39;
+  gem &#39;pry-rails&#39;
+  gem &#39;pry-byebug&#39;
+  gem &#39;better_errors&#39;
+  gem &#39;binding_of_caller&#39;
+  gem &#39;rspec-rails&#39;
+  gem &#39;guard-rspec&#39;                        # railsでguardを使うためのGem
+  gem &#39;spring-commands-rspec&#39; , &#39;~&gt; 1.0.2&#39; # springでキャッシュした状態でguardを使うためのGem
+  gem &#34;factory_girl_rails&#34; , &#34;~&gt; 4.4.1&#34;    # テストデータの作成
+end
+
+gem_group :test do
+  gem &#39;byebug&#39;
+  gem &#39;web-console&#39;, &#39;~&gt; 2.0&#39;
+  gem &#39;shoulda-matchers&#39;, require: false # rspecで使うmatcher
+  gem &#34;faker&#34; , &#34;~&gt; 1.4.3&#34;              # 名前やメールアドレス、その他のプレースホルダをファクトリに提供
+  gem &#34;database_cleaner&#34; , &#34;~&gt; 1.3.0&#34;   # まっさらな状態で各specが実行できるように、テストデータベースのデータを掃除
+#  gem &#34;capybara&#34; , &#34;~&gt; 2.4.3&#34;           # ユーザとWebアプリケーションのやりとりをプログラム上でシミュレートできる
+#  gem &#34;launchy&#34; , &#34;~&gt; 2.4.2&#34;            # 好きなタイミングでデフォルトのwebブラウザを開く
+#  gem &#34;selenium-webdriver&#34; , &#34;~&gt; 2.43.0&#34;# ブラウザ上でJavaScriptを利用する機能をCapybaraでテストできる
+end
+
+gem_group :production do
+  gem &#39;rails_12factor&#39;
+end
+
+# rspec initalize setting
+run &#39;bundle install&#39;
+run &#39;rm -rf test&#39;
+generate &#39;rspec:install&#39;
+
+# guard initalize setting
+run &#39;bundle exec spring binstub rspec&#39;
+run &#39;bundle exec guard init rspec&#39;
+
+# rm unused files
+run &#34;rm README.rdoc&#34;
+
+# database
+run &#39;rm config/database.yml&#39;
+
+database_yml = &lt;&lt;-FILE
+default: &amp;default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+development:
+  &lt;&lt;: *default
+  database: #{@app_name}
+  username: postgres
+  password: postgres
+test:
+  &lt;&lt;: *default
+  database: #{@app_name}_test
+  username: postgres
+  password: postgres
+FILE
+  
+File.open(&#34;config/database.yml&#34;,&#34;w&#34;) do |file|
+  file.puts database_yml
+end
+
+run &#39;bundle exec rake db:create&#39;
+run &#39;rails g annotate:install&#39;
+
+# config/application
+environment &#34;config.time_zone = &#39;Tokyo&#39;&#34;
+environment &#34;config.active_record.default_timezone = :local&#34;
+
+# bootstrap
+run &#34;rm app/assets/stylesheets/application.css&#34;
+run &#34;rm app/assets/javascripts/application.js&#34;
+
+File.open(&#34;app/assets/stylesheets/application.scss&#34;,&#34;w&#34;) do |file|
+  file.puts &lt;&lt;-SCSS
+@import &#34;bootstrap-sprockets&#34;;
+@import &#34;bootstrap&#34;;
+SCSS
+end
+
+File.open(&#34;app/assets/javascripts/application.js&#34;,&#34;w&#34;) do |file|
+  file.puts &lt;&lt;-JS
+//= require jquery
+//= require bootstrap-sprockets
+JS
+end
+
+# git initalize setting
+after_bundle do
+  git :init
+  git add: &#39;.&#39;
+  git commit: %Q{ -m &#39;Initial commit&#39; }
+end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+## 確認
+
+まずはテンプレートにエラーがないかに、Githubにpushする前に直接指定し`rails new`してみます。
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ rails new app_name -m template.rb
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;エラーがでなければ、Githubにpushして、今後はURLを指定して&lt;code&gt;rails new&lt;/code&gt;してください。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ rails new app_name -m
+&lt;a href=&#34;https://raw.githubusercontent.com/tatsuyano/rails-template/master/template.rb&#34;&gt;https://raw.githubusercontent.com/tatsuyano/rails-template/master/template.rb&lt;/a&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;テンプレートを一度作るまでは面倒ですが、作業がコード化できるなど、メリットが大きいので作ることをおすすめします。&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:c7250590061089d461e23945943d79e3&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://nanapi.co.jp/blog/2015/01/27/rails-template/&#34;&gt;Rails Templateでプロジェクト作成を楽にしよう&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/tachiba/items/26b2e9dc271bd8e6907d&#34;&gt;RailsのApplication templateを使って開発の初速をあげよう！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://railsguides.jp/rails_application_templates.html&#34;&gt;Rails のアプリケーションテンプレート&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://morizyun.github.io/blog/rails4-application-templates-heroku/&#34;&gt;Rails 4.2 + Bootstrap の Application Template
+1コマンドでモダンRailsが！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/tatsuyano/rails-template&#34;&gt;tatsuyano/rails-template&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ActiveRecordのモデルに注釈を付ける</title>
+      <link>http://tatsuyano.github.io/2015/03/30/i-annotate-model-of-activerecord/</link>
+      <pubDate>Mon, 30 Mar 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/03/30/i-annotate-model-of-activerecord/</guid>
+      <description>
+
+&lt;p&gt;&lt;code&gt;annotate&lt;/code&gt; を使うと、&lt;code&gt;rake db:migrate&lt;/code&gt; をしたタイミングで、自動でmodelクラスの先頭に、スキーマ情報のコメントを挿入してくれるようになります。&lt;/p&gt;
+
+&lt;h2 id=&#34;設定:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;設定&lt;/h2&gt;
+
+&lt;p&gt;まずはインストール。Gemfileに追加後 &lt;code&gt;bundle install&lt;/code&gt; します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;cat Gemfile
+gem &#39;annotate&#39;
+
+$ bundle install
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+`rake db:migrate`をしたタイミングで自動で、スキーマ情報を挿入するためには、
+`annotate:install` します。
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ rails g annotate:install
+      create  lib/tasks/auto_annotate_models.rake
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;自動で挿入したくない場合は、&lt;code&gt;annotate:install&lt;/code&gt;はせずに、modelクラスを更新した都度、&lt;code&gt;bundle exec annotate&lt;/code&gt;を行って下さい。
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ bundle exec annotate
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;確認:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;確認&lt;/h2&gt;
+
+&lt;p&gt;試しにbooksモデルを作成し、コメントが挿入されるか確認してみます。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ rails g scaffold Book title:string price:integer
+$ rake db:migrate
+== 20150330032832 CreateBooks: migrating ======================================
+&amp;ndash; create_table(:books)
+   -&amp;gt; 0.0090s
+   == 20150330032832 CreateBooks: migrated (0.0094s) =============================&lt;/p&gt;
+
+&lt;p&gt;Annotated (1): Book
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;modelクラスにスキーマ情報が挿入されていることを確認できます。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$ cat app/models/book.rb&lt;/p&gt;
+
+&lt;h1 id=&#34;schema-information:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;== Schema Information&lt;/h1&gt;
+
+&lt;p&gt;#&lt;/p&gt;
+
+&lt;h1 id=&#34;table-name-books:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;Table name: books&lt;/h1&gt;
+
+&lt;p&gt;#&lt;/p&gt;
+
+&lt;h1 id=&#34;id-integer-not-null-primary-key:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;id         :integer          not null, primary key&lt;/h1&gt;
+
+&lt;h1 id=&#34;title-string:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;title      :string&lt;/h1&gt;
+
+&lt;h1 id=&#34;price-integer:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;price      :integer&lt;/h1&gt;
+
+&lt;h1 id=&#34;created-at-datetime-not-null:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;created_at :datetime         not null&lt;/h1&gt;
+
+&lt;h1 id=&#34;updated-at-datetime-not-null:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;updated_at :datetime         not null&lt;/h1&gt;
+
+&lt;p&gt;#&lt;/p&gt;
+
+&lt;p&gt;class Book &amp;lt; ActiveRecord::Base
+end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;カラムを追加、変更後も自動でスキーマ情報が更新されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$ rails g migration AddAuthorsToBooks author:string
+$ cat db/migrate/20150330024524_add_authors_to_books.rb
+class AddAuthorsToBooks &amp;lt; ActiveRecord::Migration
+  def change
+    add_column :books, :author, :string
+  end
+end&lt;/p&gt;
+
+&lt;p&gt;$ rake db:migrate
+$ cat app/models/book.rb&lt;/p&gt;
+
+&lt;h1 id=&#34;schema-information-1:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;== Schema Information&lt;/h1&gt;
+
+&lt;p&gt;#&lt;/p&gt;
+
+&lt;h1 id=&#34;table-name-books-1:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;Table name: books&lt;/h1&gt;
+
+&lt;p&gt;#&lt;/p&gt;
+
+&lt;h1 id=&#34;id-integer-not-null-primary-key-1:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;id         :integer          not null, primary key&lt;/h1&gt;
+
+&lt;h1 id=&#34;title-string-1:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;title      :string&lt;/h1&gt;
+
+&lt;h1 id=&#34;price-integer-1:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;price      :integer&lt;/h1&gt;
+
+&lt;h1 id=&#34;created-at-datetime-not-null-1:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;created_at :datetime         not null&lt;/h1&gt;
+
+&lt;h1 id=&#34;updated-at-datetime-not-null-1:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;updated_at :datetime         not null&lt;/h1&gt;
+
+&lt;h1 id=&#34;author-string-this:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;author     :string　　　     # &amp;lt;= This!&lt;/h1&gt;
+
+&lt;p&gt;#&lt;/p&gt;
+
+&lt;p&gt;class Book &amp;lt; ActiveRecord::Base
+end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:a1e5d470e580a2d5bea32d3397647cd9&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://sue445.hatenablog.com/entry/2015/03/29/012855&#34;&gt;Railsアプリやgem作る時にいつも入れているgem一覧&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/ctran/annotate_models&#34;&gt;annotate_models:github&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>ファイルを読み込む時は require_relative を使う</title>
+      <link>http://tatsuyano.github.io/2015/03/27/use-require_relative-when-you-read-file/</link>
+      <pubDate>Fri, 27 Mar 2015 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/03/27/use-require_relative-when-you-read-file/</guid>
+      <description>
+
+&lt;p&gt;こちら[&lt;a href=&#34;http://blog.livedoor.jp/sasata299/archives/52111648.html&#34;&gt;requireとrequire_relativeの違いとは？&lt;/a&gt;]
+に詳しく書いてあるのですが、&lt;/p&gt;
+
+&lt;p&gt;ファイルを読み込む時は&lt;code&gt;require&lt;/code&gt;ではなく、&lt;code&gt;require_relative&lt;/code&gt;を使いましょう(Ruby1.9.2以降で、かつ&lt;code&gt;$LOAD_PATH&lt;/code&gt;に含まれていない場合)。&lt;/p&gt;
+
+&lt;p&gt;Ruby1.9.2以降、&lt;code&gt;$LOAD_PATH&lt;/code&gt;にカレントディレクトリが含まれなくなったため、
+例えば、同じ階層の&lt;code&gt;file.rb&lt;/code&gt;を読み込もうと思って&lt;code&gt;require &#39;file&#39;&lt;/code&gt;と書いたらエラーになります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in
+`require&#39;: cannot load such file -- file (LoadError)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;その回避方法として、&lt;code&gt;require ./file&lt;/code&gt;　と相対パスで書くことも可能ですが、
+違う階層から読み込むと結局エラーになってしまいます。&lt;/p&gt;
+
+&lt;p&gt;どうしても&lt;code&gt;require&lt;/code&gt;と使いたい場合は、&lt;code&gt;require&lt;/code&gt; する前に、
+カレントディレクトリを&lt;code&gt;$LOAD_PATH&lt;/code&gt;に追加する方法があります。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$:.unshift File.dirname(__FILE__)  # ロードパスにカレントディレクトリを追加
+require &#39;file&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;因みに&lt;code&gt;$:&lt;/code&gt;は&lt;code&gt;$LOAD_PATH&lt;/code&gt;の別の書き方です。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;$LOAD_PATH&lt;/code&gt; &amp;hellip; プログラム実行時に読み込まれるパス&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;$:&lt;/code&gt;         &amp;hellip; $LOAD_PATHの別の書き方&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;参考サイト:ae36953917d2f03984eaaeb73add2a12&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.livedoor.jp/sasata299/archives/52111648.html&#34;&gt;requireとrequire_relativeの違いとは？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/torazuka/20150115/require&#34;&gt;Rubyのrequireとrequire_relative&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rubyの標準ライブラリの構成について</title>
+      <link>http://tatsuyano.github.io/2015/03/27/standard-library-of-ruby/</link>
+      <pubDate>Fri, 27 Mar 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/03/27/standard-library-of-ruby/</guid>
+      <description>
+
+&lt;p&gt;&lt;code&gt;$LOAD_PATH&lt;/code&gt;について調べていた時に、Rubyの標準ライブラリの
+ディレクトリ構成の意味をわかっていない事にきづいたので、調べてみました。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ ruby -e &amp;lsquo;puts $:&amp;rsquo;
+$HOME/.anyenv/envs/rbenv/rbenv.d/exec/gem-rehash
+$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/site_ruby/2.2.0
+$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/site_ruby/2.2.0/x86_64-linux
+$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/site_ruby
+$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/vendor_ruby/2.2.0
+$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/vendor_ruby/2.2.0/x86_64-linux
+$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/vendor_ruby
+$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/2.2.0
+$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/2.2.0/x86_64-linux
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;大きくは4つの階層に分かれていて、以下のような構成になっています。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ cd $HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby&lt;/p&gt;
+
+&lt;p&gt;$ tree -d -L 1
+.
+├── 2.2.0       # 標準ライブラリ
+├── gems        # gemファイルの置き場
+├── site_ruby   # ユーザのライブラリ置き場
+└── vendor_ruby # ベンダー用のライブラリ
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;また、&lt;code&gt;gems&lt;/code&gt;ディレクトリ意外のディレクトリには、それぞれ環境依存のソースを置くディレクトリがあります。
+※ 自分の環境はCentOSなので、&lt;code&gt;x86_64-linux&lt;/code&gt;という名前のディレクトリになっています。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/2.2.0
+$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/2.2.0/x86_64-linux # soファイルなど、環境に依存したソース&lt;/p&gt;
+
+&lt;p&gt;$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/site_ruby
+$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/site_ruby/2.2.0
+$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/site_ruby/2.2.0/x86_64-linux # 環境依存&lt;/p&gt;
+
+&lt;p&gt;$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/vendor_ruby
+$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/vendor_ruby/2.2.0
+$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/vendor_ruby/2.2.0/x86_64-linux # 環境依存
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:1ca5ebd2f44c3d03fc19b10d92b166f3&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;p&gt;*
+&lt;a href=&#34;http://takuya-1st.hatenablog.jp/entry/20121007/1349587308&#34;&gt;Rubyのライブラリの標準ディレクトリ構成を考えて、自作ライブラリを何処に置くべきか思案する&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>if $0 == __FILE__のコードの意味</title>
+      <link>http://tatsuyano.github.io/2015/03/26/meaning-of-the-code-dollar0-equal-__file__/</link>
+      <pubDate>Thu, 26 Mar 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/03/26/meaning-of-the-code-dollar0-equal-__file__/</guid>
+      <description>
+
+&lt;p&gt;最近&lt;a href=&#34;http://yugui.jp/articles/885&#34;&gt;こちらの記事&lt;/a&gt;を読んでいて、
+以下のコードの意味が解らなかったので調べてみました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;if $0 == __FILE__
+  # 何らかの処理
+end
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+まず結論から言うと「requireされた時は実行したくないけど、スクリプトファイルを直接実行した時は処理したい」
+場合に使います。ややこしいですね。  
+主には簡易なテストコードやサンプルコードを書く場合に使われるようです。
+
+ただ、なぜ上記のコードがそのような動きになるのか解らなかったのでもう少し調べてみました。
+
+* `__FILE__` ... 実行中のファイル名(相対パス)を返します。フルパスが必要な場合は File.expand_path(\_\_FILE\_\_) とする必要があります。
+* `$0`       ... 直接実行したファイル名(相対パス)を返します。
+
+[こちらのコード](http://qiita.com/naoty_k/items/f84b2a9034a3bb3bfcb2)とほぼ同じですが、
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;# target_file.rb
+puts &#34;__FILE__ =&gt;  #{__FILE__}&#34;
+puts &#34;$0       =&gt;  #{$0}&#34;
+
+if $0 == __FILE__
+  puts &#34;Sample codeを実行&#34;
+else
+  puts &#34;Sample codeは実行されない&#34;
+end
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;target_file.rb自体を直接実行すると、
+&lt;code&gt;$0&lt;/code&gt;と&lt;code&gt;__FILE__&lt;/code&gt;に同じ値が入ることになるので、Sample codeが実行されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ ruby target_file.rb
+__FILE__ =&gt;  filename.rb
+$0       =&gt;  filename.rb
+Sample codeを実行
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+しかし、target_file.rbをライブラリとして使う(requireする)場合などは、`$0` と `__FILE__` の値が異なるので、Sample codeは実行されません。
+
+&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;# require_file.rb
+require_relative &#39;target_file&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;※ &lt;code&gt;require_relative&lt;/code&gt;と&lt;code&gt;require&lt;/code&gt;の違いについては別記事で説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ ruby require_file.rb
+&lt;strong&gt;FILE&lt;/strong&gt; =&amp;gt;  /tmp/target_file.rb
+$0       =&amp;gt;  require_file.rb
+Sample codeを実行しない
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;このようにライブラリなどを作る場合、&lt;code&gt;if $0 == __FILE__&lt;/code&gt;の分岐を入れることで
+簡単にサンプルコードを記述することができます。&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:017994b5820a7bbd18806145bdc6292f&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/naoty_k/items/f84b2a9034a3bb3bfcb2&#34;&gt;&lt;strong&gt;FILE&lt;/strong&gt;と$0の違い&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://tobysoft.net/wiki/index.php?Ruby%2F%A5%B9%A5%AF%A5%EA%A5%D7%A5%C8%A5%D5%A5%A1%A5%A4%A5%EB%BC%AB%BF%C8%A4%AC%BC%C2%B9%D4%A4%B5%A4%EC%A4%BF%BB%FE%A4%CE%A4%DF%BC%C2%B9%D4%A4%B9%A4%EB%CA%FD%CB%A1&#34;&gt;Ruby/スクリプトファイル自身が実行された時のみ実行する方法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://docs.ruby-lang.org/ja/2.0.0/doc/spec=2fvariables.html#pseudo&#34;&gt;Ruby 2.0.0 リファレンスマニュアル &amp;gt; 変数と定数&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>emacsにrcodetoolsをインストールして、返り値をコメントに出力する</title>
+      <link>http://tatsuyano.github.io/2015/03/25/install-rcodetools-to-emacs/</link>
+      <pubDate>Wed, 25 Mar 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/03/25/install-rcodetools-to-emacs/</guid>
+      <description>
+
+&lt;p&gt;返り値をコメントに出力したい場合、rcodetoolsのxmpfilterを使うことで可能になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;3 + 4
+↓
+3 + 4 # =&amp;gt; 7
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;インストール:ad54d5cd39040f18666c590ba2c4a628&#34;&gt;インストール&lt;/h2&gt;
+
+&lt;p&gt;まずはrcodetools本体をインストールします。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ gem install rcodetools
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;次にインストールしたgemの中にある&lt;code&gt;rcodetools.el&lt;/code&gt;をemacsのload-pathが通っている階層にコピーします。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ cp -a $HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/rcodetools-0.8.5.0/rcodetools.el $HOME/src/github.com/tatsuyano/dot.emacs.d/init_loader/
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;emacsの設定:ad54d5cd39040f18666c590ba2c4a628&#34;&gt;emacsの設定&lt;/h2&gt;
+
+&lt;p&gt;今回は、&lt;code&gt;M-p&lt;/code&gt;にxmpfilterを割り当てます。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;(require &amp;lsquo;rcodetools)
+(define-key ruby-mode-map (kbd &amp;ldquo;M-p&amp;rdquo;) &amp;lsquo;xmp)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;操作方法:ad54d5cd39040f18666c590ba2c4a628&#34;&gt;操作方法&lt;/h2&gt;
+
+&lt;ol&gt;
+&lt;li&gt;まずは返り値を出力したい行で、&lt;code&gt;M-;(comment-dwim)&lt;/code&gt;を2回実行すると「# =&amp;gt;」というコメントがソースに出力されます。&lt;/li&gt;
+&lt;li&gt;その状態で、&lt;code&gt;M-p(xmp)&lt;/code&gt;を実行すると、コメントに返り値が出力されます。&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;ちなみに&lt;code&gt;M-;&lt;/code&gt;はAltを押しながら&lt;code&gt;;&lt;/code&gt;を押下です。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;3 + 4
+↓
+3 + 4 # =&amp;gt;          1. comment-dwimを2回実行
+↓
+3 + 4 # =&amp;gt; 7        2. xmpfilterを実行
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;※ &lt;em&gt;環境によっては、&lt;code&gt;gems/rcodetools/bin/&lt;/code&gt;をPATHに加える必要があるようなので、動かない場合は試してみてください。&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:ad54d5cd39040f18666c590ba2c4a628&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://futurismo.biz/archives/2213&#34;&gt;EmacsでRubyの開発環境をさらにめちゃガチャパワーアップしたまとめ&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/ironsand/items/ce7c02eb46fcc25a438b&#34;&gt;Emacs で rcodetools を使って &amp;ldquo;=&amp;gt;&amp;rdquo; で値を表示する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     

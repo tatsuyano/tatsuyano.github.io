@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Coffeescript on blog.10rane.com</title>
+    <link>http://tatsuyano.github.io/tags/coffeescript/</link>
+    <description>Recent content in Coffeescript on blog.10rane.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Tue, 19 Mar 2013 04:00:00 +0900</lastBuildDate>
+    <atom:link href="http://tatsuyano.github.io/tags/coffeescript/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>coffee-modeでauto-completeを使えるようにする</title>
+      <link>http://tatsuyano.github.io/2013/03/19/coffee-mode-used-ac-dict/</link>
+      <pubDate>Tue, 19 Mar 2013 04:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/03/19/coffee-mode-used-ac-dict/</guid>
+      <description>
+
+&lt;p&gt;まずは coffee-mode.el を el-get で通常通りにインストールします。&lt;/p&gt;
+
+&lt;h2 id=&#34;auto-complete-で補完に使うdict-辞書-について:2538bac7ceee9429f96840d33dd3dcf5&#34;&gt;auto-complete で補完に使うdict(辞書)について&lt;/h2&gt;
+
+&lt;p&gt;補完をするときに参照している辞書は、.emacs.d/elisp/el-get/auto-complete/dict/ 配下にあります。&lt;br /&gt;
+デフォルトでは、coffee-mode 用のdictがないので、js2-mode 用に公開されていた辞書をインストールします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd .emacs.d/elisp/el-get/auto-complete/dict/
+wget https://raw.github.com/sandai/dotfiles/master/.emacs.d/ac-dict/js2-mode
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;設定:2538bac7ceee9429f96840d33dd3dcf5&#34;&gt;設定&lt;/h2&gt;
+
+&lt;p&gt;coffee-mode でauto-complete を使えるようにし、指定した辞書で補完するようにします。&lt;/p&gt;
+
+&lt;p&gt;52-coffee-mode.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(require &#39;coffee-mode)
+
+;; デフォルトだとインデントが８スペースなので、２スペースに変更
+;; http://qiita.com/items/a8d96ae95a1838500e37
+(defun coffee-custom ()
+  &amp;quot;coffee-mode-hook&amp;quot;
+  (set (make-local-variable &#39;tab-width) 2)
+  (setq coffee-tab-width 2))
+(add-hook &#39;coffee-mode-hook
+  &#39;(lambda() (coffee-custom)))
+
+;; auto-complete
+(add-to-list &#39;ac-modes &#39;coffee-mode) ;; coffee-modeでACを使えるようにする
+
+;; coffee-modeで、追加したjs2-modeのdict(辞書)で補完するようにする
+;; wget https://raw.github.com/sandai/dotfiles/master/.emacs.d/ac-dict/js2-mode
+(add-hook &#39;coffee-mode-hook
+  &#39;(lambda ()
+    (add-to-list &#39;ac-dictionary-files &amp;quot;~/.emacs.d/elisp/el-get/auto-complete/dict/js2-mode&amp;quot;)
+))
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>CoffeeScriptの勉強 その４(クラス、Jquery)</title>
+      <link>http://tatsuyano.github.io/2013/03/12/coffee-script-study-jquery/</link>
+      <pubDate>Tue, 12 Mar 2013 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/03/12/coffee-script-study-jquery/</guid>
+      <description>
+
+&lt;h4 id=&#34;クラス:fa6e0cd71057716f64eecd7101a8342e&#34;&gt;クラス&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;class Animal
+  constructor:(name) -&gt; @name = name
+    say:(word) -&gt; console.log &#34;#{@name} said: #{word}&#34;
+
+class Dog extends Animal
+  constructor:(name) -&gt; super name
+    say:(word) -&gt; super &#34;Bowwow, #{word}&#34;
+
+dog = new Dog(&#34;Bob&#34;)
+dog.say(&#34;hello&#34;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+#### 静的なプロパティ
+
+クラスの静的なプロパティを定義するには変数名の頭に@を付けます。
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;class Dog
+  @TYPE_CHIHUAHUA = 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;コンパイル結果↓&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;var Dog;
+Dog = (function() {
+  function Dog() {}
+    Dog.TYPE_CHIHUAHUA = 1;
+    return Dog;
+})();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;クラスの静的なプロパティの使い方というか、そもそもJsのオブジェクト指向、クロージャの実装がしっかりと理解していない。ここは後日勉強する。
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;無名関数:fa6e0cd71057716f64eecd7101a8342e&#34;&gt;無名関数&lt;/h4&gt;
+
+&lt;p&gt;setTimeoutなど引数に無名関数を渡したい場合は、次の行頭にカンマを付けます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;setTimeout -&gt;
+  console.log(&#34;ok&#34;)
+  ,1000
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;コンパイル結果↓&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;setTimeout(function() {
+  return console.log(&amp;ldquo;ok&amp;rdquo;);
+},1000);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;コンパイルせずに-直接coffeescriptを記述する方法:fa6e0cd71057716f64eecd7101a8342e&#34;&gt;コンパイルせずに、直接CoffeeScriptを記述する方法&lt;/h4&gt;
+
+&lt;p&gt;本家サイトに置いてある、「coffee-script.js」を読み込んで、scriptタグ
+「script type=&amp;ldquo;text/coffeescript&amp;rdquo;」で囲むと、直接CoffeeScriptが記述できる。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;script type=&amp;quot;text/javascript&amp;quot; src=&amp;quot;http://coffeescript.org/extras/coffee-script.js&amp;quot;&amp;gt; &amp;lt;/script&amp;gt;
+&amp;lt;script type=&amp;quot;text/coffeescript&amp;quot;&amp;gt;
+        hogehoge...
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;coffeescriptで-jqueryを使う:fa6e0cd71057716f64eecd7101a8342e&#34;&gt;CoffeeScriptで、Jqueryを使う&lt;/h4&gt;
+
+&lt;p&gt;これは、とくに考えずに、そのままCoffeeScriptで記述するだけ。
+Jsで書くより、カッコの入れ子がなくなり読みやすくなる。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-html&#34;&gt;&amp;lt;script type=&amp;quot;text/coffeescript&amp;quot;&amp;gt;
+    $(&#39;#add-more&#39;).click -&amp;gt;
+          $(&#39;#add-more&#39;).hide()
+          $(&#39;#task-add&#39;).fadeIn()
+&amp;lt;/script&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;参考サイト:fa6e0cd71057716f64eecd7101a8342e&#34;&gt;参考サイト&lt;/h4&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tech.kayac.com/archive/coffeescript-tutorial.html#coffee_syntax_classes&#34;&gt;今日から始めるCoffeeScript&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://kudox.jp/java-script/js-private-static&#34;&gt;JavaScriptのクロージャを利用したprivate staticメンバ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>CoffeeScriptの勉強 その３(オブジェクト)</title>
+      <link>http://tatsuyano.github.io/2013/03/11/coffee-scirpt-study-object/</link>
+      <pubDate>Mon, 11 Mar 2013 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/03/11/coffee-scirpt-study-object/</guid>
+      <description>
+
+&lt;h4 id=&#34;objectの生成:9c9cb6880bdaa691aadbf9dcf2d7811d&#34;&gt;Objectの生成&lt;/h4&gt;
+
+&lt;p&gt;this.x の代わりに @x と書くことができる&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;pos =
+  x:100
+  y:200
+  dump: -&gt; console.log &#34;x:#{@x},y:#{@y}&#34;
+
+pos.dump()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;コンパイル結果↓&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;var pos;
+pos = {
+  x: 100,
+  y: 200,
+  dump: function() {
+    return console.log(&#34;x:&#34; + this.x + &#34;, y:&#34; + this.y);
+  }
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;一行で書く場合、「,」で区切る&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;size = width:100, height:200
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;コンパイル結果↓&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;var size;
+size = {
+  width: 100,
+  height: 100
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+#### 配列
+
+for .. in でループが書けます。
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;seq = [&#34;a&#34;,&#34;b&#34;,&#34;c&#34;]
+for x in seq
+  console.log x
+
+ a
+ b
+ c
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ループ中に配列のインデックスを拾いたい場合はforとinの間に2つ変数を置きます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;seq = [&#34;a&#34;,&#34;b&#34;,&#34;c&#34;]
+for x,i in seq
+  console.log &#34;#{i} -&gt; #{x}&#34;
+{% endcodeblock %}
+0 -&gt; a
+1 -&gt; b
+2 -&gt; c
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+#### 連想配列
+
+for .. of を使って配列と同じように反復処理ができます。
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;data =
+  x:100
+  y:200
+
+for key,value of data
+  console.log &#34;#{key} -&gt; #{value}&#34;
+
+x -&gt; 100
+y -&gt; 200
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+#### 存在チェック
+
+変数名や関数名の直後に ? を付けると「その変数あるいは関数が定義されておりnull以外の値が入っているかどうか」をテストできます。
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;if myName?
+  console.log &#34;yes&#34;
+else
+  console.log &#34;no&#34;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;コンパイル結果↓&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;if (typeof myName != &#34;undefined&#34; &amp;&amp; myName !== null) {
+  console.log(&#34;yes&#34;);
+} else {
+  console.log(&#34;no&#34;);
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;また「.」や 「()」の前に ? を置くことで、変数や関数が存在する場合のみ処理を進めるようにできます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;console?.log?(&#34;Hello World&#34;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;コンパイル結果↓&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;if (typeof console != &#34;undefined&#34; &amp;&amp; console !== null) {
+  if (typeof console.log == &#34;function&#34;) {
+    console.log(&#34;Hello World&#34;);
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+#### ヒアドキュメント
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;html = &#39;&#39;&#39;
+aaa
+bbb
+ccc
+&#39;&#39;&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;コンパイル結果↓&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;var html;
+html = &#39;aaa\nbbb\nccc&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;
+
+#### thisのバインド
+
+関数定義時に -&gt; の代わりに =&gt; を使うと、thisがバインドされて外側のthisを参照するようになります。
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;pos =
+  x:100
+  y:200
+  dump: -&gt;
+    # 関数内部で@x(this.x)を使いたいのでfuncの定義は=&gt;にしないといけない
+    func = =&gt; console.log &#34;x:#{@x}, y:#{@y}&#34;
+        func()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;コンパイル結果↓&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-coffeescript&#34;&gt;var pos;
+
+pos = {
+  x: 100,
+  y: 200,
+  dump: function() {
+    var func,
+    _this = this;
+    func = function() {
+      return console.log(&#34;x:&#34; + _this.x + &#34;, y:&#34; + _this.y);
+    };
+    return func();
+  }
+};
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>CoffeeScriptの勉強 その１(インストール、環境構築)</title>
+      <link>http://tatsuyano.github.io/2013/03/08/coffee-script-emacs/</link>
+      <pubDate>Fri, 08 Mar 2013 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/03/08/coffee-script-emacs/</guid>
+      <description>
+
+&lt;h4 id=&#34;npm-node-js-でのインストール:c905a6070d9e047afb6468a285c74d82&#34;&gt;npm(node.js)でのインストール&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# node.jsのversionを指定
+nvm ls
+v0.8.14 v0.9.4
+current:        v0.9.4
+
+nvm use 0.9.4
+Now using node v0.9.4
+
+npm install -g coffee-script
+
+$ coffee -v
+CoffeeScript version 1.6.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;今後頻繁にCoffeeScriptを使いそうなので、zshrcにnode.jsのバージョンを指定しておく&lt;/p&gt;
+
+&lt;p&gt;$HOME/.zshrc
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[[ -s $HOME/.nvm/nvm.sh ]] &amp;amp;&amp;amp; nvm use 0.9.4&lt;/p&gt;
+
+&lt;p&gt;source $HOME/.zshrc
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;emacsにcoffee-modeをインストール:c905a6070d9e047afb6468a285c74d82&#34;&gt;emacsにcoffee-modeをインストール&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cd $HOME/.emacs.d/elisp
+git clone git://github.com/defunkt/coffee-mode.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;$HOME/.emacs.d/conf/52_coffee.el
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;(add-to-list &amp;lsquo;load-path &amp;ldquo;~/.emacs.d/elisp/coffee-mode&amp;rdquo;)
+(require &amp;lsquo;coffee-mode)&lt;/p&gt;
+
+&lt;p&gt;;; デフォルトだとインデントが Space 8 なので、Space 2 に変更
+;; &lt;a href=&#34;http://qiita.com/items/a8d96ae95a1838500e37&#34;&gt;http://qiita.com/items/a8d96ae95a1838500e37&lt;/a&gt;
+(defun coffee-custom ()
+  &amp;ldquo;coffee-mode-hook&amp;rdquo;
+   (set (make-local-variable &amp;lsquo;tab-width) 2)
+    (setq coffee-tab-width 2))&lt;/p&gt;
+
+&lt;p&gt;(add-hook &amp;lsquo;coffee-mode-hook
+  &amp;lsquo;(lambda() (coffee-custom)))
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;インデントに色をつける:c905a6070d9e047afb6468a285c74d82&#34;&gt;インデントに色をつける&lt;/h4&gt;
+
+&lt;p&gt;CoofeeScriptはrubyのようにインデントごとにブロックを表現するので、&lt;br /&gt;
+emacsに「Highlight-Indentation-for-Emacs」をインストールする。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cd $HOME/.emacs.d/elisp
+git clone https://github.com/antonj/Highlight-Indentation-for-Emacs.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;「Highlight-Indentation-for-Emacs」をインストールすると、&lt;br /&gt;
+カーソルを合わせているブロック(インデント)に色を付けてくれる「highlight-indentation-current-column-mode」。&lt;br /&gt;
+ブロック(インデント)ごとに色を付けてくれる「highlight-indentation-mode」などが使えるようになる。&lt;/p&gt;
+
+&lt;p&gt;ただ現在「highlight-indentation-mode」をcoffee-modeで初めから使えるようにhookするとerrorは出ないが、色付けをしてくれない。&lt;br /&gt;
+手動で M-x highlight-indentation-mode と起動させる分には色付けされる。&lt;br /&gt;
+とりあえず「highlight-indentation-current-column-mode」しか使わないので、こちらだけhookする。&lt;/p&gt;
+
+&lt;p&gt;$HOME/.emacs.d/conf/61_highlight.el
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;(add-to-list &amp;lsquo;load-path &amp;ldquo;~/.emacs.d/elisp/Highlight-Indentation-for-Emacs&amp;rdquo;)
+(require &amp;lsquo;highlight-indentation)(setq highlight-indentation-offset 2) ;;default:4
+(set-face-background &amp;lsquo;highlight-indentation-current-column-face &amp;ldquo;#ff0000&amp;rdquo;) ;;default:#000000
+(add-hook &amp;lsquo;coffee-mode-hook &amp;lsquo;highlight-indentation-current-column-mode) ;; coffee-mode-hook
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;参考サイト:c905a6070d9e047afb6468a285c74d82&#34;&gt;参考サイト&lt;/h4&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://coffeescript.org/&#34;&gt;本家チュートリアル&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://codezine.jp/article/detail/6392&#34;&gt;「CoffeeScript」の開発環境を用意して、サンプルを表示してみよう&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.iss.ms/2012/03/17/095152&#34;&gt;インデントをハイライトしてくれる「Highlighting indentation」で脱・インデント迷子&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>CoffeeScriptの勉強 その２(構文)</title>
+      <link>http://tatsuyano.github.io/2013/03/08/coffee-script-study/</link>
+      <pubDate>Fri, 08 Mar 2013 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/03/08/coffee-script-study/</guid>
+      <description>
+
+&lt;h4 id=&#34;hello-world:be823534c456d353d4dbe36bf961ffec&#34;&gt;Hello World&lt;/h4&gt;
+
+&lt;p&gt;$ emacs test.coffee
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;hello = -&amp;gt;
+        console.log(&amp;ldquo;Hello World!&amp;rdquo;)&lt;/p&gt;
+
+&lt;p&gt;hello()
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;p&gt;コンパイル coffee -&amp;gt; js。 test.jsというJsファイルが生成される&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ coffee -c test.coffee
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成したJsの実行&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ node test.js
+Hello World!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;生成されたJsの中身&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;(function() {
+    var hello;
+    hello = function() {
+    return console.log(&#34;Hello World!&#34;);
+ };
+ hello();
+}).call(this);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;コンパイルせずに直接実行&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ coffee test.coffee
+Hello World!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;coffee &amp;lt;ファイル名&amp;gt; と入力するのが面倒なので、zshのaliasを設定する&lt;/p&gt;
+
+&lt;p&gt;emacs $HOME/.zshrc
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;alias -s coffee=coffee&lt;/p&gt;
+
+&lt;p&gt;source $HOME/.zshrc
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;p&gt;今後は、ファイル名を入力するだけで実行される&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ ./test.coffee
+Hello World!
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;オプション:be823534c456d353d4dbe36bf961ffec&#34;&gt;オプション&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;-c (&amp;ndash;compile) .coffee から .js にコンパイルします。&lt;/li&gt;
+&lt;li&gt;-b (&amp;ndash;bare)    外側の (function(){ &amp;hellip; }).call(this); を取り除きます。&lt;/li&gt;
+&lt;li&gt;-w (&amp;ndash;watch)   ソースファイルを監視して、ファイルが変更されるたびにコンパイルを実行します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;構文:be823534c456d353d4dbe36bf961ffec&#34;&gt;構文&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;var での変数宣言が不要&lt;/li&gt;
+&lt;li&gt;関数の定義(function)の代わりに -&amp;gt; を使う&lt;/li&gt;
+&lt;li&gt;式の終わりや行末にセミコロンを必ずしも置かなくてもよい&lt;/li&gt;
+&lt;li&gt;インデントでブロックを表現する&lt;/li&gt;
+&lt;li&gt;引数を取る関数の場合、() を省略して書くこともできる&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;コメントアウト:be823534c456d353d4dbe36bf961ffec&#34;&gt;コメントアウト&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# 1行コメント
+# コンパイル時には消される
+
+###
+複数行コメント
+コンパイル時にも残る
+###
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;関数:be823534c456d353d4dbe36bf961ffec&#34;&gt;関数&lt;/h4&gt;
+
+&lt;p&gt;-&amp;gt; を使って定義します。引数を取る場合は -&amp;gt; を (var1, var2) -&amp;gt; のようにして引数を並べます。&lt;br /&gt;
+関数内の最後の値が自動的にreturnされます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;square = (x) -&gt; x * x
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;コンパイル結果 ↓&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;square = function(x) {
+  return x * x;
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;例) 引数がないので、()を省略
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;hello = -&amp;gt; &amp;ldquo;Hello World!&amp;rdquo;
+hello()
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;if文:be823534c456d353d4dbe36bf961ffec&#34;&gt;if文&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;複数行の場合
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;fib = (n) -&amp;gt;
+if n &amp;lt; 2
+ n
+else
+ fib(n-1) + fib(n-2)
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;一行の場合
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;fib = (n) -&amp;gt; if n &amp;lt; 2 then n else fib(n-1) + fib(n-2)
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;変数展開:be823534c456d353d4dbe36bf961ffec&#34;&gt;変数展開&lt;/h4&gt;
+
+&lt;p&gt;&amp;rdquo; &amp;ldquo; でくくった文字列の中では #{変数名} で変数の値を埋め込むことができます。
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;name = &amp;ldquo;Nao&amp;rdquo;
+console.log &amp;ldquo;My name is #{name}!&amp;rdquo;
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;演算子:be823534c456d353d4dbe36bf961ffec&#34;&gt;演算子&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;|Coffee | Js |
+|:------|:---|
+| is    | ===|
+| isnt  | !==|
+| not   | !  |
+| and   | &amp;&amp; |
+| or    | || |
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;参考サイト:be823534c456d353d4dbe36bf961ffec&#34;&gt;参考サイト&lt;/h4&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tech.kayac.com/archive/coffeescript-tutorial.html&#34;&gt;今日から始めるCoffeeScript&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://minghai.github.com/library/coffeescript/index.html&#34;&gt;The Little Book on CoffeeScript&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>AWSのセキュリティを強化する -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>AWSのセキュリティを強化する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Fri, Sep 26, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/aws" >aws</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>AWSを本格的に使い始めて来たので、<a href="http://qiita.com/yoshidashingo/items/cd206daca0596659b440">こちらの記事</a>を参考にセキュリティの設定を行いました。改めて記事にするか迷いましたが、いちよ備忘のために残しておこうと思います。</p>
+
+<p>今回の作業の流れは以下になります。</p>
+
+<ol>
+<li>Authyを使ってrootアカウントに2段階認証を導入する</li>
+<li>IAMユーザを作成し、IAMユーザでAWSを運用する</li>
+<li>rootアカウントのAccessKeyを削除する</li>
+</ol>
+
+<h3 id="authyの設定-インストール:92967808d8e82a6b1f0dee3fa3859785">Authyの設定、インストール</h3>
+
+<p>セキュリティといってもいろいろあると思うのですが、まずはAWSコンソールにログインできるrootアカウント
+のセキュリティを強化することだと思います。</p>
+
+<p>今回はAuthyというアプリケーションを使って、AWSに2段階認証を導入しようと思います。</p>
+
+<p>通常の2段階認証だと、ログインする度に事前に登録してあるSMSにPINコードを送ってもらい、そのPINコードを入力すると思うのですが、
+Authyを使うことで、Authyが生成するPINコードを入力してログインが可能になります。</p>
+
+<p>Authyの設定は<a href="http://www.appbank.net/2014/02/13/iphone-application/750689.php">こちらの記事</a>を参考にしてください。</p>
+
+<h3 id="mfaを有効にし-rootアカウントを2段階認証に対応させる:92967808d8e82a6b1f0dee3fa3859785">MFAを有効にし、rootアカウントを2段階認証に対応させる</h3>
+
+<p><a href="https://console.aws.amazon.com/iam/home">IAM</a>に、MFA(multi-factor authentication)という外部のサービスを使って
+2段階認証する機能を使って、AuthyにrootアカウントのPINコードを生成できるように設定します。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_01.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_02.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_03.jpg" alt="" /></p>
+
+<h3 id="iamユーザを作成する:92967808d8e82a6b1f0dee3fa3859785">IAMユーザを作成する</h3>
+
+<p>Administrator権限のIAMユーザを作成し、こちらもAuthyに紐付けます。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_04.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_05.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_06.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_07.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_08.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_09.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_10.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_11.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_12.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_13.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_14.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_15.jpg" alt="" /></p>
+
+<h3 id="rootアカウントのaccesskeyを削除する:92967808d8e82a6b1f0dee3fa3859785">rootアカウントのAccessKeyを削除する</h3>
+
+<p>今後rootアカウントを使って、インスタンスの操作はしないので、<code>AccessKey</code>を削除します。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_16.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_17.jpg" alt="" />
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_18.jpg" alt="" /></p>
+
+<p>ここまでの作業で、</p>
+
+<ul>
+<li>rootアカウントに2段階認証の導入</li>
+<li>IAMユーザの作成、及び2段階認証の導入</li>
+</ul>
+
+<p>今後はコンソールにもIAMユーザでログインして作業してください。
+お疲れ様でした。</p>
+
+<h3 id="参考サイト:92967808d8e82a6b1f0dee3fa3859785">参考サイト</h3>
+
+<ul>
+<li><a href="http://www.appbank.net/2014/02/13/iphone-application/750689.php">Authy: 2段階認証のコードをまとめて管理! 紛失時の復元・データ同期もできる</a></li>
+<li><a href="http://qiita.com/yoshidashingo/items/cd206daca0596659b440">AWSアカウント作ったらこれだけはやっとけ！IAMユーザーとAuthyを使ったMFAで2段階認証</a></li>
+</ul>
+
+<h3 id="関連する記事:92967808d8e82a6b1f0dee3fa3859785">関連する記事</h3>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/09/11/using-the-dns-of-route53/">Route53のDNSを使う</a></li>
+<li><a href="http://blog.10rane.com/2014/09/16/transferred-a-domain-to-route53/">Route53にドメインを移管する</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

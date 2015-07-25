@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>ghqをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Ghqをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Aug 27, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/go" >go</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p><a href="http://motemen.hatenablog.com/entry/2014/06/01/introducing-ghq">ghq</a>というローカルリポジトリを一元的に
+管理するツールをインストールしてみました。こちらのツールを使うと<code>golang</code>と同じようなディレクトリ構成で
+リポジトリを管理できるようになります。</p>
+
+<p>また今回は<a href="http://blog.kentarok.org/entry/2014/06/03/135300">こちらの記事</a>を参考に(というかまんま同じに)、
+リポジトリ(ソース)を管理するようにしてみました。</p>
+
+<h3 id="golangのディレクトリ構成:d8cc5a425aa92595b9f672b61024171f">golangのディレクトリ構成</h3>
+
+<p>まずは<code>GOPATH</code>を<code>$HOME</code>に設定し、以下のようなディレクトリ構成にします。</p>
+
+<p>.zshrc</p>
+
+<pre><code>## golang
+export GOPATH=$HOME
+export PATH=$PATH:$GOPATH/bin
+</code></pre>
+
+<p><code>$HOME</code>配下の構成</p>
+
+<pre><code>.
+├── bin
+├── pkg
+└── src
+    └── github.com
+            ├── clone
+            ├── codegangsta
+            ├── mattn
+            └── peco
+</code></pre>
+
+<p>これで<code>golang</code>のリポジトリ(ソース)は、<code>src</code>配下に作成されます。
+また今回は<code>ghq</code>を使ってインストール(clone)する<code>golang</code>以外のリポジトリも<code>src</code>配下にインストールするよう設定します。</p>
+
+<h3 id="ghqのインストール:d8cc5a425aa92595b9f672b61024171f">ghqのインストール</h3>
+
+<pre><code>$ go get github.com/motemen/ghq
+</code></pre>
+
+<p><code>$HOME/.gitconfig</code>に<code>ghq</code>を使ってインストールするディレクトリ先を指定します。</p>
+
+<pre><code>[ghq]
+    root = ~/src
+</code></pre>
+
+<p>これで<code>ghq</code>コマンドを使って、インストールできるようになります。</p>
+
+<pre><code>$ ghq get https://github.com/zsh-users/zsh-syntax-highlighting.git
+</code></pre>
+
+<p><code>src</code>ディレクトリ配下にインストールされます。</p>
+
+<pre><code>src
+└── github.com
+        └── zsh-users
+            └── zsh-syntax-highlighting
+</code></pre>
+
+<h3 id="ghqでインストールしたリポジトリの一覧を表示し-移動するスクリプト:d8cc5a425aa92595b9f672b61024171f">ghqでインストールしたリポジトリの一覧を表示し、移動するスクリプト</h3>
+
+<pre><code># peco-src
+# (http://blog.kentarok.org/entry/2014/06/03/135300)
+function peco-src () {
+    local selected_dir=$(ghq list --full-path | peco --query &quot;$LBUFFER&quot;)
+    if [ -n &quot;$selected_dir&quot; ]; then
+        BUFFER=&quot;cd ${selected_dir}&quot;
+        zle accept-line
+    fi
+    zle clear-screen
+}
+zle -N peco-src
+bindkey '^S' peco-src
+</code></pre>
+
+<h3 id="まとめ:d8cc5a425aa92595b9f672b61024171f">まとめ</h3>
+
+<p>今までの自己流から、ずいぶん分かりやすくなりました。<br />
+当面この方法で管理をしていこうと思います。</p>
+
+<p>お疲れ様でした。</p>
+
+<h3 id="参考サイト:d8cc5a425aa92595b9f672b61024171f">参考サイト</h3>
+
+<ul>
+<li><a href="http://motemen.hatenablog.com/entry/2014/06/01/introducing-ghq">リモートリポジトリのローカルクローンをシンプルに管理する</a></li>
+<li><a href="http://blog.kentarok.org/entry/2014/06/03/135300">ghqを使ったローカルリポジトリの統一的・効率的な管理について</a></li>
+</ul>
+
+<h3 id="関連する記事:d8cc5a425aa92595b9f672b61024171f">関連する記事</h3>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/07/02/installed-the-peco-to-centos/">流行りのpecoをcentosにインストールしました</a></li>
+<li><a href="http://blog.10rane.com/2014/08/14/updating-the-package-go/">goパッケージ(peco)のバージョンを上げる</a></li>
+<li><a href="http://blog.10rane.com/2014/08/21/select-host-for-peco/">pecoで接続先hostを選ぶスクリプトを書いた</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

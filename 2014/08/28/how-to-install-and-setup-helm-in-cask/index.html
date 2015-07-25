@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>HelmをCaskでインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>HelmをCaskでインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Thu, Aug 28, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p><code>anything.el</code>をフォークして作られたツール、<code>Helm</code>を<code>Cask</code>でインストール、管理したいと思います。</p>
+
+<h3 id="インストール:4098104992e48cdbc33d0f8655e4d9b6">インストール</h3>
+
+<p>~/.emacs.d/Cask</p>
+
+<pre><code>(depends-on &quot;helm&quot;)
+</code></pre>
+
+<p><code>cask</code>コマンドの実行</p>
+
+<pre><code>$ cd .emacs.d
+$ cask
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/archives/gnu/archive-contents
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/archives/marmalade/archive-contents
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/archives/melpa/archive-contents
+Making version-control local to helm-autoloads.el while let-bound!
+Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/helm-20140827.436/helm-autoloads.el
+</code></pre>
+
+<h3 id="最小限の設定:4098104992e48cdbc33d0f8655e4d9b6">最小限の設定</h3>
+
+<p>とりあえず<a href="https://github.com/emacs-helm/helm/blob/master/README.md">README.md</a>に書いてある最小限の設定をします。</p>
+
+<p>~/.emacs.d/init.el</p>
+
+<pre><code>;; Helm
+(require 'helm-config)
+(global-set-key (kbd &quot;C-c h&quot;) 'helm-mini)
+(helm-mode 1)
+
+;;ミニバッファでC-hをバックスペースに割り当て
+(define-key helm-read-file-map (kbd &quot;C-h&quot;) 'delete-backward-char)
+</code></pre>
+
+<h3 id="基本的な操作:4098104992e48cdbc33d0f8655e4d9b6">基本的な操作</h3>
+
+<ul>
+<li><code>C-c h</code>で最近開いたバッファ(ファイル)を選択する</li>
+<li><code>C-c f</code>で<code>helm-mode-find-file</code>が実行</li>
+</ul>
+
+<p><code>helm-mode 1</code>がどういう設定になっているかわかっていないので、今はこれぐらいしか把握していません(笑)。
+もう少し理解したら書き足したいと思います。</p>
+
+<h4 id="追加-2014-9-11-helmの設定:4098104992e48cdbc33d0f8655e4d9b6">追加 2014.9.11 Helmの設定</h4>
+
+<p><a href="http://d.hatena.ne.jp/a_bicky/20140104/1388822688">こちらのサイト</a>を参考に設定してみました。設定はまったく同じなので、省略します。</p>
+
+<h3 id="参考サイト:4098104992e48cdbc33d0f8655e4d9b6">参考サイト</h3>
+
+<ul>
+<li><a href="https://github.com/emacs-helm/helm">emacs-helm</a></li>
+<li><a href="http://rubikitch.com/2014/08/14/helm">helmでC-eとC-jが使えなくなったので取り戻した</a></li>
+<li><a href="http://konbu13.hatenablog.com/entry/2014/01/15/223014">helm.elをインストールしてみた</a></li>
+<li><a href="http://emacs.tsutomuonoda.com/emacs-anything-el-helm-mode-install">anything.elのフォークhelm-modeをインストールする</a></li>
+<li><a href="https://github.com/syohex/dot_files/blob/master/emacs/init_loader/02_helm.el">syohex/dot_files/emacs/init_loader/02_helm.el</a></li>
+<li><a href="http://d.hatena.ne.jp/a_bicky/20140104/1388822688">Helm をストレスなく使うための個人的な設定</a></li>
+</ul>
+
+<h3 id="関連する記事:4098104992e48cdbc33d0f8655e4d9b6">関連する記事</h3>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/08/20/install-cask/">Caskをインストールする</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

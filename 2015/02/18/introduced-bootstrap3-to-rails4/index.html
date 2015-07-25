@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Rails4でBootstrap3を導入 -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Rails4でBootstrap3を導入</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Feb 18, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/rails" >rails</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>※ <a href="http://tatsuyano.github.io/2015/03/31/introduced-bootstrap3-to-rails4-sass/">Bootstrapをより簡単に導入する(sass版)記事</a>
+もあるので、そちらも参照してみてください。</p>
+
+<p><code>twitter-bootstrap-rails</code>というGemを使って、Rails4にBootstrap3を導入します。</p>
+
+<p><pre><code class="language-bash">$ rails -v Rails 4.1.1
+$ ruby -v  ruby 2.1.0p0
+</code></pre>
+<br></p>
+
+<h2 id="サンプルアプリの用意:5cfef58f6f27ac7b7203d43f347caa64">サンプルアプリの用意</h2>
+
+<p>まずはbootstrap3という名前のサンプルアプリを生成し、次に確認用のページを生成します。</p>
+
+<p><pre><code class="language-bash">$ rails new bootstrap3
+$ cd bootstrap3
+$ rails g scaffold Book title:string price:integer
+$ rake db:migrate
+$ rails server
+</code></pre>
+<br></p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/introduced-bootstrap3-to-rails4_01.jpg" alt="" /></p>
+
+<h2 id="gemfileの設定:5cfef58f6f27ac7b7203d43f347caa64">Gemfileの設定</h2>
+
+<p>Bootstrapのcssがlessで書かれているので、Railsでもlessが扱えるようにし、さらにlessをコンパイルするためのGemもインストールします。</p>
+
+<p>bootstrap3/Gemfile
+<pre><code class="language-bash">gem &lsquo;therubyracer&rsquo;            # javascript runtime。lessをコンパイルするために必要
+gem &lsquo;less-rails&rsquo;              # Railsでlessを使えるようにする。Bootstrapがlessで書かれているため
+gem &lsquo;twitter-bootstrap-rails&rsquo; # Bootstrapの本体
+</code></pre>
+<br></p>
+
+<p>Gemを反映します。
+<pre><code class="language-bash">$ bundle install
+</code></pre>
+<br></p>
+
+<h2 id="bootstrapの設定:5cfef58f6f27ac7b7203d43f347caa64">Bootstrapの設定</h2>
+
+<p>まずはBootstrapのJsとCssを生成します。</p>
+
+<p><pre><code class="language-bash">$ rails g bootstrap:install
+      insert  app/assets/javascripts/application.js
+      create  app/assets/javascripts/bootstrap.js.coffee
+      create  app/assets/stylesheets/bootstrap_and_overrides.css.less
+      create  config/locales/en.bootstrap.yml
+        gsub  app/assets/stylesheets/application.css
+</code></pre>
+<br></p>
+
+<h3 id="ヘッダー-フッターのbootstrap化:5cfef58f6f27ac7b7203d43f347caa64">ヘッダー、フッターのBootstrap化</h3>
+
+<p>次にヘッダー、フッターをBootstrapのコンポーネントに差し替えるため、
+<code>app/views/layouts/application.html.erb</code>を上書き(Overwrite)します。</p>
+
+<p><pre><code class="language-bash">$ rails g bootstrap:layout application
+    conflict  app/views/layouts/application.html.erb
+    Overwrite /bootstrap3/app/views/layouts/application.html.erb? (enter &ldquo;h&rdquo; for help) [Ynaqdh] Y
+           force  app/views/layouts/application.html.erb
+</code></pre>
+<br></p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/introduced-bootstrap3-to-rails4_02.jpg" alt="" /></p>
+
+<h3 id="scaffoldしたページのbootstrap化:5cfef58f6f27ac7b7203d43f347caa64">scaffoldしたページのBootstrap化</h3>
+
+<p>次に、scaffoldしたページ全体に対してBootstrap化をしていきます。
+ページはすでに生成されているので、ここでも上書きするかメッセージが出ますが、すべて<code>Y</code>で上書きます。</p>
+
+<p><pre><code class="language-bash">$ rails g bootstrap:themed Books</p>
+
+<pre><code>conflict  app/views/books/index.html.erb
+</code></pre>
+
+<p>Overwrite /bootstrap3/app/views/books/index.html.erb? (enter &ldquo;h&rdquo; for help) [Ynaqdh] Y
+       force  app/views/books/index.html.erb
+    conflict  app/views/books/new.html.erb</p>
+
+<p>Overwrite /bootstrap3/app/views/books/new.html.erb? (enter &ldquo;h&rdquo; for help) [Ynaqdh] Y
+       force  app/views/books/new.html.erb
+    conflict  app/views/books/edit.html.erb</p>
+
+<p>Overwrite /bootstrap3/app/views/books/edit.html.erb? (enter &ldquo;h&rdquo; for help) [Ynaqdh] Y
+       force  app/views/books/edit.html.erb
+    conflict  app/views/books/_form.html.erb</p>
+
+<p>Overwrite /bootstrap3/app/views/books/_form.html.erb? (enter &ldquo;h&rdquo; for help) [Ynaqdh] Y
+       force  app/views/books/_form.html.erb
+    conflict  app/views/books/show.html.erb</p>
+
+<p>Overwrite /bootstrap3/app/views/books/show.html.erb? (enter &ldquo;h&rdquo; for help) [Ynaqdh] Y
+       force  app/views/books/show.html.erb
+</code></pre>
+<br></p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/introduced-bootstrap3-to-rails4_03.jpg" alt="" /></p>
+
+<h2 id="glyphicons-webフォント-の設定:5cfef58f6f27ac7b7203d43f347caa64">Glyphicons(Webフォント)の設定</h2>
+
+<p>Bootstrap3からGlyphiconsは、Webフォントなっており、別途サーバーにフォントをインストールする必要があります。</p>
+
+<p>本家サイトからbootstrap本体をダウンロードし、fontを<code>app/vendor/assets/</code>配下にコピーします。</p>
+
+<p><pre><code class="language-bash">wget <a href="https://github.com/twbs/bootstrap/releases/download/v3.3.2/bootstrap-3.3.2-dist.zip">https://github.com/twbs/bootstrap/releases/download/v3.3.2/bootstrap-3.3.2-dist.zip</a>
+$ unzip bootstrap-3.3.2-dist.zip
+$ cp -a bootstrap-3.3.2-dist/fonts /bootstrap3/vendor/assets/
+</code></pre>
+<br></p>
+
+<p>次にダウンロードしたフォントを読み込むため、configに設定します。</p>
+
+<p>bootstrap3/config/application.rb
+<pre><code class="language-css">module Bootstrap3
+  class Application &lt; Rails::Application
+      config.assets.paths &lt;&lt; &ldquo;#{Rails}/vendor/assets/fonts&rdquo; #&lt;- 追加
+&hellip;
+</code></pre>
+<br></p>
+
+<p>最後にlessファイルに対して、ダウンロードしたフォントのパスを設定します。</p>
+
+<p>bootstrap3/app/assets/stylesheets/bootstrap＿and＿overrides.css.less
+<pre><code class="language-bash">@font-face {
+  font-family: &lsquo;Glyphicons Halflings&rsquo;;
+  src: url(&lsquo;/assets/glyphicons-halflings-regular.eot&rsquo;);
+  src: url(&lsquo;/asstes/glyphicons-halflings-regular.eot?#iefix&rsquo;) format(&lsquo;embedded-opentype&rsquo;),
+  url(&lsquo;/assets/glyphicons-halflings-regular.woff&rsquo;) format(&lsquo;woff&rsquo;),
+  url(&lsquo;/assets/glyphicons-halflings-regular.ttf&rsquo;) format(&lsquo;truetype&rsquo;),
+  url(&lsquo;/assets/glyphicons-halflings-regular.svg#glyphicons-halflingsregular&rsquo;) format(&lsquo;svg&rsquo;);
+}
+</code></pre>
+<br></p>
+
+<p>試しにindex.html.erbに、Glyphiconsのspanタグを書いてみます。</p>
+
+<p>bootstrap3/app/views/books/index.html.erb</p>
+
+<p><pre><code class="language-markup">&lt;%-&nbsp;model_class&nbsp;=&nbsp;Book&nbsp;-%&gt;
+&lt;div&nbsp;class=&lsquo;page-header&rsquo;&gt;
+&nbsp;&nbsp;&lt;h1&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;%=&lsquo;.title&rsquo;,&nbsp;:default&nbsp;=&gt;&nbsp;model_class.model_name.human.pluralize.titleize&nbsp;%&gt;
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;span&nbsp;class=&lsquo;glyphicon&nbsp;glyphicon-heart&rsquo;&nbsp;aria-hidden=&lsquo;true&rsquo;&gt;&lt;/span&gt;
+&nbsp;&nbsp;&lt;/h1&gt;
+&hellip;
+</code></pre>
+<br></p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/introduced-bootstrap3-to-rails4_04.jpg" alt="" /></p>
+
+<h2 id="参考サイト:5cfef58f6f27ac7b7203d43f347caa64">参考サイト</h2>
+
+<ul>
+<li><a href="http://ruby-rails.hatenadiary.com/entry/20140801/1406818800">RailsにTwitter Bootstrapの導入と簡易な使い方</a></li>
+<li><a href="http://techracho.bpsinc.jp/kazumasa-ogawa/2014_03_27/15892">Rails4でサイト構築をする – Bootstrap導入編</a></li>
+<li><a href="http://d.hatena.ne.jp/next49/20141110/p2">Bootstrap3をRails4で使うときのメモ</a></li>
+<li><a href="http://hivecolor.com/id/125">rails4でbootstrap3のglyphiconを使う方法</a></li>
+</ul>
+
+<h2 id="関連する記事:5cfef58f6f27ac7b7203d43f347caa64">関連する記事</h2>
+
+<ul>
+<li><a href="http://tatsuyano.github.io/2015/03/31/introduced-bootstrap3-to-rails4-sass/">Rails4でBootstrap3を導入(sass版)</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>oh-my-zshをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Oh-My-Zshをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Aug 6, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/zsh" >zsh</a> <a href="http://tatsuyano.github.io/tags/mac" >mac</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>今まで設定が面倒で試していなかった<a href="https://github.com/robbyrussell/oh-my-zsh">oh-my-zsh</a>をインストールしてみました。下記の方法で、mac、centosともに対応可能です。</p>
+
+<h3 id="oh-my-zshをインストールする:3944f0646c6d5b7fe433d7bd3dbfa39d">oh-my-zshをインストールする</h3>
+
+<p>すでにzshはインストールされているものとします。<br />
+また、今ある<code>$HOME/.zshrc</code>はインストール時に上書きされてしまうので事前に退避してください。<br />
+インストールするとHOME直下に<code>.oh-my-zsh</code>というディレクトリが作成され<code>.zshrc</code>が上書きされます。</p>
+
+<p>インストール</p>
+
+<pre><code>curl -L http://install.ohmyz.sh | sh
+</code></pre>
+
+<p>インストールが終わったので、いったん<code>sorce .zshrc</code>して、oh-my-zshを使ってみます。promptが変更されたはずです。</p>
+
+<p>oh-my-zshは、themeとplugin(複数選択可)という単位でzshを管理しています。
+初期設定はthemeが<code>robbyrussell</code>、pluginが<code>git</code>です。</p>
+
+<p>oh-my-zshのディレクトリ構成</p>
+
+<pre><code>.
+├── custom      ... 自分が設定したzshrcを入れる
+│   └── plugins ... 自分で作ったpluginを入れる
+├── lib
+├── log         ... zsh_historyなどを入れる
+├── plugins     ... gitなどソフトウェア単位の設定ファイルが入っている
+├── templates   ... zshrcのテンプレートファイルが入っている
+├── themes      ... promptなど見た目の設定ファイルが入っている
+└── tools
+</code></pre>
+
+<h4 id="customに自分の設定ファイルを入れる:3944f0646c6d5b7fe433d7bd3dbfa39d">customに自分の設定ファイルを入れる</h4>
+
+<p>整理されていませんが、とりあえず<code>custom</code>ディレクトリに入れてみます。<br />
+因みに拡張子は<code>.zsh</code>で、ファイル名は自由です。</p>
+
+<p>main.zsh</p>
+
+<pre><code>export LC_ALL=en_US.UTF-8
+export LANG=ja_JP.UTF-8
+export EDITOR=emacs
+
+bindkey -e                        # emacsライクなキーバインド
+autoload -U compinit              # 強力な補完機能
+compinit -u                       # このあたりを使わないとzsh使ってる意味なし
+
+setopt autopushd                  # cdの履歴を表示
+setopt pushd_ignore_dups          # 同ディレクトリを履歴に追加しない
+setopt auto_cd                    # 自動的にディレクトリ移動
+
+## 履歴
+HISTFILE=~/.oh-my-zsh/log/.zsh_history
+HISTSIZE=10000                    # ファイルサイズ
+SAVEHIST=10000                    # saveする量
+setopt hist_ignore_dups           # 重複を記録しない
+setopt hist_reduce_blanks         # スペース排除
+setopt share_history              # 履歴ファイルを共有
+setopt EXTENDED_HISTORY           # zshの開始終了を記録
+
+export PATH=/usr/local/bin:$PATH
+export PATH=$PATH:$HOME/Dropbox/dotfile/mybin
+
+## zsh-syntax-highlighting
+source $HOME/Dropbox/dotfile/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+## anyenv
+export PATH=&quot;$HOME/.anyenv/bin:$PATH&quot;
+eval &quot;$(anyenv init - zsh)&quot;
+
+## z.sh
+_Z_CMD=j
+source $HOME/Dropbox/dotfile/z/z.sh
+precmd() { _z --add &quot;$(pwd -P)&quot; }
+
+## peco(for oh-my-zsh)
+function peco-select-history() {
+    local tac
+    if which tac &gt; /dev/null; then
+        tac=&quot;tac&quot;
+    else
+        tac=&quot;tail -r&quot;
+    fi
+    BUFFER=$(\history -n 1 | \
+        eval $tac | \
+        peco --query &quot;$LBUFFER&quot;)
+    CURSOR=$#BUFFER
+    zle clear-screen
+}
+zle -N peco-select-history
+bindkey '^r' peco-select-history
+
+## alias
+alias mysql=&quot;mysql --pager='less -S -n -i -F -X'&quot;
+function tmr(){ tmux new -s $1 || tmux attach -d -t $1; }
+</code></pre>
+
+<h3 id="文字化けへの対処法:3944f0646c6d5b7fe433d7bd3dbfa39d">文字化けへの対処法</h3>
+
+<p>どうもoh-my-zshがlocateをブランクに設定してしまうようなので、
+適当な箇所(私は<code>/custom/main.zsh</code>)に、以下の設定を追加しました。</p>
+
+<pre><code>export LC_ALL=en_US.UTF-8
+</code></pre>
+
+<ul>
+<li><a href="http://qiita.com/uchiko/items/f6b1528d7362c9310da0">oh-my-zsh の環境で、peco-select-history が動かない</a></li>
+</ul>
+
+<h3 id="pecoが動かなくなる問題への対処法:3944f0646c6d5b7fe433d7bd3dbfa39d">pecoが動かなくなる問題への対処法</h3>
+
+<p>以下のように変更することで対応しました。</p>
+
+<p>変更前</p>
+
+<pre><code>## peco
+for f (~/Dropbox/dotfile/peco_sources/*) source &quot;${f}&quot; # load peco sources
+bindkey '^r' peco-select-history
+</code></pre>
+
+<p>変更後</p>
+
+<pre><code>## peco(for oh-my-zsh)
+function peco-select-history() {
+    local tac
+    if which tac &gt; /dev/null; then
+        tac=&quot;tac&quot;
+    else
+        tac=&quot;tail -r&quot;
+    fi
+    BUFFER=$(\history -n 1 | \
+        eval $tac | \
+        peco --query &quot;$LBUFFER&quot;)
+    CURSOR=$#BUFFER
+    zle clear-screen
+}
+zle -N peco-select-history
+bindkey '^r' peco-select-history
+</code></pre>
+
+<ul>
+<li><a href="http://qiita.com/huydx@github/items/a045d33ec23350c730af">oh-my-zshの言語問題</a></li>
+</ul>
+
+<h3 id="themeの変更:3944f0646c6d5b7fe433d7bd3dbfa39d">themeの変更</h3>
+
+<p>oh-my-zshには複数の<a href="https://github.com/robbyrussell/oh-my-zsh/wiki/Themes">theme</a>が用意されています。
+今回は<a href="https://gist.github.com/agnoster/3712874">agnoster</a>というthemeを使ってみます。</p>
+
+<p>.zshrc</p>
+
+<pre><code>##ZSH_THEME=&quot;robbyrussell&quot;
+ZSH_THEME=&quot;agnoster&quot;
+</code></pre>
+
+<p><code>agnoster</code>はデフォルトでは入っていないので、別途インストールします。</p>
+
+<pre><code>cd .oh-my-zsh/themes/
+wget https://gist.githubusercontent.com/agnoster/3712874/raw/c3107c06c04fb42b0ca27b0a81b15854819969c6/agnoster.zsh-theme
+</code></pre>
+
+<p>promptの見た目を少しだけ変更しました。</p>
+
+<p>agnoster.zsh-theme</p>
+
+<pre><code>##prompt_segment black default &quot;%(!.%{%F{yellow}%}.)$user@%m&quot;
+prompt_segment black default &quot;%(!.%{%F{yellow}%}.)$user&quot;
+
+#prompt_segment blue black '%~'
+prompt_segment blue black '%1~'
+</code></pre>
+
+<p>変更したので<code>source $HOME/.zshrc</code>を忘れずに実行します。</p>
+
+<h4 id="macにpowerlineフォントをインストールする:3944f0646c6d5b7fe433d7bd3dbfa39d">macにpowerlineフォントをインストールする</h4>
+
+<p><code>agnoster</code>は、powerline系のフォントを使うことを前提としています。</p>
+
+<p>まずは<code>/Library/Fonts/</code>以下に、
+<a href="https://gist.github.com/qrush/1595572">Inconsolata-dz-Powerline.otf</a>ページにある<code>Inconsolata-dz-Powerline.otf</code>、<code>Menlo-Powerline.otf</code>、<code>mensch-Powerline.otf</code>をダウンロードします。</p>
+
+<p>ダウンロード後、iTerm2のフォントを変更し、再起動させます。
+ここまで、ひと通りの設定が完了しました。</p>
+
+<p>お疲れ様でした。</p>
+
+<h4 id="関連する記事:3944f0646c6d5b7fe433d7bd3dbfa39d">関連する記事</h4>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/08/06/install-ricky-powerline-for-mac/">Ricky for powerlineをmacにインストールする</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

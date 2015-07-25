@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>memcachedのインストール -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Memcachedのインストール</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Jul 29, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/php" >php</a> <a href="http://tatsuyano.github.io/tags/middleware" >middleware</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>まずはyumでmemcachedのインストール</p>
+
+<pre><code># yum install -y memcached memcached-devel
+</code></pre>
+
+<p>libmemcachedのインストール</p>
+
+<ul>
+<li><a href="https://launchpad.net/libmemcached/+download">最新のソース</a></li>
+</ul>
+
+<pre><code># cd /usr/local/src
+# wget https://launchpad.net/libmemcached/1.0/1.0.18/+download/libmemcached-1.0.18.tar.gz
+# tar xvzf libmemcached-1.0.18.tar.gz
+# ./configure
+# make
+# make install
+</code></pre>
+
+<p>/etc/sysconfig/memcached</p>
+
+<pre><code>PORT=&quot;11211&quot;
+USER=&quot;apache&quot;
+MAXCONN=&quot;1024&quot;
+CACHESIZE=&quot;64&quot;
+OPTIONS=&quot;&quot;
+</code></pre>
+
+<h3 id="phpで使うために以下の設定:903ff49946c18317e229ef4fb1b593c4">PHPで使うために以下の設定</h3>
+
+<pre><code># yum install -y php-pecl-memcached
+</code></pre>
+
+<p>PHP Extensionのインストール</p>
+
+<pre><code># git clone https://github.com/php-memcached-dev/php-memcached.git
+# cd php-memcached
+# phpize
+# ./configure --with-libmemcached-dir=/usr/local
+# make
+# make install
+</code></pre>
+
+<p>PHPで設定が有効になっているか確認</p>
+
+<pre><code>$ php -i | grep memcached
+
+memcached
+memcached support =&gt; enabled
+libmemcached version =&gt; 1.0.18
+memcached.compression_factor =&gt; 1.3 =&gt; 1.3
+memcached.compression_threshold =&gt; 2000 =&gt; 2000
+memcached.compression_type =&gt; fastlz =&gt; fastlz
+memcached.serializer =&gt; php =&gt; php
+memcached.sess_binary =&gt; 0 =&gt; 0
+memcached.sess_connect_timeout =&gt; 1000 =&gt; 1000
+memcached.sess_consistent_hash =&gt; 0 =&gt; 0
+memcached.sess_lock_expire =&gt; 0 =&gt; 0
+memcached.sess_lock_max_wait =&gt; 0 =&gt; 0
+memcached.sess_lock_wait =&gt; 150000 =&gt; 150000
+memcached.sess_locking =&gt; 1 =&gt; 1
+memcached.sess_number_of_replicas =&gt; 0 =&gt; 0
+memcached.sess_prefix =&gt; memc.sess.key. =&gt; memc.sess.key.
+memcached.sess_randomize_replica_read =&gt; 0 =&gt; 0
+memcached.sess_remove_failed =&gt; 0 =&gt; 0
+memcached.sess_sasl_password =&gt; no value =&gt; no value
+memcached.sess_sasl_username =&gt; no value =&gt; no value
+memcached.store_retry_count =&gt; 2 =&gt; 2
+memcached.use_sasl =&gt; 0 =&gt; 0
+Registered save handlers =&gt; files user memcached
+PWD =&gt; /tmp/php-memcached
+_SERVER[&quot;PWD&quot;] =&gt; /tmp/php-memcached
+</code></pre>
+
+<p>起動</p>
+
+<pre><code># /etc/init.d/memcached start
+# /etc/init.d/httpd restart
+
+ps auxwww|grep mem
+apache   24255  0.0  0.0 330844   988 ?        Ssl  18:04   0:00 memcached -d -p 11211 -u apache -m 64 -c 1024 -P /var/run/memcached/memcached.pid
+</code></pre>
+
+<p>memcachedに保存されている情報の確認</p>
+
+<pre><code>$ memcached-tool localhost display
+$ memcached-tool localhost dump | strings
+</code></pre>
+
+<ul>
+<li><a href="http://d.hatena.ne.jp/modified/20130107/1357553481">memcached のインストール。作業メモ</a></li>
+<li><a href="http://9ensan.com/blog/programming/php/fuelphp-cache-memcached/">FuelPHPのキャッシュライブラリ – memcached編</a></li>
+<li><a href="http://takashi-kun.hatenablog.com/entry/2013/11/23/031343">PHPのMemcachedモジュールをインストール</a></li>
+<li><a href="http://c-brains.jp/blog/wsg/10/07/30-105035.php">memcached の中身を確認するなら memcached-tool コマンド</a></li>
+<li><a href="http://colopl.co.jp/tech/blog/2012/06/1877/">Memcached の key 一覧を取得するまでの過程</a></li>
+<li><a href="http://d.hatena.ne.jp/masayuki14/touch/20120710/1341877792">PHPでmemcachedを使うときのモジュールパフォーマンス比較</a></li>
+<li><a href="http://l-w-i.net/t/memcached/command_001.txt">memcachedコマンド一覧</a></li>
+</ul>
+
+<p>お疲れ様でした。</p>
+
+<h4 id="関連する記事:903ff49946c18317e229ef4fb1b593c4">関連する記事</h4>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/07/29/install-deamontools/">deamontoolsのインストール</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

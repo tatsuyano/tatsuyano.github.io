@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Railsでページごとのscssを管理する方法 -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Railsでページごとのscssを管理する方法</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Thu, Apr 2, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/rails" >rails</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>GitHubにある<a href="https://github.com/twbs/bootstrap-sass/blob/master/README.md">README.md</a>を参考に、<a href="http://tatsuyano.github.io/2015/03/31/introduced-bootstrap3-to-rails4-sass/">bootstrap-sassをインストール</a>してみました。</p>
+
+<h3 id="application-scssの設定:3d11fab9ca81505041753320d61d799c">application.scssの設定</h3>
+
+<p>すると<code>application.scss</code>にimportするファイルは、<code>bootstrap</code>と<code>bootstrap-sprockets</code>の2ファイルのみとなっています。</p>
+
+<pre><code class="language-css">// 'bootstrap-sprockets' must be imported before "bootstrap" and "bootstrap/variables"
+@import "bootstrap-sprockets";
+@import "bootstrap";"
+</code></pre>
+
+<p>そのため、このままですと、ページごとに用意したscssファイルを読み込むためには、
+毎回<code>application.scss</code>にimportする必要がでてきてしまいます。</p>
+
+<h3 id="デフォルトのapplication-css:3d11fab9ca81505041753320d61d799c">デフォルトのapplication.css</h3>
+
+<p>通常、設定なしで <code>rails new</code> を行うと、<code>application.css</code> には、</p>
+
+<pre><code class="language-css">$ cat app/assets/stylesheets/application.css
+/*
+ *= require_tree . # 指定されたディレクトリ以下のすべてを再帰的にインクルード(順番の保証なし)
+ *= require_self   # require_self呼び出しが行われたその場所にCSSファイルがあれば読み込みます
+ */
+</code></pre>
+
+<p>というディレクティブが設定され、stylesheetsディレクトリ以下にcssを置くと、
+自動で読み込まれる(順番は保証されない)ようになります。</p>
+
+<h3 id="railsでsassファイルをどう管理するべきか:3d11fab9ca81505041753320d61d799c">RailsでSassファイルをどう管理するべきか</h3>
+
+<p>いろいろ方法は有ると思うのですが、今回は<a href="http://qiita.com/natsu871/items/53b38a2543df97df751d">こちらの記事</a>を参考に
+ディレクトリ構成を作ってみました。</p>
+
+<p>まず、読み込み順を守る必要のあるファイル(<code>bootstrap</code>と<code>bootstrap-sprockets</code>)は、そのまま<code>application.scss</code>に。<br />
+ページ個々のscssに関しては、<code>app/assets/stylesheets/partials</code>ディレクトリを生成し、そちらに配置しておきます。<br />
+<code>partials</code>ディレクトリでは、読み込み順が保証されないので、注意してください。
+<pre><code class="language-css"># app/assets/stylesheets/application.scss
+@import &ldquo;bootstrap-sprockets&rdquo;;
+@import &ldquo;bootstrap&rdquo;;
+@import &ldquo;partials/*&ldquo;; // glob importing
+</code></pre></p>
+
+<p>※ <code>sass-rails</code>のバージョンが古いと、<code>glob importing</code> には対応していないので、動かない場合はバージョンを上げてみて下さい。</p>
+
+<h3 id="partialsディレクトリにファイルがないとエラーになる:3d11fab9ca81505041753320d61d799c">partialsディレクトリにファイルがないとエラーになる</h3>
+
+<p>ただこのままの状態だと、partialsディレクトリにファイルがないので、<code>File to import not found or unreadable</code>エラーが出てしまいます。
+それを防ぐために、とりあえずブランクのscssファイルをディレクトリに配置するようにしました。</p>
+
+<pre><code class="language-bash">$ touch app/assets/stylesheets/partials/blank.scss
+</code></pre>
+
+<p>最後のブランクのscssを用意するのはかなり微妙ですが、
+ディレクトリに別のscssが用意された時点で、blank.scssを削除するなど対応する形で当面運用しようと思います。</p>
+
+<h3 id="application-jsの設定:3d11fab9ca81505041753320d61d799c">application.jsの設定</h3>
+
+<p>最低限必要なのは、下記のJsになります。</p>
+
+<p><pre><code class="language-javascript">//= require jquery
+//= require jquery_ujs
+//= require bootstrap-sprockets
+</code></pre>
+<br></p>
+
+<h2 id="参考サイト:3d11fab9ca81505041753320d61d799c">参考サイト</h2>
+
+<ul>
+<li><a href="http://railsguides.jp/asset_pipeline.html">RailsGuide::アセットパイプライン</a></li>
+<li><a href="https://github.com/twbs/bootstrap-sass">twbs/bootstrap-sass</a></li>
+<li><a href="http://stackoverflow.com/questions/4778627/is-it-possible-to-import-a-whole-directory-in-sass-using-import">Is it possible to import a whole directory in sass using
+@import?</a></li>
+<li><a href="http://qiita.com/natsu871/items/53b38a2543df97df751d">Rails での適切な Sass の構成手法について（翻訳）</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

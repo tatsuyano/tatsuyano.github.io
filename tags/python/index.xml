@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Python on blog.10rane.com</title>
+    <link>http://tatsuyano.github.io/tags/python/</link>
+    <description>Recent content in Python on blog.10rane.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Tue, 19 Aug 2014 01:00:00 +0900</lastBuildDate>
+    <atom:link href="http://tatsuyano.github.io/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>anyenvをインストールする</title>
+      <link>http://tatsuyano.github.io/2014/08/19/install-anyenv/</link>
+      <pubDate>Tue, 19 Aug 2014 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/08/19/install-anyenv/</guid>
+      <description>
+
+&lt;p&gt;以前導入したanyenvのインストール方法を忘れないようメモしておきます。&lt;/p&gt;
+
+&lt;p&gt;anyenvは ruby、perl、python、nodejs、php(phpenv) のバージョン管理を一元化してくれるツールです。これでhome直下がずいぶんスッキリ。素敵です。&lt;/p&gt;
+
+&lt;h3 id=&#34;インストール:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;インストール&lt;/h3&gt;
+
+&lt;p&gt;ダウンロード&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ git clone https://github.com/riywo/anyenv ~/.anyenv
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;$HOME/.zshrc&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ echo &#39;export PATH=&amp;quot;$HOME/.anyenv/bin:$PATH&amp;quot;&#39; &amp;gt;&amp;gt; ~/.zshrc
+$ echo &#39;eval &amp;quot;$(anyenv init - zsh)&amp;quot;&#39; &amp;gt;&amp;gt; ~/.zshrc
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;私は&lt;code&gt;oh-my-zsh&lt;/code&gt;を使っているので、実際は&lt;code&gt;~/.zshrc&lt;/code&gt;ではなく、&lt;code&gt;~/.oh-my-zsh/custom/main.zsh&lt;/code&gt;に設定しています。&lt;/p&gt;
+
+&lt;p&gt;シェルを再実行し、anyenvの設定を反映させます。&lt;br /&gt;
+&lt;code&gt;source $HOME/.zshrc&lt;/code&gt; でも結構です。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ exec $SHELL -l
+$ which anyenv
+~/.anyenv/bin/anyenv
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/luckypool/items/f1e756e9d3e9786ad9ea&#34;&gt;anyenvで開発環境を整える&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/DQNEO/items/ebf50c39f83970f1127c&#34;&gt;completions/plenv.bash:16: command not found: completeの対処法&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;rubyのインストール:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;rubyのインストール&lt;/h3&gt;
+
+&lt;p&gt;とりあえずanyenv経由でrubyをインストールします。
+rubyをインストールするには、事前にOpenSSL系のライブラリが必要なのでインストールしておきます。&lt;/p&gt;
+
+&lt;p&gt;また&lt;a href=&#34;http://blog.10rane.com/2014/09/01/set-up-ruby-mode-of-emacs/&#34;&gt;別記事&lt;/a&gt;で紹介している&lt;code&gt;robe&lt;/code&gt;を使うには、&lt;code&gt;read-line&lt;/code&gt;が必要なので、入れておきます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo yum -y install openssl-devel
+$ sudo yum -y install readline-devel
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://futurismo.biz/archives/1389&#34;&gt;CentOSに rbenv 経路で Ruby 2.0.0-p195を入れようとしたら、エラー&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;まずはrbenvはインストールします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ anyenv install rbenv
+$ anyenv versions
+rbenv:
+* system (set by /home/$USER/.anyenv/envs/rbenv/version)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;バージョンは2.1.0を入れてみます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ rbenv install 2.1.0
+$ rbenv global 2.1.0
+
+$ anyenv versions
+rbenv:
+system
+* 2.1.0 (set by /home/$USER/.anyenv/envs/rbenv/version)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;反映されない時は&lt;/em&gt;&lt;code&gt;source $HOME/.zshrc&lt;/code&gt;&lt;em&gt;で設定を読み込み直して下さい。&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;試しに&lt;code&gt;bundler&lt;/code&gt;をインストールしてみます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ which gem
+/home/$USER/.anyenv/envs/rbenv/shims/gem
+$ gem install bundler
+$ which bundle
+/home/$USER/.anyenv/envs/rbenv/shims/bundle
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;pythonのインストール:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;pythonのインストール&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;$ sudo yum -y install patch
+$ anyenv install pyenv
+$ pyenv install 3.3.3
+$ pyenv global 3.3.3
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;node-jsのインストール:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;node.jsのインストール&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;$ anyenv install ndenv
+$ ndenv install v0.10.26
+$ ndenv global v0.10.26
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;他の言語も流れは同じです。&lt;br /&gt;
+お疲れ様でした。&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/luckypool/items/f1e756e9d3e9786ad9ea&#34;&gt;anyenvで開発環境を整える&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/DQNEO/items/ebf50c39f83970f1127c&#34;&gt;completions/plenv.bash:16: command not found: completeの対処法&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2014/12/04/how-to-install-and-setup-phpenv/&#34;&gt;phpenvを導入する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

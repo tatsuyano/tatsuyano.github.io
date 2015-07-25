@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>el-get.elでパッケージ管理を行う (el-get.elのインストール) -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>El-Get.Elでパッケージ管理を行う (El-Get.Elのインストール)</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Mar 19, 2013
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>今までパッケージを手動でインストールしていて、自分が何のパッケージをインストールしたかを<br />
+把握できなくなってきていたので、el-get.elでパッケージ管理をすることにしました。</p>
+
+<h2 id="el-get-elでのパッケージ管理の特徴:4cbf5b901a7d5944163eceb69a0b8758">el-get.elでのパッケージ管理の特徴</h2>
+
+<p>自分がel-get.elでいいなあと思ったのは、以下の２つ</p>
+
+<ul>
+<li>自分がどのパッケージをインストールしているのかを簡単に把握できること</li>
+<li>レシピといって、パッケージごとのインストール方法を柔軟に設定できること</li>
+</ul>
+
+<h2 id="emacsのバージョン:4cbf5b901a7d5944163eceb69a0b8758">emacsのバージョン</h2>
+
+<p>emacsのバージョンは homebrew でインストールした「24.1.1」です。</p>
+
+<h2 id="emacs-dの構成:4cbf5b901a7d5944163eceb69a0b8758">emacs.dの構成</h2>
+
+<p>今回、今使っているemacs.dを捨てて、一から作り直すことにしました。</p>
+
+<p>.emacs.d<br />
+├── conf &hellip; init-loaderで分割したファイルを入れる<br />
+└── elisp &hellip; 手動でパッケージを入れた場合はここに直接入れる<br />
+│　　    ├── el-get       &hellip; el-get.elでインストールしたパッケージをディレクトリ単位で入れていく<br />
+│　　    └── auto-install &hellip; auto-installでインストールした場合<br />
+│<br />
+└── init.el &hellip; .emacs.elの代わり。load-pathの設定など</p>
+
+<p>今回は .emacs.el は使わずに代わりに .emacs.d 直下に init.el というファイルを作成します。<br />
+また、できるかぎり el-get.el でパッケージ管理を行なっていき、インストールできなかった場合は auto-install でインストールを行うことにします。<br />
+auto-install でもインストールできなかった場合は、elispディレクトリ直下に手動でインストールしていきます。</p>
+
+<p>今後のインストール方法(パッケージ管理)の優先度<br />
+1.el-get &gt; 2.auto-install &gt; 3.手動</p>
+
+<h2 id="el-get-elのインストール:4cbf5b901a7d5944163eceb69a0b8758">el-get.elのインストール</h2>
+
+<p>まずは el-get.el 本体のインストールから。事前に上記の .emacs.d の構成を作っておくこと。<br />
+el-get.el でインストールしたパッケージは、.emacs.d/elisp/el-get/ 直下に入れていきます。<br />
+init.el に以下の設定を入れて、emacsを起動させると自動でインストールが始まります。</p>
+
+<p>init.el</p>
+
+<pre><code class="language-scheme">(setq load-path
+  (append
+    (list
+      (expand-file-name &quot;~/.emacs.d/&quot;)
+      (expand-file-name &quot;~/.emacs.d/elisp/&quot;)
+      (expand-file-name &quot;~/.emacs.d/elisp/el-get/el-get/&quot;)
+      (expand-file-name &quot;~/.emacs.d/elisp/auto-install/&quot;)
+    )
+    load-path))
+
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+    (url-retrieve-synchronously
+      &quot;https://raw.github.com/dimitri/el-get/master/el-get-install.el&quot;)
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(el-get 'sync)
+</code></pre>
+
+<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
+
+<ul>
+<li><a href="http://shishithefool.blogspot.jp/2012/04/el-get-emacs.html">el-get を使って Emacs でパッケージ管理</a></li>
+<li><a href="http://shibayu36.hatenablog.com/entry/2013/03/14/081524">el-getを使ってみる(インストール編)</a></li>
+<li><a href="https://github.com/dimitri/el-get">github dimitri/el-get</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

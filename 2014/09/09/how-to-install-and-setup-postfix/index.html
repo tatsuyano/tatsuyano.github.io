@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Postfixをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Postfixをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Sep 9, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/middleware" >middleware</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>仕事ではじめて Postfix を使ったので、インストール方法などを残しておきます。</p>
+
+<h3 id="postfixのインストール:7598d049eaa8c628e37dee32b9bf32be">Postfixのインストール</h3>
+
+<p>Postfix のインストール前に Sendmail がインストールされている場合は止めておく。</p>
+
+<pre><code class="language-bash">$ sudo chkconfig sendmail off
+$ sudo /etc/init.d/sendmail stop
+
+$ sudo yum -y install postfix
+$ sudo chkconfig --add postfix
+$ sudo chkconfig on postfix
+$ sudo /etc/init.d/postfix start
+</code></pre>
+
+<p>メールサーバー(MTA)を postfix に切り替え</p>
+
+<pre><code class="language-bash">$ sudo update-alternatives --set mta /usr/sbin/sendmail.postfix
+</code></pre>
+<br>
+
+### postfix の設定
+
+設定は主に`/etc/postfix/`配下の3ファイル
+
+* /etc/postfix/main.cf      => 設定全般
+* /etc/postfix/aliases.reg  => メールを受信するユーザの設定
+* /etc/postfix/virtual      => ドメインの設定
+
+#### /etc/postfix/main.cf
+
+<pre><code class="language-bash"># mydomainを設定しない場合、メールのホスト名としても使われる(と思われる)
+myhostname = hogehoge.net
+
+# メールをローカルで受信するドメイン名を設定
+mydestination = $myhostname
+
+# 全てのメールを受け取る
+inet_interfaces = all
+
+# ipv6、ipv4 両方許可する
+inet_protocols = all
+
+# コメントアウト
+#mynetworks_style = host
+
+# LAN内のネットワークを指定
+mynetworks = 127.0.0.0/8
+
+# Telnet等でアクセスした際にpostfixのバージョン情報の表示
+smtpd_banner = $myhostname ESMTP SERVER...
+
+# 許可
+allow_mail_to_commands = alias,forward,include
+allow_mail_to_files = alias,forward,include
+allow_min_user = yes
+
+# 別のドメイン mail.hogehoge.net でも受信する
+virtual_maps = hash:/etc/postfix/virtual
+
+# 受信したメールを正規表現(regexp)で指定ユーザに振り分ける
+alias_maps = hash:/etc/aliases,regexp:/etc/postfix/aliases.reg
+</code></pre>
+
+<h4 id="etc-postfix-aliases-reg:7598d049eaa8c628e37dee32b9bf32be">/etc/postfix/aliases.reg</h4>
+
+<p>メールアドレスにパラメータを含めたい場合、<code>aliases.reg</code>に正規表現を使って、受信したメールを指定のユーザ(メールアドレス)に送ることができる。</p>
+
+<p>例では <code>support-1@hogehoge.net</code>宛のメールを<code>support@hogehoge.net</code>と同じユーザ(メールアドレス)に送る。</p>
+
+<pre><code class="language-bash">/^support-[0|1](@hogehoge.net)?$/ support
+/^support(@hogehoge.net)?$/ support
+</code></pre>
+
+<h4 id="etc-postfix-virtual:7598d049eaa8c628e37dee32b9bf32be">/etc/postfix/virtual</h4>
+
+<p>サブドメインなど、別ドメインも指定したい場合に設定する。<br />
+例では、<code>@mail.hogehoge.net</code>というドメインに来たアドレスも<code>support</code>ユーザに配送されるようにしている。</p>
+
+<pre><code class="language-bash">@mail.hogehoge.net  support
+</code></pre>
+
+<p><code>virtual</code>の設定を反映させるには、<code>postmap</code>コマンドで<code>virtual.db</code>を作成し、postfix を再起動する。</p>
+
+<p><pre><code class="language-bash">$ sudo postmap /etc/postfix/virtual
+$ sudo /etc/init.d/postfix reload
+</code></pre>
+<br></p>
+
+<h3 id="参考サイト:7598d049eaa8c628e37dee32b9bf32be">参考サイト</h3>
+
+<ul>
+<li><a href="http://www.postfix-jp.info/trans-2.0/jhtml/basic.html">Postfix の設定 - 基本</a></li>
+<li><a href="http://www.uetyi.mydns.jp/wordpress/postfix-setting/entry-476.html">Postfixでのドメイン名やホスト名の設定について</a></li>
+<li><a href="http://linux.kororo.jp/cont/server/postfix.php">Postfixによるメールサーバーの構築</a></li>
+<li><a href="http://blog.honestyworks.jp/blog/archives/193">postfix の alias を正規表現で指定したいときの注意点</a></li>
+<li><a href="http://linux.kororo.jp/cont/server/postfix_virtual.php">Postfix で複数ドメインの管理</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

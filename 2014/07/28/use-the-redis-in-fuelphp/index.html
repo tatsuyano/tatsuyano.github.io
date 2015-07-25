@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>fuelphpでredisを使う -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Fuelphpでredisを使う</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Jul 28, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/php" >php</a> <a href="http://tatsuyano.github.io/tags/middleware" >middleware</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>まずはredisのインストールから</p>
+
+<pre><code>$ yum --enablerepo=epel install -y redis
+$ /etc/init.d/redis start
+redis-server を起動中:                                  [  OK  ]
+</code></pre>
+
+<p>confの場所</p>
+
+<pre><code>$ emacs /etc/redis.conf
+</code></pre>
+
+<p>redisが正常にインストールされているか確認</p>
+
+<pre><code>$ redis-cli
+redis 127.0.0.1:6379&gt; set name 'hoge'
+OK
+redis 127.0.0.1:6379&gt; get name
+&quot;hoge&quot;
+</code></pre>
+
+<p>保存されているKEYを表示</p>
+
+<pre><code>$ redis-cli
+
+redis 127.0.0.1:6379&gt; KEYS *
+1) &quot;particles&quot;
+2) &quot;name&quot;
+redis 127.0.0.1:6379&gt;
+</code></pre>
+
+<h4 id="fuelphpの設定:e4a364e23391fc6a82f3c0ef76f3e375">fuelphpの設定</h4>
+
+<p>config/db.php</p>
+
+<pre><code>'redis' =&gt; array(
+    'default' =&gt; array(
+    'hostname' =&gt; '127.0.0.1',
+    'port'     =&gt; 6379
+  )
+),
+</code></pre>
+
+<p>config.session.php</p>
+
+<pre><code>'driver' =&gt; 'redis',
+....
+// specific configuration settings for redis based sessions
+'redis' =&gt; array(
+  'cookie_name' =&gt; 'fuelrid', // name of the session cookie 
+  'database'    =&gt; 'default'  // name of the redis database to use
+</code></pre>
+
+<h3 id="参考サイト:e4a364e23391fc6a82f3c0ef76f3e375">参考サイト</h3>
+
+<ul>
+<li><a href="http://konboi.hatenablog.com/entry/2013/03/05/155107">redisサーバー構築メモ</a></li>
+<li><a href="http://w.koshigoe.jp/study/?%5BKVS%5D%5BRedis%5D+Redis+%A5%B3%A5%DE%A5%F3%A5%C9%B0%EC%CD%F7">KOSHIGOE学習帳 - [KVS][Redis] Redis コマンド一覧</a></li>
+<li><a href="http://fuelphp.jp/docs/1.7/classes/redis.html">Redis_Db クラス</a></li>
+<li><a href="http://btt.hatenablog.com/entry/2012/06/28/004230">FuelPHPでRedisを使用する</a></li>
+<li><a href="http://d.hatena.ne.jp/akishin999/20130607/1370580692">Redis でお手軽に複数台構成の検証環境を作る</a></li>
+</ul>
+
+<h3 id="関連する記事:e4a364e23391fc6a82f3c0ef76f3e375">関連する記事</h3>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/07/29/fuelphp-use-agent-class/">fuelphpでAgentClassを設定する</a></li>
+<li><a href="http://blog.10rane.com/2014/07/29/fuelphp-validation/">fuelphpのエラー文言を日本語化する</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

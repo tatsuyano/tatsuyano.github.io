@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>el-get.elでauto-complete.elをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>El-Get.Elでauto-Complete.Elをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Mar 19, 2013
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="el-getにインストールされているパッケージリストが古かったので-レシピを更新:0a033ac6f46da56833c9f2f6b2fddbb8">el-getにインストールされているパッケージリストが古かったので、レシピを更新</h2>
+
+<p>パッケージリストには、auto-complete.elがあるのですが、レシピが古くインストールしてもディレクトリの中は空なので、レシピを新たに設定します。</p>
+
+<p>また、auto-complete.el は popup.el と fuzzy.el というelispが必須なのですが、今回 popup.el のレシピを用意し、auto-complete とは別にインストールする必要があります。<br />
+※ とりあえず fuzzy.el は別途インストールしなくても動いているので、fuzzy.el は保留。</p>
+
+<h2 id="レシピの追加:0a033ac6f46da56833c9f2f6b2fddbb8">レシピの追加</h2>
+
+<p>10-el-get.el</p>
+
+<pre><code class="language-scheme">(setq el-get-dir &quot;~/.emacs.d/elisp/el-get/&quot;)
+
+(unless (require 'el-get nil 'noerror)
+  (with-current-buffer
+    (url-retrieve-synchronously
+      &quot;https://raw.github.com/dimitri/el-get/master/el-get-install.el&quot;)
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(setq el-get-sources
+  '(
+    (:name init-loader
+      :type http
+      :url &quot;https://raw.github.com/gist/1021706/init-loader.el&quot;
+      :description &quot;[My Recipes] Split management init.el. &quot;)
+    (:name popup ;; &lt;- 追加
+      :type github
+      :website &quot;https://github.com/auto-complete/popup-el&quot;
+      :description &quot;[My Recipes] This section describes the basic data structures and operations of popups.&quot;
+      :pkgname &quot;auto-complete/popup-el&quot;)
+    (:name auto-complete ;; &lt;- 追加
+      :type github
+      :website &quot;https://github.com/auto-complete/auto-complete&quot;
+      :description &quot;[My Recipes] Auto Complete Mode renews an old completion interface and provides an environment that makes users could be more concentrate on their own works.&quot;
+      :pkgname &quot;auto-complete/auto-complete&quot;)
+    ))
+(el-get 'sync)
+</code></pre>
+
+<h2 id="インストール:0a033ac6f46da56833c9f2f6b2fddbb8">インストール</h2>
+
+<p>これで、auto-complete.el と popup.el のレシピが更新されたので、M-x el-get-list-packages　でインストールします。</p>
+
+<h2 id="設定:0a033ac6f46da56833c9f2f6b2fddbb8">設定</h2>
+
+<p>12-auto-complete.el</p>
+
+<pre><code class="language-scheme">(require 'auto-complete-config)
+(add-to-list 'ac-dictionary-directories &quot;~/.emacs.d/elisp/el-get/auto-complete/dict&quot;)
+(ac-config-default)
+(setq ac-use-menu-map t)
+</code></pre>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

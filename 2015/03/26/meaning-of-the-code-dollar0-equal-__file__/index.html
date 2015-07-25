@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>if $0 == __FILE__のコードの意味 -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>If $0 == __FILE__のコードの意味</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Thu, Mar 26, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>最近<a href="http://yugui.jp/articles/885">こちらの記事</a>を読んでいて、
+以下のコードの意味が解らなかったので調べてみました。</p>
+
+<pre><code class='language-ruby'>if $0 == __FILE__
+  # 何らかの処理
+end
+</code></pre>
+<br>
+
+まず結論から言うと「requireされた時は実行したくないけど、スクリプトファイルを直接実行した時は処理したい」
+場合に使います。ややこしいですね。  
+主には簡易なテストコードやサンプルコードを書く場合に使われるようです。
+
+ただ、なぜ上記のコードがそのような動きになるのか解らなかったのでもう少し調べてみました。
+
+* `__FILE__` ... 実行中のファイル名(相対パス)を返します。フルパスが必要な場合は File.expand_path(\_\_FILE\_\_) とする必要があります。
+* `$0`       ... 直接実行したファイル名(相対パス)を返します。
+
+[こちらのコード](http://qiita.com/naoty_k/items/f84b2a9034a3bb3bfcb2)とほぼ同じですが、
+
+<pre><code class='language-ruby'># target_file.rb
+puts "__FILE__ =>  #{__FILE__}"
+puts "$0       =>  #{$0}"
+
+if $0 == __FILE__
+  puts "Sample codeを実行"
+else
+  puts "Sample codeは実行されない"
+end
+</code></pre>
+
+<p>target_file.rb自体を直接実行すると、
+<code>$0</code>と<code>__FILE__</code>に同じ値が入ることになるので、Sample codeが実行されます。</p>
+
+<pre><code class='language-bash'>$ ruby target_file.rb
+__FILE__ =>  filename.rb
+$0       =>  filename.rb
+Sample codeを実行
+</code></pre>
+<br>
+
+しかし、target_file.rbをライブラリとして使う(requireする)場合などは、`$0` と `__FILE__` の値が異なるので、Sample codeは実行されません。
+
+<pre><code class='language-ruby'># require_file.rb
+require_relative 'target_file'
+</code></pre>
+
+<p>※ <code>require_relative</code>と<code>require</code>の違いについては別記事で説明します。</p>
+
+<p><pre><code class='language-bash'>$ ruby require_file.rb
+<strong>FILE</strong> =&gt;  /tmp/target_file.rb
+$0       =&gt;  require_file.rb
+Sample codeを実行しない
+</code></pre>
+<br></p>
+
+<p>このようにライブラリなどを作る場合、<code>if $0 == __FILE__</code>の分岐を入れることで
+簡単にサンプルコードを記述することができます。</p>
+
+<h2 id="参考サイト:017994b5820a7bbd18806145bdc6292f">参考サイト</h2>
+
+<ul>
+<li><a href="http://qiita.com/naoty_k/items/f84b2a9034a3bb3bfcb2"><strong>FILE</strong>と$0の違い</a></li>
+<li><a href="http://tobysoft.net/wiki/index.php?Ruby%2F%A5%B9%A5%AF%A5%EA%A5%D7%A5%C8%A5%D5%A5%A1%A5%A4%A5%EB%BC%AB%BF%C8%A4%AC%BC%C2%B9%D4%A4%B5%A4%EC%A4%BF%BB%FE%A4%CE%A4%DF%BC%C2%B9%D4%A4%B9%A4%EB%CA%FD%CB%A1">Ruby/スクリプトファイル自身が実行された時のみ実行する方法</a></li>
+<li><a href="http://docs.ruby-lang.org/ja/2.0.0/doc/spec=2fvariables.html#pseudo">Ruby 2.0.0 リファレンスマニュアル &gt; 変数と定数</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

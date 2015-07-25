@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>helm-gtags-modeを導入してソースコードの読解する -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Helm-Gtags-Modeを導入してソースコードの読解する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Sep 17, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p><code>helm-gtags</code>を導入すると、メソッドの定義先に簡単に移動できたり(メソッドジャンプ)、
+メソッドの参照元の一覧を表示できたりと大変便利です。</p>
+
+<p><code>helm-gtags</code>は<code>GNU GLOBAL(gtag)</code>というソフトウェアを使って上記の機能を実装しています。
+ただ<code>GNU GLOBAL</code>は今まではC言語やJava、PHPなど一部言語しか対応していませんでした。</p>
+
+<p><em>GNU GLOBAL(gtag)とは、ソースファイルを解析し、インデックスファイルを生成してくれるソフトウェアです</em></p>
+
+<p>しかし、バージョン<code>6.3.2</code>から<code>global-pygments-plugin</code>が取り込まれたことで、Rubyなど多くの言語に対応しました。</p>
+
+<p>今回は、RubyとPHPを<code>helm-gtags-mode</code>に対応するようにしました。</p>
+
+<h3 id="ソフトウェアの依存関係:e3e233bf5c17e9630342a72bfcb7ccd1">ソフトウェアの依存関係</h3>
+
+<p>少しややこしいので整理しておきますと、</p>
+
+<ol>
+<li><code>helm-gtags(複数言語対応)</code>は <code>GNU GLOBAL 6.3.2</code>が必要</li>
+<li><code>GNU GLOBAL</code>に取り込まれた<code>global-pygments-plugin</code>は、<code>Pygment</code>が必要</li>
+<li><code>Pygment</code>は<code>Python 2.6以上</code>が必要</li>
+</ol>
+
+<p>[helm-gtags] &lt;- [GLOBAL] &lt;- [Pygment] &lt;- [Python 2系] という関係性なので、
+まずは、Python 2系からインストールします。</p>
+
+<p><em>注意</em>
+<code>Pygment</code>のコマンドは<code>pygmentize</code>で、初めからインストールされている可能性があります。
+その場合は、<code>Python 2系</code>、<code>Pygment</code>のインストール手順はスルーしてください。</p>
+
+<pre><code>$ which pygmentize
+$ /usr/bin/pygmentize
+
+$ pygmentize -V
+$ Pygments version 1.4, (c) 2006-2008 by Georg Brandl.
+</code></pre>
+
+<h3 id="python-2系のインストール:e3e233bf5c17e9630342a72bfcb7ccd1">Python 2系のインストール</h3>
+
+<p><code>pyenv</code>を使って2系をインストールします。
+<code>pyenv</code>のインストールは<a href="http://blog.10rane.com/2014/08/19/install-anyenv/">こちら</a>を参考にしてください。</p>
+
+<pre><code>$ pyenv install 2.7.8
+$ pyenv global 2.7.8
+$ pyenv version
+2.7.8
+</code></pre>
+
+<h3 id="pygmentsのインストール:e3e233bf5c17e9630342a72bfcb7ccd1">Pygmentsのインストール</h3>
+
+<pre><code>$ pip install Pygments
+
+$ $HOME/.anyenv/envs/pyenv/versions/2.7.8/bin/pygmentize -V
+$ Pygments version 1.6, (c) 2006-2013 by Georg Brandl.
+</code></pre>
+
+<h3 id="gnu-globalのインストール:e3e233bf5c17e9630342a72bfcb7ccd1">GNU GLOBALのインストール</h3>
+
+<p>ダウンロード</p>
+
+<pre><code>$ sudo bash
+# cd /usr/local/src
+# wget http://tamacom.com/global/global-6.3.2.tar.gz
+</code></pre>
+
+<p>インストール</p>
+
+<pre><code># tar xvzf global-6.3.2.tar.gz
+# cd global-6.3.2
+# ./configure
+# make
+# make install
+</code></pre>
+
+<p>　</p>
+
+<pre><code>$ which global
+/usr/local/bin/global
+
+$ global --version
+global (GNU GLOBAL) 6.3.2
+</code></pre>
+
+<p>　</p>
+
+<pre><code>$ which gtags
+/usr/local/bin/gtags
+
+$ gtags --version
+gtags (GNU GLOBAL) 6.3.2
+</code></pre>
+
+<p>rootでも使えるようリンクを貼っておきます</p>
+
+<pre><code>$ sudo ln -s /usr/local/bin/gtags /usr/bin/gtags
+$ sudo ln -s /usr/local/bin/global /usr/bin/global
+</code></pre>
+
+<h3 id="global-pygments-pluginの設定:e3e233bf5c17e9630342a72bfcb7ccd1">global-pygments-pluginの設定</h3>
+
+<p>デフォルトのままだと、Rubyには対応していないので、設定ファイルをダウンロードします。</p>
+
+<pre><code>$ wget https://raw.githubusercontent.com/yoshizow/global-pygments-plugin/master/sample.globalrc
+$ mv sample.globalrc $HOME/.globalrc
+</code></pre>
+
+<p>設定ファイルでは、拡張子<code>.tt</code>がTreetopというパーサ？に設定されていますが、Rubyを解析時にエラーがでたので、
+とりあえずコメントアウトします。</p>
+
+<p>$HOME/.globalrc</p>
+
+<pre><code>#:langmap=Treetop\:.treetop.tt:\　　　　　#:gtags_parser=Treetop\:/usr/local/lib/gtags/pygments-parser.la:\
+</code></pre>
+
+<h3 id="gtagsを使ってみる:e3e233bf5c17e9630342a72bfcb7ccd1">gtagsを使ってみる</h3>
+
+<p>とりあえず単体で<code>GNU GLOBAL(gtags)</code>が使えるようになっているはずなので、テストしてみます。
+<code>GNU GLOBAL</code>はプロジェクトの直下にインデックスファイル(GPATH、GRTAGS、GTAGS)を生成することで、検索が可能になります。</p>
+
+<pre><code>$ cd /tmp/gtags_test
+$ cat &gt; hoge.php
+&lt;?php
+class Hoge
+{
+    public function hello()
+    {
+        print &quot;hello\n&quot;;
+    }
+}
+</code></pre>
+
+<p>　</p>
+
+<pre><code>$ gtags --gtagslabel=pygments --debug
+$ tree
+.
+├── GPATH
+├── GRTAGS
+├── GTAGS
+└── hoge.php
+</code></pre>
+
+<p>　</p>
+
+<pre><code>$ global -sx hello hoge.php
+hello               4 hoge.php             public function hello()
+</code></pre>
+
+<h3 id="helm-gtagsのインストール:e3e233bf5c17e9630342a72bfcb7ccd1">helm-gtagsのインストール</h3>
+
+<p>$HOME/.emacs.d/Cask</p>
+
+<pre><code>(depends-on &quot;helm-gtags&quot;)
+</code></pre>
+
+<p>$HOME/.emacs.d/init_loader/02_helm.el</p>
+
+<pre><code>(add-hook 'helm-gtags-mode-hook
+'(lambda ()
+;;入力されたタグの定義元へジャンプ
+(local-set-key (kbd &quot;M-t&quot;) 'helm-gtags-find-tag)
+
+;;入力タグを参照する場所へジャンプ
+(local-set-key (kbd &quot;M-r&quot;) 'helm-gtags-find-rtag)  
+
+;;入力したシンボルを参照する場所へジャンプ
+(local-set-key (kbd &quot;M-s&quot;) 'helm-gtags-find-symbol)
+
+;;タグ一覧からタグを選択し, その定義元にジャンプする
+(local-set-key (kbd &quot;M-l&quot;) 'helm-gtags-select)
+
+;;ジャンプ前の場所に戻る
+(local-set-key (kbd &quot;C-t&quot;) 'helm-gtags-pop-stack)))
+
+(add-hook 'php-mode-hook 'helm-gtags-mode)
+(add-hook 'ruby-mode-hook 'helm-gtags-mode)
+</code></pre>
+
+<h4 id="helm-gtags-modeの使い方:e3e233bf5c17e9630342a72bfcb7ccd1">helm-gtags-modeの使い方</h4>
+
+<p>先ほど<code>php-mode</code>と<code>ruby-mode</code>に<code>helm-gtags-mode</code>をホークしたので、Rubyファイルを開くと自動で<code>helm-gtags-mode</code>が起動します。</p>
+
+<p>ただインデックスファイルがないと検索できないので、<code>helm-gtags-mode</code>のショートカットを実行すると
+ミニバッファに<code>File GTAGS not found. Run 'gtags'? (yes or no)</code>というメッセージが出てくるので、インデックスファイルを作って下さい。</p>
+
+<p>インデックスファイルが正常に作成されないと、エラーがミニバッファに出るので、その場合は一度Emacsから出て
+<code>$ gtags --gtagslabel=pygments --debug</code>で確認してください。</p>
+
+<p>すごく便利ですね！お疲れ様でした。</p>
+
+<h3 id="参考サイト:e3e233bf5c17e9630342a72bfcb7ccd1">参考サイト</h3>
+
+<ul>
+<li><a href="http://qiita.com/5t111111/items/c14ac68f762ce71a7760">GNU GLOBALへのPygmentsパーサー取り込みでソースコード読みが信じられないくらいに捗るはず</a></li>
+<li><a href="http://blog.matsumoto-r.jp/?p=2369">GNU GLOBALとvimで巨大なコードでも快適にコードリーディング</a></li>
+<li><a href="http://www.turtlewalk.org/blog/2014/03/09/global-pygments-plugin/">Pygments を利用して GNU GLOBAL の対応言語を大幅に増やす</a></li>
+<li><a href="https://github.com/yoshizow/global-pygments-plugin">yoshizow/global-pygments-plugin</a></li>
+<li><a href="http://emacs-jp.github.io/packages/helm/helm-gtags.html">EmacsJP:helm-gtags</a></li>
+<li><a href="http://d.hatena.ne.jp/syohex/20121025/1351175067">PHPで GNU globalを使う</a></li>
+</ul>
+
+<h3 id="関連する記事:e3e233bf5c17e9630342a72bfcb7ccd1">関連する記事</h3>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/08/19/install-anyenv/">anyenvをインストールする</a></li>
+<li><a href="http://blog.10rane.com/2014/08/28/how-to-install-and-setup-helm-in-cask/">HelmをCaskでインストールする</a></li>
+<li><a href="http://blog.10rane.com/2014/08/20/install-cask/">Caskをインストールする</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

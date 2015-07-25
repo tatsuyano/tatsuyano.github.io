@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>PHP5.4から error_reportingのE_ALLにE_RISTRICTが加わった -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>PHP5.4から Error_reportingのE_ALLにE_RISTRICTが加わった</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Jul 28, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/php" >php</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>fuelphp案件でcomposer経由でxml_rpc2をインストールしたら、以下のようなエラーが出た</p>
+
+<pre><code>Uncaught exception Fuel\Core\PhpErrorException: Non-static method PEAR::loadExtension() should not be called statically
+</code></pre>
+
+<p>最初はソースの依存関係が原因かなあと思ったが、調べてみるとそうではなく
+PHP5.4から <code>error_reportingのE_ALL</code>に<code>E_RISTRICT</code>が加わったことで、エラーと判定されるようになった</p>
+
+<ul>
+<li><a href="http://life.co-hey.com/2013/04/php5-4%E3%81%8B%E3%82%89%E3%81%AFerror_reporting%E3%81%AEe_all%E3%81%ABe_ristrict%E3%81%8C%E5%90%AB%E3%81%BE%E3%82%8C%E3%82%8B/">php5.4からはerror_reportingのE_ALLにE_RISTRICTが含まれる</a></li>
+<li><a href="http://blog.thingslabo.com/archives/000184.html">PHPでHTML上にエラー表示/非表示する php.ini 設定</a></li>
+</ul>
+
+<h4 id="対象箇所でのみerror-reportingを止めることにした:30914d35f563b3c38cf63575b62c0153">対象箇所でのみerror_reportingを止めることにした</h4>
+
+<p>production環境以外で、かつ一部分でのみ<code>error_reporting</code>を止めたかったので、対象箇所の前後で一時的に解除した</p>
+
+<pre><code>$before_level = error_reporting(0); // error_report解除
+
+$options = array('prefix' =&gt; 'package.');
+$client = \XML_RPC2_Client::create('http://pear.php.net/xmlrpc.php', $options);
+$result = $client-&gt;info('XML_RPC2');
+print_r($result);
+
+error_reporting($before_level); // error_reportを元に戻す
+</code></pre>
+
+<ul>
+<li><a href="http://php.net/manual/ja/function.error-reporting.php">error_reporting</a></li>
+<li><a href="http://www.php.net/manual/ja/errorfunc.constants.php">定義済み定数</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

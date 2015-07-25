@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>webpackを使ってes6-promiseを読み込む -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Webpackを使ってes6-Promiseを読み込む</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Jun 3, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/nodejs" >nodejs</a> <a href="http://tatsuyano.github.io/tags/es6" >es6</a> <a href="http://tatsuyano.github.io/tags/webpack" >webpack</a> <a href="http://tatsuyano.github.io/tags/js" >js</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>最近勉強中のPromiseですが、現段階(15/06/03)ではIE11に対応していません。
+PromiseをIEに対応させるためには、es6-promiseというNode.jsのライブラリをフロントエンドで読み込む必要があります。</p>
+
+<p>しかしNode.jsのライブラリは、そのままではフロントエンドで使えないので、
+webpackでフロントエンド向けにBuildする必要があります。</p>
+
+<p><em>-webpackは他にも多くの機能がありますが、ここではNode.jsのモジュールをフロントエンドで使うため方法のみにフォーカスします。-</em></p>
+
+<h3 id="webpackを使うための準備:bf105b025d29d59e69f389ae56581628">webpackを使うための準備</h3>
+
+<p>まずは本体のインストール。
+<pre><code class="language-bash">$ npm install webpack -g
+</code></pre></p>
+
+<p>次に適当なディレクトリを作成します。
+<pre><code class="language-bash">$ mkdir webpack-sample &amp;&amp; cd webpack-sample
+</code></pre></p>
+
+<p>今回使うライブラリ(es6-promise)をディレクトリにインストールします。
+<pre><code class="language-bash">$ npm install es6-promise
+</code></pre></p>
+
+<p>ライブラリはglobalではなく、ディレクトリ直下(/webpack-sample/node_modules)にインストールしてください。</p>
+
+<h3 id="jsのbuild方法:bf105b025d29d59e69f389ae56581628">JsのBuild方法</h3>
+
+<p>次に(Node.jsの)ライブラリを読み込むJs(main.js)をビルドします。</p>
+
+<pre><code class="language-bash">$ webpack main.js bundle.js
+Hash: de7b4a8a87c6e52d026f
+Version: webpack 1.9.10
+Time: 109ms
+    Asset     Size  Chunks             Chunk Names
+bundle.js  40.1 kB       0  [emitted]  main
+   [0] ./main.js 255 bytes {0} [built]
+   + 6 hidden modules
+</code></pre>
+<br>
+
+BuildしたJs(bundle.js)は、main.jsが依存しているライブラリ(es6-promise等)も含んだ一つのファイルに圧縮されます。
+このJsのみをHTMLに読み込むだけで、Node.jsが利用できるようになります。
+
+<pre><code class="language-bash">&lt;script&nbsp;src=&quot;bundle.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<br>
+
+<b>main.js</b>
+<pre><code class="language-javascript">'use strict'
+var Promise = require('es6-promise').Promise;
+
+var promise = function(code) {
+    return new Promise(function (resolve,reject) {
+        resolve('Hello Promise !!');
+    });
+}
+
+promise().then(function (result) {
+    console.log(result);
+});
+</code></pre>
+<br>
+
+### 確認
+
+今回は、node.jsのhttp-serverを使って確認しようと思います。
+
+* [Node.jsのhttp-serverっていうコマンドラインのウェブサーバーが便利](https://firegoby.jp/archives/5706)
+
+<pre><code class="language-bash">$ npm install -g http-server
+$ http-server -p 4000
+</code></pre>
+
+<p>サーバー起動し、IEのconsoleにメッセージが表示されれば、確認OKです。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/use-webpack-to-read-the-es6-promise_01.jpg" alt="" /></p>
+
+<h3 id="参考サイト:bf105b025d29d59e69f389ae56581628">参考サイト</h3>
+
+<ul>
+<li><a href="http://webpack.github.io/">webpack</a></li>
+<li><a href="https://github.com/jakearchibald/es6-promise">es6-promise</a></li>
+<li><a href="http://ameblo.jp/ca-1pixel/entry-11884453208.html">RequireJS等はもう古い。WebPackとは？</a></li>
+<li><a href="http://thujikun.github.io/blog/2014/12/07/webpack/">Webpackを使い倒す</a></li>
+<li><a href="http://www.twopipe.com/front-end/2014/12/22/react-webpack-env.html">ReactとStylusをwebpackで使うための開発環境構築</a></li>
+</ul>
+
+<h3 id="関連する記事:bf105b025d29d59e69f389ae56581628">関連する記事</h3>
+
+<ul>
+<li><a href="http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/">Promiseを使って、非同期処理を任意のタイミングで実行する</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

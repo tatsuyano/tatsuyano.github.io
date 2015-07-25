@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Jsの関数について -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Jsの関数について</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Jun 8, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/js" >js</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>Jsには主に「Function文」と「Function式(関数リテラル)」という２つの関数の宣言方法がある。
+※本当は「Functionコンストラクタ」という方法もあるが、あまり実用的ではないので省略。</p>
+
+<pre><code class='language-javascript'>// Function文
+function func () {
+  console.log('statements');
+}
+
+// Function式
+var func = function func() {
+  console.log('expression');
+};
+
+//関数の呼び出し方法は同じ
+func();
+</code></pre>
+<br>
+
+違いは評価のタイミング。「Function文」は関数が静的な構造として宣言される。つまり、Jsの実行環境がコードを解析するタイミングで関数が静的に登録され、これにより「関数をどこで定義していても呼び出せる」ようになります。
+
+
+<pre><code class='language-javascript'>func(); // => 宣言前に読み出してもエラーにならない
+
+function func () {
+  console.log('statements');
+}
+</code></pre>
+<br>
+
+逆に「Function式」は、変数に代入された段階で評価される。そのため、宣言後に呼び出さないとエラーになる。
+
+<pre><code class='language-javascript'>func(); // => TypeError: undefined is not a function
+
+var func = function func () {
+  console.log('expression');
+}
+</code></pre>
+<br>
+
+## 無名関数
+
+「無名関数」とは、Function式の関数名を省略した形
+。Function式を使う場合は、主に無名関数が使われる。
+
+<pre><code class='language-javascript'>// 無名関数
+var func = function () {
+  console.log('expression');
+};
+
+func();
+</code></pre>
+<br>
+
+## 即時関数
+
+「即時関数」とは、関数を()で囲んだ状態で実行することで、関数宣言と同時にその関数を実行する書き方です。
+
+<pre><code class='language-javascript'>// 即時関数
+(function () {
+  console.log('Hello');
+})();
+
+// ()();の代わりに、().call(this);とも書ける
+(function () {
+  console.log('Hello');
+}).call(this);
+
+// 即時関数に引数を渡す場合
+(function (val,val2) {
+  console.log(val + ' ' + val2);
+})('Hello','World');
+</code></pre>
+
+<p>即時関数を使うことで、関数内で宣言した変数のスコープは、関数内でしか使えないようになる。
+つまり、ブロックスコープと同じ効果となる。</p>
+
+<h2 id="まとめ:faca702768e957c2e4fade9d48317c0a">まとめ</h2>
+
+<ul>
+<li>変数宣言は無名関数を使う</li>
+<li>即時関数を使えば、ブロックスコープと同じ効果が得られる</li>
+</ul>
+
+<h2 id="参考サイト:faca702768e957c2e4fade9d48317c0a">参考サイト</h2>
+
+<ul>
+<li><a href="http://itpro.nikkeibp.co.jp/atcl/column/14/091700069/091700001/">現代プログラマの必須知識、JavaScript</a></li>
+<li><a href="http://d.hatena.ne.jp/amachang/20080208/1202448348">(function(){})() と function(){}()</a></li>
+</ul>
+
+<h2 id="関連記事:faca702768e957c2e4fade9d48317c0a">関連記事</h2>
+
+<ul>
+<li><a href="http://tatsuyano.github.io/2015/06/08/for-the-scope-of-the-js/">Jsのスコープについて</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

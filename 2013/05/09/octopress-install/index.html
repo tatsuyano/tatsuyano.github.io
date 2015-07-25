@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>octopressをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Octopressをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Thu, May 9, 2013
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/blog" >blog</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/octopress_001.png" alt="" /></p>
+
+<h2 id="octopressとは:104b45e224bd247e1ecac5584f543dd5">Octopressとは</h2>
+
+<p>github上にブログを構築できるruby製のフレームワーク。</p>
+
+<h2 id="インストール:104b45e224bd247e1ecac5584f543dd5">インストール</h2>
+
+<p>複数PCで更新したいので、Dropbox上にインストール。手順は<a href="http://octopress.org/docs/setup/">公式サイト</a>と同じです。<br />
+事前にrbenvかRVMでruby1.9.3以上をインストールしておいてください。</p>
+
+<pre><code>cd $HOME/Dropbox/
+git clone git://github.com/imathis/octopress.git octopress
+cd octopress
+gem install bundler
+rbenv rehash
+bundle install
+</code></pre>
+
+<h3 id="rake-インストール時にエラー:104b45e224bd247e1ecac5584f543dd5">rake インストール時にエラー</h3>
+
+<p>rakeをインストールしたさいにOctopressで使うバージョンが違うというエラーがでた。</p>
+
+<pre><code>rake install
+rake aborted!
+You have already activated rake 10.0.4, but your Gemfile requires rake 0.9.2.2. Using bundle exec may solve this.
+</code></pre>
+
+<p>gemのバージョンは、Gemfileに設定されているので、rakeのバージョンを 10.0 から 0.9に変更し、再度 rake install を行う</p>
+
+<p>octopress/Gemfile</p>
+
+<pre><code class="language-ruby">source &quot;http://rubygems.org&quot;
+
+group :development do
+  gem 'rake', '~&gt; 0.9' # 10.0 -&gt; 0.9
+  gem 'jekyll', '~&gt; 0.12'
+</code></pre>
+
+<h3 id="インストールの確認:104b45e224bd247e1ecac5584f543dd5">インストールの確認</h3>
+
+<pre><code>rake preview
+</code></pre>
+
+<p>とコマンドを打ち、ブラウザからlocalhost:4000にアクセスしてください。
+正常にインストールされていれば、記事が0件のOctopressが表示されるはずです。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/octopress_002.png" alt="" /></p>
+
+<h2 id="使い方-最低限のコマンド:104b45e224bd247e1ecac5584f543dd5">使い方、最低限のコマンド</h2>
+
+<ul>
+<li>記事の生成</li>
+</ul>
+
+<p>octopress/source/_posts/以下にmarkdown形式のファイルが生成される</p>
+
+<pre><code>rake new_post [&quot;hoge&quot;]
+</code></pre>
+
+<ul>
+<li>記事の確認</li>
+</ul>
+
+<p>ブラウザからlocalhost:4000で、生成した記事を確認できる</p>
+
+<pre><code>rake preview
+</code></pre>
+
+<ul>
+<li>記事の再構築</li>
+</ul>
+
+<p>記事を変更すると自動で更新されるが、まれに更新されない場合がある。その場合は、手動で更新(再構築)する。</p>
+
+<pre><code>rake generate
+</code></pre>
+
+<h3 id="rake-preview実行後-logに-regeneration-1-files-changed-が流れ続ける:104b45e224bd247e1ecac5584f543dd5">rake preview実行後、logに regeneration: 1 files changed が流れ続ける</h3>
+
+<p><a href="http://blog.satooshi.jp/blog/2013/04/09/octopress-preview-never-stop-auto-regeneration">Octopressでpreviewしていたらregeneration: 1 files changedが終わらない場合の対処方法</a>に解決方法がかいてありました。
+これもgemのバージョン違いが原因のようです。</p>
+
+<p>octopress/Gemfile</p>
+
+<pre><code class="language-ruby">source &quot;http://rubygems.org&quot;
+
+group :development do
+...
+  gem 'directory_watcher', '~&gt; 1.4.1' # 1.5.1 -&gt; 1.4.1
+</code></pre>
+
+<h2 id="参考サイト:104b45e224bd247e1ecac5584f543dd5">参考サイト</h2>
+
+<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
+
+<ul>
+<li><a href="http://octopress.org/">公式サイト</a></li>
+<li><a href="http://rcmdnk.github.io/blog/2013/03/07/setup-octopress/">GitHub pages + Octopressの導入</a></li>
+<li><a href="http://www.miukoba.net/blog/2013/01/05/start-octopress/">Octopressはじめました</a></li>
+<li><a href="http://blog.glidenote.com/blog/2011/11/07/install-octopress-on-github">GithubとOctopressでモダンな技術系ブログを作ってみる</a></li>
+<li><a href="http://blog.satooshi.jp/blog/2013/04/09/octopress-preview-never-stop-auto-regeneration">Octopressでpreviewしていたらregeneration: 1 files changedが終わらない場合の対処方法</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

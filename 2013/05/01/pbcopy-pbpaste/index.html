@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>tmuxでもpbcopy、pbpasteを使えるように設定する -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Tmuxでもpbcopy、pbpasteを使えるように設定する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, May 1, 2013
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/mac" >mac</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>最近しりましたpbcopyとpbpasteをtmuxで使う方法です。</p>
+
+<h2 id="pbcopyとpbpasteの使い方:d460daa9c014f50f9a01f891352372f4">pbcopyとpbpasteの使い方</h2>
+
+<pre><code>ls -la | pbcopy    # 標準出力 -&gt; クリップボード
+pbpaste &gt; hoge.txt # クリップボード -&gt; 標準出力
+</code></pre>
+
+<h2 id="pbcopyとpbpasteをtmuxで使うための設定:d460daa9c014f50f9a01f891352372f4">pbcopyとpbpasteをtmuxで使うための設定</h2>
+
+<p>tmuxで、pbcopyとpbpasteが正しく動かない。</p>
+
+<pre><code>brew install reattach-to-user-namespace
+</code></pre>
+
+<p>.tmux.conf</p>
+
+<pre><code>set -g default-command 'reattach-to-user-namespace -l zsh'
+</code></pre>
+
+<h2 id="tmuxにpbcopyのキーバインドを追加:d460daa9c014f50f9a01f891352372f4">tmuxにpbcopyのキーバインドを追加</h2>
+
+<p><a href="http://koseki.hatenablog.com/entry/20110816/TmuxCopy">Mac の tmux でクリップボードを使う。</a>のサイトを参考にpbcopyのキーバインドを追加しました。</p>
+
+<p>.tmux.conf</p>
+
+<pre><code># buffer copy
+bind C-q run-shell 'reattach-to-user-namespace tmux-pbcopy'
+</code></pre>
+
+<p>emacs $HOME/Dropbox/dotfile/mybin/tmux-pbcopy</p>
+
+<pre><code class="language-scheme">#! /bin/sh
+
+tmux save-buffer /tmp/.tmux_to_pbcopy
+cat /tmp/.tmux_to_pbcopy | pbcopy
+
+# 以下はメッセージを表示するだけ。無くてもOK。
+HEAD=`head -1 /tmp/.tmux_to_pbcopy`
+TAIL=`tail -1 /tmp/.tmux_to_pbcopy`
+tmux display-message &quot;Copy:  $HEAD  -  $TAIL&quot;
+</code></pre>
+
+<h2 id="使い方:d460daa9c014f50f9a01f891352372f4">使い方</h2>
+
+<ul>
+<li>C-z C-[ でコピーモードに入る。</li>
+<li>C-SPCで選択開始</li>
+<li>C-wでバッファにコピー</li>
+<li>C-z C-qでバッファの内容をクリップボードにコピー</li>
+</ul>
+
+<h2 id="参考サイト:d460daa9c014f50f9a01f891352372f4">参考サイト</h2>
+
+<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
+
+<ul>
+<li><a href="http://www.ideaxidea.com/archives/2011/04/macosx_terminal_tips.html">ターミナルで使える「pbcopy」「pbpaste」って知ってました？</a></li>
+<li><a href="http://koseki.hatenablog.com/entry/20110816/TmuxCopy">Mac の tmux でクリップボードを使う。</a></li>
+<li><a href="http://blog.livedoor.jp/xaicron/archives/54458405.html">homebrew で最低限これだけはいれておけってやつ</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

@@ -1,0 +1,682 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Mac on blog.10rane.com</title>
+    <link>http://tatsuyano.github.io/tags/mac/</link>
+    <description>Recent content in Mac on blog.10rane.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Wed, 15 Oct 2014 01:00:00 +0900</lastBuildDate>
+    <atom:link href="http://tatsuyano.github.io/tags/mac/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Homebrew CaskでMacアプリをインストールする</title>
+      <link>http://tatsuyano.github.io/2014/10/15/how-to-install-and-setup-homebrew-cask/</link>
+      <pubDate>Wed, 15 Oct 2014 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/10/15/how-to-install-and-setup-homebrew-cask/</guid>
+      <description>
+
+&lt;p&gt;Emacsの&lt;code&gt;Cask&lt;/code&gt;のように、インストールしたMacアプリをファイルに記述して、一括管理できる方法を探していたところ、
+&lt;code&gt;Homebrew Cask&lt;/code&gt;というものを見つけました。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;Homebrew Cask&lt;/code&gt;はHomebrewの拡張で、コマンドラインでMacアプリをインストールできるようになります。
+また、Homebrewの拡張なので、&lt;code&gt;Brewfile&lt;/code&gt;を使って、アプリも一括インストール(管理)できるようになります。&lt;/p&gt;
+
+&lt;h4 id=&#34;homebrew-caskのインストール:a5eb851712b682a06ffb00332a1d80ae&#34;&gt;Homebrew Caskのインストール&lt;/h4&gt;
+
+&lt;p&gt;念のため、先にHomebrew本体、インストール済みのコマンドをアップデートします。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ sudo -E bash&lt;/p&gt;
+
+&lt;h1 id=&#34;brew-update:a5eb851712b682a06ffb00332a1d80ae&#34;&gt;brew update&lt;/h1&gt;
+
+&lt;h1 id=&#34;brew-upgrade:a5eb851712b682a06ffb00332a1d80ae&#34;&gt;brew upgrade&lt;/h1&gt;
+
+&lt;h1 id=&#34;brew-tap-phinze-homebrew-cask:a5eb851712b682a06ffb00332a1d80ae&#34;&gt;brew tap phinze/homebrew-cask&lt;/h1&gt;
+
+&lt;h1 id=&#34;brew-install-brew-cask:a5eb851712b682a06ffb00332a1d80ae&#34;&gt;brew install brew-cask&lt;/h1&gt;
+
+&lt;p&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;macアプリの検索:a5eb851712b682a06ffb00332a1d80ae&#34;&gt;Macアプリの検索&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;search&lt;/code&gt;に続けて、検索文字を入力すれば、絞り込み検索ができます。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# brew cask search
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;macアプリの-単体-インストール-アンインストール:a5eb851712b682a06ffb00332a1d80ae&#34;&gt;Macアプリの(単体)インストール、アンインストール&lt;/h4&gt;
+
+&lt;p&gt;デフォルトだと、インストール先は/Users/hoge/Application 配下になります。
+変更する場合は、&lt;code&gt;HOMEBREW_CASK_OPTS&lt;/code&gt;を設定してください。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# export HOMEBREW_CASK_OPTS=&amp;ldquo;&amp;ndash;appdir=/Applications&amp;rdquo;&lt;/p&gt;
+
+&lt;h1 id=&#34;brew-cask-install-github:a5eb851712b682a06ffb00332a1d80ae&#34;&gt;brew cask install github&lt;/h1&gt;
+
+&lt;h1 id=&#34;brew-cask-uninstall-github:a5eb851712b682a06ffb00332a1d80ae&#34;&gt;brew cask uninstall github&lt;/h1&gt;
+
+&lt;p&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;brewfileでのインストール:a5eb851712b682a06ffb00332a1d80ae&#34;&gt;Brewfileでのインストール&lt;/h4&gt;
+
+&lt;p&gt;Macアプリ以外にもHomebrewでインストールしたコマンドもインストール(管理)できます。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# brew bundle
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;こちらにgitにあげた私の&lt;code&gt;Brewfile&lt;/code&gt;を貼っておきます。&lt;code&gt;gist-it&lt;/code&gt;を使うと、
+gistではなく、gitに上げたファイルも読み込めるようになりました。&lt;/p&gt;
+
+&lt;p&gt;&lt;script src=&#34;http://gist-it.appspot.com/github/tatsuyano/dotfiles/blob/master/mac/Brewfile&#34;&gt;&lt;/script&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;参考サイト:a5eb851712b682a06ffb00332a1d80ae&#34;&gt;参考サイト&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://nanapi.co.jp/blog/2014/03/05/homebrew-cask/&#34;&gt;homebrew-caskを使って簡単にMacの環境構築をしよう！&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/paming/items/15ec3543cc094d411428&#34;&gt;Homebrewで*.dmgなアプリをインストールしたい→それhomebrew-caskで出来るよ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>oh-my-zshをインストールする</title>
+      <link>http://tatsuyano.github.io/2014/08/06/install-oh-my-zsh/</link>
+      <pubDate>Wed, 06 Aug 2014 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/08/06/install-oh-my-zsh/</guid>
+      <description>
+
+&lt;p&gt;今まで設定が面倒で試していなかった&lt;a href=&#34;https://github.com/robbyrussell/oh-my-zsh&#34;&gt;oh-my-zsh&lt;/a&gt;をインストールしてみました。下記の方法で、mac、centosともに対応可能です。&lt;/p&gt;
+
+&lt;h3 id=&#34;oh-my-zshをインストールする:3944f0646c6d5b7fe433d7bd3dbfa39d&#34;&gt;oh-my-zshをインストールする&lt;/h3&gt;
+
+&lt;p&gt;すでにzshはインストールされているものとします。&lt;br /&gt;
+また、今ある&lt;code&gt;$HOME/.zshrc&lt;/code&gt;はインストール時に上書きされてしまうので事前に退避してください。&lt;br /&gt;
+インストールするとHOME直下に&lt;code&gt;.oh-my-zsh&lt;/code&gt;というディレクトリが作成され&lt;code&gt;.zshrc&lt;/code&gt;が上書きされます。&lt;/p&gt;
+
+&lt;p&gt;インストール&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;curl -L http://install.ohmyz.sh | sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;インストールが終わったので、いったん&lt;code&gt;sorce .zshrc&lt;/code&gt;して、oh-my-zshを使ってみます。promptが変更されたはずです。&lt;/p&gt;
+
+&lt;p&gt;oh-my-zshは、themeとplugin(複数選択可)という単位でzshを管理しています。
+初期設定はthemeが&lt;code&gt;robbyrussell&lt;/code&gt;、pluginが&lt;code&gt;git&lt;/code&gt;です。&lt;/p&gt;
+
+&lt;p&gt;oh-my-zshのディレクトリ構成&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;.
+├── custom      ... 自分が設定したzshrcを入れる
+│   └── plugins ... 自分で作ったpluginを入れる
+├── lib
+├── log         ... zsh_historyなどを入れる
+├── plugins     ... gitなどソフトウェア単位の設定ファイルが入っている
+├── templates   ... zshrcのテンプレートファイルが入っている
+├── themes      ... promptなど見た目の設定ファイルが入っている
+└── tools
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;customに自分の設定ファイルを入れる:3944f0646c6d5b7fe433d7bd3dbfa39d&#34;&gt;customに自分の設定ファイルを入れる&lt;/h4&gt;
+
+&lt;p&gt;整理されていませんが、とりあえず&lt;code&gt;custom&lt;/code&gt;ディレクトリに入れてみます。&lt;br /&gt;
+因みに拡張子は&lt;code&gt;.zsh&lt;/code&gt;で、ファイル名は自由です。&lt;/p&gt;
+
+&lt;p&gt;main.zsh&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export LC_ALL=en_US.UTF-8
+export LANG=ja_JP.UTF-8
+export EDITOR=emacs
+
+bindkey -e                        # emacsライクなキーバインド
+autoload -U compinit              # 強力な補完機能
+compinit -u                       # このあたりを使わないとzsh使ってる意味なし
+
+setopt autopushd                  # cdの履歴を表示
+setopt pushd_ignore_dups          # 同ディレクトリを履歴に追加しない
+setopt auto_cd                    # 自動的にディレクトリ移動
+
+## 履歴
+HISTFILE=~/.oh-my-zsh/log/.zsh_history
+HISTSIZE=10000                    # ファイルサイズ
+SAVEHIST=10000                    # saveする量
+setopt hist_ignore_dups           # 重複を記録しない
+setopt hist_reduce_blanks         # スペース排除
+setopt share_history              # 履歴ファイルを共有
+setopt EXTENDED_HISTORY           # zshの開始終了を記録
+
+export PATH=/usr/local/bin:$PATH
+export PATH=$PATH:$HOME/Dropbox/dotfile/mybin
+
+## zsh-syntax-highlighting
+source $HOME/Dropbox/dotfile/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+## anyenv
+export PATH=&amp;quot;$HOME/.anyenv/bin:$PATH&amp;quot;
+eval &amp;quot;$(anyenv init - zsh)&amp;quot;
+
+## z.sh
+_Z_CMD=j
+source $HOME/Dropbox/dotfile/z/z.sh
+precmd() { _z --add &amp;quot;$(pwd -P)&amp;quot; }
+
+## peco(for oh-my-zsh)
+function peco-select-history() {
+    local tac
+    if which tac &amp;gt; /dev/null; then
+        tac=&amp;quot;tac&amp;quot;
+    else
+        tac=&amp;quot;tail -r&amp;quot;
+    fi
+    BUFFER=$(\history -n 1 | \
+        eval $tac | \
+        peco --query &amp;quot;$LBUFFER&amp;quot;)
+    CURSOR=$#BUFFER
+    zle clear-screen
+}
+zle -N peco-select-history
+bindkey &#39;^r&#39; peco-select-history
+
+## alias
+alias mysql=&amp;quot;mysql --pager=&#39;less -S -n -i -F -X&#39;&amp;quot;
+function tmr(){ tmux new -s $1 || tmux attach -d -t $1; }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;文字化けへの対処法:3944f0646c6d5b7fe433d7bd3dbfa39d&#34;&gt;文字化けへの対処法&lt;/h3&gt;
+
+&lt;p&gt;どうもoh-my-zshがlocateをブランクに設定してしまうようなので、
+適当な箇所(私は&lt;code&gt;/custom/main.zsh&lt;/code&gt;)に、以下の設定を追加しました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;export LC_ALL=en_US.UTF-8
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/uchiko/items/f6b1528d7362c9310da0&#34;&gt;oh-my-zsh の環境で、peco-select-history が動かない&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;pecoが動かなくなる問題への対処法:3944f0646c6d5b7fe433d7bd3dbfa39d&#34;&gt;pecoが動かなくなる問題への対処法&lt;/h3&gt;
+
+&lt;p&gt;以下のように変更することで対応しました。&lt;/p&gt;
+
+&lt;p&gt;変更前&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;## peco
+for f (~/Dropbox/dotfile/peco_sources/*) source &amp;quot;${f}&amp;quot; # load peco sources
+bindkey &#39;^r&#39; peco-select-history
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;変更後&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;## peco(for oh-my-zsh)
+function peco-select-history() {
+    local tac
+    if which tac &amp;gt; /dev/null; then
+        tac=&amp;quot;tac&amp;quot;
+    else
+        tac=&amp;quot;tail -r&amp;quot;
+    fi
+    BUFFER=$(\history -n 1 | \
+        eval $tac | \
+        peco --query &amp;quot;$LBUFFER&amp;quot;)
+    CURSOR=$#BUFFER
+    zle clear-screen
+}
+zle -N peco-select-history
+bindkey &#39;^r&#39; peco-select-history
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/huydx@github/items/a045d33ec23350c730af&#34;&gt;oh-my-zshの言語問題&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;themeの変更:3944f0646c6d5b7fe433d7bd3dbfa39d&#34;&gt;themeの変更&lt;/h3&gt;
+
+&lt;p&gt;oh-my-zshには複数の&lt;a href=&#34;https://github.com/robbyrussell/oh-my-zsh/wiki/Themes&#34;&gt;theme&lt;/a&gt;が用意されています。
+今回は&lt;a href=&#34;https://gist.github.com/agnoster/3712874&#34;&gt;agnoster&lt;/a&gt;というthemeを使ってみます。&lt;/p&gt;
+
+&lt;p&gt;.zshrc&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;##ZSH_THEME=&amp;quot;robbyrussell&amp;quot;
+ZSH_THEME=&amp;quot;agnoster&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;code&gt;agnoster&lt;/code&gt;はデフォルトでは入っていないので、別途インストールします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd .oh-my-zsh/themes/
+wget https://gist.githubusercontent.com/agnoster/3712874/raw/c3107c06c04fb42b0ca27b0a81b15854819969c6/agnoster.zsh-theme
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;promptの見た目を少しだけ変更しました。&lt;/p&gt;
+
+&lt;p&gt;agnoster.zsh-theme&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;##prompt_segment black default &amp;quot;%(!.%{%F{yellow}%}.)$user@%m&amp;quot;
+prompt_segment black default &amp;quot;%(!.%{%F{yellow}%}.)$user&amp;quot;
+
+#prompt_segment blue black &#39;%~&#39;
+prompt_segment blue black &#39;%1~&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;変更したので&lt;code&gt;source $HOME/.zshrc&lt;/code&gt;を忘れずに実行します。&lt;/p&gt;
+
+&lt;h4 id=&#34;macにpowerlineフォントをインストールする:3944f0646c6d5b7fe433d7bd3dbfa39d&#34;&gt;macにpowerlineフォントをインストールする&lt;/h4&gt;
+
+&lt;p&gt;&lt;code&gt;agnoster&lt;/code&gt;は、powerline系のフォントを使うことを前提としています。&lt;/p&gt;
+
+&lt;p&gt;まずは&lt;code&gt;/Library/Fonts/&lt;/code&gt;以下に、
+&lt;a href=&#34;https://gist.github.com/qrush/1595572&#34;&gt;Inconsolata-dz-Powerline.otf&lt;/a&gt;ページにある&lt;code&gt;Inconsolata-dz-Powerline.otf&lt;/code&gt;、&lt;code&gt;Menlo-Powerline.otf&lt;/code&gt;、&lt;code&gt;mensch-Powerline.otf&lt;/code&gt;をダウンロードします。&lt;/p&gt;
+
+&lt;p&gt;ダウンロード後、iTerm2のフォントを変更し、再起動させます。
+ここまで、ひと通りの設定が完了しました。&lt;/p&gt;
+
+&lt;p&gt;お疲れ様でした。&lt;/p&gt;
+
+&lt;h4 id=&#34;関連する記事:3944f0646c6d5b7fe433d7bd3dbfa39d&#34;&gt;関連する記事&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/06/install-ricky-powerline-for-mac/&#34;&gt;Ricky for powerlineをmacにインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Ricky for powerlineをmacにインストールする</title>
+      <link>http://tatsuyano.github.io/2014/08/06/install-ricky-powerline-for-mac/</link>
+      <pubDate>Wed, 06 Aug 2014 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/08/06/install-ricky-powerline-for-mac/</guid>
+      <description>
+
+&lt;p&gt;agnosterは&lt;code&gt;powerline.otf&lt;/code&gt;にある依存文字を使うことを前提しているので、
+macにpowerline系のフォントをインストールします。&lt;/p&gt;
+
+&lt;p&gt;少しややこしいのですが、元々powerlineというフォントはvimで使う用？だったので
+ググるとよくvim-powerlineとかがヒットしますが同じもののようです。&lt;/p&gt;
+
+&lt;p&gt;また、既存のフォントをpowerline化(既存のフォントに依存文字を使えるようにする)することもできます。&lt;/p&gt;
+
+&lt;p&gt;今回は、今使っているRictyをそのまま使いたかったので、
+新たに&lt;code&gt;Ricty for powerline&lt;/code&gt;というフォントをbrewでインストールしてみました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew update
+brew uninstall ricty
+brew tap sanemat/font
+brew install --vim-powerline ricty
+cp -f /usr/local/Cellar/ricty/3.2.3/share/fonts/Ricty*.ttf ~/Library/Fonts/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/osakanafish/items/731dc31168e3330dbcd0&#34;&gt;homebrewを使ってiTerm2でRicty for powerline設定した&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;インストールが完了したら、iTermのフォントの設定を変更して、iTermを再起動してください。&lt;/p&gt;
+
+&lt;p&gt;お疲れ様でした。&lt;/p&gt;
+
+&lt;h4 id=&#34;関連する記事:6fca2851ceced0539c2a5ff6938f09f8&#34;&gt;関連する記事&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/06/install-oh-my-zsh/&#34;&gt;oh-my-zshをインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>tmuxでもpbcopy、pbpasteを使えるように設定する</title>
+      <link>http://tatsuyano.github.io/2013/05/01/pbcopy-pbpaste/</link>
+      <pubDate>Wed, 01 May 2013 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/05/01/pbcopy-pbpaste/</guid>
+      <description>
+
+&lt;p&gt;最近しりましたpbcopyとpbpasteをtmuxで使う方法です。&lt;/p&gt;
+
+&lt;h2 id=&#34;pbcopyとpbpasteの使い方:d460daa9c014f50f9a01f891352372f4&#34;&gt;pbcopyとpbpasteの使い方&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;ls -la | pbcopy    # 標準出力 -&amp;gt; クリップボード
+pbpaste &amp;gt; hoge.txt # クリップボード -&amp;gt; 標準出力
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;pbcopyとpbpasteをtmuxで使うための設定:d460daa9c014f50f9a01f891352372f4&#34;&gt;pbcopyとpbpasteをtmuxで使うための設定&lt;/h2&gt;
+
+&lt;p&gt;tmuxで、pbcopyとpbpasteが正しく動かない。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew install reattach-to-user-namespace
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;.tmux.conf&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;set -g default-command &#39;reattach-to-user-namespace -l zsh&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;tmuxにpbcopyのキーバインドを追加:d460daa9c014f50f9a01f891352372f4&#34;&gt;tmuxにpbcopyのキーバインドを追加&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://koseki.hatenablog.com/entry/20110816/TmuxCopy&#34;&gt;Mac の tmux でクリップボードを使う。&lt;/a&gt;のサイトを参考にpbcopyのキーバインドを追加しました。&lt;/p&gt;
+
+&lt;p&gt;.tmux.conf&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# buffer copy
+bind C-q run-shell &#39;reattach-to-user-namespace tmux-pbcopy&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;emacs $HOME/Dropbox/dotfile/mybin/tmux-pbcopy&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;#! /bin/sh
+
+tmux save-buffer /tmp/.tmux_to_pbcopy
+cat /tmp/.tmux_to_pbcopy | pbcopy
+
+# 以下はメッセージを表示するだけ。無くてもOK。
+HEAD=`head -1 /tmp/.tmux_to_pbcopy`
+TAIL=`tail -1 /tmp/.tmux_to_pbcopy`
+tmux display-message &amp;quot;Copy:  $HEAD  -  $TAIL&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;使い方:d460daa9c014f50f9a01f891352372f4&#34;&gt;使い方&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;C-z C-[ でコピーモードに入る。&lt;/li&gt;
+&lt;li&gt;C-SPCで選択開始&lt;/li&gt;
+&lt;li&gt;C-wでバッファにコピー&lt;/li&gt;
+&lt;li&gt;C-z C-qでバッファの内容をクリップボードにコピー&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;参考サイト:d460daa9c014f50f9a01f891352372f4&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.ideaxidea.com/archives/2011/04/macosx_terminal_tips.html&#34;&gt;ターミナルで使える「pbcopy」「pbpaste」って知ってました？&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://koseki.hatenablog.com/entry/20110816/TmuxCopy&#34;&gt;Mac の tmux でクリップボードを使う。&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.livedoor.jp/xaicron/archives/54458405.html&#34;&gt;homebrew で最低限これだけはいれておけってやつ&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>iterm2のカラースキームを変更する</title>
+      <link>http://tatsuyano.github.io/2013/04/05/item2-color-scheme/</link>
+      <pubDate>Fri, 05 Apr 2013 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/04/05/item2-color-scheme/</guid>
+      <description>
+
+&lt;p&gt;最近は background を白系の透過で使っていたが、なんとなくまた黒系の透過に戻してみた。&lt;br /&gt;
+毎回自分で設定するのは面倒なので、今回はこちらの方のカラースキームを使わしてもらうことにした。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://this.aereal.org/entry/2013/01/02/222304&#34;&gt;iTerm 2 で使えるカラースキーム、Japanesque を作った&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;カラースキームのダウンロード:dbbd43f4652853118ef194f1165682b8&#34;&gt;カラースキームのダウンロード&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;$ mkdir Dropbox/src/itermcolors
+$ cd Dropbox/src/itermcolors
+$ wget https://raw.github.com/aereal/dotfiles/master/colors/Japanesque/Japanesque.itermcolors
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;カラースキームの設定:dbbd43f4652853118ef194f1165682b8&#34;&gt;カラースキームの設定&lt;/h2&gt;
+
+&lt;h3 id=&#34;新しい-profile-を作成する:dbbd43f4652853118ef194f1165682b8&#34;&gt;新しい Profile を作成する&lt;/h3&gt;
+
+&lt;p&gt;Preferences &amp;gt; Profiles &amp;gt; General &amp;gt; +&lt;br /&gt;
+Preferences &amp;gt; Profiles &amp;gt; General &amp;gt; Name&lt;br /&gt;
+Preferences &amp;gt; Profiles &amp;gt; General &amp;gt; Other Actions &amp;gt; Set as Default&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/iterm2_color_scheme_001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;ダウンロードしたカラースキームを-import-する:dbbd43f4652853118ef194f1165682b8&#34;&gt;ダウンロードしたカラースキームを import する&lt;/h3&gt;
+
+&lt;p&gt;Import を行うと、Load Presets に新たに Japanesque が追加される。&lt;/p&gt;
+
+&lt;p&gt;Preferences &amp;gt; Profiles &amp;gt; Colors &amp;gt; Import&lt;br /&gt;
+Preferences &amp;gt; Profiles &amp;gt; Colors &amp;gt; Japanesque&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/iterm2_color_scheme_002.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:dbbd43f4652853118ef194f1165682b8&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/nomnel/20111120/1321799289&#34;&gt;iTerm2のカラースキームをSolarizedにする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://this.aereal.org/entry/2013/01/02/222304&#34;&gt;iTerm 2 で使えるカラースキーム、Japanesque を作った&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>MAMP環境でのCakePHPのmysql.sockの指定方法</title>
+      <link>http://tatsuyano.github.io/2013/02/04/mamp-cakephp-mysql/</link>
+      <pubDate>Mon, 04 Feb 2013 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/02/04/mamp-cakephp-mysql/</guid>
+      <description>
+
+&lt;h2 id=&#34;worning:3f05be670dddf031e8b273ab46ea1cc7&#34;&gt;worning&lt;/h2&gt;
+
+&lt;p&gt;MacにMAMPをインストールし、CakePHPの「bakeコンソール」でModelクラスを作成したさいに、mysql.sockの指定箇所が違うよと警告された&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Warning Error: PDO::__construct(): [2002] No such file or directory (trying to connect via unix:///var/mysql/mysql.sock) in [/Applications/MAMP/htdocs/bake/lib/Cake/Model/Datasource/Database/Mysql.php, line 149]
+
+Error: Database connection &amp;quot;SQLSTATE[HY000] [2002] No such file or directory&amp;quot; is missing, or could not be created.
+#0 /Applications/MAMP/htdocs/bake/lib/Cake/Model/Datasource/DboSource.php(260): Mysql-&amp;gt;connect()
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;MAMPを使っているので、mysql.sockは「/Applications/MAMP/tmp/mysql/mysql.sock」作成されている。&lt;br /&gt;
+たぶん解決方法としては３つあって、&lt;br /&gt;
+1.sockファイルをworiningに書いてある「/var/mysql/mysql.sock」に生成するようMysql側の設定をいじる。&lt;br /&gt;
+2.「/var/mysql/mysql.sock」に「/Applications/MAMP/tmp/mysql/mysql.sock」のリンクを貼ってしまう。&lt;br /&gt;
+3.たぶん「app/Config/database.php」に現在生成されているmysql.sockの場所を指定する。&lt;/p&gt;
+
+&lt;p&gt;どう考えても「３」が正しいやり方だと思うけど、なかなかそれっぽい情報が引っかからなかったがやっとあった。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://stackoverflow.com/questions/1688705/cakephp-console-bake-on-mac-os-with-mamp-database-connection-error&#34;&gt;Cakephp console (bake) on Mac OS with Mamp : database connection error&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
+public $default = array(
+    &#39;datasource&#39; =&gt; &#39;Database/Mysql&#39;,
+    &#39;persistent&#39; =&gt; false,
+    &#39;host&#39; =&gt; &#39;localhost&#39;,
+    &#39;login&#39; =&gt; &#39;USERNAME&#39;,
+    &#39;password&#39; =&gt; &#39;PASSWORD&#39;,
+    &#39;database&#39; =&gt; &#39;DATABASE&#39;,
+    &#39;encoding&#39; =&gt; &#39;utf8&#39;,
+    &#39;unix_socket&#39; =&gt; &#39;/Applications/MAMP/tmp/mysql/mysql.sock&#39; # &lt;- this
+    );
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2.x系から、socketの指定がデフォルトと違う場合に上記のように設定する模様。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>iterm2 &#43; tmux に乗り換えた</title>
+      <link>http://tatsuyano.github.io/2013/01/27/item2-tmux/</link>
+      <pubDate>Sun, 27 Jan 2013 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/01/27/item2-tmux/</guid>
+      <description>
+
+&lt;p&gt;今まで頑なにTotalTerminal + KeyRemap4MacBookを使って来た私ですが、ついに乗り換えることにしました。&lt;br /&gt;
+理由はKeyRemap4MacBookをバージョンアップしたら、一部のkey bindが使えなくなってしまったから。まあいい機会なので乗り換えたいと思います。&lt;/p&gt;
+
+&lt;h2 id=&#34;iterm2のバージョン:591bddd21d8821b8395d80ad9e332964&#34;&gt;iterm2のバージョン&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://code.google.com/p/iterm2/downloads/list&#34;&gt;iterm2の公式ページ&lt;/a&gt;からダウンロード&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.10rane.com/tech/wp-content/uploads/2013/02/01_iterm2.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;ダウンロードしたファイル解凍してみるとなぜか「tmux-for-iTerm2-20130122.tar.gz」というファイルも入っている。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.10rane.com/tech/wp-content/uploads/2013/02/02_iterm2.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;http://code.google.com/p/iterm2/wiki/TmuxIntegration&#34;&gt;iterm2の公式wiki&lt;/a&gt;で調べてみると、tmuxを使う場合、この「iTerm2用のtmux」じゃないと細かい挙動が期待どおりに動かないっぽい（適当）。&lt;br /&gt;
+なので、このタイミングでScreenからtmuxにも乗り換えてみることにした。&lt;/p&gt;
+
+&lt;h2 id=&#34;brewでlibevnetのインストール:591bddd21d8821b8395d80ad9e332964&#34;&gt;brewでlibevnetのインストール&lt;/h2&gt;
+
+&lt;p&gt;まず、こちらのサイト「&lt;a href=&#34;http://d.hatena.ne.jp/kmn23/20120215/1329323332&#34;&gt;Lionにiterm2とtmux と libeventをインストールする&lt;/a&gt;」を参考にlibenventをインストール。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew update
+brew install libevent
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;tmuxのインストール:591bddd21d8821b8395d80ad9e332964&#34;&gt;tmuxのインストール&lt;/h2&gt;
+
+&lt;p&gt;さきほどダウンロードしたファイルを解凍し、make &amp;amp; install&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;tar xvzf tmux-for-iTerm2-20130122.tar.gz
+cd tmux
+./configure
+make
+make clean
+sudo make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;念のためtmuxのインストール先を確認&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;which tmux
+/usr/local/bin/tmux
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;iterm2の初期設定:591bddd21d8821b8395d80ad9e332964&#34;&gt;iterm2の初期設定&lt;/h2&gt;
+
+&lt;p&gt;今まで、KeyRemap4MacBookでcmdとoptionを入れ替えていて、操作上はcmdにmetaキーが割り振ってある感じにして使っていたんですが、このタイミングでoptionにmetaキーを割り当てることにしました。&lt;br /&gt;
+ただ、それ以外の操作はできるかぎりTotalTerminalと同じようにしたいので、その設定をしていきます。&lt;/p&gt;
+
+&lt;h3 id=&#34;バックグラウンドを白にし-透過させる:591bddd21d8821b8395d80ad9e332964&#34;&gt;バックグラウンドを白にし、透過させる&lt;/h3&gt;
+
+&lt;p&gt;Preferences &amp;gt; Profiles &amp;gt; Colors &amp;gt; Background&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.10rane.com/tech/wp-content/uploads/2013/02/03_iterm2.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Preferences &amp;gt; Profiles &amp;gt; Window &amp;gt; Transparency&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.10rane.com/tech/wp-content/uploads/2013/02/04_iterm2.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;画面の上部からターミナルをショートカットで表示できるようにする:591bddd21d8821b8395d80ad9e332964&#34;&gt;画面の上部からターミナルをショートカットで表示できるようにする&lt;/h3&gt;
+
+&lt;p&gt;Preferences &amp;gt; Profiles &amp;gt; Window &amp;gt; Setting for New Window &amp;gt; Style &amp;gt; Top of Screen&lt;br /&gt;
+Preferences &amp;gt; Profiles &amp;gt; Window &amp;gt; Setting for New Window &amp;gt; Space &amp;gt; All Spaces&lt;br /&gt;
+Preferences &amp;gt; Profiles &amp;gt; Window &amp;gt; Setting for New Window &amp;gt; Rows  &amp;gt; 70&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.10rane.com/tech/wp-content/uploads/2013/02/04_iterm2.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Preferences &amp;gt; Keys &amp;gt; Hot key &amp;gt; Show/hide iTerm2 with a system-wide hotkey&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.10rane.com/tech/wp-content/uploads/2013/02/05_iterm2.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;metaキーをoptionに割り当てる:591bddd21d8821b8395d80ad9e332964&#34;&gt;metaキーをoptionに割り当てる&lt;/h3&gt;
+
+&lt;p&gt;Preferences &amp;gt; Profiles &amp;gt; Keys &amp;gt; Left option  &amp;gt; +Esc&lt;br /&gt;
+Preferences &amp;gt; Profiles &amp;gt; Keys &amp;gt; Right option &amp;gt; +Esc&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.10rane.com/tech/wp-content/uploads/2013/02/06_iterm2.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;cmd-w-ですぐにターミナルを終了しないようにする:591bddd21d8821b8395d80ad9e332964&#34;&gt;cmd + w ですぐにターミナルを終了しないようにする&lt;/h3&gt;
+
+&lt;p&gt;Preferences &amp;gt; Profiles &amp;gt; Session &amp;gt; Always prompt before closing&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://blog.10rane.com/tech/wp-content/uploads/2013/02/07_iterm2.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:591bddd21d8821b8395d80ad9e332964&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/kmn23/20120215/1329323332&#34;&gt;Lionにiterm2とtmux と libeventをインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://weboo-returns.com/blog/using-iterm2-as-visor/&#34;&gt;iTerm2 を Visor のように使う方法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.bungu-do.jp/archives/3434&#34;&gt;MacのiTerm2でEmacsを使用するときのMetaキー設定&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>MacにRictyをインストールする</title>
+      <link>http://tatsuyano.github.io/2012/09/16/mac-ricky/</link>
+      <pubDate>Sun, 16 Sep 2012 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2012/09/16/mac-ricky/</guid>
+      <description>
+
+&lt;h2 id=&#34;rictyとは:a83bd3c9298fc7c9b8a459e9131d8bd9&#34;&gt;Rictyとは&lt;/h2&gt;
+
+&lt;p&gt;去年あたりから話題だったRictyをなんとなくインストールしてみました。&lt;br /&gt;
+フォントの特徴は、本家サイトに詳しく書いてあるので見て頂くとして、個人的には「半角文字と全角文字の横幅の比が 1:2 に調整される」ところが素敵だなあと思います。&lt;/p&gt;
+
+&lt;h2 id=&#34;インストールの前に:a83bd3c9298fc7c9b8a459e9131d8bd9&#34;&gt;インストールの前に&lt;/h2&gt;
+
+&lt;p&gt;Rictyをインストール(生成する)には、事前に&lt;br /&gt;
+1.「fontforge」がインストールされていること&lt;br /&gt;
+2.「Inconsolata」と「Migu 1M」をダウンロードしていること&lt;br /&gt;
+が前提となります。&lt;/p&gt;
+
+&lt;h2 id=&#34;fontforgeのインストール:a83bd3c9298fc7c9b8a459e9131d8bd9&#34;&gt;fontforgeのインストール&lt;/h2&gt;
+
+&lt;p&gt;homebrewでインストールします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew install fontforge --use-gcc --without-python
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;ricty本体のダウンロード:a83bd3c9298fc7c9b8a459e9131d8bd9&#34;&gt;Ricty本体のダウンロード&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;git clone git://github.com/yascentur/Ricty.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;inconsolata-migu-1mのダウンロード:a83bd3c9298fc7c9b8a459e9131d8bd9&#34;&gt;Inconsolata、Migu 1Mのダウンロード&lt;/h2&gt;
+
+&lt;p&gt;ダウンロード先は、先程cloneしてできたRictyディレクトリ内にしました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd git/Ricty
+wget http://levien.com/type/myfonts/Inconsolata.otf
+wget &#39;http://sourceforge.jp/frs/redir.php?m=iij&amp;amp;f=%2Fmix-mplus-ipa%2F56156%2Fmigu-1m-20120411-2.zip&#39;
+unzip migu-1m-20120411-2.zip
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;rictyの生成:a83bd3c9298fc7c9b8a459e9131d8bd9&#34;&gt;Rictyの生成&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;sh ricty_generator.sh auto
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;生成したフォントをコピー:a83bd3c9298fc7c9b8a459e9131d8bd9&#34;&gt;生成したフォントをコピー&lt;/h2&gt;
+
+&lt;p&gt;Macのフォントは/Library/Fonts以下で管理しているので、生成したRictyをcopy。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cp -a Ricty*.ttf /Library/Fonts
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;ターミナルのフォントの設定をrictyにする:a83bd3c9298fc7c9b8a459e9131d8bd9&#34;&gt;ターミナルのフォントの設定をRictyにする&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/ricty001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;他のサイトではemacs単体のみに設定していることが多かったんですが、&lt;br /&gt;
+せっかくなんでターミナル全体に設定します。ちなみに私はTotalTerminal派です。&lt;/p&gt;
+
+&lt;h2 id=&#34;実行画面:a83bd3c9298fc7c9b8a459e9131d8bd9&#34;&gt;実行画面&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/ricty002.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;見ていただくと解るように&lt;br /&gt;
+「半角文字と全角文字の横幅の比が 1:2に調整されている」&lt;br /&gt;
+「全角スペースが可視化されている」ことがわかります。&lt;br /&gt;
+文字自体は少し丸っこくて初めはちょっとだけ違和感があったのですが、慣れるとすごく見やすく感じてきました。&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:a83bd3c9298fc7c9b8a459e9131d8bd9&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://save.sys.t.u-tokyo.ac.jp/~yusa/fonts/ricty.html&#34;&gt;プログラミング用フォント Ricty&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://show-web.jp/2012/01/31/mac-os-x-lion%E7%92%B0%E5%A2%83netbeans-ide%E3%81%AB%E3%83%97%E3%83%AD%E3%82%B0%E3%83%A9%E3%83%9F%E3%83%B3%E3%82%B0%E7%94%A8%E3%83%95%E3%82%A9%E3%83%B3%E3%83%88ricty%E5%B0%8E%E5%85%A5/&#34;&gt;Mac OS X Lion環境NetBeans IDEにプログラミング用フォントRicty導入&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

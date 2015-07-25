@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>anyenvをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Anyenvをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Aug 19, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/php" >php</a> <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/nodejs" >nodejs</a> <a href="http://tatsuyano.github.io/tags/python" >python</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>以前導入したanyenvのインストール方法を忘れないようメモしておきます。</p>
+
+<p>anyenvは ruby、perl、python、nodejs、php(phpenv) のバージョン管理を一元化してくれるツールです。これでhome直下がずいぶんスッキリ。素敵です。</p>
+
+<h3 id="インストール:14bcb1cdd9b62f61ca95a6e6fd5293c5">インストール</h3>
+
+<p>ダウンロード</p>
+
+<pre><code>$ git clone https://github.com/riywo/anyenv ~/.anyenv
+</code></pre>
+
+<p>$HOME/.zshrc</p>
+
+<pre><code>$ echo 'export PATH=&quot;$HOME/.anyenv/bin:$PATH&quot;' &gt;&gt; ~/.zshrc
+$ echo 'eval &quot;$(anyenv init - zsh)&quot;' &gt;&gt; ~/.zshrc
+</code></pre>
+
+<p>私は<code>oh-my-zsh</code>を使っているので、実際は<code>~/.zshrc</code>ではなく、<code>~/.oh-my-zsh/custom/main.zsh</code>に設定しています。</p>
+
+<p>シェルを再実行し、anyenvの設定を反映させます。<br />
+<code>source $HOME/.zshrc</code> でも結構です。</p>
+
+<pre><code>$ exec $SHELL -l
+$ which anyenv
+~/.anyenv/bin/anyenv
+</code></pre>
+
+<ul>
+<li><a href="http://qiita.com/luckypool/items/f1e756e9d3e9786ad9ea">anyenvで開発環境を整える</a></li>
+<li><a href="http://qiita.com/DQNEO/items/ebf50c39f83970f1127c">completions/plenv.bash:16: command not found: completeの対処法</a></li>
+</ul>
+
+<h3 id="rubyのインストール:14bcb1cdd9b62f61ca95a6e6fd5293c5">rubyのインストール</h3>
+
+<p>とりあえずanyenv経由でrubyをインストールします。
+rubyをインストールするには、事前にOpenSSL系のライブラリが必要なのでインストールしておきます。</p>
+
+<p>また<a href="http://blog.10rane.com/2014/09/01/set-up-ruby-mode-of-emacs/">別記事</a>で紹介している<code>robe</code>を使うには、<code>read-line</code>が必要なので、入れておきます。</p>
+
+<pre><code>$ sudo yum -y install openssl-devel
+$ sudo yum -y install readline-devel
+</code></pre>
+
+<ul>
+<li><a href="http://futurismo.biz/archives/1389">CentOSに rbenv 経路で Ruby 2.0.0-p195を入れようとしたら、エラー</a></li>
+</ul>
+
+<p>まずはrbenvはインストールします。</p>
+
+<pre><code>$ anyenv install rbenv
+$ anyenv versions
+rbenv:
+* system (set by /home/$USER/.anyenv/envs/rbenv/version)
+</code></pre>
+
+<p>バージョンは2.1.0を入れてみます。</p>
+
+<pre><code>$ rbenv install 2.1.0
+$ rbenv global 2.1.0
+
+$ anyenv versions
+rbenv:
+system
+* 2.1.0 (set by /home/$USER/.anyenv/envs/rbenv/version)
+</code></pre>
+
+<p><em>反映されない時は</em><code>source $HOME/.zshrc</code><em>で設定を読み込み直して下さい。</em></p>
+
+<p>試しに<code>bundler</code>をインストールしてみます。</p>
+
+<pre><code>$ which gem
+/home/$USER/.anyenv/envs/rbenv/shims/gem
+$ gem install bundler
+$ which bundle
+/home/$USER/.anyenv/envs/rbenv/shims/bundle
+</code></pre>
+
+<h3 id="pythonのインストール:14bcb1cdd9b62f61ca95a6e6fd5293c5">pythonのインストール</h3>
+
+<pre><code>$ sudo yum -y install patch
+$ anyenv install pyenv
+$ pyenv install 3.3.3
+$ pyenv global 3.3.3
+</code></pre>
+
+<h3 id="node-jsのインストール:14bcb1cdd9b62f61ca95a6e6fd5293c5">node.jsのインストール</h3>
+
+<pre><code>$ anyenv install ndenv
+$ ndenv install v0.10.26
+$ ndenv global v0.10.26
+</code></pre>
+
+<p>他の言語も流れは同じです。<br />
+お疲れ様でした。</p>
+
+<h3 id="参考サイト:14bcb1cdd9b62f61ca95a6e6fd5293c5">参考サイト</h3>
+
+<ul>
+<li><a href="http://qiita.com/luckypool/items/f1e756e9d3e9786ad9ea">anyenvで開発環境を整える</a></li>
+<li><a href="http://qiita.com/DQNEO/items/ebf50c39f83970f1127c">completions/plenv.bash:16: command not found: completeの対処法</a></li>
+</ul>
+
+<h3 id="関連する記事:14bcb1cdd9b62f61ca95a6e6fd5293c5">関連する記事</h3>
+
+<ul>
+<li><a href="http://tatsuyano.github.io/2014/12/04/how-to-install-and-setup-phpenv/">phpenvを導入する</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

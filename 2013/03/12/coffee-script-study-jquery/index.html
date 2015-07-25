@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CoffeeScriptの勉強 その４(クラス、Jquery) -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>CoffeeScriptの勉強 その４(クラス、Jquery)</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Mar 12, 2013
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/coffeescript" >coffeescript</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h4 id="クラス:fa6e0cd71057716f64eecd7101a8342e">クラス</h4>
+
+<pre><code class="language-coffeescript">class Animal
+  constructor:(name) -> @name = name
+    say:(word) -> console.log "#{@name} said: #{word}"
+
+class Dog extends Animal
+  constructor:(name) -> super name
+    say:(word) -> super "Bowwow, #{word}"
+
+dog = new Dog("Bob")
+dog.say("hello")
+</code></pre>
+<br>
+
+#### 静的なプロパティ
+
+クラスの静的なプロパティを定義するには変数名の頭に@を付けます。
+
+<pre><code class="language-coffeescript">class Dog
+  @TYPE_CHIHUAHUA = 1
+</code></pre>
+
+<p>コンパイル結果↓</p>
+
+<pre><code class="language-coffeescript">var Dog;
+Dog = (function() {
+  function Dog() {}
+    Dog.TYPE_CHIHUAHUA = 1;
+    return Dog;
+})();
+</code></pre>
+
+<p>クラスの静的なプロパティの使い方というか、そもそもJsのオブジェクト指向、クロージャの実装がしっかりと理解していない。ここは後日勉強する。
+<br></p>
+
+<h4 id="無名関数:fa6e0cd71057716f64eecd7101a8342e">無名関数</h4>
+
+<p>setTimeoutなど引数に無名関数を渡したい場合は、次の行頭にカンマを付けます。</p>
+
+<pre><code class="language-coffeescript">setTimeout ->
+  console.log("ok")
+  ,1000
+</code></pre>
+
+<p>コンパイル結果↓</p>
+
+<p><pre><code class="language-coffeescript">setTimeout(function() {
+  return console.log(&ldquo;ok&rdquo;);
+},1000);
+</code></pre>
+<br></p>
+
+<h4 id="コンパイルせずに-直接coffeescriptを記述する方法:fa6e0cd71057716f64eecd7101a8342e">コンパイルせずに、直接CoffeeScriptを記述する方法</h4>
+
+<p>本家サイトに置いてある、「coffee-script.js」を読み込んで、scriptタグ
+「script type=&ldquo;text/coffeescript&rdquo;」で囲むと、直接CoffeeScriptが記述できる。</p>
+
+<pre><code class="language-html">&lt;script type=&quot;text/javascript&quot; src=&quot;http://coffeescript.org/extras/coffee-script.js&quot;&gt; &lt;/script&gt;
+&lt;script type=&quot;text/coffeescript&quot;&gt;
+        hogehoge...
+&lt;/script&gt;
+</code></pre>
+
+<p><br></p>
+
+<h4 id="coffeescriptで-jqueryを使う:fa6e0cd71057716f64eecd7101a8342e">CoffeeScriptで、Jqueryを使う</h4>
+
+<p>これは、とくに考えずに、そのままCoffeeScriptで記述するだけ。
+Jsで書くより、カッコの入れ子がなくなり読みやすくなる。</p>
+
+<pre><code class="language-html">&lt;script type=&quot;text/coffeescript&quot;&gt;
+    $('#add-more').click -&gt;
+          $('#add-more').hide()
+          $('#task-add').fadeIn()
+&lt;/script&gt;
+</code></pre>
+
+<p><br></p>
+
+<h4 id="参考サイト:fa6e0cd71057716f64eecd7101a8342e">参考サイト</h4>
+
+<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
+
+<ul>
+<li><a href="http://tech.kayac.com/archive/coffeescript-tutorial.html#coffee_syntax_classes">今日から始めるCoffeeScript</a></li>
+<li><a href="http://kudox.jp/java-script/js-private-static">JavaScriptのクロージャを利用したprivate staticメンバ</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

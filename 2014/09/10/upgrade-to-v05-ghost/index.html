@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Ghostをv0.5にアップグレードする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Ghostをv0.5にアップグレードする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Sep 10, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/blog" >blog</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>運用中のGhost(v0.4)にGhost(v0.5)のファイルを一部コピーするだけで、アップグレードすることができます。</p>
+
+<p>以下のような構成で話をすすめます。</p>
+
+<pre><code>$ tree $HOME/app -d -L 1
+
+$HOME/app
+├── ghost     #&lt;- 運用中のGhost(v0.4)
+└── ghost.v5  #&lt;- コピー元のGhost(v0.5)
+</code></pre>
+
+<h3 id="ghost-v0-5のダウンロード:c290fcb14b6458c0488fd77ee1159704">Ghost v0.5のダウンロード</h3>
+
+<pre><code>$ cd app
+$ curl -L https://ghost.org/zip/ghost-latest.zip -o ghost.zip
+$ unzip -uo ghost.zip -d ghost.v5
+</code></pre>
+
+<h3 id="ghost-v0-5から一部ファイルをコピーする:c290fcb14b6458c0488fd77ee1159704">Ghost v0.5から一部ファイルをコピーする</h3>
+
+<p>コピーする前に<code>forever</code>を止めてください。</p>
+
+<pre><code>$ cd $HOME/app/ghost
+$ NODE_ENV=production forever stop index.js
+</code></pre>
+
+<p>　</p>
+
+<pre><code>$ cd ../ghost.v5/
+$ cp -a *.md *.js *.json ../ghost/
+$ cp -R core ../ghost
+$ cp -R content/themes/casper ../ghost/content/themes
+</code></pre>
+
+<p>nodeパッケージを再インストール</p>
+
+<pre><code>$ cd ../ghost
+$ npm install --production
+</code></pre>
+
+<p><code>config.js</code>も上書いた(コピーした)ので、urlを変更します。</p>
+
+<p>ghost/config.js</p>
+
+<pre><code>config = {
+    // ### Development **(default)**
+    development: {
+        // The url to use when providing links to the site, E.g. in RSS and email.
+//        url: 'http://my-ghost-blog.com',
+        url: 'http://blog.10rane.com',
+
+    production: {
+//        url: 'http://my-ghost-blog.com',
+        url: 'http://blog.10rane.com',
+        mail: {},
+</code></pre>
+
+<p><code>forever</code>を起動</p>
+
+<pre><code>$ NODE_ENV=production forever start index.js
+</code></pre>
+
+<p>これでアップグレードの完了です。<br />
+お疲れ様でした。</p>
+
+<h3 id="参考サイト:c290fcb14b6458c0488fd77ee1159704">参考サイト</h3>
+
+<ul>
+<li><a href="http://docs.ghost.org/ja/installation/upgrading/">Ghostのアップグレードについて</a></li>
+</ul>
+
+<h3 id="関連する記事:c290fcb14b6458c0488fd77ee1159704">関連する記事</h3>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/09/09/how-to-install-and-setup-ghost-on-amazon-linux/">Amazon LinuxにGhostをインストールする</a></li>
+<li><a href="http://blog.10rane.com/2014/08/10/get-access-ip-installed-google-analytics-to-ghost/">GhostにGoogle Analyticsに設置しアクセス元IPを取得する</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

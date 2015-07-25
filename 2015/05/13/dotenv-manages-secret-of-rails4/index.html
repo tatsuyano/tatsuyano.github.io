@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Rails4の非公開情報をdotenvで管理する -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Rails4の非公開情報をdotenvで管理する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, May 13, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/heroku" >heroku</a> <a href="http://tatsuyano.github.io/tags/rails" >rails</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>TwitterのAPIキーなど、公開したくない情報をどこに設定すればいいか調べたところ、
+<code>config/secrets.yml</code>に設定して、<code>.gitignore</code>して使うようなので、設定してみました。</p>
+
+<pre><code class='language-ruby'># config/secrets.yml
+development:
+  twitter_api_key: hogefuga.....
+
+# 呼び出し側
+key = Rails.application.secrets.twitter_api_key
+</code></pre>
+<br>
+
+しかしherokuを利用する場合、この`secrets.yml`というファイル自体必須なので、`.gitignore`するわけにはいきません。
+
+* [How to solve error "Missing secret_key_base   for production environment" on
+Heroku](http://stackoverflow.com/questions/23180650/how-to-solve-error-missing-secret-key-base-for-production-environment-on-h)
+
+## dotenv-railsの設定
+
+そこで検討した結果、`dotenv-rails`というGemを使うことにしました。
+このGemを使うと、アプリケーションごとに環境変数(非公開情報)が設定できるようになり、
+`secrets.yml`に公開したくない情報を設定しなくても良くなります。
+
+<pre><code class='language-ruby'># Gemfile
+gem 'dotenv-rails'
+</code></pre>
+
+<p>まず、アプリケーションのディレクトリの直下に<code>.env</code>というファイルを作成し、環境変数を設定します。</p>
+
+<pre><code class='language-ruby'># .env
+TWITTER_API_KEY="hogehoge"
+TWITTER_API_SECRET="fugafuga"
+</code></pre>
+
+<p>読み出す時は、以下のように指定します。
+<pre><code class='language-ruby'>puts ENV[&lsquo;TWITTER_API_KEY&rsquo;] # =&gt; &ldquo;hogehoge&rdquo;
+</code></pre></p>
+
+<p>最後に<code>.env</code>ファイルを<code>.gitignore</code>します。<br />
+以上で完了です。</p>
+
+<h2 id="herokuに環境変数を設定する:51a96cd6c0e962b72bbcd741a4bc7fd0">herokuに環境変数を設定する</h2>
+
+<p>ちなみに、herokuに環境変数を設定するには以下のように指定します。</p>
+
+<p><pre><code class='language-bash'>$ heroku config:add TWITTER_API_KEY=&ldquo;hogehoge&rdquo;    &ndash;app アプリ名
+$ heroku config:add TWITTER_API_SECRET=&ldquo;fugafuga&rdquo; &ndash;app アプリ名
+</code></pre>
+<br></p>
+
+<h2 id="参考サイト:51a96cd6c0e962b72bbcd741a4bc7fd0">参考サイト</h2>
+
+<ul>
+<li><a href="http://xoyip.hatenablog.com/entry/2014/04/09/214405">Rails4.1のsecrets.ymlはfigaroと違うの？</a></li>
+<li><a href="http://railsguides.jp/security.html#%E5%88%A9%E7%94%A8%E7%92%B0%E5%A2%83%E3%81%AE%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3">Rails セキュリティガイド 10 利用環境のセキュリティ
+</a></li>
+<li><a href="http://jangajan.com/blog/2014/10/05/secrets-dot-yml-on-heroku-in-rails4-dot-1/">Rails4.1でherokuへのデプロイに失敗(Missing &lsquo;secret_key_base&rsquo;)</a></li>
+<li><a href="http://t4traw.github.io/20141215/study-rails-secrets-yml.html">RailsチュートリアルをRails(4.1)で勉強する：secret_key_baseからsecrets.yml</a></li>
+<li><a href="http://qiita.com/closer/items/f8d8ba00ae86d7051764">環境によって変わる設定値はdotenvを使うと便利</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

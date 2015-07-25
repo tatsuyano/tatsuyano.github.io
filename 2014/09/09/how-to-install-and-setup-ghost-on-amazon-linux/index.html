@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Amazon LinuxにGhostをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Amazon LinuxにGhostをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Sep 9, 2014
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/blog" >blog</a> <a href="http://tatsuyano.github.io/tags/nginx" >nginx</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>新たに<code>t2.micro</code>のインスタンスを立ち上げたので、Ghost を新規でインストールしようと思います。</p>
+
+<h3 id="node-js-のインストール:1de3ebcd72298143cbf6759e7ec6289b">Node.js のインストール</h3>
+
+<p><code>anyenv</code>を使って、<code>0.10.0</code>以上のNode.js をインストールしてください。</p>
+
+<pre><code>$ which node
+HOME/.anyenv/envs/ndenv/shims/node
+
+$ which npm
+$HOME/.anyenv/envs/ndenv/shims/npm
+
+$ node --version
+v0.10.26
+</code></pre>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/08/19/install-anyenv/">anyenvをインストールする</a></li>
+</ul>
+
+<h3 id="nginx-のインストール:1de3ebcd72298143cbf6759e7ec6289b">nginx のインストール</h3>
+
+<p><code>yum</code>でのバージョンは1.4.7と少し古いですが、面倒なのでインストール</p>
+
+<pre><code>$ sudo yum -y install nginx
+
+$ /usr/sbin/nginx -v
+nginx version: nginx/1.4.7
+
+$ sudo chkconfig nginx on
+$ sudo chkconfig --list | grep nginx
+nginx           0:off   1:off   2:on    3:on    4:on    5:on    6:off
+</code></pre>
+
+<p>念のため起動テスト</p>
+
+<pre><code>$ sudo /etc/init.d/nginx start
+</code></pre>
+
+<h4 id="confの設定:1de3ebcd72298143cbf6759e7ec6289b">confの設定</h4>
+
+<p>特定のドメインのみを停止(切り離)したりするために、
+設定ファイルのリンクを貼ったディレクトリを<code>include</code>します。</p>
+
+<p><code>sites-available</code>にはドメインごとの設定ファイル、
+<code>sites-enabled</code>には設定ファイルのリンクを貼ります。</p>
+
+<pre><code>$ sudo bash
+# cd /etc/nginx
+# mkdir sites-available sites-enabled
+
+# touch sites-available/blog.10rane.com.conf
+# ln -s /etc/nginx/sites-available/blog.10rane.com.conf /etc/nginx/sites-enabled/blog.10rane.com.conf
+</code></pre>
+
+<p>sites-available/blog.10rane.com.conf</p>
+
+<pre><code>server {
+    listen 80;
+    server_name blog.10rane.com;
+
+    location / {
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   Host      $http_host;
+        proxy_pass         http://127.0.0.1:2368;
+    }
+}
+</code></pre>
+
+<p>シンボリックリンク<code>sites-enabled</code>を<code>httpディレクティブ</code>に<code>include</code>します。</p>
+
+<p>/etc/nginx/nginx.conf</p>
+
+<pre><code>http {
+    include       /etc/nginx/sites-enabled/*.conf; # for Ghost
+....
+</code></pre>
+
+<p>Nginx の再起動</p>
+
+<pre><code>$ sudo /etc/init.d/nginx restart
+</code></pre>
+
+<ul>
+<li><a href="http://docs.ghost.org/ja/installation/linux/">LinuxにGhostをインストールする方法</a></li>
+</ul>
+
+<h3 id="ghost-のダウンロード-インストール:1de3ebcd72298143cbf6759e7ec6289b">Ghost のダウンロード&amp;インストール</h3>
+
+<p><code>npm start</code>を実行すると、フォアグラウンドで実行される。実運用するためには、
+Ghost を永続的に動かすためには、Nodeパッケージの<code>forever</code>などを使う必要があります。</p>
+
+<pre><code>$ mkdir $HOME/app
+$ cd app
+$ curl -L https://ghost.org/zip/ghost-latest.zip -o ghost.zip
+$ unzip -uo ghost.zip -d ghost
+
+$ cd ghost
+$ npm install --production
+$ npm start
+</code></pre>
+
+<p>$HOME/app/ghost/config.js</p>
+
+<pre><code>config = {
+    // ### Development **(default)**
+    development: {
+        // The url to use when providing links to the site, E.g. in RSS and email.
+//        url: 'http://my-ghost-blog.com',
+        url: 'http://blog.10rane.com',
+...
+
+    production: {
+//        url: 'http://my-ghost-blog.com',
+        url: 'http://blog.10rane.com',
+</code></pre>
+
+<h3 id="forever-のインストール:1de3ebcd72298143cbf6759e7ec6289b">forever のインストール</h3>
+
+<p>Ghost をバックグラウンドで動かすために<code>forever</code>を使います。
+<code>forever</code>は別パッケージでもよく使うので、<code>-g</code>オプションを指定してグローバルインストールします。</p>
+
+<pre><code>$ npm install forever -g
+
+$ ndenv which forever
+$HOME/.anyenv/envs/ndenv/versions/v0.10.26/bin/forever
+
+$ source $HOME/.zshrc
+</code></pre>
+
+<p><code>forever</code>の起動</p>
+
+<pre><code>$ cd $HOME/app/ghost
+$ NODE_ENV=production forever start index.js
+</code></pre>
+
+<p>これでGhost を運用できるようになりました。<br />
+お疲れ様でした。</p>
+
+<h3 id="参考サイト:1de3ebcd72298143cbf6759e7ec6289b">参考サイト</h3>
+
+<ul>
+<li><a href="http://blog.10rane.com/2014/08/19/install-anyenv/">anyenvをインストールする</a></li>
+<li><a href="http://docs.ghost.org/ja/installation/linux/">LinuxにGhostをインストールする方法</a></li>
+<li><a href="http://docs.ghost.org/ja/installation/deploy/#foreverを使う場合-(https://npmjs.org/package/forever">Foreverを使う場合</a>)</li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

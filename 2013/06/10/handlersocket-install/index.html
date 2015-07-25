@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>HandlerSocketをインストールする -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>HandlerSocketをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Mon, Jun 10, 2013
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/php" >php</a> <a href="http://tatsuyano.github.io/tags/mysql" >mysql</a> <a href="http://tatsuyano.github.io/tags/middleware" >middleware</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="インストールする内容:70ecf40fc52ac5a33c486956612d2368">インストールする内容</h2>
+
+<ul>
+<li>rpm版 MySQL 5.1.68</li>
+<li>HandlerSocket-Plugin-for-MySQL 最新版(2013/06/05)</li>
+<li>php-handlersocket 0.3.1</li>
+</ul>
+
+<h2 id="作業の流れ:70ecf40fc52ac5a33c486956612d2368">作業の流れ</h2>
+
+<ol>
+<li>すでにyumでインストールしてあるMySQLの削除</li>
+<li>MySQL(rpm版)のインストール</li>
+<li>Handler Socketのインストール</li>
+<li>php-handlersocketのインストール</li>
+</ol>
+
+<h2 id="すでにyumでインストールしてあるmysqlの削除:70ecf40fc52ac5a33c486956612d2368">すでにyumでインストールしてあるMySQLの削除</h2>
+
+<p>前にテスト導入で成功したバージョンにあわせるため、yumでインストールしたMySQLを削除</p>
+
+<h3 id="インストール済みのmysqlを確認:70ecf40fc52ac5a33c486956612d2368">インストール済みのMySQLを確認</h3>
+
+<pre><code>yum list installed | grep mysql
+mysql.x86_64            5.1.69-1.el6_4  @updates
+mysql-libs.x86_64       5.1.69-1.el6_4  @updates
+mysql-server.x86_64     5.1.69-1.el6_4  @updates
+php-mysql.x86_64        5.3.3-22.el6    @base
+</code></pre>
+
+<h3 id="chkconfigからmysqldをoff:70ecf40fc52ac5a33c486956612d2368">chkconfigからmysqldをoff</h3>
+
+<pre><code>chkconfig --list mysqld
+mysqld          0:off   1:off   2:on    3:on    4:on    5:on    6:off
+
+chkconfig mysqld off
+</code></pre>
+
+<h3 id="yumでインストールしたmysqlを削除:70ecf40fc52ac5a33c486956612d2368">yumでインストールしたMySQLを削除</h3>
+
+<pre><code>yum -y remove mysql mysql-server mysql-libs
+</code></pre>
+
+<h2 id="mysql-rpm版-のインストール:70ecf40fc52ac5a33c486956612d2368">MySQL(rpm版)のインストール</h2>
+
+<p>過去にインストールしたmysqlのバージョンは5.1.66 だったが見つからなかったので、<br />
+近いバージョンの5.1.68をインストールすることにした。</p>
+
+<h3 id="インストール先のディレクトリ作成:70ecf40fc52ac5a33c486956612d2368">インストール先のディレクトリ作成</h3>
+
+<pre><code>mkdir -p /usr/src/redhat/RPMS/x86_64/
+cd /usr/src/redhat/
+mkdir BUILD SOURCES SPECS SRPMS
+</code></pre>
+
+<h3 id="rpmファイルのダウンロード:70ecf40fc52ac5a33c486956612d2368">rpmファイルのダウンロード</h3>
+
+<pre><code>cd /usr/src/redhat/RPMS/x86_64/
+wget http://download.softagency.net/MySQL/Downloads/MySQL-5.1/MySQL-client-community-5.1.68-1.rhel5.x86_64.rpm
+wget http://download.softagency.net/MySQL/Downloads/MySQL-5.1/MySQL-server-community-5.1.68-1.rhel5.x86_64.rpm
+wget http://download.softagency.net/MySQL/Downloads/MySQL-5.1/MySQL-devel-community-5.1.68-1.rhel5.x86_64.rpm
+wget http://download.softagency.net/MySQL/Downloads/MySQL-5.1/MySQL-shared-community-5.1.68-1.rhel5.x86_64.rpm
+</code></pre>
+
+<h3 id="インストール:70ecf40fc52ac5a33c486956612d2368">インストール</h3>
+
+<pre><code>rpm -ivh MySQL*.rpm
+</code></pre>
+
+<h3 id="インストールの確認:70ecf40fc52ac5a33c486956612d2368">インストールの確認</h3>
+
+<pre><code>/etc/init.d/mysql start
+/usr/bin/mysql -uroot
+</code></pre>
+
+<h2 id="handler-socketのインストール:70ecf40fc52ac5a33c486956612d2368">Handler Socketのインストール</h2>
+
+<p>Handler Socketをインストールするには、MySQLのソース版とgitが必要。</p>
+
+<h3 id="起動中のmysqlを停止させる-念のため:70ecf40fc52ac5a33c486956612d2368">起動中のMySQLを停止させる(念のため)</h3>
+
+<pre><code>/etc/init.d/mysql stop
+</code></pre>
+
+<h3 id="mysqlのソース版をダウンロード:70ecf40fc52ac5a33c486956612d2368">MySQLのソース版をダウンロード</h3>
+
+<p>ダウンロードするソースは、先ほどインストールしたMySQL 5.1.68と合わせること。</p>
+
+<pre><code>cd /usr/src/redhat/SRPMS/
+wget http://download.softagency.net/MySQL/Downloads/MySQL-5.1/MySQL-community-5.1.68-1.rhel5.src.rpm
+rpm -ivh MySQL-community-5.1.68-1.rhel5.src.rpm
+</code></pre>
+
+<pre><code>cd /usr/src/redhat/SOURCES/
+wget http://download.softagency.net/MySQL/Downloads/MySQL-5.1/mysql-5.1.68.tar.gz
+tar xvzf mysql-5.1.68.tar.gz
+</code></pre>
+
+<h3 id="必要なライブラリなどをyumでインストール:70ecf40fc52ac5a33c486956612d2368">必要なライブラリなどをyumでインストール</h3>
+
+<pre><code>yum -y install libtool gcc gcc-c++ openssl-devel
+</code></pre>
+
+<h3 id="handlersocket-plugin-for-mysqlをダウンロード-git-clone:70ecf40fc52ac5a33c486956612d2368">HandlerSocket-Plugin-for-MySQLをダウンロード(git clone)</h3>
+
+<pre><code>cd /tmp/
+git clone git://github.com/ahiguti/HandlerSocket-Plugin-for-MySQL.git
+</code></pre>
+
+<h3 id="configure-and-make-install:70ecf40fc52ac5a33c486956612d2368">configure and make install</h3>
+
+<pre><code>cd /tmp/HandlerSocket-Plugin-for-MySQL/
+
+./autogen.sh
+
+./configure \
+--with-mysql-source=/usr/src/redhat/SOURCES/mysql-5.1.68 \
+--with-mysql-bindir=/usr/bin \
+--with-mysql-plugindir=/usr/lib64/mysql/plugin
+make
+make install
+</code></pre>
+
+<ul>
+<li>with-mysql-source&hellip;.. MySQLのソースコードのトップディレクトリを指定します。</li>
+<li>with-mysql-bindir&hellip;.. インストール済みのMySQLのmysql_configコマンドが有るディレクトリを指定します。&rdquo;which mysql_config&rdquo;で調べます。</li>
+<li>with-mysql-plugindir.. MySQLのpluginディレクトリを指定します。以下のコマンドで確認できます。</li>
+</ul>
+
+<pre><code>cd /usr/src/redhat/RPMS/x86_64/
+rpm -ql MySQL-server-community-5.1.68-1.rhel5 | grep plugin
+/usr/lib64/mysql/plugin/ha_innodb_plugin.so
+/usr/lib64/mysql/plugin/ha_innodb_plugin.so.0
+/usr/lib64/mysql/plugin/ha_innodb_plugin.so.0.0.0
+</code></pre>
+
+<h3 id="configure-時の注意:70ecf40fc52ac5a33c486956612d2368">configure 時の注意</h3>
+
+<p>自分は &ndash;with-mysql-plugindirのパスを間違えて、<br />
+&ndash;with-mysql-plugindir=/usr/lib64/mysql/plugin ではなく、<br />
+&ndash;with-mysql-plugindir=/usr/lib/mysql/plugin で指定したために、<br />
+「libtool: link: only absolute run-paths are allowed」とうエラーが出てしまいうまくいかなった。<br />
+うまくいかないときは、一度 make clean して再度 configure のパラメータを確認すること。</p>
+
+<h3 id="handlersocketのpluginが入っているか-インストールがうまくいっているかの-確認:70ecf40fc52ac5a33c486956612d2368">handlersocketのpluginが入っているか(インストールがうまくいっているかの)確認</h3>
+
+<pre><code>ll /usr/lib64/mysql/plugin/handlersocket*
+-rw-r--r-- 1 root root  3519732  6月  7 10:16 2013 handlersocket.a
+-rwxr-xr-x 1 root root      972  6月  7 10:16 2013 handlersocket.la
+lrwxrwxrwx 1 root root       22  6月  7 10:16 2013 handlersocket.so -&gt; handlersocket.so.0.0.0
+lrwxrwxrwx 1 root root       22  6月  7 10:16 2013 handlersocket.so.0 -&gt; handlersocket.so.0.0.0
+-rwxr-xr-x 1 root root  1708138  6月  7 10:16 2013 handlersocket.so.0.0.0
+</code></pre>
+
+<h3 id="pluginのインストール:70ecf40fc52ac5a33c486956612d2368">pluginのインストール</h3>
+
+<pre><code>/etc/init.d/mysql start
+mysql -uroot;
+
+mysql&gt; install plugin handlersocket soname 'handlersocket.so';
+mysql&gt; show plugin;
++---------------+----------+----------------+------------------+---------+
+| Name          | Status   | Type           | Library          | License |
++---------------+----------+----------------+------------------+---------+
+| binlog        | ACTIVE   | STORAGE ENGINE | NULL             | GPL     |
+| partition     | ACTIVE   | STORAGE ENGINE | NULL             | GPL     |
+| ARCHIVE       | ACTIVE   | STORAGE ENGINE | NULL             | GPL     |
+| BLACKHOLE     | ACTIVE   | STORAGE ENGINE | NULL             | GPL     |
+| CSV           | ACTIVE   | STORAGE ENGINE | NULL             | GPL     |
+| FEDERATED     | DISABLED | STORAGE ENGINE | NULL             | GPL     |
+| MEMORY        | ACTIVE   | STORAGE ENGINE | NULL             | GPL     |
+| InnoDB        | ACTIVE   | STORAGE ENGINE | NULL             | GPL     |
+| MyISAM        | ACTIVE   | STORAGE ENGINE | NULL             | GPL     |
+| MRG_MYISAM    | ACTIVE   | STORAGE ENGINE | NULL             | GPL     |
+| handlersocket | ACTIVE   | DAEMON         | handlersocket.so | BSD     |
++---------------+----------+----------------+------------------+---------+
+11 rows in set, 1 warning (0.00 sec)
+</code></pre>
+
+<h3 id="my-cnf-の設定:70ecf40fc52ac5a33c486956612d2368">my.cnf の設定</h3>
+
+<pre><code>/etc/init.d/mysql stop
+cat &gt; /etc/my.cnf
+[mysqld]
+handlersocket_port =    9998 # handlersocketが接続を受け付けるポート(参照系リクエスト用)
+handlersocket_port_wr = 9999 # handlersocketが接続を受け付けるポート(更新系リクエスト用)
+handlersocket_address =      # handlersocketがバインドするアドレス(空のままでOK)
+handlersocket_verbose = 0    # デバッグ用
+handlersocket_timeout = 300  # 通信タイムアウト(秒)
+handlersocket_threads = 16   # handlersocketのワーカースレッド数
+thread_concurrency = 128     # handlersocketが幾つかのスレッドを占有するため、大きめの値を指定してください
+open_files_limit = 65535
+
+/etc/init.d/mysql start
+</code></pre>
+
+<h2 id="php-handlersocketのインストール:70ecf40fc52ac5a33c486956612d2368">php-handlersocketのインストール</h2>
+
+<h3 id="ソースのダウンロード:70ecf40fc52ac5a33c486956612d2368">ソースのダウンロード</h3>
+
+<pre><code>cd /tmp/
+wget https://php-handlersocket.googlecode.com/files/php-handlersocket-0.3.1.tar.gz
+tar xvzf php-handlersocket-0.3.1.tar.gz
+</code></pre>
+
+<h3 id="configure-and-make-install-1:70ecf40fc52ac5a33c486956612d2368">configure and make install</h3>
+
+<pre><code>cd handlersocket
+phpize
+./configure
+make
+make install
+Installing shared extensions:     /usr/lib64/php/modules/
+Installing header files:          /usr/include/php/
+</code></pre>
+
+<h3 id="php-iniへ追加-httpdの再起動:70ecf40fc52ac5a33c486956612d2368">php.iniへ追加、httpdの再起動</h3>
+
+<pre><code>echo &quot;extension=handlersocket.so&quot; &gt; /etc/php.d/hs.ini
+/etc/init.d/httpd restart
+</code></pre>
+
+<p>php.iniへの追加を行わなかったために、Class not found になってしまった。<br />
+PHP Fatal error:  Class &lsquo;HandlerSocket&rsquo; not found in /tmp/handlersocket/examples/example.php on line 12<br />
+モジュールをインストール後は、/etc/php.d/以下に設定ファイルを配置し、httpdを再起動する。</p>
+
+<ul>
+<li><a href="http://qiita.com/items/540fd2ecdc98a7549fcb">AWS EC2にhandlersocketを入れるまで</a></li>
+</ul>
+
+<h3 id="php-handlersocketのインストール確認:70ecf40fc52ac5a33c486956612d2368">php-handlersocketのインストール確認</h3>
+
+<p>まずはphpinfo.phpを確認する。</p>
+
+<blockquote>
+<p>handlersocket<br />
+MySQL HandlerSocket support enabled<br />
+extension Version           0.3.1<br />
+hsclient Library Support    enabled</p>
+</blockquote>
+
+<h3 id="exsampleを動かし-最終確認:70ecf40fc52ac5a33c486956612d2368">exsampleを動かし、最終確認</h3>
+
+<p>handlersocketに付属しているexamplesを実行し最終確認する。</p>
+
+<pre><code>cd /tmp/handlersocket/examples/
+</code></pre>
+
+<p>テスト用のDB、テーブルを作成し、6件ほどレコードをinsertする</p>
+
+<pre><code>emacs development.ja.php
+
+CREATE DATABASE hstestdb;
+
+CREATE TABLE hstesttbl (
+  k varchar(30) PRIMARY KEY,
+  v varchar(30) NOT NULL,
+  f1 varchar(30),
+  f2 varchar(30)
+) Engine = innodb;
+
+CREATE INDEX i1 ON hstesttbl(v, k);
+INSERT INTO hstesttbl VALUES ('k1', 'v1', 'f1', 'f2');
+INSERT INTO hstesttbl VALUES ('k2', 'v2', 'f2', NULL);
+INSERT INTO hstesttbl VALUES ('k3', 'v3', 'f3', '');
+INSERT INTO hstesttbl VALUES ('k4', 'v4', 'f4', 'f24');
+INSERT INTO hstesttbl VALUES ('k5', 'v5', 'f5', NULL);
+INSERT INTO hstesttbl VALUES ('k6', 'v6', 'f6', '');
+</code></pre>
+
+<p>php example.php
+<pre><code class="language-php">
+array(1) {
+  [0]=&gt;
+  array(2) {
+    [0]=&gt;
+    string(2) &ldquo;k1&rdquo;
+    [1]=&gt;
+    string(2) &ldquo;v1&rdquo;
+   }
+}
+array(1) {
+  [0]=&gt;
+  array(2) {
+    [0]=&gt;
+    string(2) &ldquo;k2&rdquo;
+    [1]=&gt;
+    string(2) &ldquo;v2&rdquo;
+   }
+}
+bool(false)
+56:op:
+</code></pre></p>
+
+<h2 id="参考サイト:70ecf40fc52ac5a33c486956612d2368">参考サイト</h2>
+
+<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
+
+<ul>
+<li><a href="http://kotaroito.hatenablog.com/entry/20111213/1323755054">CentOSにMySQLとHandler Socketを入れてみる</a></li>
+<li><a href="http://akitosblog.seesaa.net/article/193127939.html">Akito&rsquo;s IT技術 メモ</a></li>
+<li><a href="https://github.com/ahiguti/HandlerSocket-Plugin-for-MySQL">HandlerSocket-Plugin-for-MySQL</a></li>
+<li><a href="https://code.google.com/p/php-handlersocket/">php handler socket</a></li>
+<li><a href="http://www.slideshare.net/akirahiguchi/handlersocket-etc-20110906">HandlerSocket について + a</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+
