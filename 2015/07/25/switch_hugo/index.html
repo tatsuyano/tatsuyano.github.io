@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>ブログをHugoに移行した -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>ブログをHugoに移行した</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Sat, Jul 25, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/blog" >blog</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <p>今までaws上でブログ(Ghost)を運用していたが、無料期間が終わったら月2000円ちょっとかかったので、<br />
+もったいないので、またGithub Pages上にブログを移行させた。</p>
+
+<p>以前はOctopressを使っていたが、最近は<a href="http://gohugo.io/">Hugo</a>というのが、流行っているらしいのでHugoを使ってみた。<br />
+以外と記事が多かったので、スクリプトを書いてエクスポートさせた。</p>
+
+<p>以外と書くのに時間がかかったが、久々にrubyでなんか楽しかった。</p>
+
+<pre><code>#!/usr/bin/env ruby
+
+require 'unindent'
+require 'rss'
+require 'sqlite3'
+
+def make_article(db,item)
+  db.execute(sprintf(&quot;SELECT id, title, markdown FROM posts WHERE slug = '%s'&quot;, item[:slug])) do |row|
+    info = {
+      post_id: row[0],
+      title: row[1],
+      markdown: row[2],
+      tags: []
+    }
+    db.execute(sprintf(&quot;SELECT tags.name FROM posts_tags, tags WHERE posts_tags.post_id = %d AND posts_tags.tag_id = tags.id&quot;, info[:post_id])) do |row2|
+      info[:tags].push row2[0]
+    end
+
+    File.open(sprintf(&quot;post/%s&quot;,item[:file]),&quot;w&quot;) do |file|
+      article = &lt;&lt;-EOF.unindent
+        +++
+        date = &quot;#{item[:date]}&quot;
+        draft = false
+        image = &quot;/img/about-bg.jpg&quot;
+        tags = #{info[:tags]}
+        title = &quot;#{info[:title]}&quot;
+        slug = &quot;#{item[:slug]}&quot;
+        +++
+      EOF
+      
+      # info[:markdown]をヒアドキュメントに加えると、インデントが崩れたので、ヒアドキュメントの外で結合
+      article = sprintf&quot;%s\n%s&quot;, article, info[:markdown]
+      file.puts(article)
+    end
+  end
+end
+
+list = []
+blog = 'http://blog.10rane.com'
+(1..9).each do |num|
+  url = sprintf &quot;%s/rss/%d&quot;, blog, num # e.g. http://blog.10rane.com/rss/2
+  rss = RSS::Parser.parse(url)
+  rss.items.each do |entry|
+    all,year,month,day,slug = entry.link.match(%r|^#{blog}/(\d{4})/(\d{2})/(\d{2})/(.*)/$|).to_a
+
+    list.push({
+        slug: slug,
+        year: year,
+        month: month,
+        day: day,
+        ymd: sprintf(&quot;%s%s%s&quot;, year, month, day)
+      })
+  end
+end
+
+db = SQLite3::Database.new('ghost.db')
+hour = 1, old_ymd = ''
+list.sort!{|a,b| a[:ymd] &lt;=&gt; b[:ymd]}
+list.each do |item|
+  if old_ymd != item[:ymd] then
+    hour = 1
+    old_ymd = item[:ymd]
+  else
+    hour += 1
+  end
+  
+  item[:file] = sprintf &quot;%s_%s_%s_%s.md&quot;, item[:year], item[:month], item[:day], item[:slug]
+  item[:date] = sprintf &quot;%s-%s-%sT%02d:00:00+09:00&quot;, item[:year], item[:month], item[:day], hour
+  make_article(db,item)
+end
+</code></pre>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

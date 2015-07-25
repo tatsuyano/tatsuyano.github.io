@@ -6,8 +6,96 @@
     <description>Recent content in Blog on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Wed, 10 Sep 2014 01:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 25 Jul 2015 01:00:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/tags/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ブログをHugoに移行した</title>
+      <link>http://tatsuyano.github.io/2015/07/25/switch_hugo/</link>
+      <pubDate>Sat, 25 Jul 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/07/25/switch_hugo/</guid>
+      <description>&lt;p&gt;今までaws上でブログ(Ghost)を運用していたが、無料期間が終わったら月2000円ちょっとかかったので、&lt;br /&gt;
+もったいないので、またGithub Pages上にブログを移行させた。&lt;/p&gt;
+
+&lt;p&gt;以前はOctopressを使っていたが、最近は&lt;a href=&#34;http://gohugo.io/&#34;&gt;Hugo&lt;/a&gt;というのが、流行っているらしいのでHugoを使ってみた。&lt;br /&gt;
+以外と記事が多かったので、スクリプトを書いてエクスポートさせた。&lt;/p&gt;
+
+&lt;p&gt;以外と書くのに時間がかかったが、久々にrubyでなんか楽しかった。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/usr/bin/env ruby
+
+require &#39;unindent&#39;
+require &#39;rss&#39;
+require &#39;sqlite3&#39;
+
+def make_article(db,item)
+  db.execute(sprintf(&amp;quot;SELECT id, title, markdown FROM posts WHERE slug = &#39;%s&#39;&amp;quot;, item[:slug])) do |row|
+    info = {
+      post_id: row[0],
+      title: row[1],
+      markdown: row[2],
+      tags: []
+    }
+    db.execute(sprintf(&amp;quot;SELECT tags.name FROM posts_tags, tags WHERE posts_tags.post_id = %d AND posts_tags.tag_id = tags.id&amp;quot;, info[:post_id])) do |row2|
+      info[:tags].push row2[0]
+    end
+
+    File.open(sprintf(&amp;quot;post/%s&amp;quot;,item[:file]),&amp;quot;w&amp;quot;) do |file|
+      article = &amp;lt;&amp;lt;-EOF.unindent
+        +++
+        date = &amp;quot;#{item[:date]}&amp;quot;
+        draft = false
+        image = &amp;quot;/img/about-bg.jpg&amp;quot;
+        tags = #{info[:tags]}
+        title = &amp;quot;#{info[:title]}&amp;quot;
+        slug = &amp;quot;#{item[:slug]}&amp;quot;
+        +++
+      EOF
+      
+      # info[:markdown]をヒアドキュメントに加えると、インデントが崩れたので、ヒアドキュメントの外で結合
+      article = sprintf&amp;quot;%s\n%s&amp;quot;, article, info[:markdown]
+      file.puts(article)
+    end
+  end
+end
+
+list = []
+blog = &#39;http://blog.10rane.com&#39;
+(1..9).each do |num|
+  url = sprintf &amp;quot;%s/rss/%d&amp;quot;, blog, num # e.g. http://blog.10rane.com/rss/2
+  rss = RSS::Parser.parse(url)
+  rss.items.each do |entry|
+    all,year,month,day,slug = entry.link.match(%r|^#{blog}/(\d{4})/(\d{2})/(\d{2})/(.*)/$|).to_a
+
+    list.push({
+        slug: slug,
+        year: year,
+        month: month,
+        day: day,
+        ymd: sprintf(&amp;quot;%s%s%s&amp;quot;, year, month, day)
+      })
+  end
+end
+
+db = SQLite3::Database.new(&#39;ghost.db&#39;)
+hour = 1, old_ymd = &#39;&#39;
+list.sort!{|a,b| a[:ymd] &amp;lt;=&amp;gt; b[:ymd]}
+list.each do |item|
+  if old_ymd != item[:ymd] then
+    hour = 1
+    old_ymd = item[:ymd]
+  else
+    hour += 1
+  end
+  
+  item[:file] = sprintf &amp;quot;%s_%s_%s_%s.md&amp;quot;, item[:year], item[:month], item[:day], item[:slug]
+  item[:date] = sprintf &amp;quot;%s-%s-%sT%02d:00:00+09:00&amp;quot;, item[:year], item[:month], item[:day], hour
+  make_article(db,item)
+end
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>Ghostをv0.5にアップグレードする</title>

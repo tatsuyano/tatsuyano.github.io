@@ -6,8 +6,96 @@
     <description>Recent content in Posts on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Mon, 08 Jun 2015 02:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 25 Jul 2015 01:00:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ブログをHugoに移行した</title>
+      <link>http://tatsuyano.github.io/2015/07/25/switch_hugo/</link>
+      <pubDate>Sat, 25 Jul 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/07/25/switch_hugo/</guid>
+      <description>&lt;p&gt;今までaws上でブログ(Ghost)を運用していたが、無料期間が終わったら月2000円ちょっとかかったので、&lt;br /&gt;
+もったいないので、またGithub Pages上にブログを移行させた。&lt;/p&gt;
+
+&lt;p&gt;以前はOctopressを使っていたが、最近は&lt;a href=&#34;http://gohugo.io/&#34;&gt;Hugo&lt;/a&gt;というのが、流行っているらしいのでHugoを使ってみた。&lt;br /&gt;
+以外と記事が多かったので、スクリプトを書いてエクスポートさせた。&lt;/p&gt;
+
+&lt;p&gt;以外と書くのに時間がかかったが、久々にrubyでなんか楽しかった。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/usr/bin/env ruby
+
+require &#39;unindent&#39;
+require &#39;rss&#39;
+require &#39;sqlite3&#39;
+
+def make_article(db,item)
+  db.execute(sprintf(&amp;quot;SELECT id, title, markdown FROM posts WHERE slug = &#39;%s&#39;&amp;quot;, item[:slug])) do |row|
+    info = {
+      post_id: row[0],
+      title: row[1],
+      markdown: row[2],
+      tags: []
+    }
+    db.execute(sprintf(&amp;quot;SELECT tags.name FROM posts_tags, tags WHERE posts_tags.post_id = %d AND posts_tags.tag_id = tags.id&amp;quot;, info[:post_id])) do |row2|
+      info[:tags].push row2[0]
+    end
+
+    File.open(sprintf(&amp;quot;post/%s&amp;quot;,item[:file]),&amp;quot;w&amp;quot;) do |file|
+      article = &amp;lt;&amp;lt;-EOF.unindent
+        +++
+        date = &amp;quot;#{item[:date]}&amp;quot;
+        draft = false
+        image = &amp;quot;/img/about-bg.jpg&amp;quot;
+        tags = #{info[:tags]}
+        title = &amp;quot;#{info[:title]}&amp;quot;
+        slug = &amp;quot;#{item[:slug]}&amp;quot;
+        +++
+      EOF
+      
+      # info[:markdown]をヒアドキュメントに加えると、インデントが崩れたので、ヒアドキュメントの外で結合
+      article = sprintf&amp;quot;%s\n%s&amp;quot;, article, info[:markdown]
+      file.puts(article)
+    end
+  end
+end
+
+list = []
+blog = &#39;http://blog.10rane.com&#39;
+(1..9).each do |num|
+  url = sprintf &amp;quot;%s/rss/%d&amp;quot;, blog, num # e.g. http://blog.10rane.com/rss/2
+  rss = RSS::Parser.parse(url)
+  rss.items.each do |entry|
+    all,year,month,day,slug = entry.link.match(%r|^#{blog}/(\d{4})/(\d{2})/(\d{2})/(.*)/$|).to_a
+
+    list.push({
+        slug: slug,
+        year: year,
+        month: month,
+        day: day,
+        ymd: sprintf(&amp;quot;%s%s%s&amp;quot;, year, month, day)
+      })
+  end
+end
+
+db = SQLite3::Database.new(&#39;ghost.db&#39;)
+hour = 1, old_ymd = &#39;&#39;
+list.sort!{|a,b| a[:ymd] &amp;lt;=&amp;gt; b[:ymd]}
+list.each do |item|
+  if old_ymd != item[:ymd] then
+    hour = 1
+    old_ymd = item[:ymd]
+  else
+    hour += 1
+  end
+  
+  item[:file] = sprintf &amp;quot;%s_%s_%s_%s.md&amp;quot;, item[:year], item[:month], item[:day], item[:slug]
+  item[:date] = sprintf &amp;quot;%s-%s-%sT%02d:00:00+09:00&amp;quot;, item[:year], item[:month], item[:day], hour
+  make_article(db,item)
+end
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>Jsのスコープについて</title>
@@ -1287,73 +1375,6 @@ Sample codeを実行しない
 &lt;li&gt;&lt;a href=&#34;http://qiita.com/naoty_k/items/f84b2a9034a3bb3bfcb2&#34;&gt;&lt;strong&gt;FILE&lt;/strong&gt;と$0の違い&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://tobysoft.net/wiki/index.php?Ruby%2F%A5%B9%A5%AF%A5%EA%A5%D7%A5%C8%A5%D5%A5%A1%A5%A4%A5%EB%BC%AB%BF%C8%A4%AC%BC%C2%B9%D4%A4%B5%A4%EC%A4%BF%BB%FE%A4%CE%A4%DF%BC%C2%B9%D4%A4%B9%A4%EB%CA%FD%CB%A1&#34;&gt;Ruby/スクリプトファイル自身が実行された時のみ実行する方法&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://docs.ruby-lang.org/ja/2.0.0/doc/spec=2fvariables.html#pseudo&#34;&gt;Ruby 2.0.0 リファレンスマニュアル &amp;gt; 変数と定数&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>emacsにrcodetoolsをインストールして、返り値をコメントに出力する</title>
-      <link>http://tatsuyano.github.io/2015/03/25/install-rcodetools-to-emacs/</link>
-      <pubDate>Wed, 25 Mar 2015 01:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2015/03/25/install-rcodetools-to-emacs/</guid>
-      <description>
-
-&lt;p&gt;返り値をコメントに出力したい場合、rcodetoolsのxmpfilterを使うことで可能になります。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;3 + 4
-↓
-3 + 4 # =&amp;gt; 7
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;インストール:ad54d5cd39040f18666c590ba2c4a628&#34;&gt;インストール&lt;/h2&gt;
-
-&lt;p&gt;まずはrcodetools本体をインストールします。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ gem install rcodetools
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;p&gt;次にインストールしたgemの中にある&lt;code&gt;rcodetools.el&lt;/code&gt;をemacsのload-pathが通っている階層にコピーします。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ cp -a $HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/gems/2.2.0/gems/rcodetools-0.8.5.0/rcodetools.el $HOME/src/github.com/tatsuyano/dot.emacs.d/init_loader/
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;emacsの設定:ad54d5cd39040f18666c590ba2c4a628&#34;&gt;emacsの設定&lt;/h2&gt;
-
-&lt;p&gt;今回は、&lt;code&gt;M-p&lt;/code&gt;にxmpfilterを割り当てます。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;(require &amp;lsquo;rcodetools)
-(define-key ruby-mode-map (kbd &amp;ldquo;M-p&amp;rdquo;) &amp;lsquo;xmp)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;操作方法:ad54d5cd39040f18666c590ba2c4a628&#34;&gt;操作方法&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;まずは返り値を出力したい行で、&lt;code&gt;M-;(comment-dwim)&lt;/code&gt;を2回実行すると「# =&amp;gt;」というコメントがソースに出力されます。&lt;/li&gt;
-&lt;li&gt;その状態で、&lt;code&gt;M-p(xmp)&lt;/code&gt;を実行すると、コメントに返り値が出力されます。&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;ちなみに&lt;code&gt;M-;&lt;/code&gt;はAltを押しながら&lt;code&gt;;&lt;/code&gt;を押下です。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;3 + 4
-↓
-3 + 4 # =&amp;gt;          1. comment-dwimを2回実行
-↓
-3 + 4 # =&amp;gt; 7        2. xmpfilterを実行
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;p&gt;※ &lt;em&gt;環境によっては、&lt;code&gt;gems/rcodetools/bin/&lt;/code&gt;をPATHに加える必要があるようなので、動かない場合は試してみてください。&lt;/em&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:ad54d5cd39040f18666c590ba2c4a628&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://futurismo.biz/archives/2213&#34;&gt;EmacsでRubyの開発環境をさらにめちゃガチャパワーアップしたまとめ&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/ironsand/items/ce7c02eb46fcc25a438b&#34;&gt;Emacs で rcodetools を使って &amp;ldquo;=&amp;gt;&amp;rdquo; で値を表示する&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

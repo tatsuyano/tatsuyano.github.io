@@ -6,8 +6,96 @@
     <description>Recent content in Ruby on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Wed, 13 May 2015 01:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 25 Jul 2015 01:00:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/tags/ruby/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>ブログをHugoに移行した</title>
+      <link>http://tatsuyano.github.io/2015/07/25/switch_hugo/</link>
+      <pubDate>Sat, 25 Jul 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/07/25/switch_hugo/</guid>
+      <description>&lt;p&gt;今までaws上でブログ(Ghost)を運用していたが、無料期間が終わったら月2000円ちょっとかかったので、&lt;br /&gt;
+もったいないので、またGithub Pages上にブログを移行させた。&lt;/p&gt;
+
+&lt;p&gt;以前はOctopressを使っていたが、最近は&lt;a href=&#34;http://gohugo.io/&#34;&gt;Hugo&lt;/a&gt;というのが、流行っているらしいのでHugoを使ってみた。&lt;br /&gt;
+以外と記事が多かったので、スクリプトを書いてエクスポートさせた。&lt;/p&gt;
+
+&lt;p&gt;以外と書くのに時間がかかったが、久々にrubyでなんか楽しかった。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/usr/bin/env ruby
+
+require &#39;unindent&#39;
+require &#39;rss&#39;
+require &#39;sqlite3&#39;
+
+def make_article(db,item)
+  db.execute(sprintf(&amp;quot;SELECT id, title, markdown FROM posts WHERE slug = &#39;%s&#39;&amp;quot;, item[:slug])) do |row|
+    info = {
+      post_id: row[0],
+      title: row[1],
+      markdown: row[2],
+      tags: []
+    }
+    db.execute(sprintf(&amp;quot;SELECT tags.name FROM posts_tags, tags WHERE posts_tags.post_id = %d AND posts_tags.tag_id = tags.id&amp;quot;, info[:post_id])) do |row2|
+      info[:tags].push row2[0]
+    end
+
+    File.open(sprintf(&amp;quot;post/%s&amp;quot;,item[:file]),&amp;quot;w&amp;quot;) do |file|
+      article = &amp;lt;&amp;lt;-EOF.unindent
+        +++
+        date = &amp;quot;#{item[:date]}&amp;quot;
+        draft = false
+        image = &amp;quot;/img/about-bg.jpg&amp;quot;
+        tags = #{info[:tags]}
+        title = &amp;quot;#{info[:title]}&amp;quot;
+        slug = &amp;quot;#{item[:slug]}&amp;quot;
+        +++
+      EOF
+      
+      # info[:markdown]をヒアドキュメントに加えると、インデントが崩れたので、ヒアドキュメントの外で結合
+      article = sprintf&amp;quot;%s\n%s&amp;quot;, article, info[:markdown]
+      file.puts(article)
+    end
+  end
+end
+
+list = []
+blog = &#39;http://blog.10rane.com&#39;
+(1..9).each do |num|
+  url = sprintf &amp;quot;%s/rss/%d&amp;quot;, blog, num # e.g. http://blog.10rane.com/rss/2
+  rss = RSS::Parser.parse(url)
+  rss.items.each do |entry|
+    all,year,month,day,slug = entry.link.match(%r|^#{blog}/(\d{4})/(\d{2})/(\d{2})/(.*)/$|).to_a
+
+    list.push({
+        slug: slug,
+        year: year,
+        month: month,
+        day: day,
+        ymd: sprintf(&amp;quot;%s%s%s&amp;quot;, year, month, day)
+      })
+  end
+end
+
+db = SQLite3::Database.new(&#39;ghost.db&#39;)
+hour = 1, old_ymd = &#39;&#39;
+list.sort!{|a,b| a[:ymd] &amp;lt;=&amp;gt; b[:ymd]}
+list.each do |item|
+  if old_ymd != item[:ymd] then
+    hour = 1
+    old_ymd = item[:ymd]
+  else
+    hour += 1
+  end
+  
+  item[:file] = sprintf &amp;quot;%s_%s_%s_%s.md&amp;quot;, item[:year], item[:month], item[:day], item[:slug]
+  item[:date] = sprintf &amp;quot;%s-%s-%sT%02d:00:00+09:00&amp;quot;, item[:year], item[:month], item[:day], hour
+  make_article(db,item)
+end
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
     
     <item>
       <title>Rails4の非公開情報をdotenvで管理する</title>
@@ -1363,156 +1451,6 @@ $ sudo /etc/init.d/nginx restart
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.workabroad.jp/posts/1079&#34;&gt;RubyonRailsでsqliteでなくてPostgresqlを使う時&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Rails4をherokuにdeployする</title>
-      <link>http://tatsuyano.github.io/2015/02/19/deploy-the-rails4-to-heroku/</link>
-      <pubDate>Thu, 19 Feb 2015 01:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2015/02/19/deploy-the-rails4-to-heroku/</guid>
-      <description>
-
-&lt;p&gt;備忘のため、Rails4をheroku上にdeployする方法をメモしておきます。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;herokuのアカウントの作成、及び鍵の設定は終っているものとします。&lt;/em&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ ruby  -v 2.2.0p0
-$ rails -v 4.2.0
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-## サンプルアプリの作成
-
-まずはherokuにdeployするアプリを生成
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ rails new heroku-rails
-$ cd heroku-rails
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-herokuではsqlite3はサポートされていないので、productionからは外すようにする。今回productionで使うDBは、heroku標準のpostgressを選択。
-また、Rail4から`rails_12factor`が必須になったらしいので設定。
-
-Gemfile
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;group :development do
-  gem &#39;sqlite3&#39;
-end
-group :production do
-  gem &#39;pg&#39;
-  gem &#39;rails_12factor&#39;
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-開発環境では、postgressを使っていないので、`--without production`をつけて
-productionでのみ必要なGemは開発環境には入れないようにする。
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ bundle install --without production
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-開発環境でも`pg`を使う場合は、以下のようにpostgress本体と、develをインストールする。
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ sudo yum install -y postgresql-devel
-$ sudo yum install -y postgresql
-$ gem install pg
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-ここまでで空のアプリができたので、いったん`git commit`。
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ git init
-$ git add .
-$ git commit -m &#39;initial commit&#39;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-次にherokuにログインし、`heroku create`してheroku上にアプリを生成する。
-この時、アプリ名を指定しなければ、適当な名前で生成される(後から変更可)。
-*アプリ名はURLに含まれるため、heroku全体でユニークである必要がある*
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ heroku login
-$ heroku create &lt;アプリ名&gt;
-$ git push heroku master  # この段階でheroku上にdeployされる。
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-ちなみに`git commit`する前に`heroku create`すると、herokuのremote-urlが設定されないので、
-その場合は、自分で設定する必要がある。
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ git remote set-url heroku  https://git.heroku.com/&lt;アプリ名&gt;.git
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-アプリの情報は、`heroku app:info`で確認ができる。
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ heroku apps:info
-=== fast-stream-xxxx
-Addons:        heroku-postgresql:hobby-dev
-Dynos:         1
-Git URL:       https://git.heroku.com/fast-stream-xxxx.git
-Owner Email:   xxxxxx@xxxx.com
-Region:        us
-Repo Size:     24k
-Slug Size:     27M
-Stack:         cedar-14
-Web URL:       https://fast-stream-xxxx.herokuapp.com/
-Workers:       0
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-しかし、作成したアプリのURLをたたくと、以下のようなエラーが出る。
-
-![](https://dl.dropboxusercontent.com/u/159938/blog_images/deploy-the-rails4-to-heroku_01.png)
-
-heroku上のアプリでは、いつものRailsのTOP画面は出てこない。
-
-ここまでの状態で、heroku上で動いているのを確認したい場合は、
-仮のTOPページを生成してgit commitし、再度`heroku push origin master`してdeployすると確認できる。
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ cat &gt;&gt; public/index.html
-index.html
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-## herokuでDBを使う　
-
-`scaffold`で、DBにアクセスする機能を実装してみる。
-開発環境で、`rake db:migrate`した場合は、herokuでも`migrate`する必要がある。
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;$ rails g scaffold Book title:string price:integer
-$ rake db:migrate
-$ git add .
-$ git commit -m &#39;rails g scaffold Book title:string price:integer&#39;
-
-$ git push heroku master
-$ heroku run rake db:migrate　# &lt;= This!
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/deploy-the-rails4-to-heroku_02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;twitterbootstrapのglyphiconを使う:69d872b5ac14e5d9ddb41de50a34f0aa&#34;&gt;TwitterBootStrapのGlyphiconを使う&lt;/h2&gt;
-
-&lt;p&gt;BootStrapのGlyphiconを使ったアプリをherokuにdeployしても、そのままでは使えない。
-使うためには、production環境(heroku)でも、assets.compileを有効にする必要がある。&lt;/p&gt;
-
-&lt;p&gt;config/environments/production.rb
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;#config.assets.compile = false
- config.assets.compile = true
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:69d872b5ac14e5d9ddb41de50a34f0aa&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://railsgirls.jp/heroku/&#34;&gt;Heroku に Rails アプリをアップ&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/tstomoki/items/cd2391e028dc44dd6f40&#34;&gt;Railsで簡単なアプリをscaffoldで作ってHerokuにデプロイするまで&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.machacks.net/2014/01/21/heroku%E3%81%A7rails%E3%82%A2%E3%83%97%E3%83%AA%E3%82%92%E5%85%AC%E9%96%8B%E3%81%97%E3%82%88%E3%81%86%E3%81%A8%E3%81%97%E3%81%A6%E8%BA%93%E3%81%84%E3%81%9F%E6%89%80/&#34;&gt;HerokuでRailsアプリを公開しようとして躓いた所&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/02/18/introduced-bootstrap3-to-rails4/&#34;&gt;Rails4でBootstrap3を導入&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/20588786/glyphicon-works-locally-but-not-on-heroku&#34;&gt;Glyphicon works locally but not on Heroku&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
