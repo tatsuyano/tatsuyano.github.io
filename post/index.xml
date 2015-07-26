@@ -6,8 +6,24 @@
     <description>Recent content in Posts on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sat, 25 Jul 2015 18:15:01 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 26 Jul 2015 21:15:01 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Hugoに同時ドメインを適応したので、sitemap.xmlを置換する</title>
+      <link>http://tatsuyano.github.io/2015/07/26/replacing_sitemap_of_hugo/</link>
+      <pubDate>Sun, 26 Jul 2015 21:15:01 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/07/26/replacing_sitemap_of_hugo/</guid>
+      <description>&lt;p&gt;Hugoに独自ドメインを適応したところ、自動生成されるsitemap.xmlが&lt;br /&gt;
+Github pagesのURLで生成されていたので、deploy.shにsedコマンドを追加した。&lt;/p&gt;
+
+&lt;p&gt;sedコマンドで上書き置換(sed -i)したら、バックアップファイルが自動で生成&lt;br /&gt;
+されるを止めるのはどうしたらいいのだろうか。。&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/tatsuyano/57c42f1b050402abd7ea.js&#34;&gt;&lt;/script&gt;
+</description>
+    </item>
     
     <item>
       <title>ブログをGhostからHugoに移行した</title>
@@ -1238,83 +1254,6 @@ require &#39;file&#39;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://blog.livedoor.jp/sasata299/archives/52111648.html&#34;&gt;requireとrequire_relativeの違いとは？&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/torazuka/20150115/require&#34;&gt;Rubyのrequireとrequire_relative&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>if $0 == __FILE__のコードの意味</title>
-      <link>http://tatsuyano.github.io/2015/03/26/meaning-of-the-code-dollar0-equal-__file__/</link>
-      <pubDate>Thu, 26 Mar 2015 01:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2015/03/26/meaning-of-the-code-dollar0-equal-__file__/</guid>
-      <description>
-
-&lt;p&gt;最近&lt;a href=&#34;http://yugui.jp/articles/885&#34;&gt;こちらの記事&lt;/a&gt;を読んでいて、
-以下のコードの意味が解らなかったので調べてみました。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;if $0 == __FILE__
-  # 何らかの処理
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-まず結論から言うと「requireされた時は実行したくないけど、スクリプトファイルを直接実行した時は処理したい」
-場合に使います。ややこしいですね。  
-主には簡易なテストコードやサンプルコードを書く場合に使われるようです。
-
-ただ、なぜ上記のコードがそのような動きになるのか解らなかったのでもう少し調べてみました。
-
-* `__FILE__` ... 実行中のファイル名(相対パス)を返します。フルパスが必要な場合は File.expand_path(\_\_FILE\_\_) とする必要があります。
-* `$0`       ... 直接実行したファイル名(相対パス)を返します。
-
-[こちらのコード](http://qiita.com/naoty_k/items/f84b2a9034a3bb3bfcb2)とほぼ同じですが、
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;# target_file.rb
-puts &#34;__FILE__ =&gt;  #{__FILE__}&#34;
-puts &#34;$0       =&gt;  #{$0}&#34;
-
-if $0 == __FILE__
-  puts &#34;Sample codeを実行&#34;
-else
-  puts &#34;Sample codeは実行されない&#34;
-end
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;target_file.rb自体を直接実行すると、
-&lt;code&gt;$0&lt;/code&gt;と&lt;code&gt;__FILE__&lt;/code&gt;に同じ値が入ることになるので、Sample codeが実行されます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ ruby target_file.rb
-__FILE__ =&gt;  filename.rb
-$0       =&gt;  filename.rb
-Sample codeを実行
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-しかし、target_file.rbをライブラリとして使う(requireする)場合などは、`$0` と `__FILE__` の値が異なるので、Sample codeは実行されません。
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;# require_file.rb
-require_relative &#39;target_file&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;※ &lt;code&gt;require_relative&lt;/code&gt;と&lt;code&gt;require&lt;/code&gt;の違いについては別記事で説明します。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ ruby require_file.rb
-&lt;strong&gt;FILE&lt;/strong&gt; =&amp;gt;  /tmp/target_file.rb
-$0       =&amp;gt;  require_file.rb
-Sample codeを実行しない
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;p&gt;このようにライブラリなどを作る場合、&lt;code&gt;if $0 == __FILE__&lt;/code&gt;の分岐を入れることで
-簡単にサンプルコードを記述することができます。&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:017994b5820a7bbd18806145bdc6292f&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/naoty_k/items/f84b2a9034a3bb3bfcb2&#34;&gt;&lt;strong&gt;FILE&lt;/strong&gt;と$0の違い&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://tobysoft.net/wiki/index.php?Ruby%2F%A5%B9%A5%AF%A5%EA%A5%D7%A5%C8%A5%D5%A5%A1%A5%A4%A5%EB%BC%AB%BF%C8%A4%AC%BC%C2%B9%D4%A4%B5%A4%EC%A4%BF%BB%FE%A4%CE%A4%DF%BC%C2%B9%D4%A4%B9%A4%EB%CA%FD%CB%A1&#34;&gt;Ruby/スクリプトファイル自身が実行された時のみ実行する方法&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://docs.ruby-lang.org/ja/2.0.0/doc/spec=2fvariables.html#pseudo&#34;&gt;Ruby 2.0.0 リファレンスマニュアル &amp;gt; 変数と定数&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

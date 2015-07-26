@@ -9,11 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>blog.10rane.com -- blog.10rane.com</title>
+    <title>Hugoに同時ドメインを適応したので、sitemap.xmlを置換する -- blog.10rane.com</title>
 
-    
-    <link href="http://tatsuyano.github.io/index.xml" rel="alternate" type="application/rss+xml" title="blog.10rane.com" />
-    <link href="http://tatsuyano.github.io/index.xml" rel="feed" type="application/rss+xml" title="blog.10rane.com" />
     
 
     
@@ -71,102 +68,46 @@
 
 
     
-    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io/img/home-bg.jpg')">
-     <div class="container">
-       <div class="row">
-         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-           <div class="site-heading">
-             <h1>Blog.10rane.Com</h1>
-             <hr class="small">
-             <span class="subheading"></span>
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Hugoに同時ドメインを適応したので、sitemap.Xmlを置換する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Sun, Jul 26, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/blog" >blog</a> 
+
+               </span>
+             </div>
            </div>
-         </div>
-       </div>
-     </div>
+        </div>
+      </div>
     </header>
 
     
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-          
-                             <div class="post-preview">
-                 <a href="http://tatsuyano.github.io/2015/07/26/replacing_sitemap_of_hugo/">
-                      <h2 class="post-title">Hugoに同時ドメインを適応したので、sitemap.xmlを置換する</h2>
-                      <h3 class="post-subtitle"></h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Tatsuyano</a> on Sun, Jul 26, 2015
-                    <br />
-                    In 
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <p>Hugoに独自ドメインを適応したところ、自動生成されるsitemap.xmlが<br />
+Github pagesのURLで生成されていたので、deploy.shにsedコマンドを追加した。</p>
 
-                    <br />
-                    Tags <a href="http://tatsuyano.github.io/tags/blog" >blog</a> 
+<p>sedコマンドで上書き置換(sed -i)したら、バックアップファイルが自動で生成<br />
+されるを止めるのはどうしたらいいのだろうか。。</p>
 
-                  </p>
+<script src="https://gist.github.com/tatsuyano/57c42f1b050402abd7ea.js"></script>
+
                 </div>
-                <hr>
-
-          
-                             <div class="post-preview">
-                 <a href="http://tatsuyano.github.io/2015/07/25/switch-hugo/">
-                      <h2 class="post-title">ブログをGhostからHugoに移行した</h2>
-                      <h3 class="post-subtitle"></h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Tatsuyano</a> on Sat, Jul 25, 2015
-                    <br />
-                    In 
-
-                    <br />
-                    Tags <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/blog" >blog</a> 
-
-                  </p>
-                </div>
-                <hr>
-
-          
-                             <div class="post-preview">
-                 <a href="http://tatsuyano.github.io/2015/06/08/for-the-scope-of-the-js/">
-                      <h2 class="post-title">Jsのスコープについて</h2>
-                      <h3 class="post-subtitle"></h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Tatsuyano</a> on Mon, Jun 8, 2015
-                    <br />
-                    In 
-
-                    <br />
-                    Tags <a href="http://tatsuyano.github.io/tags/js" >js</a> 
-
-                  </p>
-                </div>
-                <hr>
-
-          
-                             <div class="post-preview">
-                 <a href="http://tatsuyano.github.io/2015/06/08/for-function-of-js/">
-                      <h2 class="post-title">Jsの関数について</h2>
-                      <h3 class="post-subtitle"></h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Tatsuyano</a> on Mon, Jun 8, 2015
-                    <br />
-                    In 
-
-                    <br />
-                    Tags <a href="http://tatsuyano.github.io/tags/js" >js</a> 
-
-                  </p>
-                </div>
-                <hr>
-
-          
-          
-          <ul class="pager">
-            <li class="next">
-              <a href="http://tatsuyano.github.io/post/">Older Posts &rarr;</a>
-            </li>
-          </ul>
+            </div>
         </div>
-      </div>
-    </div>
+    </article>
 
     <hr>
     

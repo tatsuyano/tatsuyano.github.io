@@ -6,8 +6,24 @@
     <description>Recent content in Blog on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sat, 25 Jul 2015 18:15:01 +0900</lastBuildDate>
+    <lastBuildDate>Sun, 26 Jul 2015 21:15:01 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/tags/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Hugoに同時ドメインを適応したので、sitemap.xmlを置換する</title>
+      <link>http://tatsuyano.github.io/2015/07/26/replacing_sitemap_of_hugo/</link>
+      <pubDate>Sun, 26 Jul 2015 21:15:01 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/07/26/replacing_sitemap_of_hugo/</guid>
+      <description>&lt;p&gt;Hugoに独自ドメインを適応したところ、自動生成されるsitemap.xmlが&lt;br /&gt;
+Github pagesのURLで生成されていたので、deploy.shにsedコマンドを追加した。&lt;/p&gt;
+
+&lt;p&gt;sedコマンドで上書き置換(sed -i)したら、バックアップファイルが自動で生成&lt;br /&gt;
+されるを止めるのはどうしたらいいのだろうか。。&lt;/p&gt;
+
+&lt;script src=&#34;https://gist.github.com/tatsuyano/57c42f1b050402abd7ea.js&#34;&gt;&lt;/script&gt;
+</description>
+    </item>
     
     <item>
       <title>ブログをGhostからHugoに移行した</title>
