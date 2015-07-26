@@ -782,66 +782,9 @@ config/environments/*.local.yml
     </item>
     
     <item>
-      <title>Rails4でBootstrap3を導入(sass版)</title>
-      <link>http://tatsuyano.github.io/2015/03/31/introduced-bootstrap3-to-rails4-sass/</link>
-      <pubDate>Tue, 31 Mar 2015 02:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2015/03/31/introduced-bootstrap3-to-rails4-sass/</guid>
-      <description>
-
-&lt;p&gt;以前、&lt;code&gt;twitter-bootstrap-rails&lt;/code&gt; をつかって&lt;a href=&#34;http://tatsuyano.github.io/2015/02/18/introduced-bootstrap3-to-rails4/&#34;&gt;Bootstrap3を導入&lt;/a&gt;という記事を書いたんですが、
-Twitter社が提供している&lt;code&gt;bootstrap-sass&lt;/code&gt;のほうが導入が簡単だったので、今後はこちらを使っていきたいと思います。&lt;/p&gt;
-
-&lt;h2 id=&#34;設定:1d26c675b81c51ae89761728b91077a7&#34;&gt;設定&lt;/h2&gt;
-
-&lt;p&gt;まずはGemfileの設定から。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;cat Gemfile
-gem &amp;lsquo;bootstrap-sass&amp;rsquo;, &amp;lsquo;~&amp;gt; 3.3.4&amp;rsquo;
-gem &amp;lsquo;sass-rails&amp;rsquo;, &amp;lsquo;&amp;gt;= 3.2&amp;rsquo;&lt;/p&gt;
-
-&lt;p&gt;$ bundle install
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;application.css&lt;/code&gt; を削除し、新たに &lt;code&gt;application.sass&lt;/code&gt; を生成します。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ rm app/assets/stylesheets/application.css
-$ cat &amp;gt; app/assets/stylesheets/application.scss
-@import &amp;ldquo;bootstrap-sprockets&amp;rdquo;;
-@import &amp;ldquo;bootstrap&amp;rdquo;;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;application.js&lt;/code&gt; の設定を変更します。読み込み順に注意してください。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ cat &amp;gt; app/assets/javascripts/application.js
-//= require jquery
-//= require bootstrap-sprockets
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;p&gt;これでGlyphicons(Webフォント)も使えるようになります。便利ですね。&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:1d26c675b81c51ae89761728b91077a7&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/twbs/bootstrap-sass&#34;&gt;twbs/bootstrap-sass&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/masamitsu-konya/items/e3630046774ac1fbd346&#34;&gt;全部はいらないよね？bootstrap-sassをカスタマイズして使う方法&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;関連する記事:1d26c675b81c51ae89761728b91077a7&#34;&gt;関連する記事&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/02/18/introduced-bootstrap3-to-rails4/&#34;&gt;Rails4でBootstrap3を導入&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
       <title>アプリケーションテンプレートを使って、プロジェクトのひな形を作る</title>
       <link>http://tatsuyano.github.io/2015/03/31/use-rails-application-templates/</link>
-      <pubDate>Tue, 31 Mar 2015 01:00:00 +0900</pubDate>
+      <pubDate>Tue, 31 Mar 2015 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/03/31/use-rails-application-templates/</guid>
       <description>
@@ -1006,6 +949,63 @@ end
 &lt;li&gt;&lt;a href=&#34;http://morizyun.github.io/blog/rails4-application-templates-heroku/&#34;&gt;Rails 4.2 + Bootstrap の Application Template
 1コマンドでモダンRailsが！&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/tatsuyano/rails-template&#34;&gt;tatsuyano/rails-template&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rails4でBootstrap3を導入(sass版)</title>
+      <link>http://tatsuyano.github.io/2015/03/31/introduced-bootstrap3-to-rails4-sass/</link>
+      <pubDate>Tue, 31 Mar 2015 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/03/31/introduced-bootstrap3-to-rails4-sass/</guid>
+      <description>
+
+&lt;p&gt;以前、&lt;code&gt;twitter-bootstrap-rails&lt;/code&gt; をつかって&lt;a href=&#34;http://tatsuyano.github.io/2015/02/18/introduced-bootstrap3-to-rails4/&#34;&gt;Bootstrap3を導入&lt;/a&gt;という記事を書いたんですが、
+Twitter社が提供している&lt;code&gt;bootstrap-sass&lt;/code&gt;のほうが導入が簡単だったので、今後はこちらを使っていきたいと思います。&lt;/p&gt;
+
+&lt;h2 id=&#34;設定:1d26c675b81c51ae89761728b91077a7&#34;&gt;設定&lt;/h2&gt;
+
+&lt;p&gt;まずはGemfileの設定から。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;cat Gemfile
+gem &amp;lsquo;bootstrap-sass&amp;rsquo;, &amp;lsquo;~&amp;gt; 3.3.4&amp;rsquo;
+gem &amp;lsquo;sass-rails&amp;rsquo;, &amp;lsquo;&amp;gt;= 3.2&amp;rsquo;&lt;/p&gt;
+
+&lt;p&gt;$ bundle install
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;application.css&lt;/code&gt; を削除し、新たに &lt;code&gt;application.sass&lt;/code&gt; を生成します。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ rm app/assets/stylesheets/application.css
+$ cat &amp;gt; app/assets/stylesheets/application.scss
+@import &amp;ldquo;bootstrap-sprockets&amp;rdquo;;
+@import &amp;ldquo;bootstrap&amp;rdquo;;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;application.js&lt;/code&gt; の設定を変更します。読み込み順に注意してください。&lt;/p&gt;
+
+&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ cat &amp;gt; app/assets/javascripts/application.js
+//= require jquery
+//= require bootstrap-sprockets
+&lt;/code&gt;&lt;/pre&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;これでGlyphicons(Webフォント)も使えるようになります。便利ですね。&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:1d26c675b81c51ae89761728b91077a7&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/twbs/bootstrap-sass&#34;&gt;twbs/bootstrap-sass&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/masamitsu-konya/items/e3630046774ac1fbd346&#34;&gt;全部はいらないよね？bootstrap-sassをカスタマイズして使う方法&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;関連する記事:1d26c675b81c51ae89761728b91077a7&#34;&gt;関連する記事&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/02/18/introduced-bootstrap3-to-rails4/&#34;&gt;Rails4でBootstrap3を導入&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
