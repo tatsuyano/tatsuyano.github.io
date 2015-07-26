@@ -86,9 +86,51 @@ gistではなく、gitに上げたファイルも読み込めるようになり�
     </item>
     
     <item>
+      <title>Ricky for powerlineをmacにインストールする</title>
+      <link>http://tatsuyano.github.io/2014/08/06/install-ricky-powerline-for-mac/</link>
+      <pubDate>Wed, 06 Aug 2014 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/08/06/install-ricky-powerline-for-mac/</guid>
+      <description>
+
+&lt;p&gt;agnosterは&lt;code&gt;powerline.otf&lt;/code&gt;にある依存文字を使うことを前提しているので、
+macにpowerline系のフォントをインストールします。&lt;/p&gt;
+
+&lt;p&gt;少しややこしいのですが、元々powerlineというフォントはvimで使う用？だったので
+ググるとよくvim-powerlineとかがヒットしますが同じもののようです。&lt;/p&gt;
+
+&lt;p&gt;また、既存のフォントをpowerline化(既存のフォントに依存文字を使えるようにする)することもできます。&lt;/p&gt;
+
+&lt;p&gt;今回は、今使っているRictyをそのまま使いたかったので、
+新たに&lt;code&gt;Ricty for powerline&lt;/code&gt;というフォントをbrewでインストールしてみました。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;brew update
+brew uninstall ricty
+brew tap sanemat/font
+brew install --vim-powerline ricty
+cp -f /usr/local/Cellar/ricty/3.2.3/share/fonts/Ricty*.ttf ~/Library/Fonts/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/osakanafish/items/731dc31168e3330dbcd0&#34;&gt;homebrewを使ってiTerm2でRicty for powerline設定した&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;インストールが完了したら、iTermのフォントの設定を変更して、iTermを再起動してください。&lt;/p&gt;
+
+&lt;p&gt;お疲れ様でした。&lt;/p&gt;
+
+&lt;h4 id=&#34;関連する記事:6fca2851ceced0539c2a5ff6938f09f8&#34;&gt;関連する記事&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/06/install-oh-my-zsh/&#34;&gt;oh-my-zshをインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
       <title>oh-my-zshをインストールする</title>
       <link>http://tatsuyano.github.io/2014/08/06/install-oh-my-zsh/</link>
-      <pubDate>Wed, 06 Aug 2014 02:00:00 +0900</pubDate>
+      <pubDate>Wed, 06 Aug 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/08/06/install-oh-my-zsh/</guid>
       <description>
@@ -282,48 +324,6 @@ prompt_segment blue black &#39;%1~&#39;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/06/install-ricky-powerline-for-mac/&#34;&gt;Ricky for powerlineをmacにインストールする&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Ricky for powerlineをmacにインストールする</title>
-      <link>http://tatsuyano.github.io/2014/08/06/install-ricky-powerline-for-mac/</link>
-      <pubDate>Wed, 06 Aug 2014 01:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2014/08/06/install-ricky-powerline-for-mac/</guid>
-      <description>
-
-&lt;p&gt;agnosterは&lt;code&gt;powerline.otf&lt;/code&gt;にある依存文字を使うことを前提しているので、
-macにpowerline系のフォントをインストールします。&lt;/p&gt;
-
-&lt;p&gt;少しややこしいのですが、元々powerlineというフォントはvimで使う用？だったので
-ググるとよくvim-powerlineとかがヒットしますが同じもののようです。&lt;/p&gt;
-
-&lt;p&gt;また、既存のフォントをpowerline化(既存のフォントに依存文字を使えるようにする)することもできます。&lt;/p&gt;
-
-&lt;p&gt;今回は、今使っているRictyをそのまま使いたかったので、
-新たに&lt;code&gt;Ricty for powerline&lt;/code&gt;というフォントをbrewでインストールしてみました。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;brew update
-brew uninstall ricty
-brew tap sanemat/font
-brew install --vim-powerline ricty
-cp -f /usr/local/Cellar/ricty/3.2.3/share/fonts/Ricty*.ttf ~/Library/Fonts/
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/osakanafish/items/731dc31168e3330dbcd0&#34;&gt;homebrewを使ってiTerm2でRicty for powerline設定した&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;インストールが完了したら、iTermのフォントの設定を変更して、iTermを再起動してください。&lt;/p&gt;
-
-&lt;p&gt;お疲れ様でした。&lt;/p&gt;
-
-&lt;h4 id=&#34;関連する記事:6fca2851ceced0539c2a5ff6938f09f8&#34;&gt;関連する記事&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/06/install-oh-my-zsh/&#34;&gt;oh-my-zshをインストールする&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

@@ -83,7 +83,7 @@ $ heroku config:add TWITTER_API_SECRET=&amp;ldquo;fugafuga&amp;rdquo; &amp;ndash
     <item>
       <title>Werckerを使ってHerokuにデプロイする</title>
       <link>http://tatsuyano.github.io/2015/03/13/deploying-to-heroku-using-wercker/</link>
-      <pubDate>Fri, 13 Mar 2015 02:00:00 +0900</pubDate>
+      <pubDate>Fri, 13 Mar 2015 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/03/13/deploying-to-heroku-using-wercker/</guid>
       <description>
@@ -491,80 +491,9 @@ $ heroku run rake db:migrate　# &lt;= This!
     </item>
     
     <item>
-      <title>herokuことはじめ</title>
-      <link>http://tatsuyano.github.io/2014/10/07/start-heroku/</link>
-      <pubDate>Tue, 07 Oct 2014 02:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2014/10/07/start-heroku/</guid>
-      <description>
-
-&lt;p&gt;まずは&lt;a href=&#34;https://www.heroku.com/&#34;&gt;heroku&lt;/a&gt;アカウントを作成します。&lt;br /&gt;
-2段階認証にも対応しているので、設定したほうがいいと思います。&lt;/p&gt;
-
-&lt;h4 id=&#34;heroku-toolbeltのインストール:0f14ad6159787e3a37913d50c16c6864&#34;&gt;heroku-toolbeltのインストール&lt;/h4&gt;
-
-&lt;p&gt;CentOS(AmazonLinux)に、&lt;code&gt;herokuコマンド&lt;/code&gt;をインストールします。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ wget -qO- https://toolbelt.heroku.com/install.sh | sh
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;$HOME/.zshrc&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;if [ -d /usr/local/heroku ]; then
-  export PATH=/usr/local/heroku/bin:$PATH
-fi
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ source $HOME/.zshrc
-
-$ which heroku
-/usr/local/heroku/bin/heroku
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/tsumekoara/items/ea5e1b144620ffc4acca&#34;&gt;Vagrant 上の CentOS 6.5 から Heroku を使うには&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;herokuに公開鍵を登録:0f14ad6159787e3a37913d50c16c6864&#34;&gt;herokuに公開鍵を登録&lt;/h4&gt;
-
-&lt;p&gt;秘密鍵を作成&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ ssh-keygen -t rsa
-Generating public/private rsa key pair.
-Enter file in which to save the key (/Home/hoge/.ssh/id_rsa): /Home/hoge/.ssh/heroku_rsa
-Enter passphrase (empty for no passphrase):
-Enter same passphrase again:
-Your identification has been saved in /Home/hoge/.ssh/heroku_rsa.
-Your public key has been saved in /Home/hoge/.ssh/heroku_rsa.pub.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;$HOME/.ssh/config&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;Host heroku.com
-    HostName heroku.com
-    IdentityFile ~/.ssh/heroku_rsa
-    IdentitiesOnly yes
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;herokuにログインし、公開鍵をアップロード&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ heroku login
-
-$ heroku keys:add
-Found existing public key: /Home/hoge/.ssh/heroku_rsa.pub
-Uploading SSH public key /Home/hoge/.ssh/heroku_rsa.pub... done
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://devcenter.heroku.com/articles/keys&#34;&gt;Managing Your SSH Keys&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
       <title>herokuでfuelphpをデプロイ</title>
       <link>http://tatsuyano.github.io/2014/10/07/deploying-the-fuelphp-in-heroku/</link>
-      <pubDate>Tue, 07 Oct 2014 01:00:00 +0900</pubDate>
+      <pubDate>Tue, 07 Oct 2014 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/10/07/deploying-the-fuelphp-in-heroku/</guid>
       <description>
@@ -646,6 +575,77 @@ web: vendor/bin/heroku-php-apache2 public/
 &lt;li&gt;&lt;a href=&#34;http://exfreeter.hatenablog.com/entry/2013/12/09/235902&#34;&gt;Herokuの使い方まとめ(2013年12月時点、Rails使用)&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://spicy-space.hatenablog.com/entry/2014/06/22/013708&#34;&gt;HerokuがPHPに正式対応したのでFuelPHP動かしてみた&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://devcenter.heroku.com/articles/custom-php-settings#setting-the-document-root&#34;&gt;Setting the document root&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>herokuことはじめ</title>
+      <link>http://tatsuyano.github.io/2014/10/07/start-heroku/</link>
+      <pubDate>Tue, 07 Oct 2014 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/10/07/start-heroku/</guid>
+      <description>
+
+&lt;p&gt;まずは&lt;a href=&#34;https://www.heroku.com/&#34;&gt;heroku&lt;/a&gt;アカウントを作成します。&lt;br /&gt;
+2段階認証にも対応しているので、設定したほうがいいと思います。&lt;/p&gt;
+
+&lt;h4 id=&#34;heroku-toolbeltのインストール:0f14ad6159787e3a37913d50c16c6864&#34;&gt;heroku-toolbeltのインストール&lt;/h4&gt;
+
+&lt;p&gt;CentOS(AmazonLinux)に、&lt;code&gt;herokuコマンド&lt;/code&gt;をインストールします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ wget -qO- https://toolbelt.heroku.com/install.sh | sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;$HOME/.zshrc&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;if [ -d /usr/local/heroku ]; then
+  export PATH=/usr/local/heroku/bin:$PATH
+fi
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ source $HOME/.zshrc
+
+$ which heroku
+/usr/local/heroku/bin/heroku
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/tsumekoara/items/ea5e1b144620ffc4acca&#34;&gt;Vagrant 上の CentOS 6.5 から Heroku を使うには&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;herokuに公開鍵を登録:0f14ad6159787e3a37913d50c16c6864&#34;&gt;herokuに公開鍵を登録&lt;/h4&gt;
+
+&lt;p&gt;秘密鍵を作成&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/Home/hoge/.ssh/id_rsa): /Home/hoge/.ssh/heroku_rsa
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /Home/hoge/.ssh/heroku_rsa.
+Your public key has been saved in /Home/hoge/.ssh/heroku_rsa.pub.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;$HOME/.ssh/config&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;Host heroku.com
+    HostName heroku.com
+    IdentityFile ~/.ssh/heroku_rsa
+    IdentitiesOnly yes
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;herokuにログインし、公開鍵をアップロード&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ heroku login
+
+$ heroku keys:add
+Found existing public key: /Home/hoge/.ssh/heroku_rsa.pub
+Uploading SSH public key /Home/hoge/.ssh/heroku_rsa.pub... done
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://devcenter.heroku.com/articles/keys&#34;&gt;Managing Your SSH Keys&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

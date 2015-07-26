@@ -286,7 +286,7 @@ print $child-&amp;gt;say() . &amp;ldquo;\n&amp;rdquo;;
     <item>
       <title>herokuでfuelphpをデプロイ</title>
       <link>http://tatsuyano.github.io/2014/10/07/deploying-the-fuelphp-in-heroku/</link>
-      <pubDate>Tue, 07 Oct 2014 01:00:00 +0900</pubDate>
+      <pubDate>Tue, 07 Oct 2014 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/10/07/deploying-the-fuelphp-in-heroku/</guid>
       <description>
@@ -415,7 +415,7 @@ $ git submodule add git://github.com/fuel/email.git fuel/packages/email
     <item>
       <title>anyenvをインストールする</title>
       <link>http://tatsuyano.github.io/2014/08/19/install-anyenv/</link>
-      <pubDate>Tue, 19 Aug 2014 01:00:00 +0900</pubDate>
+      <pubDate>Tue, 19 Aug 2014 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/08/19/install-anyenv/</guid>
       <description>
@@ -531,9 +531,189 @@ $ ndenv global v0.10.26
     </item>
     
     <item>
+      <title>fuelphpのエラー文言を日本語化する</title>
+      <link>http://tatsuyano.github.io/2014/07/29/fuelphp-validation/</link>
+      <pubDate>Tue, 29 Jul 2014 04:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/07/29/fuelphp-validation/</guid>
+      <description>
+
+&lt;h4 id=&#34;config-phpに設定を追加:c686d533785df368c7d44ebfce4543f8&#34;&gt;config.phpに設定を追加&lt;/h4&gt;
+
+&lt;p&gt;app/config/config.php&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//&#39;language&#39;           =&amp;gt; &#39;en&#39;, // Default language
+//&#39;language_fallback&#39;  =&amp;gt; &#39;en&#39;, // Fallback language when file isn&#39;t available for default language
+//&#39;locale&#39;             =&amp;gt; &#39;en_US&#39;, // PHP set_locale() setting, null to not set
+&#39;language&#39;           =&amp;gt; &#39;ja&#39;,
+&#39;language_fallback&#39;  =&amp;gt; &#39;en&#39;,
+&#39;locale&#39;             =&amp;gt; &#39;ja_JP.UTF-8&#39;,
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;langディレクトリに日本語用のディレクトリを作成:c686d533785df368c7d44ebfce4543f8&#34;&gt;langディレクトリに日本語用のディレクトリを作成&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir app/lang/ja
+touch app/lang/ja/validation.php
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;validation.phpの設定は core/lang/en/validation.php を参照
+設定されているkey(メソッド)は、core/classes/validation.phpで設定されている&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?php
+return array(
+    &#39;required&#39;         =&amp;gt; &#39;「:label」は必須です&#39;,
+    &#39;min_length&#39;       =&amp;gt; &#39;「:label」は:param:1文字以上で入力してください&#39;,
+    &#39;max_length&#39;       =&amp;gt; &#39;「:label」は:param:1文字以内で入力してください&#39;,
+    &#39;exact_length&#39;     =&amp;gt; &#39;「:label」は:param:1文字で入力してください&#39;,
+    &#39;match_value&#39;      =&amp;gt; &#39;「:label」は「:param:1」と一致していません&#39;,
+    &#39;match_pattern&#39;    =&amp;gt; &#39;「:label」はパターン「:param:1」と一致しません&#39;,
+    &#39;match_field&#39;      =&amp;gt; &#39;「:label」は「:param:1」と一致していません&#39;,
+    &#39;valid_email&#39;      =&amp;gt; &#39;「:label」はメールアドレスが不正です&#39;,
+    &#39;valid_emails&#39;     =&amp;gt; &#39;「:label」に不正なメールアドレスが含まれてます&#39;,
+    &#39;valid_url&#39;        =&amp;gt; &#39;「:label」は不正なURLです&#39;,
+    &#39;valid_ip&#39;         =&amp;gt; &#39;「:label」は不正なIPアドレスです&#39;,
+    &#39;numeric_min&#39;      =&amp;gt; &#39;「:label」は:param:1以上で入力してください&#39;,
+    &#39;numeric_max&#39;      =&amp;gt; &#39;「:label」は:param:1以内で入力してください&#39;,
+    &#39;valid_string&#39;     =&amp;gt; &#39;「:label」は:param:1で入力する必要があります&#39;,
+);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;自前のvalidation-helperクラス-を作成する:c686d533785df368c7d44ebfce4543f8&#34;&gt;自前のvalidation(helperクラス)を作成する&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir app/classes/helper
+touch app/classes/helper/myvalidation.php
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;app/classes/helper/myvalidation.php&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;?php
+class Helper_MyValidation
+{
+    /**
+     * 数字をチェックするバリデーション
+     *
+     * @param  string val
+     * @return bool   numeric or blank is &#39;true&#39;.
+     */
+    public static function _validation_numeric_only($val)
+    {
+        mb_regex_encoding(&amp;quot;UTF-8&amp;quot;);
+        return preg_match(&amp;quot;/^[\d]*$/&amp;quot;, $val) === 1;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;自作したメソッドのアラートを登録する:c686d533785df368c7d44ebfce4543f8&#34;&gt;自作したメソッドのアラートを登録する&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;cat fuel/app/lang/ja/validation.php | grep numeric_only
+&#39;numeric_only&#39;     =&amp;gt; &#39;「:label」は数字のみで入力してください&#39;,
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;controllerで自作のバリデーションの呼び出し:c686d533785df368c7d44ebfce4543f8&#34;&gt;controllerで自作のバリデーションの呼び出し&lt;/h4&gt;
+
+&lt;p&gt;app/classes/controller/hoge.php&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;public function action_create()
+{
+  $val = Validation::forge();
+  $val-&amp;gt;add_callable(&#39;Helper_MyValidation&#39;);
+  $val-&amp;gt;add_field(&#39;name&#39;,&#39;名前&#39;,&#39;required|min_length[2]|max_length[30]&#39;);
+  $val-&amp;gt;add_field(&#39;email&#39;,&#39;Email&#39;,&#39;required|valid_email&#39;);
+  $val-&amp;gt;add_field(&#39;tel&#39;,&#39;電話番号&#39;,&#39;numeric_only&#39;);
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;どこでバリデーションを呼ぶべきか:c686d533785df368c7d44ebfce4543f8&#34;&gt;どこでバリデーションを呼ぶべきか&lt;/h3&gt;
+
+&lt;p&gt;modelかcontroller どちらに実装すべきかは迷いましたが、今回はcontrollerに実装するようにしました。
+理由はfieldsetを使わないからです。&lt;/p&gt;
+
+&lt;p&gt;fieldsetは便利ですが、どうしても細かいところに手が届かないのと、デザイナーさんと分業するには、少し勝手が悪いかなあと思いました。&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:c686d533785df368c7d44ebfce4543f8&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://fuelphp.jp/docs/1.7/classes/validation/validation.html&#34;&gt;Validation クラス&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://raining.bear-life.com/fuelphp/%E3%83%90%E3%83%AA%E3%83%87%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%AE%E3%83%AB%E3%83%BC%E3%83%AB%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B&#34;&gt;バリデーションのルールを追加する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:c686d533785df368c7d44ebfce4543f8&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/29/fuelphp-use-agent-class/&#34;&gt;fuelphpでAgentClassを設定する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/28/use-the-redis-in-fuelphp/&#34;&gt;fuelphpでredisを使う&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>fuelphpでAgentClassを設定する</title>
+      <link>http://tatsuyano.github.io/2014/07/29/fuelphp-use-agent-class/</link>
+      <pubDate>Tue, 29 Jul 2014 03:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/07/29/fuelphp-use-agent-class/</guid>
+      <description>
+
+&lt;p&gt;ブラウザの識別やモバイルフォンとPCの識別をするには、fuelではAgentクラスを使用する。&lt;/p&gt;
+
+&lt;p&gt;AgentクラスはPHPのget_browser関数を利用する。&lt;/p&gt;
+
+&lt;p&gt;get_browser関数は、UA情報を&lt;a href=&#34;http://tempdownloads.browserscap.com/&#34;&gt;Browser Capabilities Project&lt;/a&gt;というサイトから取得する。
+fuelではこのサイトからUA情報を取得(キャッシュ化し2回目のアクセスからキャッシュを参照)し、識別する。&lt;/p&gt;
+
+&lt;h4 id=&#34;configファイルにua情報-サイト-の取得先urlなどを設定:46b9b5ce7f3c77f59a7ac57dcd96ae9b&#34;&gt;configファイルにUA情報(サイト)の取得先URLなどを設定&lt;/h4&gt;
+
+&lt;p&gt;fuel/app/config/config.php&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&#39;browscap&#39; =&amp;gt; array(
+    &#39;enabled&#39; =&amp;gt; true,
+    &#39;url&#39;     =&amp;gt; &#39;http://browsers.garykeith.com/stream.asp?BrowsCapINI&#39;,
+    &#39;method&#39; =&amp;gt; &#39;wrapper&#39;,
+    &#39;file&#39;   =&amp;gt; &#39;/tmp/php_browscap.ini&#39;,
+),
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;キャッシュの保存先について:46b9b5ce7f3c77f59a7ac57dcd96ae9b&#34;&gt;キャッシュの保存先について&lt;/h4&gt;
+
+&lt;p&gt;fuelでは fuel/app/cache にキャシュを保存している&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cache
+└── fuel
+    └── agent
+            ├── browscap.cache
+            └── browscap_file.cache
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;キャッシュ周りで権限エラーがでたので、権限を&lt;code&gt;777&lt;/code&gt;にする&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;chmod -R 777 fuel/app/cache/
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h4 id=&#34;agentクラスの実装:46b9b5ce7f3c77f59a7ac57dcd96ae9b&#34;&gt;Agentクラスの実装&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;Agent::is_mobiledevice();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;参考サイト:46b9b5ce7f3c77f59a7ac57dcd96ae9b&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://btt.hatenablog.com/entry/2012/07/04/001254&#34;&gt;FuelPHPのAgentクラスと拡張&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://fuelphp.com/docs/classes/agent/config.html&#34;&gt;Agent Class&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://fuelphp.seesaa.net/article/279094100.html&#34;&gt;FuelPHPのAgentクラスによる端末振り分けが簡単すぎる&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:46b9b5ce7f3c77f59a7ac57dcd96ae9b&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/29/fuelphp-validation/&#34;&gt;fuelphpのエラー文言を日本語化する&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/28/use-the-redis-in-fuelphp/&#34;&gt;fuelphpでredisを使う&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
       <title>memcachedのインストール</title>
       <link>http://tatsuyano.github.io/2014/07/29/install-memcached/</link>
-      <pubDate>Tue, 29 Jul 2014 04:00:00 +0900</pubDate>
+      <pubDate>Tue, 29 Jul 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/07/29/install-memcached/</guid>
       <description>
@@ -648,231 +828,9 @@ $ memcached-tool localhost dump | strings
     </item>
     
     <item>
-      <title>fuelphpでAgentClassを設定する</title>
-      <link>http://tatsuyano.github.io/2014/07/29/fuelphp-use-agent-class/</link>
-      <pubDate>Tue, 29 Jul 2014 02:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2014/07/29/fuelphp-use-agent-class/</guid>
-      <description>
-
-&lt;p&gt;ブラウザの識別やモバイルフォンとPCの識別をするには、fuelではAgentクラスを使用する。&lt;/p&gt;
-
-&lt;p&gt;AgentクラスはPHPのget_browser関数を利用する。&lt;/p&gt;
-
-&lt;p&gt;get_browser関数は、UA情報を&lt;a href=&#34;http://tempdownloads.browserscap.com/&#34;&gt;Browser Capabilities Project&lt;/a&gt;というサイトから取得する。
-fuelではこのサイトからUA情報を取得(キャッシュ化し2回目のアクセスからキャッシュを参照)し、識別する。&lt;/p&gt;
-
-&lt;h4 id=&#34;configファイルにua情報-サイト-の取得先urlなどを設定:46b9b5ce7f3c77f59a7ac57dcd96ae9b&#34;&gt;configファイルにUA情報(サイト)の取得先URLなどを設定&lt;/h4&gt;
-
-&lt;p&gt;fuel/app/config/config.php&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&#39;browscap&#39; =&amp;gt; array(
-    &#39;enabled&#39; =&amp;gt; true,
-    &#39;url&#39;     =&amp;gt; &#39;http://browsers.garykeith.com/stream.asp?BrowsCapINI&#39;,
-    &#39;method&#39; =&amp;gt; &#39;wrapper&#39;,
-    &#39;file&#39;   =&amp;gt; &#39;/tmp/php_browscap.ini&#39;,
-),
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;キャッシュの保存先について:46b9b5ce7f3c77f59a7ac57dcd96ae9b&#34;&gt;キャッシュの保存先について&lt;/h4&gt;
-
-&lt;p&gt;fuelでは fuel/app/cache にキャシュを保存している&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cache
-└── fuel
-    └── agent
-            ├── browscap.cache
-            └── browscap_file.cache
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;キャッシュ周りで権限エラーがでたので、権限を&lt;code&gt;777&lt;/code&gt;にする&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;chmod -R 777 fuel/app/cache/
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;agentクラスの実装:46b9b5ce7f3c77f59a7ac57dcd96ae9b&#34;&gt;Agentクラスの実装&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;Agent::is_mobiledevice();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;参考サイト:46b9b5ce7f3c77f59a7ac57dcd96ae9b&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://btt.hatenablog.com/entry/2012/07/04/001254&#34;&gt;FuelPHPのAgentクラスと拡張&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://fuelphp.com/docs/classes/agent/config.html&#34;&gt;Agent Class&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://fuelphp.seesaa.net/article/279094100.html&#34;&gt;FuelPHPのAgentクラスによる端末振り分けが簡単すぎる&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;関連する記事:46b9b5ce7f3c77f59a7ac57dcd96ae9b&#34;&gt;関連する記事&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/29/fuelphp-validation/&#34;&gt;fuelphpのエラー文言を日本語化する&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/28/use-the-redis-in-fuelphp/&#34;&gt;fuelphpでredisを使う&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>fuelphpのエラー文言を日本語化する</title>
-      <link>http://tatsuyano.github.io/2014/07/29/fuelphp-validation/</link>
-      <pubDate>Tue, 29 Jul 2014 01:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2014/07/29/fuelphp-validation/</guid>
-      <description>
-
-&lt;h4 id=&#34;config-phpに設定を追加:c686d533785df368c7d44ebfce4543f8&#34;&gt;config.phpに設定を追加&lt;/h4&gt;
-
-&lt;p&gt;app/config/config.php&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;//&#39;language&#39;           =&amp;gt; &#39;en&#39;, // Default language
-//&#39;language_fallback&#39;  =&amp;gt; &#39;en&#39;, // Fallback language when file isn&#39;t available for default language
-//&#39;locale&#39;             =&amp;gt; &#39;en_US&#39;, // PHP set_locale() setting, null to not set
-&#39;language&#39;           =&amp;gt; &#39;ja&#39;,
-&#39;language_fallback&#39;  =&amp;gt; &#39;en&#39;,
-&#39;locale&#39;             =&amp;gt; &#39;ja_JP.UTF-8&#39;,
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;langディレクトリに日本語用のディレクトリを作成:c686d533785df368c7d44ebfce4543f8&#34;&gt;langディレクトリに日本語用のディレクトリを作成&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;mkdir app/lang/ja
-touch app/lang/ja/validation.php
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;validation.phpの設定は core/lang/en/validation.php を参照
-設定されているkey(メソッド)は、core/classes/validation.phpで設定されている&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;?php
-return array(
-    &#39;required&#39;         =&amp;gt; &#39;「:label」は必須です&#39;,
-    &#39;min_length&#39;       =&amp;gt; &#39;「:label」は:param:1文字以上で入力してください&#39;,
-    &#39;max_length&#39;       =&amp;gt; &#39;「:label」は:param:1文字以内で入力してください&#39;,
-    &#39;exact_length&#39;     =&amp;gt; &#39;「:label」は:param:1文字で入力してください&#39;,
-    &#39;match_value&#39;      =&amp;gt; &#39;「:label」は「:param:1」と一致していません&#39;,
-    &#39;match_pattern&#39;    =&amp;gt; &#39;「:label」はパターン「:param:1」と一致しません&#39;,
-    &#39;match_field&#39;      =&amp;gt; &#39;「:label」は「:param:1」と一致していません&#39;,
-    &#39;valid_email&#39;      =&amp;gt; &#39;「:label」はメールアドレスが不正です&#39;,
-    &#39;valid_emails&#39;     =&amp;gt; &#39;「:label」に不正なメールアドレスが含まれてます&#39;,
-    &#39;valid_url&#39;        =&amp;gt; &#39;「:label」は不正なURLです&#39;,
-    &#39;valid_ip&#39;         =&amp;gt; &#39;「:label」は不正なIPアドレスです&#39;,
-    &#39;numeric_min&#39;      =&amp;gt; &#39;「:label」は:param:1以上で入力してください&#39;,
-    &#39;numeric_max&#39;      =&amp;gt; &#39;「:label」は:param:1以内で入力してください&#39;,
-    &#39;valid_string&#39;     =&amp;gt; &#39;「:label」は:param:1で入力する必要があります&#39;,
-);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;自前のvalidation-helperクラス-を作成する:c686d533785df368c7d44ebfce4543f8&#34;&gt;自前のvalidation(helperクラス)を作成する&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;mkdir app/classes/helper
-touch app/classes/helper/myvalidation.php
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;app/classes/helper/myvalidation.php&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;?php
-class Helper_MyValidation
-{
-    /**
-     * 数字をチェックするバリデーション
-     *
-     * @param  string val
-     * @return bool   numeric or blank is &#39;true&#39;.
-     */
-    public static function _validation_numeric_only($val)
-    {
-        mb_regex_encoding(&amp;quot;UTF-8&amp;quot;);
-        return preg_match(&amp;quot;/^[\d]*$/&amp;quot;, $val) === 1;
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;自作したメソッドのアラートを登録する:c686d533785df368c7d44ebfce4543f8&#34;&gt;自作したメソッドのアラートを登録する&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code&gt;cat fuel/app/lang/ja/validation.php | grep numeric_only
-&#39;numeric_only&#39;     =&amp;gt; &#39;「:label」は数字のみで入力してください&#39;,
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;controllerで自作のバリデーションの呼び出し:c686d533785df368c7d44ebfce4543f8&#34;&gt;controllerで自作のバリデーションの呼び出し&lt;/h4&gt;
-
-&lt;p&gt;app/classes/controller/hoge.php&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;public function action_create()
-{
-  $val = Validation::forge();
-  $val-&amp;gt;add_callable(&#39;Helper_MyValidation&#39;);
-  $val-&amp;gt;add_field(&#39;name&#39;,&#39;名前&#39;,&#39;required|min_length[2]|max_length[30]&#39;);
-  $val-&amp;gt;add_field(&#39;email&#39;,&#39;Email&#39;,&#39;required|valid_email&#39;);
-  $val-&amp;gt;add_field(&#39;tel&#39;,&#39;電話番号&#39;,&#39;numeric_only&#39;);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;どこでバリデーションを呼ぶべきか:c686d533785df368c7d44ebfce4543f8&#34;&gt;どこでバリデーションを呼ぶべきか&lt;/h3&gt;
-
-&lt;p&gt;modelかcontroller どちらに実装すべきかは迷いましたが、今回はcontrollerに実装するようにしました。
-理由はfieldsetを使わないからです。&lt;/p&gt;
-
-&lt;p&gt;fieldsetは便利ですが、どうしても細かいところに手が届かないのと、デザイナーさんと分業するには、少し勝手が悪いかなあと思いました。&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:c686d533785df368c7d44ebfce4543f8&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://fuelphp.jp/docs/1.7/classes/validation/validation.html&#34;&gt;Validation クラス&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://raining.bear-life.com/fuelphp/%E3%83%90%E3%83%AA%E3%83%87%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E3%81%AE%E3%83%AB%E3%83%BC%E3%83%AB%E3%82%92%E8%BF%BD%E5%8A%A0%E3%81%99%E3%82%8B&#34;&gt;バリデーションのルールを追加する&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;関連する記事:c686d533785df368c7d44ebfce4543f8&#34;&gt;関連する記事&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/29/fuelphp-use-agent-class/&#34;&gt;fuelphpでAgentClassを設定する&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/28/use-the-redis-in-fuelphp/&#34;&gt;fuelphpでredisを使う&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>PHP5.4から error_reportingのE_ALLにE_RISTRICTが加わった</title>
-      <link>http://tatsuyano.github.io/2014/07/28/e_ristrict-is-added-to-the-e_all/</link>
-      <pubDate>Mon, 28 Jul 2014 02:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2014/07/28/e_ristrict-is-added-to-the-e_all/</guid>
-      <description>
-
-&lt;p&gt;fuelphp案件でcomposer経由でxml_rpc2をインストールしたら、以下のようなエラーが出た&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Uncaught exception Fuel\Core\PhpErrorException: Non-static method PEAR::loadExtension() should not be called statically
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;最初はソースの依存関係が原因かなあと思ったが、調べてみるとそうではなく
-PHP5.4から &lt;code&gt;error_reportingのE_ALL&lt;/code&gt;に&lt;code&gt;E_RISTRICT&lt;/code&gt;が加わったことで、エラーと判定されるようになった&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://life.co-hey.com/2013/04/php5-4%E3%81%8B%E3%82%89%E3%81%AFerror_reporting%E3%81%AEe_all%E3%81%ABe_ristrict%E3%81%8C%E5%90%AB%E3%81%BE%E3%82%8C%E3%82%8B/&#34;&gt;php5.4からはerror_reportingのE_ALLにE_RISTRICTが含まれる&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.thingslabo.com/archives/000184.html&#34;&gt;PHPでHTML上にエラー表示/非表示する php.ini 設定&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;対象箇所でのみerror-reportingを止めることにした:30914d35f563b3c38cf63575b62c0153&#34;&gt;対象箇所でのみerror_reportingを止めることにした&lt;/h4&gt;
-
-&lt;p&gt;production環境以外で、かつ一部分でのみ&lt;code&gt;error_reporting&lt;/code&gt;を止めたかったので、対象箇所の前後で一時的に解除した&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$before_level = error_reporting(0); // error_report解除
-
-$options = array(&#39;prefix&#39; =&amp;gt; &#39;package.&#39;);
-$client = \XML_RPC2_Client::create(&#39;http://pear.php.net/xmlrpc.php&#39;, $options);
-$result = $client-&amp;gt;info(&#39;XML_RPC2&#39;);
-print_r($result);
-
-error_reporting($before_level); // error_reportを元に戻す
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://php.net/manual/ja/function.error-reporting.php&#34;&gt;error_reporting&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.php.net/manual/ja/errorfunc.constants.php&#34;&gt;定義済み定数&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
       <title>fuelphpでredisを使う</title>
       <link>http://tatsuyano.github.io/2014/07/28/use-the-redis-in-fuelphp/</link>
-      <pubDate>Mon, 28 Jul 2014 01:00:00 +0900</pubDate>
+      <pubDate>Mon, 28 Jul 2014 03:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/07/28/use-the-redis-in-fuelphp/</guid>
       <description>
@@ -945,6 +903,48 @@ redis 127.0.0.1:6379&amp;gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/29/fuelphp-use-agent-class/&#34;&gt;fuelphpでAgentClassを設定する&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/29/fuelphp-validation/&#34;&gt;fuelphpのエラー文言を日本語化する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>PHP5.4から error_reportingのE_ALLにE_RISTRICTが加わった</title>
+      <link>http://tatsuyano.github.io/2014/07/28/e_ristrict-is-added-to-the-e_all/</link>
+      <pubDate>Mon, 28 Jul 2014 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/07/28/e_ristrict-is-added-to-the-e_all/</guid>
+      <description>
+
+&lt;p&gt;fuelphp案件でcomposer経由でxml_rpc2をインストールしたら、以下のようなエラーが出た&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Uncaught exception Fuel\Core\PhpErrorException: Non-static method PEAR::loadExtension() should not be called statically
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;最初はソースの依存関係が原因かなあと思ったが、調べてみるとそうではなく
+PHP5.4から &lt;code&gt;error_reportingのE_ALL&lt;/code&gt;に&lt;code&gt;E_RISTRICT&lt;/code&gt;が加わったことで、エラーと判定されるようになった&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://life.co-hey.com/2013/04/php5-4%E3%81%8B%E3%82%89%E3%81%AFerror_reporting%E3%81%AEe_all%E3%81%ABe_ristrict%E3%81%8C%E5%90%AB%E3%81%BE%E3%82%8C%E3%82%8B/&#34;&gt;php5.4からはerror_reportingのE_ALLにE_RISTRICTが含まれる&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.thingslabo.com/archives/000184.html&#34;&gt;PHPでHTML上にエラー表示/非表示する php.ini 設定&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;対象箇所でのみerror-reportingを止めることにした:30914d35f563b3c38cf63575b62c0153&#34;&gt;対象箇所でのみerror_reportingを止めることにした&lt;/h4&gt;
+
+&lt;p&gt;production環境以外で、かつ一部分でのみ&lt;code&gt;error_reporting&lt;/code&gt;を止めたかったので、対象箇所の前後で一時的に解除した&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$before_level = error_reporting(0); // error_report解除
+
+$options = array(&#39;prefix&#39; =&amp;gt; &#39;package.&#39;);
+$client = \XML_RPC2_Client::create(&#39;http://pear.php.net/xmlrpc.php&#39;, $options);
+$result = $client-&amp;gt;info(&#39;XML_RPC2&#39;);
+print_r($result);
+
+error_reporting($before_level); // error_reportを元に戻す
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://php.net/manual/ja/function.error-reporting.php&#34;&gt;error_reporting&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.php.net/manual/ja/errorfunc.constants.php&#34;&gt;定義済み定数&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
@@ -1266,9 +1266,28 @@ bool(false)
     </item>
     
     <item>
+      <title>PhpStormのkeymapを変更し、C-hにdelete-backward-charを割り当てる</title>
+      <link>http://tatsuyano.github.io/2013/02/14/phpstorm-keymap/</link>
+      <pubDate>Thu, 14 Feb 2013 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/02/14/phpstorm-keymap/</guid>
+      <description>&lt;p&gt;C-h(delete-backward-char)のことを「hungry backspace」というらしい。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Preference &amp;gt; Keymap &amp;gt; Main menu &amp;gt; Navigate &amp;gt; Type Hierarchy &amp;gt; Remove ^H
+Preference &amp;gt; Keymap &amp;gt; hungry backspace &amp;gt; Add Keyboard Shortcut ^H
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ついでにCtrl+i に設定されていた「Implement Mehtods」のショートカットを削除&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Preference &amp;gt; Keymap &amp;gt; Main menu &amp;gt; Code &amp;gt; Implement Methods &amp;gt; Remove ^I
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
       <title>PhpStormのメモリ使用量を増やす</title>
       <link>http://tatsuyano.github.io/2013/02/14/phpstorm-memory/</link>
-      <pubDate>Thu, 14 Feb 2013 02:00:00 +0900</pubDate>
+      <pubDate>Thu, 14 Feb 2013 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/02/14/phpstorm-memory/</guid>
       <description>
@@ -1297,25 +1316,6 @@ bool(false)
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://webinthelife.com/?p=274&#34;&gt;Mac版PHPStormのメモリ割り当てを増やして快適に&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>PhpStormのkeymapを変更し、C-hにdelete-backward-charを割り当てる</title>
-      <link>http://tatsuyano.github.io/2013/02/14/phpstorm-keymap/</link>
-      <pubDate>Thu, 14 Feb 2013 01:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2013/02/14/phpstorm-keymap/</guid>
-      <description>&lt;p&gt;C-h(delete-backward-char)のことを「hungry backspace」というらしい。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Preference &amp;gt; Keymap &amp;gt; Main menu &amp;gt; Navigate &amp;gt; Type Hierarchy &amp;gt; Remove ^H
-Preference &amp;gt; Keymap &amp;gt; hungry backspace &amp;gt; Add Keyboard Shortcut ^H
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;ついでにCtrl+i に設定されていた「Implement Mehtods」のショートカットを削除&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Preference &amp;gt; Keymap &amp;gt; Main menu &amp;gt; Code &amp;gt; Implement Methods &amp;gt; Remove ^I
-&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

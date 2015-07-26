@@ -92,7 +92,7 @@ And you can also install it with el-get.&lt;/p&gt;
     <item>
       <title>リモートリポジトリの変更を取得する(git fetch)</title>
       <link>http://tatsuyano.github.io/2013/02/25/git-fetch/</link>
-      <pubDate>Mon, 25 Feb 2013 02:00:00 +0900</pubDate>
+      <pubDate>Mon, 25 Feb 2013 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/02/25/git-fetch/</guid>
       <description>
@@ -135,106 +135,9 @@ And you can also install it with el-get.&lt;/p&gt;
     </item>
     
     <item>
-      <title>master以外のbranchをリモート(origin)にpushする</title>
-      <link>http://tatsuyano.github.io/2013/02/23/git-push-origin-newbranch/</link>
-      <pubDate>Sat, 23 Feb 2013 03:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2013/02/23/git-push-origin-newbranch/</guid>
-      <description>
-
-&lt;p&gt;master以外の別branchをリモートにpushする&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git push origin new-branch
-
-git branch -a
-  master
-* new-branch
-  remotes/origin/HEAD -&amp;gt; origin/master
-  remotes/origin/master
-  remotes/origin/new-branch # &amp;lt;- 追加される
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;origin/master以外のリモートにあるbranchをローカルに追加する&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git branch new-branch origin/new-branch # &amp;lt;- 本来ならこれでうまくいくのだが
-
-# なぜかすでにローカルにあるリポジトリから、新たに追加されたリモートのブランチが参照されていない
-git branch -a
-* master
-  remotes/origin/HEAD -&amp;gt; origin/master
-  remotes/origin/master
-# remotes/origin/new-branch &amp;lt;- 本来参照されるはずのブランチ
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;うまくいかないので、いったんローカルのリポジトリを破棄し、新たにcloneしなおしてみる&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;mv local-repository local-repository.bk
-
-git clone ssh://hoge/var/git/remote-repository.git local-repository
-cd local-repository/
-
-git branch -a
-* master
-  remotes/origin/HEAD -&amp;gt; origin/master
-  remotes/origin/master
-  remotes/origin/new-branch # &amp;lt;- 追加されている
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;参考サイト:8bd59dae8686eeb4035b3a21d62ebfa9&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.basyura.org/entry/20100323/p1&#34;&gt;remote に branch を push し、remote から clone したリポジトリの branch を変更して push する&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>conflictしたファイルを修正しpushする</title>
-      <link>http://tatsuyano.github.io/2013/02/23/git-conflict/</link>
-      <pubDate>Sat, 23 Feb 2013 02:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2013/02/23/git-conflict/</guid>
-      <description>&lt;p&gt;pullした後に、commitしたファイルdummy.txtがconflictした場合&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git pull
-Auto-merging dummy.txt # &amp;lt;- dummy.txtがconflictして、auto-mergeされた
-CONFLICT (content): Merge conflict in dummy.txt
-Automatic merge failed; fix conflicts and then commit the result.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;conflictしたファイルを修正する&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;emacs dummy.txt
-&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt; HEAD
-local
-=======
-remote
-&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt; 58da51ee64bf7f793167ddb40d035815e39566b4
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;修正後、git commit -aで再度commitしpush&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git commit -a -m &#39;merge dummy&#39;
-[master 102b6c6] merge dummy
-
-git push
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;git commit -a は git add -u した後すぐにgit commitしたのと同義&lt;/p&gt;
-
-&lt;p&gt;conflictしているファイルの表示&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;git ls-files -u
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
       <title>作業ごとにブランチを切る(git branch)</title>
       <link>http://tatsuyano.github.io/2013/02/23/git-branch/</link>
-      <pubDate>Sat, 23 Feb 2013 01:00:00 +0900</pubDate>
+      <pubDate>Sat, 23 Feb 2013 03:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/02/23/git-branch/</guid>
       <description>
@@ -291,6 +194,103 @@ git checkout master
 # 対象のbranchをmerge
 git merge new-branch
 &lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>conflictしたファイルを修正しpushする</title>
+      <link>http://tatsuyano.github.io/2013/02/23/git-conflict/</link>
+      <pubDate>Sat, 23 Feb 2013 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/02/23/git-conflict/</guid>
+      <description>&lt;p&gt;pullした後に、commitしたファイルdummy.txtがconflictした場合&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git pull
+Auto-merging dummy.txt # &amp;lt;- dummy.txtがconflictして、auto-mergeされた
+CONFLICT (content): Merge conflict in dummy.txt
+Automatic merge failed; fix conflicts and then commit the result.
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;conflictしたファイルを修正する&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;emacs dummy.txt
+&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt;&amp;lt; HEAD
+local
+=======
+remote
+&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt;&amp;gt; 58da51ee64bf7f793167ddb40d035815e39566b4
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;修正後、git commit -aで再度commitしpush&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git commit -a -m &#39;merge dummy&#39;
+[master 102b6c6] merge dummy
+
+git push
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;git commit -a は git add -u した後すぐにgit commitしたのと同義&lt;/p&gt;
+
+&lt;p&gt;conflictしているファイルの表示&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git ls-files -u
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>master以外のbranchをリモート(origin)にpushする</title>
+      <link>http://tatsuyano.github.io/2013/02/23/git-push-origin-newbranch/</link>
+      <pubDate>Sat, 23 Feb 2013 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/02/23/git-push-origin-newbranch/</guid>
+      <description>
+
+&lt;p&gt;master以外の別branchをリモートにpushする&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git push origin new-branch
+
+git branch -a
+  master
+* new-branch
+  remotes/origin/HEAD -&amp;gt; origin/master
+  remotes/origin/master
+  remotes/origin/new-branch # &amp;lt;- 追加される
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;origin/master以外のリモートにあるbranchをローカルに追加する&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;git branch new-branch origin/new-branch # &amp;lt;- 本来ならこれでうまくいくのだが
+
+# なぜかすでにローカルにあるリポジトリから、新たに追加されたリモートのブランチが参照されていない
+git branch -a
+* master
+  remotes/origin/HEAD -&amp;gt; origin/master
+  remotes/origin/master
+# remotes/origin/new-branch &amp;lt;- 本来参照されるはずのブランチ
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;うまくいかないので、いったんローカルのリポジトリを破棄し、新たにcloneしなおしてみる&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mv local-repository local-repository.bk
+
+git clone ssh://hoge/var/git/remote-repository.git local-repository
+cd local-repository/
+
+git branch -a
+* master
+  remotes/origin/HEAD -&amp;gt; origin/master
+  remotes/origin/master
+  remotes/origin/new-branch # &amp;lt;- 追加されている
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;参考サイト:8bd59dae8686eeb4035b3a21d62ebfa9&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.basyura.org/entry/20100323/p1&#34;&gt;remote に branch を push し、remote から clone したリポジトリの branch を変更して push する&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     

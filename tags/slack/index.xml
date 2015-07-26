@@ -6,13 +6,13 @@
     <description>Recent content in Slack on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Fri, 13 Mar 2015 01:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 13 Mar 2015 02:00:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/tags/slack/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>WerckerのBuild結果をSlackに通知する</title>
       <link>http://tatsuyano.github.io/2015/03/13/notification-build-results-of-wercker-to-slack/</link>
-      <pubDate>Fri, 13 Mar 2015 01:00:00 +0900</pubDate>
+      <pubDate>Fri, 13 Mar 2015 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/03/13/notification-build-results-of-wercker-to-slack/</guid>
       <description>

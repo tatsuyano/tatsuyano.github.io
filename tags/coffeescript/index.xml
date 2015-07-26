@@ -6,13 +6,13 @@
     <description>Recent content in Coffeescript on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Tue, 19 Mar 2013 04:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 19 Mar 2013 03:00:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/tags/coffeescript/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>coffee-modeでauto-completeを使えるようにする</title>
       <link>http://tatsuyano.github.io/2013/03/19/coffee-mode-used-ac-dict/</link>
-      <pubDate>Tue, 19 Mar 2013 04:00:00 +0900</pubDate>
+      <pubDate>Tue, 19 Mar 2013 03:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/03/19/coffee-mode-used-ac-dict/</guid>
       <description>
@@ -61,7 +61,7 @@ wget https://raw.github.com/sandai/dotfiles/master/.emacs.d/ac-dict/js2-mode
     <item>
       <title>CoffeeScriptの勉強 その４(クラス、Jquery)</title>
       <link>http://tatsuyano.github.io/2013/03/12/coffee-script-study-jquery/</link>
-      <pubDate>Tue, 12 Mar 2013 01:00:00 +0900</pubDate>
+      <pubDate>Tue, 12 Mar 2013 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/03/12/coffee-script-study-jquery/</guid>
       <description>
@@ -329,98 +329,9 @@ pos = {
     </item>
     
     <item>
-      <title>CoffeeScriptの勉強 その１(インストール、環境構築)</title>
-      <link>http://tatsuyano.github.io/2013/03/08/coffee-script-emacs/</link>
-      <pubDate>Fri, 08 Mar 2013 02:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2013/03/08/coffee-script-emacs/</guid>
-      <description>
-
-&lt;h4 id=&#34;npm-node-js-でのインストール:c905a6070d9e047afb6468a285c74d82&#34;&gt;npm(node.js)でのインストール&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# node.jsのversionを指定
-nvm ls
-v0.8.14 v0.9.4
-current:        v0.9.4
-
-nvm use 0.9.4
-Now using node v0.9.4
-
-npm install -g coffee-script
-
-$ coffee -v
-CoffeeScript version 1.6.1
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;今後頻繁にCoffeeScriptを使いそうなので、zshrcにnode.jsのバージョンを指定しておく&lt;/p&gt;
-
-&lt;p&gt;$HOME/.zshrc
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[[ -s $HOME/.nvm/nvm.sh ]] &amp;amp;&amp;amp; nvm use 0.9.4&lt;/p&gt;
-
-&lt;p&gt;source $HOME/.zshrc
-&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-
-&lt;h4 id=&#34;emacsにcoffee-modeをインストール:c905a6070d9e047afb6468a285c74d82&#34;&gt;emacsにcoffee-modeをインストール&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cd $HOME/.emacs.d/elisp
-git clone git://github.com/defunkt/coffee-mode.git
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;$HOME/.emacs.d/conf/52_coffee.el
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;(add-to-list &amp;lsquo;load-path &amp;ldquo;~/.emacs.d/elisp/coffee-mode&amp;rdquo;)
-(require &amp;lsquo;coffee-mode)&lt;/p&gt;
-
-&lt;p&gt;;; デフォルトだとインデントが Space 8 なので、Space 2 に変更
-;; &lt;a href=&#34;http://qiita.com/items/a8d96ae95a1838500e37&#34;&gt;http://qiita.com/items/a8d96ae95a1838500e37&lt;/a&gt;
-(defun coffee-custom ()
-  &amp;ldquo;coffee-mode-hook&amp;rdquo;
-   (set (make-local-variable &amp;lsquo;tab-width) 2)
-    (setq coffee-tab-width 2))&lt;/p&gt;
-
-&lt;p&gt;(add-hook &amp;lsquo;coffee-mode-hook
-  &amp;lsquo;(lambda() (coffee-custom)))
-&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-
-&lt;h4 id=&#34;インデントに色をつける:c905a6070d9e047afb6468a285c74d82&#34;&gt;インデントに色をつける&lt;/h4&gt;
-
-&lt;p&gt;CoofeeScriptはrubyのようにインデントごとにブロックを表現するので、&lt;br /&gt;
-emacsに「Highlight-Indentation-for-Emacs」をインストールする。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cd $HOME/.emacs.d/elisp
-git clone https://github.com/antonj/Highlight-Indentation-for-Emacs.git
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;「Highlight-Indentation-for-Emacs」をインストールすると、&lt;br /&gt;
-カーソルを合わせているブロック(インデント)に色を付けてくれる「highlight-indentation-current-column-mode」。&lt;br /&gt;
-ブロック(インデント)ごとに色を付けてくれる「highlight-indentation-mode」などが使えるようになる。&lt;/p&gt;
-
-&lt;p&gt;ただ現在「highlight-indentation-mode」をcoffee-modeで初めから使えるようにhookするとerrorは出ないが、色付けをしてくれない。&lt;br /&gt;
-手動で M-x highlight-indentation-mode と起動させる分には色付けされる。&lt;br /&gt;
-とりあえず「highlight-indentation-current-column-mode」しか使わないので、こちらだけhookする。&lt;/p&gt;
-
-&lt;p&gt;$HOME/.emacs.d/conf/61_highlight.el
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;(add-to-list &amp;lsquo;load-path &amp;ldquo;~/.emacs.d/elisp/Highlight-Indentation-for-Emacs&amp;rdquo;)
-(require &amp;lsquo;highlight-indentation)(setq highlight-indentation-offset 2) ;;default:4
-(set-face-background &amp;lsquo;highlight-indentation-current-column-face &amp;ldquo;#ff0000&amp;rdquo;) ;;default:#000000
-(add-hook &amp;lsquo;coffee-mode-hook &amp;lsquo;highlight-indentation-current-column-mode) ;; coffee-mode-hook
-&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-
-&lt;h4 id=&#34;参考サイト:c905a6070d9e047afb6468a285c74d82&#34;&gt;参考サイト&lt;/h4&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://coffeescript.org/&#34;&gt;本家チュートリアル&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://codezine.jp/article/detail/6392&#34;&gt;「CoffeeScript」の開発環境を用意して、サンプルを表示してみよう&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.iss.ms/2012/03/17/095152&#34;&gt;インデントをハイライトしてくれる「Highlighting indentation」で脱・インデント迷子&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
       <title>CoffeeScriptの勉強 その２(構文)</title>
       <link>http://tatsuyano.github.io/2013/03/08/coffee-script-study/</link>
-      <pubDate>Fri, 08 Mar 2013 01:00:00 +0900</pubDate>
+      <pubDate>Fri, 08 Mar 2013 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/03/08/coffee-script-study/</guid>
       <description>
@@ -566,6 +477,95 @@ console.log &amp;ldquo;My name is #{name}!&amp;rdquo;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://tech.kayac.com/archive/coffeescript-tutorial.html&#34;&gt;今日から始めるCoffeeScript&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://minghai.github.com/library/coffeescript/index.html&#34;&gt;The Little Book on CoffeeScript&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>CoffeeScriptの勉強 その１(インストール、環境構築)</title>
+      <link>http://tatsuyano.github.io/2013/03/08/coffee-script-emacs/</link>
+      <pubDate>Fri, 08 Mar 2013 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/03/08/coffee-script-emacs/</guid>
+      <description>
+
+&lt;h4 id=&#34;npm-node-js-でのインストール:c905a6070d9e047afb6468a285c74d82&#34;&gt;npm(node.js)でのインストール&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# node.jsのversionを指定
+nvm ls
+v0.8.14 v0.9.4
+current:        v0.9.4
+
+nvm use 0.9.4
+Now using node v0.9.4
+
+npm install -g coffee-script
+
+$ coffee -v
+CoffeeScript version 1.6.1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;今後頻繁にCoffeeScriptを使いそうなので、zshrcにnode.jsのバージョンを指定しておく&lt;/p&gt;
+
+&lt;p&gt;$HOME/.zshrc
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;[[ -s $HOME/.nvm/nvm.sh ]] &amp;amp;&amp;amp; nvm use 0.9.4&lt;/p&gt;
+
+&lt;p&gt;source $HOME/.zshrc
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;emacsにcoffee-modeをインストール:c905a6070d9e047afb6468a285c74d82&#34;&gt;emacsにcoffee-modeをインストール&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cd $HOME/.emacs.d/elisp
+git clone git://github.com/defunkt/coffee-mode.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;$HOME/.emacs.d/conf/52_coffee.el
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;(add-to-list &amp;lsquo;load-path &amp;ldquo;~/.emacs.d/elisp/coffee-mode&amp;rdquo;)
+(require &amp;lsquo;coffee-mode)&lt;/p&gt;
+
+&lt;p&gt;;; デフォルトだとインデントが Space 8 なので、Space 2 に変更
+;; &lt;a href=&#34;http://qiita.com/items/a8d96ae95a1838500e37&#34;&gt;http://qiita.com/items/a8d96ae95a1838500e37&lt;/a&gt;
+(defun coffee-custom ()
+  &amp;ldquo;coffee-mode-hook&amp;rdquo;
+   (set (make-local-variable &amp;lsquo;tab-width) 2)
+    (setq coffee-tab-width 2))&lt;/p&gt;
+
+&lt;p&gt;(add-hook &amp;lsquo;coffee-mode-hook
+  &amp;lsquo;(lambda() (coffee-custom)))
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;インデントに色をつける:c905a6070d9e047afb6468a285c74d82&#34;&gt;インデントに色をつける&lt;/h4&gt;
+
+&lt;p&gt;CoofeeScriptはrubyのようにインデントごとにブロックを表現するので、&lt;br /&gt;
+emacsに「Highlight-Indentation-for-Emacs」をインストールする。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;cd $HOME/.emacs.d/elisp
+git clone https://github.com/antonj/Highlight-Indentation-for-Emacs.git
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;「Highlight-Indentation-for-Emacs」をインストールすると、&lt;br /&gt;
+カーソルを合わせているブロック(インデント)に色を付けてくれる「highlight-indentation-current-column-mode」。&lt;br /&gt;
+ブロック(インデント)ごとに色を付けてくれる「highlight-indentation-mode」などが使えるようになる。&lt;/p&gt;
+
+&lt;p&gt;ただ現在「highlight-indentation-mode」をcoffee-modeで初めから使えるようにhookするとerrorは出ないが、色付けをしてくれない。&lt;br /&gt;
+手動で M-x highlight-indentation-mode と起動させる分には色付けされる。&lt;br /&gt;
+とりあえず「highlight-indentation-current-column-mode」しか使わないので、こちらだけhookする。&lt;/p&gt;
+
+&lt;p&gt;$HOME/.emacs.d/conf/61_highlight.el
+&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;(add-to-list &amp;lsquo;load-path &amp;ldquo;~/.emacs.d/elisp/Highlight-Indentation-for-Emacs&amp;rdquo;)
+(require &amp;lsquo;highlight-indentation)(setq highlight-indentation-offset 2) ;;default:4
+(set-face-background &amp;lsquo;highlight-indentation-current-column-face &amp;ldquo;#ff0000&amp;rdquo;) ;;default:#000000
+(add-hook &amp;lsquo;coffee-mode-hook &amp;lsquo;highlight-indentation-current-column-mode) ;; coffee-mode-hook
+&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;参考サイト:c905a6070d9e047afb6468a285c74d82&#34;&gt;参考サイト&lt;/h4&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://coffeescript.org/&#34;&gt;本家チュートリアル&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://codezine.jp/article/detail/6392&#34;&gt;「CoffeeScript」の開発環境を用意して、サンプルを表示してみよう&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.iss.ms/2012/03/17/095152&#34;&gt;インデントをハイライトしてくれる「Highlighting indentation」で脱・インデント迷子&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

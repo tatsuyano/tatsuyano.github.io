@@ -6,13 +6,13 @@
     <description>Recent content in Nginx on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Tue, 09 Sep 2014 02:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 09 Sep 2014 01:00:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/tags/nginx/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Amazon LinuxにGhostをインストールする</title>
       <link>http://tatsuyano.github.io/2014/09/09/how-to-install-and-setup-ghost-on-amazon-linux/</link>
-      <pubDate>Tue, 09 Sep 2014 02:00:00 +0900</pubDate>
+      <pubDate>Tue, 09 Sep 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/09/09/how-to-install-and-setup-ghost-on-amazon-linux/</guid>
       <description>
@@ -333,62 +333,9 @@ $ NODE_ENV=production forever start index.js
     </item>
     
     <item>
-      <title>nginxにBASIC認証とIP制限を入れる</title>
-      <link>http://tatsuyano.github.io/2012/12/21/nginx-basic-authentication-limit-ip/</link>
-      <pubDate>Fri, 21 Dec 2012 02:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2012/12/21/nginx-basic-authentication-limit-ip/</guid>
-      <description>
-
-&lt;h2 id=&#34;basic認証:798fce9c39f0cf864e5e3338113d2019&#34;&gt;Basic認証&lt;/h2&gt;
-
-&lt;p&gt;自分のホーム以下に.htpasswdファイルを配置するとうまく認証できませんでした。&lt;br /&gt;
-なのであまりよくありませんが面倒なので、/etc/nginx配下で、かつパーミッションは777で。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cd /etc/nginx
-htpasswd -c /etc/nginx/.htpasswd hoge
-chmod 777 .htpasswd
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;emacs conf.d/vh_redmine.conf
-   location / {
-     ....
-     auth_basic &amp;quot;Secret Area&amp;quot;;
-     auth_basic_user_file &amp;quot;/etc/nginx/.htpasswd&amp;quot;;
-   }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;ip制限:798fce9c39f0cf864e5e3338113d2019&#34;&gt;IP制限&lt;/h2&gt;
-
-&lt;p&gt;上から順に設定が反映されるらしく、allowより前にdenyの設定を入れてしまうとallowが反映されないので注意。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;  server {
-    ....
-    allow xxx.xxx.xxx.xxx;
-    deny  all;
-  }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;再起動:798fce9c39f0cf864e5e3338113d2019&#34;&gt;再起動&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;/etc/init.d/nginx restart
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;参考サイト:798fce9c39f0cf864e5e3338113d2019&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://se-suganuma.blogspot.jp/2012/05/nginxbasic.html&#34;&gt;nginxでBasic認証を設定&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://ecpplus.net/weblog/nginx%E3%81%A7ip%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E5%88%B6%E9%99%90/&#34;&gt;Nginx で IPアドレスによるアクセス制限&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
       <title>nginxのファイルのアップロードサイズを変更する　413 Request Entity Too Large</title>
       <link>http://tatsuyano.github.io/2012/12/21/nginx-request-entity-too-large/</link>
-      <pubDate>Fri, 21 Dec 2012 01:00:00 +0900</pubDate>
+      <pubDate>Fri, 21 Dec 2012 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2012/12/21/nginx-request-entity-too-large/</guid>
       <description>
@@ -440,6 +387,59 @@ memory_limit = 128M
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://weble.org/2012/05/28/nginx-error-413-request-entity-too-large-%E3%81%A8%E5%87%BA%E3%82%8B%E5%A0%B4%E5%90%88%E3%81%AF%E6%9C%80%E5%A4%A7%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%B5%E3%82%A4%E3%82%BA%E3%82%92&#34;&gt;nginx error – 413 Request Entity Too Large と出る場合は最大ファイルサイズを変更する&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://se-suganuma.blogspot.jp/2012/04/fileuploadnginxphpini.html&#34;&gt;FileをUploadするためのnginxとphp.iniの設定&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>nginxにBASIC認証とIP制限を入れる</title>
+      <link>http://tatsuyano.github.io/2012/12/21/nginx-basic-authentication-limit-ip/</link>
+      <pubDate>Fri, 21 Dec 2012 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2012/12/21/nginx-basic-authentication-limit-ip/</guid>
+      <description>
+
+&lt;h2 id=&#34;basic認証:798fce9c39f0cf864e5e3338113d2019&#34;&gt;Basic認証&lt;/h2&gt;
+
+&lt;p&gt;自分のホーム以下に.htpasswdファイルを配置するとうまく認証できませんでした。&lt;br /&gt;
+なのであまりよくありませんが面倒なので、/etc/nginx配下で、かつパーミッションは777で。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd /etc/nginx
+htpasswd -c /etc/nginx/.htpasswd hoge
+chmod 777 .htpasswd
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;emacs conf.d/vh_redmine.conf
+   location / {
+     ....
+     auth_basic &amp;quot;Secret Area&amp;quot;;
+     auth_basic_user_file &amp;quot;/etc/nginx/.htpasswd&amp;quot;;
+   }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;ip制限:798fce9c39f0cf864e5e3338113d2019&#34;&gt;IP制限&lt;/h2&gt;
+
+&lt;p&gt;上から順に設定が反映されるらしく、allowより前にdenyの設定を入れてしまうとallowが反映されないので注意。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;  server {
+    ....
+    allow xxx.xxx.xxx.xxx;
+    deny  all;
+  }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;再起動:798fce9c39f0cf864e5e3338113d2019&#34;&gt;再起動&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;/etc/init.d/nginx restart
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;参考サイト:798fce9c39f0cf864e5e3338113d2019&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://se-suganuma.blogspot.jp/2012/05/nginxbasic.html&#34;&gt;nginxでBasic認証を設定&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://ecpplus.net/weblog/nginx%E3%81%A7ip%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E5%88%B6%E9%99%90/&#34;&gt;Nginx で IPアドレスによるアクセス制限&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

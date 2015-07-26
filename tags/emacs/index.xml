@@ -583,9 +583,74 @@ gem &amp;quot;method_source&amp;quot;, &amp;quot;&amp;gt;= 0.8.2&amp;quot;
     </item>
     
     <item>
+      <title>init-loaderをCaskでインストールする</title>
+      <link>http://tatsuyano.github.io/2014/08/28/how-to-install-and-setup-initloader-in-cask/</link>
+      <pubDate>Thu, 28 Aug 2014 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/08/28/how-to-install-and-setup-initloader-in-cask/</guid>
+      <description>
+
+&lt;p&gt;最近&lt;code&gt;cask&lt;/code&gt;に乗り換えたので、&lt;code&gt;init-loader.el&lt;/code&gt;も再度設定し直しました。&lt;/p&gt;
+
+&lt;h3 id=&#34;init-loaderのインストール:af05674282cdca3f015095d80d55db77&#34;&gt;init-loaderのインストール&lt;/h3&gt;
+
+&lt;p&gt;まずはCaskファイルに設定し、&lt;code&gt;cask&lt;/code&gt;コマンドで&lt;code&gt;init-loader&lt;/code&gt;をインストールします。&lt;/p&gt;
+
+&lt;p&gt;~/.emacs.d/Cask&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;;; Setup
+(depends-on &amp;quot;init-loader&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;次に設定ファイル(elisp)を格納するディレクトリ、&lt;code&gt;init_loader&lt;/code&gt;を作成します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;mkdir $HOME/.emacs.d/init_loader
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;先ほど作成したディレクトリを&lt;code&gt;init-loader&lt;/code&gt;がロードするように設定します。&lt;/p&gt;
+
+&lt;p&gt;~/.emacs.d/init.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;;; init-loader
+(custom-set-variables
+ &#39;(init-loader-show-log-after-init &#39;error-only))
+ (init-loader-load (concat user-emacs-directory &amp;quot;init_loader&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;init-loaderで読み込むファイル:af05674282cdca3f015095d80d55db77&#34;&gt;init-loaderで読み込むファイル&lt;/h3&gt;
+
+&lt;p&gt;とりあえずinit-loaderで読み込むファイルは以下のように設定しました。
+まだすべて&lt;code&gt;cask&lt;/code&gt;に移行しきれていないので、順々に対応していきたいと思います。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;init_loader
+│
+├── 01_basic.el
+├── 02_helm.el
+└── 02_migemo.el
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;お疲れ様でした。&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:af05674282cdca3f015095d80d55db77&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://github.com/syohex/dot_files/tree/master/emacs&#34;&gt;syohex/dotfiles/emacs&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;関連する記事:af05674282cdca3f015095d80d55db77&#34;&gt;関連する記事&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/20/install-cask/&#34;&gt;Caskをインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/27/how-to-install-and-setup-migemo-on-amazon-linux/&#34;&gt;Amazon LinuxにMigemoをインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/28/how-to-install-and-setup-helm-in-cask/&#34;&gt;HelmをCaskでインストールする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
       <title>HelmをCaskでインストールする</title>
       <link>http://tatsuyano.github.io/2014/08/28/how-to-install-and-setup-helm-in-cask/</link>
-      <pubDate>Thu, 28 Aug 2014 02:00:00 +0900</pubDate>
+      <pubDate>Thu, 28 Aug 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/08/28/how-to-install-and-setup-helm-in-cask/</guid>
       <description>
@@ -659,74 +724,9 @@ Wrote $HOME/.emacs.d/.cask/24.3.1/elpa/helm-20140827.436/helm-autoloads.el
     </item>
     
     <item>
-      <title>init-loaderをCaskでインストールする</title>
-      <link>http://tatsuyano.github.io/2014/08/28/how-to-install-and-setup-initloader-in-cask/</link>
-      <pubDate>Thu, 28 Aug 2014 01:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2014/08/28/how-to-install-and-setup-initloader-in-cask/</guid>
-      <description>
-
-&lt;p&gt;最近&lt;code&gt;cask&lt;/code&gt;に乗り換えたので、&lt;code&gt;init-loader.el&lt;/code&gt;も再度設定し直しました。&lt;/p&gt;
-
-&lt;h3 id=&#34;init-loaderのインストール:af05674282cdca3f015095d80d55db77&#34;&gt;init-loaderのインストール&lt;/h3&gt;
-
-&lt;p&gt;まずはCaskファイルに設定し、&lt;code&gt;cask&lt;/code&gt;コマンドで&lt;code&gt;init-loader&lt;/code&gt;をインストールします。&lt;/p&gt;
-
-&lt;p&gt;~/.emacs.d/Cask&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;;; Setup
-(depends-on &amp;quot;init-loader&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;次に設定ファイル(elisp)を格納するディレクトリ、&lt;code&gt;init_loader&lt;/code&gt;を作成します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;mkdir $HOME/.emacs.d/init_loader
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;先ほど作成したディレクトリを&lt;code&gt;init-loader&lt;/code&gt;がロードするように設定します。&lt;/p&gt;
-
-&lt;p&gt;~/.emacs.d/init.el&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;;; init-loader
-(custom-set-variables
- &#39;(init-loader-show-log-after-init &#39;error-only))
- (init-loader-load (concat user-emacs-directory &amp;quot;init_loader&amp;quot;))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;init-loaderで読み込むファイル:af05674282cdca3f015095d80d55db77&#34;&gt;init-loaderで読み込むファイル&lt;/h3&gt;
-
-&lt;p&gt;とりあえずinit-loaderで読み込むファイルは以下のように設定しました。
-まだすべて&lt;code&gt;cask&lt;/code&gt;に移行しきれていないので、順々に対応していきたいと思います。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;init_loader
-│
-├── 01_basic.el
-├── 02_helm.el
-└── 02_migemo.el
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;お疲れ様でした。&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:af05674282cdca3f015095d80d55db77&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/syohex/dot_files/tree/master/emacs&#34;&gt;syohex/dotfiles/emacs&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;関連する記事:af05674282cdca3f015095d80d55db77&#34;&gt;関連する記事&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/20/install-cask/&#34;&gt;Caskをインストールする&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/27/how-to-install-and-setup-migemo-on-amazon-linux/&#34;&gt;Amazon LinuxにMigemoをインストールする&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/28/how-to-install-and-setup-helm-in-cask/&#34;&gt;HelmをCaskでインストールする&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Amazon LinuxにMigemoをインストールする</title>
       <link>http://tatsuyano.github.io/2014/08/27/how-to-install-and-setup-migemo-on-amazon-linux/</link>
-      <pubDate>Wed, 27 Aug 2014 01:00:00 +0900</pubDate>
+      <pubDate>Wed, 27 Aug 2014 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/08/27/how-to-install-and-setup-migemo-on-amazon-linux/</guid>
       <description>
@@ -1421,23 +1421,44 @@ cp -a .rbenv/versions/2.0.0-p0/lib/ruby/gems/2.0.0/gems/rcodetools-0.8.5.0/rcode
     </item>
     
     <item>
-      <title>el-get.elでauto-complete.elをインストールする</title>
-      <link>http://tatsuyano.github.io/2013/03/19/emacs-el-get-auto-complete/</link>
+      <title>el-get.elでinit-loader.elをインストールする</title>
+      <link>http://tatsuyano.github.io/2013/03/19/emacs-el-get-init-loader/</link>
       <pubDate>Tue, 19 Mar 2013 06:00:00 +0900</pubDate>
       
-      <guid>http://tatsuyano.github.io/2013/03/19/emacs-el-get-auto-complete/</guid>
+      <guid>http://tatsuyano.github.io/2013/03/19/emacs-el-get-init-loader/</guid>
       <description>
 
-&lt;h2 id=&#34;el-getにインストールされているパッケージリストが古かったので-レシピを更新:0a033ac6f46da56833c9f2f6b2fddbb8&#34;&gt;el-getにインストールされているパッケージリストが古かったので、レシピを更新&lt;/h2&gt;
+&lt;h4 id=&#34;インストールしたいパッケージが-el-get-のパッケージリストにない場合:13a2c021518d9b0bbded7970921ba69f&#34;&gt;インストールしたいパッケージが、el-get のパッケージリストにない場合&lt;/h4&gt;
 
-&lt;p&gt;パッケージリストには、auto-complete.elがあるのですが、レシピが古くインストールしてもディレクトリの中は空なので、レシピを新たに設定します。&lt;/p&gt;
+&lt;p&gt;自分でレシピを作成(設定)し、パッケージリストに追加します。リストに追加する方法は２つあります。&lt;/p&gt;
 
-&lt;p&gt;また、auto-complete.el は popup.el と fuzzy.el というelispが必須なのですが、今回 popup.el のレシピを用意し、auto-complete とは別にインストールする必要があります。&lt;br /&gt;
-※ とりあえず fuzzy.el は別途インストールしなくても動いているので、fuzzy.el は保留。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;レシピ(rcpファイル)を作成し .emacs.d/elisp/el-get/el-get/recipes/ 以下にファイルを置く方法&lt;/li&gt;
+&lt;li&gt;init.el などに直接設定を記述する方法&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;h2 id=&#34;レシピの追加:0a033ac6f46da56833c9f2f6b2fddbb8&#34;&gt;レシピの追加&lt;/h2&gt;
+&lt;p&gt;どちらも設定する内容は一緒なので、今回は直接設定することにします。設定する内容は主に以下のようになります。&lt;/p&gt;
 
-&lt;p&gt;10-el-get.el&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;(:name {パッケージ名}
+       :type {パッケージ配布方法: elpa, emacswiki, git, svn, http, ...}
+       :url {パッケージURL}
+       :after {後処理} ...)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/koshigoeb/20110503/1304425417&#34;&gt;el-getありきのinit.elに書き換えてみた&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;最新のinit-loader-el:13a2c021518d9b0bbded7970921ba69f&#34;&gt;最新のinit-loader.el&lt;/h4&gt;
+
+&lt;p&gt;init-loader.elの最新ファイルは 現在&lt;a href=&#34;https://gist.github.com/zqwell/1021706&#34;&gt;gist&lt;/a&gt; にあるので、&lt;br /&gt;
+まずは &lt;a href=&#34;http://blog.10rane.com/tech/2013/03/19/gist-raw-url/&#34;&gt;rawファイル&lt;/a&gt;のURLを確認します。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://raw.github.com/gist/1021706/init-loader.el&#34;&gt;https://raw.github.com/gist/1021706/init-loader.el&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;レシピの追加:13a2c021518d9b0bbded7970921ba69f&#34;&gt;レシピの追加&lt;/h4&gt;
+
+&lt;p&gt;init.el&lt;/p&gt;
 
 &lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(setq el-get-dir &amp;quot;~/.emacs.d/elisp/el-get/&amp;quot;)
 
@@ -1449,37 +1470,167 @@ cp -a .rbenv/versions/2.0.0-p0/lib/ruby/gems/2.0.0/gems/rcodetools-0.8.5.0/rcode
     (eval-print-last-sexp)))
 
 (setq el-get-sources
-  &#39;(
-    (:name init-loader
+      &#39;(
+      (:name init-loader
       :type http
       :url &amp;quot;https://raw.github.com/gist/1021706/init-loader.el&amp;quot;
-      :description &amp;quot;[My Recipes] Split management init.el. &amp;quot;)
-    (:name popup ;; &amp;lt;- 追加
-      :type github
-      :website &amp;quot;https://github.com/auto-complete/popup-el&amp;quot;
-      :description &amp;quot;[My Recipes] This section describes the basic data structures and operations of popups.&amp;quot;
-      :pkgname &amp;quot;auto-complete/popup-el&amp;quot;)
-    (:name auto-complete ;; &amp;lt;- 追加
-      :type github
-      :website &amp;quot;https://github.com/auto-complete/auto-complete&amp;quot;
-      :description &amp;quot;[My Recipes] Auto Complete Mode renews an old completion interface and provides an environment that makes users could be more concentrate on their own works.&amp;quot;
-      :pkgname &amp;quot;auto-complete/auto-complete&amp;quot;)
-    ))
+      :description &amp;quot;[My Recipes] Split management init.el.&amp;quot;)
+      ))
 (el-get &#39;sync)
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h2 id=&#34;インストール:0a033ac6f46da56833c9f2f6b2fddbb8&#34;&gt;インストール&lt;/h2&gt;
+&lt;h4 id=&#34;インストール:13a2c021518d9b0bbded7970921ba69f&#34;&gt;インストール&lt;/h4&gt;
 
-&lt;p&gt;これで、auto-complete.el と popup.el のレシピが更新されたので、M-x el-get-list-packages　でインストールします。&lt;/p&gt;
+&lt;p&gt;レシピが正しい場合、 M-x el-get-list-packages で init-loader が追加されているので、インストールできます。&lt;/p&gt;
 
-&lt;h2 id=&#34;設定:0a033ac6f46da56833c9f2f6b2fddbb8&#34;&gt;設定&lt;/h2&gt;
+&lt;h4 id=&#34;init-elの分割:13a2c021518d9b0bbded7970921ba69f&#34;&gt;init.elの分割&lt;/h4&gt;
 
-&lt;p&gt;12-auto-complete.el&lt;/p&gt;
+&lt;p&gt;今まで、init.elにすべて記述していた内容をパッケージごとに分割します。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(require &#39;auto-complete-config)
-(add-to-list &#39;ac-dictionary-directories &amp;quot;~/.emacs.d/elisp/el-get/auto-complete/dict&amp;quot;)
-(ac-config-default)
-(setq ac-use-menu-map t)
+&lt;p&gt;conf&lt;br /&gt;
+├── 00-basic.el&lt;br /&gt;
+├── 01-truncate-lines.el&lt;br /&gt;
+├── 10-el-get.el&lt;br /&gt;
+├── 11-auto-install.el&lt;br /&gt;
+└── 12-auto-complete.el&lt;/p&gt;
+
+&lt;p&gt;init.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(setq load-path
+  (append
+  (list
+  (expand-file-name &amp;quot;~/.emacs.d/&amp;quot;)
+  (expand-file-name &amp;quot;~/.emacs.d/elisp/&amp;quot;)
+  (expand-file-name &amp;quot;~/.emacs.d/elisp/el-get/init-loader/&amp;quot;)
+  (expand-file-name &amp;quot;~/.emacs.d/elisp/el-get/el-get/&amp;quot;)
+  (expand-file-name &amp;quot;~/.emacs.d/elisp/auto-install/&amp;quot;)
+  )
+  load-path))
+
+(require &#39;init-loader)
+(init-loader-load &amp;quot;~/.emacs.d/conf&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;10-el-get.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(setq el-get-dir &amp;quot;~/.emacs.d/elisp/el-get/&amp;quot;)
+
+(unless (require &#39;el-get nil &#39;noerror)
+  (with-current-buffer
+    (url-retrieve-synchronously
+    &amp;quot;https://raw.github.com/dimitri/el-get/master/el-get-install.el&amp;quot;)
+    (goto-char (point-max))
+    (eval-print-last-sexp)))
+
+(setq el-get-sources
+      &#39;(
+      (:name init-loader
+      :type http
+      :url &amp;quot;https://raw.github.com/gist/1021706/init-loader.el&amp;quot;
+      :description &amp;quot;[My Recipes] Split management init.el.&amp;quot;)
+      ))
+
+(el-get &#39;sync)
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>el-get.elでauto-install.elをインストールする</title>
+      <link>http://tatsuyano.github.io/2013/03/19/emacs-el-get-auto-install/</link>
+      <pubDate>Tue, 19 Mar 2013 05:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/03/19/emacs-el-get-auto-install/</guid>
+      <description>
+
+&lt;p&gt;まずは &lt;a href=&#34;http://tatsuyano.github.io/2013/03/19/emacs-el-get/&#34;&gt;el-get.el のインストール&lt;/a&gt; が完了していることが前提になります。&lt;/p&gt;
+
+&lt;h4 id=&#34;インストール:f24d91dad4bdb702ecb1f4d733e2ca17&#34;&gt;インストール&lt;/h4&gt;
+
+&lt;p&gt;まずは M-x el-get-list-packages で利用できるパッケージを一覧表示します。&lt;br /&gt;
+次に インストールしたいパッケージに「i」を押してチェックをいれ、「x」を押すと自動でインストールが始まります。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/emacs-install-auto-install_001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;インストールしたパッケージは、 (setq el-get-dir &amp;ldquo;~/.emacs.d/elisp/el-get/&amp;ldquo;) で指定したディレクトリ直下にディレクトリ単位にインストールされます。&lt;/p&gt;
+
+&lt;p&gt;またインストールしたパッケージを削除する場合は、M-x el-get-remove で削除します。&lt;/p&gt;
+
+&lt;h4 id=&#34;auto-installでインストールしたパッケージの置場所:f24d91dad4bdb702ecb1f4d733e2ca17&#34;&gt;auto-installでインストールしたパッケージの置場所&lt;/h4&gt;
+
+&lt;p&gt;el-get.el でインストールしたパッケージと、auto-install.el でインストールしたパッケージを分けて管理したいので、&lt;br /&gt;
+auto-install用のディレクトリとパスの設定をします。&lt;/p&gt;
+
+&lt;p&gt;.emacs.d&lt;br /&gt;
+└── elisp&lt;br /&gt;
+　　├── auto-install &amp;hellip; auto-installでインストールしたパッケージの置場所&lt;br /&gt;
+　　└── el-get &amp;hellip; el-getでインストールしたパッケージの置場所&lt;br /&gt;
+　　　　　├── auto-install &amp;hellip; auto-install.elの本体。本体はel-getでインストールしたため&lt;br /&gt;
+　　　　　└── el-get &amp;hellip; el-get.el自身もまた、el-getに管理されている&lt;/p&gt;
+
+&lt;h4 id=&#34;auto-installの設定:f24d91dad4bdb702ecb1f4d733e2ca17&#34;&gt;auto-installの設定&lt;/h4&gt;
+
+&lt;p&gt;init.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(setq load-path
+  (append
+  (list
+  ...
+  (expand-file-name &amp;quot;~/.emacs.d/elisp/auto-install/&amp;quot;) ;; &amp;lt;- パスの追加
+  )
+  load-path))
+  ...
+  (require &#39;auto-install)
+  (setq auto-install-directory &amp;quot;~/.emacs.d/elisp/auto-install/&amp;quot;) ;; auto-installでインストールしたパッケージの置場所を指定
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>coffee-modeでauto-completeを使えるようにする</title>
+      <link>http://tatsuyano.github.io/2013/03/19/coffee-mode-used-ac-dict/</link>
+      <pubDate>Tue, 19 Mar 2013 03:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2013/03/19/coffee-mode-used-ac-dict/</guid>
+      <description>
+
+&lt;p&gt;まずは coffee-mode.el を el-get で通常通りにインストールします。&lt;/p&gt;
+
+&lt;h2 id=&#34;auto-complete-で補完に使うdict-辞書-について:2538bac7ceee9429f96840d33dd3dcf5&#34;&gt;auto-complete で補完に使うdict(辞書)について&lt;/h2&gt;
+
+&lt;p&gt;補完をするときに参照している辞書は、.emacs.d/elisp/el-get/auto-complete/dict/ 配下にあります。&lt;br /&gt;
+デフォルトでは、coffee-mode 用のdictがないので、js2-mode 用に公開されていた辞書をインストールします。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;cd .emacs.d/elisp/el-get/auto-complete/dict/
+wget https://raw.github.com/sandai/dotfiles/master/.emacs.d/ac-dict/js2-mode
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;設定:2538bac7ceee9429f96840d33dd3dcf5&#34;&gt;設定&lt;/h2&gt;
+
+&lt;p&gt;coffee-mode でauto-complete を使えるようにし、指定した辞書で補完するようにします。&lt;/p&gt;
+
+&lt;p&gt;52-coffee-mode.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(require &#39;coffee-mode)
+
+;; デフォルトだとインデントが８スペースなので、２スペースに変更
+;; http://qiita.com/items/a8d96ae95a1838500e37
+(defun coffee-custom ()
+  &amp;quot;coffee-mode-hook&amp;quot;
+  (set (make-local-variable &#39;tab-width) 2)
+  (setq coffee-tab-width 2))
+(add-hook &#39;coffee-mode-hook
+  &#39;(lambda() (coffee-custom)))
+
+;; auto-complete
+(add-to-list &#39;ac-modes &#39;coffee-mode) ;; coffee-modeでACを使えるようにする
+
+;; coffee-modeで、追加したjs2-modeのdict(辞書)で補完するようにする
+;; wget https://raw.github.com/sandai/dotfiles/master/.emacs.d/ac-dict/js2-mode
+(add-hook &#39;coffee-mode-hook
+  &#39;(lambda ()
+    (add-to-list &#39;ac-dictionary-files &amp;quot;~/.emacs.d/elisp/el-get/auto-complete/dict/js2-mode&amp;quot;)
+))
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
@@ -1487,7 +1638,7 @@ cp -a .rbenv/versions/2.0.0-p0/lib/ruby/gems/2.0.0/gems/rcodetools-0.8.5.0/rcode
     <item>
       <title>el-get.elでパッケージ管理を行う (el-get.elのインストール)</title>
       <link>http://tatsuyano.github.io/2013/03/19/emacs-el-get/</link>
-      <pubDate>Tue, 19 Mar 2013 05:00:00 +0900</pubDate>
+      <pubDate>Tue, 19 Mar 2013 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/03/19/emacs-el-get/</guid>
       <description>
@@ -1562,106 +1713,6 @@ init.el に以下の設定を入れて、emacsを起動させると自動でイ�
 &lt;li&gt;&lt;a href=&#34;http://shibayu36.hatenablog.com/entry/2013/03/14/081524&#34;&gt;el-getを使ってみる(インストール編)&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/dimitri/el-get&#34;&gt;github dimitri/el-get&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>coffee-modeでauto-completeを使えるようにする</title>
-      <link>http://tatsuyano.github.io/2013/03/19/coffee-mode-used-ac-dict/</link>
-      <pubDate>Tue, 19 Mar 2013 04:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2013/03/19/coffee-mode-used-ac-dict/</guid>
-      <description>
-
-&lt;p&gt;まずは coffee-mode.el を el-get で通常通りにインストールします。&lt;/p&gt;
-
-&lt;h2 id=&#34;auto-complete-で補完に使うdict-辞書-について:2538bac7ceee9429f96840d33dd3dcf5&#34;&gt;auto-complete で補完に使うdict(辞書)について&lt;/h2&gt;
-
-&lt;p&gt;補完をするときに参照している辞書は、.emacs.d/elisp/el-get/auto-complete/dict/ 配下にあります。&lt;br /&gt;
-デフォルトでは、coffee-mode 用のdictがないので、js2-mode 用に公開されていた辞書をインストールします。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cd .emacs.d/elisp/el-get/auto-complete/dict/
-wget https://raw.github.com/sandai/dotfiles/master/.emacs.d/ac-dict/js2-mode
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;設定:2538bac7ceee9429f96840d33dd3dcf5&#34;&gt;設定&lt;/h2&gt;
-
-&lt;p&gt;coffee-mode でauto-complete を使えるようにし、指定した辞書で補完するようにします。&lt;/p&gt;
-
-&lt;p&gt;52-coffee-mode.el&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(require &#39;coffee-mode)
-
-;; デフォルトだとインデントが８スペースなので、２スペースに変更
-;; http://qiita.com/items/a8d96ae95a1838500e37
-(defun coffee-custom ()
-  &amp;quot;coffee-mode-hook&amp;quot;
-  (set (make-local-variable &#39;tab-width) 2)
-  (setq coffee-tab-width 2))
-(add-hook &#39;coffee-mode-hook
-  &#39;(lambda() (coffee-custom)))
-
-;; auto-complete
-(add-to-list &#39;ac-modes &#39;coffee-mode) ;; coffee-modeでACを使えるようにする
-
-;; coffee-modeで、追加したjs2-modeのdict(辞書)で補完するようにする
-;; wget https://raw.github.com/sandai/dotfiles/master/.emacs.d/ac-dict/js2-mode
-(add-hook &#39;coffee-mode-hook
-  &#39;(lambda ()
-    (add-to-list &#39;ac-dictionary-files &amp;quot;~/.emacs.d/elisp/el-get/auto-complete/dict/js2-mode&amp;quot;)
-))
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>el-get.elでauto-install.elをインストールする</title>
-      <link>http://tatsuyano.github.io/2013/03/19/emacs-el-get-auto-install/</link>
-      <pubDate>Tue, 19 Mar 2013 02:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2013/03/19/emacs-el-get-auto-install/</guid>
-      <description>
-
-&lt;p&gt;まずは &lt;a href=&#34;http://tatsuyano.github.io/2013/03/19/emacs-el-get/&#34;&gt;el-get.el のインストール&lt;/a&gt; が完了していることが前提になります。&lt;/p&gt;
-
-&lt;h4 id=&#34;インストール:f24d91dad4bdb702ecb1f4d733e2ca17&#34;&gt;インストール&lt;/h4&gt;
-
-&lt;p&gt;まずは M-x el-get-list-packages で利用できるパッケージを一覧表示します。&lt;br /&gt;
-次に インストールしたいパッケージに「i」を押してチェックをいれ、「x」を押すと自動でインストールが始まります。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/emacs-install-auto-install_001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;インストールしたパッケージは、 (setq el-get-dir &amp;ldquo;~/.emacs.d/elisp/el-get/&amp;ldquo;) で指定したディレクトリ直下にディレクトリ単位にインストールされます。&lt;/p&gt;
-
-&lt;p&gt;またインストールしたパッケージを削除する場合は、M-x el-get-remove で削除します。&lt;/p&gt;
-
-&lt;h4 id=&#34;auto-installでインストールしたパッケージの置場所:f24d91dad4bdb702ecb1f4d733e2ca17&#34;&gt;auto-installでインストールしたパッケージの置場所&lt;/h4&gt;
-
-&lt;p&gt;el-get.el でインストールしたパッケージと、auto-install.el でインストールしたパッケージを分けて管理したいので、&lt;br /&gt;
-auto-install用のディレクトリとパスの設定をします。&lt;/p&gt;
-
-&lt;p&gt;.emacs.d&lt;br /&gt;
-└── elisp&lt;br /&gt;
-　　├── auto-install &amp;hellip; auto-installでインストールしたパッケージの置場所&lt;br /&gt;
-　　└── el-get &amp;hellip; el-getでインストールしたパッケージの置場所&lt;br /&gt;
-　　　　　├── auto-install &amp;hellip; auto-install.elの本体。本体はel-getでインストールしたため&lt;br /&gt;
-　　　　　└── el-get &amp;hellip; el-get.el自身もまた、el-getに管理されている&lt;/p&gt;
-
-&lt;h4 id=&#34;auto-installの設定:f24d91dad4bdb702ecb1f4d733e2ca17&#34;&gt;auto-installの設定&lt;/h4&gt;
-
-&lt;p&gt;init.el&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(setq load-path
-  (append
-  (list
-  ...
-  (expand-file-name &amp;quot;~/.emacs.d/elisp/auto-install/&amp;quot;) ;; &amp;lt;- パスの追加
-  )
-  load-path))
-  ...
-  (require &#39;auto-install)
-  (setq auto-install-directory &amp;quot;~/.emacs.d/elisp/auto-install/&amp;quot;) ;; auto-installでインストールしたパッケージの置場所を指定
-&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     

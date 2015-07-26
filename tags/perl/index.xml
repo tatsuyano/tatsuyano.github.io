@@ -221,83 +221,9 @@ make install
     </item>
     
     <item>
-      <title>flymakeを設定し、perlのシンタックスチェックをする</title>
-      <link>http://tatsuyano.github.io/2012/08/21/emacs-flymake/</link>
-      <pubDate>Tue, 21 Aug 2012 02:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2012/08/21/emacs-flymake/</guid>
-      <description>
-
-&lt;h2 id=&#34;はじめに:750098d471aaed018fe4f2ca674feeea&#34;&gt;はじめに&lt;/h2&gt;
-
-&lt;p&gt;perlのシンタックスチェックをflymakeで行うには、事前に「set-perl5lib.el」をインストールする必要があります。&lt;/p&gt;
-
-&lt;h2 id=&#34;set-perl5lib-elのインストール:750098d471aaed018fe4f2ca674feeea&#34;&gt;set-perl5lib.elのインストール&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;cd .emacs.d/elisp/
-wget http://svn.coderepos.org/share/lang/elisp/set-perl5lib/set-perl5lib.el
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;emacsの設定:750098d471aaed018fe4f2ca674feeea&#34;&gt;.emacsの設定&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;;; flymake for perl
-(require &#39;flymake)
-(require &#39;set-perl5lib) ;; http://svn.coderepos.org/share/lang/elisp/set-perl5lib/set-perl5lib.el
-
-(defvar flymake-perl-err-line-patterns &#39;((&amp;quot;\\(.*\\) at \\([^ \n]+\\) line \\([0-9]+\\)[,.\n]&amp;quot; 2 3 nil 1)))
-(defconst flymake-allowed-perl-file-name-masks &#39;((&amp;quot;\\.pl$&amp;quot; flymake-perl-init)
-                                                (&amp;quot;\\.pm$&amp;quot; flymake-perl-init)
-                                                (&amp;quot;\\.t$&amp;quot; flymake-perl-init)
-                                                ))
-
-(defun flymake-perl-init ()
-  (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       &#39;flymake-create-temp-inplace))
-         (local-file (file-relative-name
-                      temp-file
-                      (file-name-directory buffer-file-name))))
-  (list &amp;quot;perl&amp;quot; (list &amp;quot;-wc&amp;quot; local-file))))
-
-(defun flymake-perl-load ()
-  (interactive)
-  (set-perl5lib)
-  (defadvice flymake-post-syntax-check (before flymake-force-check-was-interrupted)
-    (setq flymake-check-was-interrupted t))
-  (ad-activate &#39;flymake-post-syntax-check)
-  (setq flymake-allowed-file-name-masks (append flymake-allowed-file-name-masks flymake-allowed-perl-file-name-masks))
-  (setq flymake-err-line-patterns flymake-perl-err-line-patterns)
-  (flymake-mode t))
-
-(add-hook &#39;cperl-mode-hook &#39;(lambda () (flymake-perl-load)))
-
-(defun next-flymake-error ()
-  (interactive)
-  (flymake-goto-next-error)
-  (let ((err (get-char-property (point) &#39;help-echo)))
-    (when err
-      (message err))))
-(global-set-key &amp;quot;\M-e&amp;quot; &#39;next-flymake-error)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;実行画面:750098d471aaed018fe4f2ca674feeea&#34;&gt;実行画面&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/flymark001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:750098d471aaed018fe4f2ca674feeea&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://typester.stfuawsc.com/slides/perlcasual2/start.html&#34;&gt;Perl Hacks on Emacs&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://tech.lampetty.net/tech/index.php/archives/384&#34;&gt;Perl開発環境としてのEmacsの設定&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
       <title>perltidyをインストールし、emacsでも使えるように設定する</title>
       <link>http://tatsuyano.github.io/2012/08/21/emacs-perltidy/</link>
-      <pubDate>Tue, 21 Aug 2012 01:00:00 +0900</pubDate>
+      <pubDate>Tue, 21 Aug 2012 03:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2012/08/21/emacs-perltidy/</guid>
       <description>
@@ -376,9 +302,83 @@ macとCentOS両方同じ方法でインストールしたいので、Perlモジ�
     </item>
     
     <item>
+      <title>flymakeを設定し、perlのシンタックスチェックをする</title>
+      <link>http://tatsuyano.github.io/2012/08/21/emacs-flymake/</link>
+      <pubDate>Tue, 21 Aug 2012 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2012/08/21/emacs-flymake/</guid>
+      <description>
+
+&lt;h2 id=&#34;はじめに:750098d471aaed018fe4f2ca674feeea&#34;&gt;はじめに&lt;/h2&gt;
+
+&lt;p&gt;perlのシンタックスチェックをflymakeで行うには、事前に「set-perl5lib.el」をインストールする必要があります。&lt;/p&gt;
+
+&lt;h2 id=&#34;set-perl5lib-elのインストール:750098d471aaed018fe4f2ca674feeea&#34;&gt;set-perl5lib.elのインストール&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;cd .emacs.d/elisp/
+wget http://svn.coderepos.org/share/lang/elisp/set-perl5lib/set-perl5lib.el
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;emacsの設定:750098d471aaed018fe4f2ca674feeea&#34;&gt;.emacsの設定&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;;; flymake for perl
+(require &#39;flymake)
+(require &#39;set-perl5lib) ;; http://svn.coderepos.org/share/lang/elisp/set-perl5lib/set-perl5lib.el
+
+(defvar flymake-perl-err-line-patterns &#39;((&amp;quot;\\(.*\\) at \\([^ \n]+\\) line \\([0-9]+\\)[,.\n]&amp;quot; 2 3 nil 1)))
+(defconst flymake-allowed-perl-file-name-masks &#39;((&amp;quot;\\.pl$&amp;quot; flymake-perl-init)
+                                                (&amp;quot;\\.pm$&amp;quot; flymake-perl-init)
+                                                (&amp;quot;\\.t$&amp;quot; flymake-perl-init)
+                                                ))
+
+(defun flymake-perl-init ()
+  (let* ((temp-file (flymake-init-create-temp-buffer-copy
+                       &#39;flymake-create-temp-inplace))
+         (local-file (file-relative-name
+                      temp-file
+                      (file-name-directory buffer-file-name))))
+  (list &amp;quot;perl&amp;quot; (list &amp;quot;-wc&amp;quot; local-file))))
+
+(defun flymake-perl-load ()
+  (interactive)
+  (set-perl5lib)
+  (defadvice flymake-post-syntax-check (before flymake-force-check-was-interrupted)
+    (setq flymake-check-was-interrupted t))
+  (ad-activate &#39;flymake-post-syntax-check)
+  (setq flymake-allowed-file-name-masks (append flymake-allowed-file-name-masks flymake-allowed-perl-file-name-masks))
+  (setq flymake-err-line-patterns flymake-perl-err-line-patterns)
+  (flymake-mode t))
+
+(add-hook &#39;cperl-mode-hook &#39;(lambda () (flymake-perl-load)))
+
+(defun next-flymake-error ()
+  (interactive)
+  (flymake-goto-next-error)
+  (let ((err (get-char-property (point) &#39;help-echo)))
+    (when err
+      (message err))))
+(global-set-key &amp;quot;\M-e&amp;quot; &#39;next-flymake-error)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;実行画面:750098d471aaed018fe4f2ca674feeea&#34;&gt;実行画面&lt;/h2&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/flymark001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:750098d471aaed018fe4f2ca674feeea&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://typester.stfuawsc.com/slides/perlcasual2/start.html&#34;&gt;Perl Hacks on Emacs&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://tech.lampetty.net/tech/index.php/archives/384&#34;&gt;Perl開発環境としてのEmacsの設定&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
       <title>perl-completion.elをインストールする</title>
       <link>http://tatsuyano.github.io/2012/08/20/emacs-perl-completion/</link>
-      <pubDate>Mon, 20 Aug 2012 01:00:00 +0900</pubDate>
+      <pubDate>Mon, 20 Aug 2012 04:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2012/08/20/emacs-perl-completion/</guid>
       <description>

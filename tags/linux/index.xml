@@ -246,7 +246,7 @@ mosh=ssh
     <item>
       <title>tmuxのコピーモードで、標準出力を見る方法</title>
       <link>http://tatsuyano.github.io/2013/03/12/tmux-copy/</link>
-      <pubDate>Tue, 12 Mar 2013 02:00:00 +0900</pubDate>
+      <pubDate>Tue, 12 Mar 2013 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/03/12/tmux-copy/</guid>
       <description>&lt;p&gt;tmux.confに「set-window-option -g mode-mouse on」を追加する方法もあるが、&lt;br /&gt;

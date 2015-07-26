@@ -10,105 +10,9 @@
     <atom:link href="http://tatsuyano.github.io/tags/vagrant/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>VagrantとVirtualBoxのインストール</title>
-      <link>http://tatsuyano.github.io/2014/07/21/install-vagrant-and-virtualbox/</link>
-      <pubDate>Mon, 21 Jul 2014 03:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2014/07/21/install-vagrant-and-virtualbox/</guid>
-      <description>
-
-&lt;p&gt;今回はVagrantが1.5.4、VirtualBoxが4.3.10をインストール&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.vagrantup.com/downloads.html&#34;&gt;DOWNLOAD VAGRANT&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.virtualbox.org/wiki/Downloads&#34;&gt;Download VirtualBox&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;boxのインストール:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;BOXのインストール&lt;/h2&gt;
-
-&lt;p&gt;新しくできた&lt;a href=&#34;https://vagrantcloud.com/discover/featured&#34;&gt;VAGRANT CLOUD&lt;/a&gt;にあるBOXをインストール&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ vagrant add chef/centos-6.5
-1) virtualbox
-2) hyperv
-Enter your choice: 1
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;仮想マシンを作る:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;仮想マシンを作る&lt;/h2&gt;
-
-&lt;h3 id=&#34;まずは設定ファイルを置くためのディレクトリを掘る:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;まずは設定ファイルを置くためのディレクトリを掘る&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ mkdir -p ~/Vagrant/CentOS65
-$ cd /Vagrant/CentOS65
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;インストールされているboxの確認:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;インストールされているBOXの確認&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ vagrant box list
-$ chef/centos-6.5 (virtualbox, 1.0.0)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;初期化と起動:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;初期化と起動&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ vagrant init chef/centos-6.5
-$ vagrant up
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;仮想マシンへの接続:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;仮想マシンへの接続&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ vagrant ssh
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;仮想マシンのipを固定にする:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;仮想マシンのIPを固定にする&lt;/h3&gt;
-
-&lt;p&gt;Vagrantfileのconfig.vm.networkをコメントインする&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ grep -ir &amp;quot;private_network&amp;quot; ~/Vagrant/Centos65/Vagrantfile
-/$HOME/Vagrant/Centos65/Vagrantfile:  # config.vm.network &amp;quot;private_network&amp;quot;, ip: &amp;quot;192.168.33.10&amp;quot;
-$ vagrant reload
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;sshの設定を保存し-ホスト名でログインできるようにする:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;SSHの設定を保存し、ホスト名でログインできるようにする&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cd ~/Vagrant/Centos65
-$ vagrant ssh-config &amp;gt;&amp;gt; ~/.ssh/config
-ssh default &amp;lt;- 追加した状態だとhost名が&#39;default&#39;なので、後で変える
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;それ以外のコマンド:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;それ以外のコマンド&lt;/h3&gt;
-
-&lt;p&gt;仮想マシンの削除&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ vagrant box remove chef/centos-6.5
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;ステータスの確認&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ vagrant status
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;参考サイト:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/inouet/items/b36638adc2b5772db457&#34;&gt;Vagrant セットアップ (Mac)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://shindolog.hatenablog.com/entry/2013/04/15/235731&#34;&gt;Vagrant のコマンドをメモしておく&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;関連する記事:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;関連する記事&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/21/start-aws/&#34;&gt;aws はじめました。&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/21/install-vagrant-and-virtualbox/&#34;&gt;VagrantとVirtualBoxのインストール&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
       <title>vagrant-aws-pluginをインストール</title>
       <link>http://tatsuyano.github.io/2014/07/21/install-vagrant-aws-plugin/</link>
-      <pubDate>Mon, 21 Jul 2014 01:00:00 +0900</pubDate>
+      <pubDate>Mon, 21 Jul 2014 03:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/07/21/install-vagrant-aws-plugin/</guid>
       <description>
@@ -213,6 +117,102 @@ end
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/21/install-vagrant-and-virtualbox/&#34;&gt;VagrantとVirtualBoxのインストール&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/21/start-aws/&#34;&gt;aws はじめました。&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>VagrantとVirtualBoxのインストール</title>
+      <link>http://tatsuyano.github.io/2014/07/21/install-vagrant-and-virtualbox/</link>
+      <pubDate>Mon, 21 Jul 2014 01:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/07/21/install-vagrant-and-virtualbox/</guid>
+      <description>
+
+&lt;p&gt;今回はVagrantが1.5.4、VirtualBoxが4.3.10をインストール&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.vagrantup.com/downloads.html&#34;&gt;DOWNLOAD VAGRANT&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.virtualbox.org/wiki/Downloads&#34;&gt;Download VirtualBox&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;boxのインストール:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;BOXのインストール&lt;/h2&gt;
+
+&lt;p&gt;新しくできた&lt;a href=&#34;https://vagrantcloud.com/discover/featured&#34;&gt;VAGRANT CLOUD&lt;/a&gt;にあるBOXをインストール&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ vagrant add chef/centos-6.5
+1) virtualbox
+2) hyperv
+Enter your choice: 1
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;仮想マシンを作る:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;仮想マシンを作る&lt;/h2&gt;
+
+&lt;h3 id=&#34;まずは設定ファイルを置くためのディレクトリを掘る:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;まずは設定ファイルを置くためのディレクトリを掘る&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;$ mkdir -p ~/Vagrant/CentOS65
+$ cd /Vagrant/CentOS65
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;インストールされているboxの確認:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;インストールされているBOXの確認&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;$ vagrant box list
+$ chef/centos-6.5 (virtualbox, 1.0.0)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;初期化と起動:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;初期化と起動&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;$ vagrant init chef/centos-6.5
+$ vagrant up
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;仮想マシンへの接続:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;仮想マシンへの接続&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;$ vagrant ssh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;仮想マシンのipを固定にする:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;仮想マシンのIPを固定にする&lt;/h3&gt;
+
+&lt;p&gt;Vagrantfileのconfig.vm.networkをコメントインする&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ grep -ir &amp;quot;private_network&amp;quot; ~/Vagrant/Centos65/Vagrantfile
+/$HOME/Vagrant/Centos65/Vagrantfile:  # config.vm.network &amp;quot;private_network&amp;quot;, ip: &amp;quot;192.168.33.10&amp;quot;
+$ vagrant reload
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;sshの設定を保存し-ホスト名でログインできるようにする:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;SSHの設定を保存し、ホスト名でログインできるようにする&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cd ~/Vagrant/Centos65
+$ vagrant ssh-config &amp;gt;&amp;gt; ~/.ssh/config
+ssh default &amp;lt;- 追加した状態だとhost名が&#39;default&#39;なので、後で変える
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;それ以外のコマンド:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;それ以外のコマンド&lt;/h3&gt;
+
+&lt;p&gt;仮想マシンの削除&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ vagrant box remove chef/centos-6.5
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;ステータスの確認&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ vagrant status
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&#34;参考サイト:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/inouet/items/b36638adc2b5772db457&#34;&gt;Vagrant セットアップ (Mac)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://shindolog.hatenablog.com/entry/2013/04/15/235731&#34;&gt;Vagrant のコマンドをメモしておく&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;関連する記事:691a8f9bf65a866d03438cfc2d34fceb&#34;&gt;関連する記事&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/21/start-aws/&#34;&gt;aws はじめました。&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/21/install-vagrant-and-virtualbox/&#34;&gt;VagrantとVirtualBoxのインストール&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

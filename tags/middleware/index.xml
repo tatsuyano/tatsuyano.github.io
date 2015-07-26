@@ -250,7 +250,7 @@ $ sudo /etc/init.d/td-agent stop
     <item>
       <title>Postfixをインストールする</title>
       <link>http://tatsuyano.github.io/2014/09/09/how-to-install-and-setup-postfix/</link>
-      <pubDate>Tue, 09 Sep 2014 01:00:00 +0900</pubDate>
+      <pubDate>Tue, 09 Sep 2014 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/09/09/how-to-install-and-setup-postfix/</guid>
       <description>
@@ -357,9 +357,121 @@ $ sudo /etc/init.d/postfix reload
     </item>
     
     <item>
+      <title>daemontoolsのインストール</title>
+      <link>http://tatsuyano.github.io/2014/07/29/install-daemontools/</link>
+      <pubDate>Tue, 29 Jul 2014 02:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2014/07/29/install-daemontools/</guid>
+      <description>
+
+&lt;p&gt;ダウンロード&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# mkdir -p /package
+# chmod 1755 /package
+# cd /package
+
+# wget http://cr.yp.to/daemontools/daemontools-0.76.tar.gz
+# tar zxvf daemontools-0.76.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;インストールスクリプトの修正&lt;/p&gt;
+
+&lt;p&gt;/package/admin/daemontools-0.76/src/conf-cc&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;gcc -O2 -Wimplicit -Wunused -Wcomment -Wchar-subscripts -Wuninitialized -Wshadow -Wcast-qual -Wcast-align -Wwrite-strings #&amp;lt;- 削除
+gcc -O2 --include /usr/include/errno.h #&amp;lt;-書き換え
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;インストール&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# cd /admin/daemontools-0.76
+# /package/install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;daemontools本体の起動設定
+/etc/init/svscan.conf&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;start on runlevel [12345]
+respawn
+exec /usr/local/bin/svscanboot
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://itochin2.hatenablog.com/entry/2014/01/26/151224&#34;&gt;CentOS6.4にmemcachedを入れた。&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://gihyo.jp/dev/feature/01/memcached/0005?page=1&#34;&gt;memcachedの運用と互換アプリケーション&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.unixuser.org/~euske/doc/daemontools/myfaq/faq-3.html&#34;&gt;私家版 daemontools FAQ) 3. トラブルシューティング&lt;/a&gt;&lt;br /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&#34;daemontoolsのコマンド:862733573a98f4e98da780723d159505&#34;&gt;daemontoolsのコマンド&lt;/h4&gt;
+
+&lt;p&gt;ややこしいのですが、実際のコマンドは、&lt;code&gt;/package/admin/daemontools/command&lt;/code&gt;にあります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;/usr/local/bin&lt;/code&gt; =&amp;gt; &lt;code&gt;/command&lt;/code&gt; =&amp;gt; &lt;code&gt;/package.../command&lt;/code&gt;&lt;br /&gt;
+の順番にシンボリックリンクが貼ってあります。&lt;/p&gt;
+
+&lt;h3 id=&#34;監視用スクリプトの作成:862733573a98f4e98da780723d159505&#34;&gt;監視用スクリプトの作成&lt;/h3&gt;
+
+&lt;p&gt;memcachedを監視するためのスクリプトを作成します。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# chmod +x /var/memcached/run
+# ln -s /var/memcached /service/memcached
+# /etc/init.d/memcached stop
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;/var/memcached/run&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#!/bin/sh
+
+if [ -f /etc/sysconfig/memcached ];then
+        . /etc/sysconfig/memcached
+fi
+
+exec 2&amp;gt;&amp;amp;1
+exec /usr/bin/memcached -p $PORT -u $USER  -m $CACHESIZE -c $MAXCONN
+$OPTIONS
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;daemontoolsの起動&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;sh -c &#39;svscan /service &amp;amp;&#39;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;daemontoolsを起動すると、監視対象のmemcachedが起動されます。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# ps aux|grep [m]em
+root     10011  0.0  0.0   4048   348 ?        S    07:52   0:00 supervise memcached
+apache   10012  0.0  0.1 316772  1104 ?        Sl   07:52   0:00 /usr/bin/memcached -p 11211 -u apache -m 64 -c 1024
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;daemontoolsのコマンド-1:862733573a98f4e98da780723d159505&#34;&gt;daemontoolsのコマンド&lt;/h3&gt;
+
+&lt;p&gt;監視対象の起動、停止&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# svc -d /service/memcached   #=&amp;gt; down
+# svc -u /service/memcached   #=&amp;gt; up
+# svc -t /service/memcached   #=&amp;gt; restart
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;状態の確認&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;svstat /service/memcached
+ /service/memcached: down 216 seconds, normally up
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;お疲れ様でした。&lt;/p&gt;
+
+&lt;h4 id=&#34;関連する記事:862733573a98f4e98da780723d159505&#34;&gt;関連する記事&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/29/install-memcached/&#34;&gt;memcachedのインストール&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
       <title>memcachedのインストール</title>
       <link>http://tatsuyano.github.io/2014/07/29/install-memcached/</link>
-      <pubDate>Tue, 29 Jul 2014 04:00:00 +0900</pubDate>
+      <pubDate>Tue, 29 Jul 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/07/29/install-memcached/</guid>
       <description>
@@ -474,121 +586,9 @@ $ memcached-tool localhost dump | strings
     </item>
     
     <item>
-      <title>daemontoolsのインストール</title>
-      <link>http://tatsuyano.github.io/2014/07/29/install-daemontools/</link>
-      <pubDate>Tue, 29 Jul 2014 03:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2014/07/29/install-daemontools/</guid>
-      <description>
-
-&lt;p&gt;ダウンロード&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# mkdir -p /package
-# chmod 1755 /package
-# cd /package
-
-# wget http://cr.yp.to/daemontools/daemontools-0.76.tar.gz
-# tar zxvf daemontools-0.76.tar.gz
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;インストールスクリプトの修正&lt;/p&gt;
-
-&lt;p&gt;/package/admin/daemontools-0.76/src/conf-cc&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;gcc -O2 -Wimplicit -Wunused -Wcomment -Wchar-subscripts -Wuninitialized -Wshadow -Wcast-qual -Wcast-align -Wwrite-strings #&amp;lt;- 削除
-gcc -O2 --include /usr/include/errno.h #&amp;lt;-書き換え
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;インストール&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# cd /admin/daemontools-0.76
-# /package/install
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;daemontools本体の起動設定
-/etc/init/svscan.conf&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;start on runlevel [12345]
-respawn
-exec /usr/local/bin/svscanboot
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://itochin2.hatenablog.com/entry/2014/01/26/151224&#34;&gt;CentOS6.4にmemcachedを入れた。&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://gihyo.jp/dev/feature/01/memcached/0005?page=1&#34;&gt;memcachedの運用と互換アプリケーション&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.unixuser.org/~euske/doc/daemontools/myfaq/faq-3.html&#34;&gt;私家版 daemontools FAQ) 3. トラブルシューティング&lt;/a&gt;&lt;br /&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;daemontoolsのコマンド:862733573a98f4e98da780723d159505&#34;&gt;daemontoolsのコマンド&lt;/h4&gt;
-
-&lt;p&gt;ややこしいのですが、実際のコマンドは、&lt;code&gt;/package/admin/daemontools/command&lt;/code&gt;にあります。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;/usr/local/bin&lt;/code&gt; =&amp;gt; &lt;code&gt;/command&lt;/code&gt; =&amp;gt; &lt;code&gt;/package.../command&lt;/code&gt;&lt;br /&gt;
-の順番にシンボリックリンクが貼ってあります。&lt;/p&gt;
-
-&lt;h3 id=&#34;監視用スクリプトの作成:862733573a98f4e98da780723d159505&#34;&gt;監視用スクリプトの作成&lt;/h3&gt;
-
-&lt;p&gt;memcachedを監視するためのスクリプトを作成します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# chmod +x /var/memcached/run
-# ln -s /var/memcached /service/memcached
-# /etc/init.d/memcached stop
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;/var/memcached/run&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;#!/bin/sh
-
-if [ -f /etc/sysconfig/memcached ];then
-        . /etc/sysconfig/memcached
-fi
-
-exec 2&amp;gt;&amp;amp;1
-exec /usr/bin/memcached -p $PORT -u $USER  -m $CACHESIZE -c $MAXCONN
-$OPTIONS
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;daemontoolsの起動&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;sh -c &#39;svscan /service &amp;amp;&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;daemontoolsを起動すると、監視対象のmemcachedが起動されます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# ps aux|grep [m]em
-root     10011  0.0  0.0   4048   348 ?        S    07:52   0:00 supervise memcached
-apache   10012  0.0  0.1 316772  1104 ?        Sl   07:52   0:00 /usr/bin/memcached -p 11211 -u apache -m 64 -c 1024
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;daemontoolsのコマンド-1:862733573a98f4e98da780723d159505&#34;&gt;daemontoolsのコマンド&lt;/h3&gt;
-
-&lt;p&gt;監視対象の起動、停止&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# svc -d /service/memcached   #=&amp;gt; down
-# svc -u /service/memcached   #=&amp;gt; up
-# svc -t /service/memcached   #=&amp;gt; restart
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;状態の確認&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;svstat /service/memcached
- /service/memcached: down 216 seconds, normally up
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;お疲れ様でした。&lt;/p&gt;
-
-&lt;h4 id=&#34;関連する記事:862733573a98f4e98da780723d159505&#34;&gt;関連する記事&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/29/install-memcached/&#34;&gt;memcachedのインストール&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
       <title>fuelphpでredisを使う</title>
       <link>http://tatsuyano.github.io/2014/07/28/use-the-redis-in-fuelphp/</link>
-      <pubDate>Mon, 28 Jul 2014 01:00:00 +0900</pubDate>
+      <pubDate>Mon, 28 Jul 2014 03:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/07/28/use-the-redis-in-fuelphp/</guid>
       <description>
