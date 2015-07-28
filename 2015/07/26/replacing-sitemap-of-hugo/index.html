@@ -9,11 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Js -- blog.10rane.com</title>
+    <title>Hugoに同時ドメインを適応したので、sitemap.xmlを置換する -- blog.10rane.com</title>
 
-    
-    <link href="http://tatsuyano.github.io/tags/js/index.xml" rel="alternate" type="application/rss+xml" title="blog.10rane.com" />
-    <link href="http://tatsuyano.github.io/tags/js/index.xml" rel="feed" type="application/rss+xml" title="blog.10rane.com" />
     
 
     
@@ -71,85 +68,46 @@
 
 
     
-    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io/img/home-bg.jpg')">
-     <div class="container">
-       <div class="row">
-         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-           <div class="site-heading">
-             <h1>Js</h1>
-             <hr class="small">
-             <span class="subheading"></span>
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Hugoに同時ドメインを適応したので、sitemap.Xmlを置換する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Sun, Jul 26, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/blog" >blog</a> 
+
+               </span>
+             </div>
            </div>
-         </div>
-       </div>
-     </div>
+        </div>
+      </div>
     </header>
 
     
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://tatsuyano.github.io/2015/07/28/how-to-install-and-setup-jshint/">Emacsにflymake-jshintをインストールする</a> on Tue, Jul 28, 2015
-                    <br />
-                    In 
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <p>Hugoに独自ドメインを適応したところ、自動生成されるsitemap.xmlが<br />
+Github pagesのURLで生成されていたので、deploy.shにsedコマンドを追加した。</p>
 
-                    Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> <a href="http://tatsuyano.github.io/tags/js" >js</a> 
+<p>sedコマンドで上書き置換(sed -i)したら、バックアップファイルが自動で生成<br />
+されるを止めるのはどうしたらいいのだろうか。。</p>
 
-                  </p>
-               </div>
+<script src="https://gist.github.com/tatsuyano/57c42f1b050402abd7ea.js"></script>
 
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://tatsuyano.github.io/2015/06/08/for-the-scope-of-the-js/">Jsのスコープについて</a> on Mon, Jun 8, 2015
-                    <br />
-                    In 
-
-                    Tags <a href="http://tatsuyano.github.io/tags/js" >js</a> 
-
-                  </p>
-               </div>
-
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://tatsuyano.github.io/2015/06/08/for-function-of-js/">Jsの関数について</a> on Mon, Jun 8, 2015
-                    <br />
-                    In 
-
-                    Tags <a href="http://tatsuyano.github.io/tags/js" >js</a> 
-
-                  </p>
-               </div>
-
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/">webpackを使ってes6-promiseを読み込む</a> on Wed, Jun 3, 2015
-                    <br />
-                    In 
-
-                    Tags <a href="http://tatsuyano.github.io/tags/nodejs" >nodejs</a> <a href="http://tatsuyano.github.io/tags/es6" >es6</a> <a href="http://tatsuyano.github.io/tags/webpack" >webpack</a> <a href="http://tatsuyano.github.io/tags/js" >js</a> 
-
-                  </p>
-               </div>
-
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/">Promiseを使って、非同期処理を任意のタイミングで実行する</a> on Tue, Jun 2, 2015
-                    <br />
-                    In 
-
-                    Tags <a href="http://tatsuyano.github.io/tags/nodejs" >nodejs</a> <a href="http://tatsuyano.github.io/tags/es6" >es6</a> <a href="http://tatsuyano.github.io/tags/js" >js</a> 
-
-                  </p>
-               </div>
-
-          
-          
-    
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
+    </article>
 
     <hr>
     

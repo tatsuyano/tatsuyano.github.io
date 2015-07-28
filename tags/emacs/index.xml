@@ -6,8 +6,66 @@
     <description>Recent content in Emacs on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Wed, 25 Mar 2015 01:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 28 Jul 2015 11:51:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/tags/emacs/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Emacsにflymake-jshintをインストールする</title>
+      <link>http://tatsuyano.github.io/2015/07/28/how-to-install-and-setup-jshint/</link>
+      <pubDate>Tue, 28 Jul 2015 11:51:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/07/28/how-to-install-and-setup-jshint/</guid>
+      <description>
+
+&lt;p&gt;今読んでいる &lt;a href=&#34;http://www.oreilly.co.jp/books/9784873116730/&#34;&gt;シングルページWebアプリケーション&lt;/a&gt; の
+サンプルコードが「JSLint」を使っていたので、インストールしようと思ったが
+「JSHint」のほうが良さそうなのでEmacsに「flymake-jshint」をCask経由でインストールした。&lt;/p&gt;
+
+&lt;h3 id=&#34;jshintのインストール:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;JSHintのインストール&lt;/h3&gt;
+
+&lt;p&gt;まずはnpmでJSHint本体をインストール。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install -g jshint
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;flymake-jshintのインストール:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;flymake-jshintのインストール&lt;/h3&gt;
+
+&lt;p&gt;自分はCaskで管理しているので、Caskファイルに追加しインストール。
+flymake-jshintは「js2-mode」に必須のようなので、インストールしていない場合は先にインストールする。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Cask
+(depends-on &amp;quot;flymake-jshint&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;JSHintのパスを通し、js2-modeが起動したら、JSHintがロードするよう設定する。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# init_loader/03_javascript.el
+(setq exec-path (append exec-path &#39;(&amp;quot;~/.anyenv/envs/ndenv/shims/&amp;quot;)))
+(add-hook &#39;js2-mode-hook &#39;(lambda ()
+                              (require &#39;flymake-jshint)
+                              (flymake-jshint-load)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;jshintの実行:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;JSHintの実行&lt;/h3&gt;
+
+&lt;p&gt;正常にインストールが完了すると、タイポなどミスがあると以下のようにポップアップで警告が出るようになる。
+うまくいかない場合は&lt;code&gt;M-x flymake-jshint-load&lt;/code&gt;で手動でJSHintを起動し、エラーを確認すること。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-install-and-setup-jshint_01.png&#34; alt=&#34;&#34; /&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.node.ws/?p=1379&#34;&gt;JSLint から JSHint をフォークした理由(翻訳)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://safx-dev.blogspot.jp/2013/05/emacsflymake-jshintjavascript.html&#34;&gt;Emacsでflymake-jshintを利用してリアルタイムでのJavaScript文法チェックができるようにする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>emacsにrcodetoolsをインストールして、返り値をコメントに出力する</title>
@@ -1632,87 +1690,6 @@ wget https://raw.github.com/sandai/dotfiles/master/.emacs.d/ac-dict/js2-mode
     (add-to-list &#39;ac-dictionary-files &amp;quot;~/.emacs.d/elisp/el-get/auto-complete/dict/js2-mode&amp;quot;)
 ))
 &lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>el-get.elでパッケージ管理を行う (el-get.elのインストール)</title>
-      <link>http://tatsuyano.github.io/2013/03/19/emacs-el-get/</link>
-      <pubDate>Tue, 19 Mar 2013 02:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2013/03/19/emacs-el-get/</guid>
-      <description>
-
-&lt;p&gt;今までパッケージを手動でインストールしていて、自分が何のパッケージをインストールしたかを&lt;br /&gt;
-把握できなくなってきていたので、el-get.elでパッケージ管理をすることにしました。&lt;/p&gt;
-
-&lt;h2 id=&#34;el-get-elでのパッケージ管理の特徴:4cbf5b901a7d5944163eceb69a0b8758&#34;&gt;el-get.elでのパッケージ管理の特徴&lt;/h2&gt;
-
-&lt;p&gt;自分がel-get.elでいいなあと思ったのは、以下の２つ&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;自分がどのパッケージをインストールしているのかを簡単に把握できること&lt;/li&gt;
-&lt;li&gt;レシピといって、パッケージごとのインストール方法を柔軟に設定できること&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;emacsのバージョン:4cbf5b901a7d5944163eceb69a0b8758&#34;&gt;emacsのバージョン&lt;/h2&gt;
-
-&lt;p&gt;emacsのバージョンは homebrew でインストールした「24.1.1」です。&lt;/p&gt;
-
-&lt;h2 id=&#34;emacs-dの構成:4cbf5b901a7d5944163eceb69a0b8758&#34;&gt;emacs.dの構成&lt;/h2&gt;
-
-&lt;p&gt;今回、今使っているemacs.dを捨てて、一から作り直すことにしました。&lt;/p&gt;
-
-&lt;p&gt;.emacs.d&lt;br /&gt;
-├── conf &amp;hellip; init-loaderで分割したファイルを入れる&lt;br /&gt;
-└── elisp &amp;hellip; 手動でパッケージを入れた場合はここに直接入れる&lt;br /&gt;
-│　　    ├── el-get       &amp;hellip; el-get.elでインストールしたパッケージをディレクトリ単位で入れていく&lt;br /&gt;
-│　　    └── auto-install &amp;hellip; auto-installでインストールした場合&lt;br /&gt;
-│&lt;br /&gt;
-└── init.el &amp;hellip; .emacs.elの代わり。load-pathの設定など&lt;/p&gt;
-
-&lt;p&gt;今回は .emacs.el は使わずに代わりに .emacs.d 直下に init.el というファイルを作成します。&lt;br /&gt;
-また、できるかぎり el-get.el でパッケージ管理を行なっていき、インストールできなかった場合は auto-install でインストールを行うことにします。&lt;br /&gt;
-auto-install でもインストールできなかった場合は、elispディレクトリ直下に手動でインストールしていきます。&lt;/p&gt;
-
-&lt;p&gt;今後のインストール方法(パッケージ管理)の優先度&lt;br /&gt;
-1.el-get &amp;gt; 2.auto-install &amp;gt; 3.手動&lt;/p&gt;
-
-&lt;h2 id=&#34;el-get-elのインストール:4cbf5b901a7d5944163eceb69a0b8758&#34;&gt;el-get.elのインストール&lt;/h2&gt;
-
-&lt;p&gt;まずは el-get.el 本体のインストールから。事前に上記の .emacs.d の構成を作っておくこと。&lt;br /&gt;
-el-get.el でインストールしたパッケージは、.emacs.d/elisp/el-get/ 直下に入れていきます。&lt;br /&gt;
-init.el に以下の設定を入れて、emacsを起動させると自動でインストールが始まります。&lt;/p&gt;
-
-&lt;p&gt;init.el&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(setq load-path
-  (append
-    (list
-      (expand-file-name &amp;quot;~/.emacs.d/&amp;quot;)
-      (expand-file-name &amp;quot;~/.emacs.d/elisp/&amp;quot;)
-      (expand-file-name &amp;quot;~/.emacs.d/elisp/el-get/el-get/&amp;quot;)
-      (expand-file-name &amp;quot;~/.emacs.d/elisp/auto-install/&amp;quot;)
-    )
-    load-path))
-
-(unless (require &#39;el-get nil &#39;noerror)
-  (with-current-buffer
-    (url-retrieve-synchronously
-      &amp;quot;https://raw.github.com/dimitri/el-get/master/el-get-install.el&amp;quot;)
-    (goto-char (point-max))
-    (eval-print-last-sexp)))
-
-(el-get &#39;sync)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://shishithefool.blogspot.jp/2012/04/el-get-emacs.html&#34;&gt;el-get を使って Emacs でパッケージ管理&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://shibayu36.hatenablog.com/entry/2013/03/14/081524&#34;&gt;el-getを使ってみる(インストール編)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/dimitri/el-get&#34;&gt;github dimitri/el-get&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </description>
     </item>
     

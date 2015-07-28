@@ -6,8 +6,66 @@
     <description>Recent content in Js on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Mon, 08 Jun 2015 02:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 28 Jul 2015 11:51:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/tags/js/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Emacsにflymake-jshintをインストールする</title>
+      <link>http://tatsuyano.github.io/2015/07/28/how-to-install-and-setup-jshint/</link>
+      <pubDate>Tue, 28 Jul 2015 11:51:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/07/28/how-to-install-and-setup-jshint/</guid>
+      <description>
+
+&lt;p&gt;今読んでいる &lt;a href=&#34;http://www.oreilly.co.jp/books/9784873116730/&#34;&gt;シングルページWebアプリケーション&lt;/a&gt; の
+サンプルコードが「JSLint」を使っていたので、インストールしようと思ったが
+「JSHint」のほうが良さそうなのでEmacsに「flymake-jshint」をCask経由でインストールした。&lt;/p&gt;
+
+&lt;h3 id=&#34;jshintのインストール:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;JSHintのインストール&lt;/h3&gt;
+
+&lt;p&gt;まずはnpmでJSHint本体をインストール。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install -g jshint
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;flymake-jshintのインストール:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;flymake-jshintのインストール&lt;/h3&gt;
+
+&lt;p&gt;自分はCaskで管理しているので、Caskファイルに追加しインストール。
+flymake-jshintは「js2-mode」に必須のようなので、インストールしていない場合は先にインストールする。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Cask
+(depends-on &amp;quot;flymake-jshint&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;JSHintのパスを通し、js2-modeが起動したら、JSHintがロードするよう設定する。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# init_loader/03_javascript.el
+(setq exec-path (append exec-path &#39;(&amp;quot;~/.anyenv/envs/ndenv/shims/&amp;quot;)))
+(add-hook &#39;js2-mode-hook &#39;(lambda ()
+                              (require &#39;flymake-jshint)
+                              (flymake-jshint-load)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;jshintの実行:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;JSHintの実行&lt;/h3&gt;
+
+&lt;p&gt;正常にインストールが完了すると、タイポなどミスがあると以下のようにポップアップで警告が出るようになる。
+うまくいかない場合は&lt;code&gt;M-x flymake-jshint-load&lt;/code&gt;で手動でJSHintを起動し、エラーを確認すること。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-install-and-setup-jshint_01.png&#34; alt=&#34;&#34; /&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.node.ws/?p=1379&#34;&gt;JSLint から JSHint をフォークした理由(翻訳)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://safx-dev.blogspot.jp/2013/05/emacsflymake-jshintjavascript.html&#34;&gt;Emacsでflymake-jshintを利用してリアルタイムでのJavaScript文法チェックができるようにする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Jsのスコープについて</title>

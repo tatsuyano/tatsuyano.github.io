@@ -9,11 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Js -- blog.10rane.com</title>
+    <title>Emacsにflymake-jshintをインストールする -- blog.10rane.com</title>
 
-    
-    <link href="http://tatsuyano.github.io/tags/js/index.xml" rel="alternate" type="application/rss+xml" title="blog.10rane.com" />
-    <link href="http://tatsuyano.github.io/tags/js/index.xml" rel="feed" type="application/rss+xml" title="blog.10rane.com" />
     
 
     
@@ -71,85 +68,88 @@
 
 
     
-    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io/img/home-bg.jpg')">
-     <div class="container">
-       <div class="row">
-         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-           <div class="site-heading">
-             <h1>Js</h1>
-             <hr class="small">
-             <span class="subheading"></span>
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Emacsにflymake-Jshintをインストールする</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Jul 28, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> <a href="http://tatsuyano.github.io/tags/js" >js</a> 
+
+               </span>
+             </div>
            </div>
-         </div>
-       </div>
-     </div>
+        </div>
+      </div>
     </header>
 
     
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://tatsuyano.github.io/2015/07/28/how-to-install-and-setup-jshint/">Emacsにflymake-jshintをインストールする</a> on Tue, Jul 28, 2015
-                    <br />
-                    In 
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
 
-                    Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> <a href="http://tatsuyano.github.io/tags/js" >js</a> 
+<p>今読んでいる <a href="http://www.oreilly.co.jp/books/9784873116730/">シングルページWebアプリケーション</a> の
+サンプルコードが「JSLint」を使っていたので、インストールしようと思ったが
+「JSHint」のほうが良さそうなのでEmacsに「flymake-jshint」をCask経由でインストールした。</p>
 
-                  </p>
-               </div>
+<h3 id="jshintのインストール:f7ec3808b192c40a23b60d0e92adce7b">JSHintのインストール</h3>
 
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://tatsuyano.github.io/2015/06/08/for-the-scope-of-the-js/">Jsのスコープについて</a> on Mon, Jun 8, 2015
-                    <br />
-                    In 
+<p>まずはnpmでJSHint本体をインストール。</p>
 
-                    Tags <a href="http://tatsuyano.github.io/tags/js" >js</a> 
+<pre><code>npm install -g jshint
+</code></pre>
 
-                  </p>
-               </div>
+<p><br></p>
 
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://tatsuyano.github.io/2015/06/08/for-function-of-js/">Jsの関数について</a> on Mon, Jun 8, 2015
-                    <br />
-                    In 
+<h3 id="flymake-jshintのインストール:f7ec3808b192c40a23b60d0e92adce7b">flymake-jshintのインストール</h3>
 
-                    Tags <a href="http://tatsuyano.github.io/tags/js" >js</a> 
+<p>自分はCaskで管理しているので、Caskファイルに追加しインストール。
+flymake-jshintは「js2-mode」に必須のようなので、インストールしていない場合は先にインストールする。</p>
 
-                  </p>
-               </div>
+<pre><code># Cask
+(depends-on &quot;flymake-jshint&quot;)
+</code></pre>
 
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/">webpackを使ってes6-promiseを読み込む</a> on Wed, Jun 3, 2015
-                    <br />
-                    In 
+<p>JSHintのパスを通し、js2-modeが起動したら、JSHintがロードするよう設定する。</p>
 
-                    Tags <a href="http://tatsuyano.github.io/tags/nodejs" >nodejs</a> <a href="http://tatsuyano.github.io/tags/es6" >es6</a> <a href="http://tatsuyano.github.io/tags/webpack" >webpack</a> <a href="http://tatsuyano.github.io/tags/js" >js</a> 
+<pre><code># init_loader/03_javascript.el
+(setq exec-path (append exec-path '(&quot;~/.anyenv/envs/ndenv/shims/&quot;)))
+(add-hook 'js2-mode-hook '(lambda ()
+                              (require 'flymake-jshint)
+                              (flymake-jshint-load)))
+</code></pre>
 
-                  </p>
-               </div>
+<p><br></p>
 
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/">Promiseを使って、非同期処理を任意のタイミングで実行する</a> on Tue, Jun 2, 2015
-                    <br />
-                    In 
+<h3 id="jshintの実行:f7ec3808b192c40a23b60d0e92adce7b">JSHintの実行</h3>
 
-                    Tags <a href="http://tatsuyano.github.io/tags/nodejs" >nodejs</a> <a href="http://tatsuyano.github.io/tags/es6" >es6</a> <a href="http://tatsuyano.github.io/tags/js" >js</a> 
+<p>正常にインストールが完了すると、タイポなどミスがあると以下のようにポップアップで警告が出るようになる。
+うまくいかない場合は<code>M-x flymake-jshint-load</code>で手動でJSHintを起動し、エラーを確認すること。</p>
 
-                  </p>
-               </div>
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-install-and-setup-jshint_01.png" alt="" />
+<br></p>
 
-          
-          
-    
+<h2 id="参考サイト:f7ec3808b192c40a23b60d0e92adce7b">参考サイト</h2>
+
+<ul>
+<li><a href="http://blog.node.ws/?p=1379">JSLint から JSHint をフォークした理由(翻訳)</a></li>
+<li><a href="http://safx-dev.blogspot.jp/2013/05/emacsflymake-jshintjavascript.html">Emacsでflymake-jshintを利用してリアルタイムでのJavaScript文法チェックができるようにする</a></li>
+</ul>
+
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
+    </article>
 
     <hr>
     

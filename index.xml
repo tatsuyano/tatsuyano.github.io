@@ -6,15 +6,73 @@
     <description>Recent content on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 26 Jul 2015 21:15:01 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 28 Jul 2015 11:51:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/index.xml" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Emacsにflymake-jshintをインストールする</title>
+      <link>http://tatsuyano.github.io/2015/07/28/how-to-install-and-setup-jshint/</link>
+      <pubDate>Tue, 28 Jul 2015 11:51:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/07/28/how-to-install-and-setup-jshint/</guid>
+      <description>
+
+&lt;p&gt;今読んでいる &lt;a href=&#34;http://www.oreilly.co.jp/books/9784873116730/&#34;&gt;シングルページWebアプリケーション&lt;/a&gt; の
+サンプルコードが「JSLint」を使っていたので、インストールしようと思ったが
+「JSHint」のほうが良さそうなのでEmacsに「flymake-jshint」をCask経由でインストールした。&lt;/p&gt;
+
+&lt;h3 id=&#34;jshintのインストール:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;JSHintのインストール&lt;/h3&gt;
+
+&lt;p&gt;まずはnpmでJSHint本体をインストール。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install -g jshint
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;flymake-jshintのインストール:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;flymake-jshintのインストール&lt;/h3&gt;
+
+&lt;p&gt;自分はCaskで管理しているので、Caskファイルに追加しインストール。
+flymake-jshintは「js2-mode」に必須のようなので、インストールしていない場合は先にインストールする。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# Cask
+(depends-on &amp;quot;flymake-jshint&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;JSHintのパスを通し、js2-modeが起動したら、JSHintがロードするよう設定する。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;# init_loader/03_javascript.el
+(setq exec-path (append exec-path &#39;(&amp;quot;~/.anyenv/envs/ndenv/shims/&amp;quot;)))
+(add-hook &#39;js2-mode-hook &#39;(lambda ()
+                              (require &#39;flymake-jshint)
+                              (flymake-jshint-load)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;jshintの実行:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;JSHintの実行&lt;/h3&gt;
+
+&lt;p&gt;正常にインストールが完了すると、タイポなどミスがあると以下のようにポップアップで警告が出るようになる。
+うまくいかない場合は&lt;code&gt;M-x flymake-jshint-load&lt;/code&gt;で手動でJSHintを起動し、エラーを確認すること。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-install-and-setup-jshint_01.png&#34; alt=&#34;&#34; /&gt;
+&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.node.ws/?p=1379&#34;&gt;JSLint から JSHint をフォークした理由(翻訳)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://safx-dev.blogspot.jp/2013/05/emacsflymake-jshintjavascript.html&#34;&gt;Emacsでflymake-jshintを利用してリアルタイムでのJavaScript文法チェックができるようにする&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Hugoに同時ドメインを適応したので、sitemap.xmlを置換する</title>
-      <link>http://tatsuyano.github.io/2015/07/26/replacing_sitemap_of_hugo/</link>
+      <link>http://tatsuyano.github.io/2015/07/26/replacing-sitemap-of-hugo/</link>
       <pubDate>Sun, 26 Jul 2015 21:15:01 +0900</pubDate>
       
-      <guid>http://tatsuyano.github.io/2015/07/26/replacing_sitemap_of_hugo/</guid>
+      <guid>http://tatsuyano.github.io/2015/07/26/replacing-sitemap-of-hugo/</guid>
       <description>&lt;p&gt;Hugoに独自ドメインを適応したところ、自動生成されるsitemap.xmlが&lt;br /&gt;
 Github pagesのURLで生成されていたので、deploy.shにsedコマンドを追加した。&lt;/p&gt;
 
@@ -1209,52 +1267,6 @@ $HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/vendor_ruby/2.2.0/x86_64-linux 
 
 &lt;p&gt;*
 &lt;a href=&#34;http://takuya-1st.hatenablog.jp/entry/20121007/1349587308&#34;&gt;Rubyのライブラリの標準ディレクトリ構成を考えて、自作ライブラリを何処に置くべきか思案する&lt;/a&gt;&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>ファイルを読み込む時は require_relative を使う</title>
-      <link>http://tatsuyano.github.io/2015/03/27/use-require_relative-when-you-read-file/</link>
-      <pubDate>Fri, 27 Mar 2015 01:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2015/03/27/use-require_relative-when-you-read-file/</guid>
-      <description>
-
-&lt;p&gt;こちら[&lt;a href=&#34;http://blog.livedoor.jp/sasata299/archives/52111648.html&#34;&gt;requireとrequire_relativeの違いとは？&lt;/a&gt;]
-に詳しく書いてあるのですが、&lt;/p&gt;
-
-&lt;p&gt;ファイルを読み込む時は&lt;code&gt;require&lt;/code&gt;ではなく、&lt;code&gt;require_relative&lt;/code&gt;を使いましょう(Ruby1.9.2以降で、かつ&lt;code&gt;$LOAD_PATH&lt;/code&gt;に含まれていない場合)。&lt;/p&gt;
-
-&lt;p&gt;Ruby1.9.2以降、&lt;code&gt;$LOAD_PATH&lt;/code&gt;にカレントディレクトリが含まれなくなったため、
-例えば、同じ階層の&lt;code&gt;file.rb&lt;/code&gt;を読み込もうと思って&lt;code&gt;require &#39;file&#39;&lt;/code&gt;と書いたらエラーになります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/2.2.0/rubygems/core_ext/kernel_require.rb:54:in
-`require&#39;: cannot load such file -- file (LoadError)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;その回避方法として、&lt;code&gt;require ./file&lt;/code&gt;　と相対パスで書くことも可能ですが、
-違う階層から読み込むと結局エラーになってしまいます。&lt;/p&gt;
-
-&lt;p&gt;どうしても&lt;code&gt;require&lt;/code&gt;と使いたい場合は、&lt;code&gt;require&lt;/code&gt; する前に、
-カレントディレクトリを&lt;code&gt;$LOAD_PATH&lt;/code&gt;に追加する方法があります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$:.unshift File.dirname(__FILE__)  # ロードパスにカレントディレクトリを追加
-require &#39;file&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;因みに&lt;code&gt;$:&lt;/code&gt;は&lt;code&gt;$LOAD_PATH&lt;/code&gt;の別の書き方です。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;$LOAD_PATH&lt;/code&gt; &amp;hellip; プログラム実行時に読み込まれるパス&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;$:&lt;/code&gt;         &amp;hellip; $LOAD_PATHの別の書き方&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;参考サイト:ae36953917d2f03984eaaeb73add2a12&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.livedoor.jp/sasata299/archives/52111648.html&#34;&gt;requireとrequire_relativeの違いとは？&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/torazuka/20150115/require&#34;&gt;Rubyのrequireとrequire_relative&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 </description>
     </item>
     
