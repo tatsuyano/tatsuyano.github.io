@@ -6,8 +6,96 @@
     <description>Recent content in Posts on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Tue, 28 Jul 2015 11:51:00 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 06 Aug 2015 16:51:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>EmacsにternをインストールしてjQueryを補完する</title>
+      <link>http://tatsuyano.github.io/2015/08/06/how-to-install-and-setup-tern/</link>
+      <pubDate>Thu, 06 Aug 2015 16:51:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/08/06/how-to-install-and-setup-tern/</guid>
+      <description>
+
+&lt;p&gt;EmacsでjQueryの補完をするには、&lt;a href=&#34;http://ternjs.net/&#34;&gt;Tern&lt;/a&gt;というツールを使うことで実現できる。&lt;/p&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;ternのインストール:fbb0e51f3f221aa6ee9a86ae15128c18&#34;&gt;Ternのインストール&lt;/h3&gt;
+
+&lt;p&gt;まずはTern本体をインストール。このTernとEmacs(tern-mode)が裏で通信しながら補完を行う。
+Rubyでいうところのrobeと同じ形。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install -g tern
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;tern-tern-auto-completeのインストール:fbb0e51f3f221aa6ee9a86ae15128c18&#34;&gt;tern、tern-auto-completeのインストール&lt;/h3&gt;
+
+&lt;p&gt;自分はCaskで管理しているので、Caskファイルに追加し、インストール。
+&lt;code&gt;tern-auto-complate&lt;/code&gt;は「auto-complate」を使ってpopupで補完候補を表示する。&lt;/p&gt;
+
+&lt;p&gt;Cask&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(depends-on &amp;quot;tern&amp;quot;)
+(depends-on &amp;quot;tern-auto-complete&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;「js2-mode」が起動したら&lt;code&gt;tern-mode&lt;/code&gt;と&lt;code&gt;tern-auto-complate&lt;/code&gt;も起動するよう設定する。&lt;/p&gt;
+
+&lt;p&gt;init_loader/03_javascript.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(autoload &#39;js2-mode &amp;quot;js2-mode&amp;quot; nil t)
+(add-to-list &#39;auto-mode-alist &#39;(&amp;quot;\.js$&amp;quot; . js2-mode))
+(add-hook &#39;js2-mode-hook
+          (lambda ()
+            (tern-mode t)))
+ 
+(eval-after-load &#39;tern
+   &#39;(progn
+      (require &#39;tern-auto-complete)
+      (tern-ac-setup)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;tern-configの設定:fbb0e51f3f221aa6ee9a86ae15128c18&#34;&gt;tern-configの設定&lt;/h3&gt;
+
+&lt;p&gt;ホーム直下に&lt;code&gt;.tern-config&lt;/code&gt;というJsonファイルを設定する。ここで補完するライブラリなどを指定できる。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;libs&amp;quot;: [
+    &amp;quot;browser&amp;quot;,
+    &amp;quot;jquery&amp;quot;
+  ],
+  &amp;quot;plugins&amp;quot;: {
+     &amp;quot;node&amp;quot;: {}
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;tern-modeの実行:fbb0e51f3f221aa6ee9a86ae15128c18&#34;&gt;tern-modeの実行&lt;/h3&gt;
+
+&lt;p&gt;正常にインストールが完了すると、以下のようにポップアップで補完が出るようになる。&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-install-and-setup-tern_01.png&#34; alt=&#34;&#34; /&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:fbb0e51f3f221aa6ee9a86ae15128c18&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://ternjs.net/doc/demo.html&#34;&gt;Tern demo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://syati.info/?p=2163&#34;&gt;emacs で javascript なら js2-mode, tern-mode&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://suzuki.tdiary.net/20150120.html&#34;&gt;Emacs の JavaScript 開発環境を整備する(Tern編)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Emacsにflymake-jshintをインストールする</title>
@@ -1207,66 +1295,6 @@ end
 &lt;li&gt;&lt;a href=&#34;http://sue445.hatenablog.com/entry/2015/03/29/012855&#34;&gt;Railsアプリやgem作る時にいつも入れているgem一覧&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/ctran/annotate_models&#34;&gt;annotate_models:github&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Rubyの標準ライブラリの構成について</title>
-      <link>http://tatsuyano.github.io/2015/03/27/standard-library-of-ruby/</link>
-      <pubDate>Fri, 27 Mar 2015 02:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2015/03/27/standard-library-of-ruby/</guid>
-      <description>
-
-&lt;p&gt;&lt;code&gt;$LOAD_PATH&lt;/code&gt;について調べていた時に、Rubyの標準ライブラリの
-ディレクトリ構成の意味をわかっていない事にきづいたので、調べてみました。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ ruby -e &amp;lsquo;puts $:&amp;rsquo;
-$HOME/.anyenv/envs/rbenv/rbenv.d/exec/gem-rehash
-$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/site_ruby/2.2.0
-$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/site_ruby/2.2.0/x86_64-linux
-$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/site_ruby
-$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/vendor_ruby/2.2.0
-$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/vendor_ruby/2.2.0/x86_64-linux
-$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/vendor_ruby
-$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/2.2.0
-$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/2.2.0/x86_64-linux
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;p&gt;大きくは4つの階層に分かれていて、以下のような構成になっています。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ cd $HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby&lt;/p&gt;
-
-&lt;p&gt;$ tree -d -L 1
-.
-├── 2.2.0       # 標準ライブラリ
-├── gems        # gemファイルの置き場
-├── site_ruby   # ユーザのライブラリ置き場
-└── vendor_ruby # ベンダー用のライブラリ
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;p&gt;また、&lt;code&gt;gems&lt;/code&gt;ディレクトリ意外のディレクトリには、それぞれ環境依存のソースを置くディレクトリがあります。
-※ 自分の環境はCentOSなので、&lt;code&gt;x86_64-linux&lt;/code&gt;という名前のディレクトリになっています。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/2.2.0
-$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/2.2.0/x86_64-linux # soファイルなど、環境に依存したソース&lt;/p&gt;
-
-&lt;p&gt;$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/site_ruby
-$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/site_ruby/2.2.0
-$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/site_ruby/2.2.0/x86_64-linux # 環境依存&lt;/p&gt;
-
-&lt;p&gt;$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/vendor_ruby
-$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/vendor_ruby/2.2.0
-$HOME/.anyenv/envs/rbenv/versions/2.2.0/lib/ruby/vendor_ruby/2.2.0/x86_64-linux # 環境依存
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:1ca5ebd2f44c3d03fc19b10d92b166f3&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;*
-&lt;a href=&#34;http://takuya-1st.hatenablog.jp/entry/20121007/1349587308&#34;&gt;Rubyのライブラリの標準ディレクトリ構成を考えて、自作ライブラリを何処に置くべきか思案する&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     

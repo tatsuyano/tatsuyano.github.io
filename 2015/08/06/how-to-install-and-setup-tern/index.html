@@ -9,11 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>blog.10rane.com -- blog.10rane.com</title>
+    <title>EmacsにternをインストールしてjQueryを補完する -- blog.10rane.com</title>
 
-    
-    <link href="http://tatsuyano.github.io/index.xml" rel="alternate" type="application/rss+xml" title="blog.10rane.com" />
-    <link href="http://tatsuyano.github.io/index.xml" rel="feed" type="application/rss+xml" title="blog.10rane.com" />
     
 
     
@@ -71,102 +68,118 @@
 
 
     
-    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io/img/home-bg.jpg')">
-     <div class="container">
-       <div class="row">
-         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-           <div class="site-heading">
-             <h1>Blog.10rane.Com</h1>
-             <hr class="small">
-             <span class="subheading"></span>
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>EmacsにternをインストールしてjQueryを補完する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Thu, Aug 6, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> <a href="http://tatsuyano.github.io/tags/js" >js</a> 
+
+               </span>
+             </div>
            </div>
-         </div>
-       </div>
-     </div>
+        </div>
+      </div>
     </header>
 
     
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-          
-                             <div class="post-preview">
-                 <a href="http://tatsuyano.github.io/2015/08/06/how-to-install-and-setup-tern/">
-                      <h2 class="post-title">EmacsにternをインストールしてjQueryを補完する</h2>
-                      <h3 class="post-subtitle"></h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Tatsuyano</a> on Thu, Aug 6, 2015
-                    <br />
-                    In 
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
 
-                    <br />
-                    Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> <a href="http://tatsuyano.github.io/tags/js" >js</a> 
+<p>EmacsでjQueryの補完をするには、<a href="http://ternjs.net/">Tern</a>というツールを使うことで実現できる。</p>
 
-                  </p>
+<p><br></p>
+
+<h3 id="ternのインストール:fbb0e51f3f221aa6ee9a86ae15128c18">Ternのインストール</h3>
+
+<p>まずはTern本体をインストール。このTernとEmacs(tern-mode)が裏で通信しながら補完を行う。
+Rubyでいうところのrobeと同じ形。</p>
+
+<pre><code>npm install -g tern
+</code></pre>
+
+<p><br></p>
+
+<h3 id="tern-tern-auto-completeのインストール:fbb0e51f3f221aa6ee9a86ae15128c18">tern、tern-auto-completeのインストール</h3>
+
+<p>自分はCaskで管理しているので、Caskファイルに追加し、インストール。
+<code>tern-auto-complate</code>は「auto-complate」を使ってpopupで補完候補を表示する。</p>
+
+<p>Cask</p>
+
+<pre><code>(depends-on &quot;tern&quot;)
+(depends-on &quot;tern-auto-complete&quot;)
+</code></pre>
+
+<p>「js2-mode」が起動したら<code>tern-mode</code>と<code>tern-auto-complate</code>も起動するよう設定する。</p>
+
+<p>init_loader/03_javascript.el</p>
+
+<pre><code>(autoload 'js2-mode &quot;js2-mode&quot; nil t)
+(add-to-list 'auto-mode-alist '(&quot;\.js$&quot; . js2-mode))
+(add-hook 'js2-mode-hook
+          (lambda ()
+            (tern-mode t)))
+ 
+(eval-after-load 'tern
+   '(progn
+      (require 'tern-auto-complete)
+      (tern-ac-setup)))
+</code></pre>
+
+<p><br></p>
+
+<h3 id="tern-configの設定:fbb0e51f3f221aa6ee9a86ae15128c18">tern-configの設定</h3>
+
+<p>ホーム直下に<code>.tern-config</code>というJsonファイルを設定する。ここで補完するライブラリなどを指定できる。</p>
+
+<pre><code>{
+  &quot;libs&quot;: [
+    &quot;browser&quot;,
+    &quot;jquery&quot;
+  ],
+  &quot;plugins&quot;: {
+     &quot;node&quot;: {}
+  }
+}
+</code></pre>
+
+<p><br></p>
+
+<h3 id="tern-modeの実行:fbb0e51f3f221aa6ee9a86ae15128c18">tern-modeの実行</h3>
+
+<p>正常にインストールが完了すると、以下のようにポップアップで補完が出るようになる。</p>
+
+<p><center>
+<img src="https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-install-and-setup-tern_01.png" alt="" />
+</center></p>
+
+<p><br></p>
+
+<h2 id="参考サイト:fbb0e51f3f221aa6ee9a86ae15128c18">参考サイト</h2>
+
+<ul>
+<li><a href="http://ternjs.net/doc/demo.html">Tern demo</a></li>
+<li><a href="http://syati.info/?p=2163">emacs で javascript なら js2-mode, tern-mode</a></li>
+<li><a href="http://suzuki.tdiary.net/20150120.html">Emacs の JavaScript 開発環境を整備する(Tern編)</a></li>
+</ul>
+
                 </div>
-                <hr>
-
-          
-                             <div class="post-preview">
-                 <a href="http://tatsuyano.github.io/2015/07/28/how-to-install-and-setup-jshint/">
-                      <h2 class="post-title">Emacsにflymake-jshintをインストールする</h2>
-                      <h3 class="post-subtitle"></h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Tatsuyano</a> on Tue, Jul 28, 2015
-                    <br />
-                    In 
-
-                    <br />
-                    Tags <a href="http://tatsuyano.github.io/tags/emacs" >emacs</a> <a href="http://tatsuyano.github.io/tags/js" >js</a> 
-
-                  </p>
-                </div>
-                <hr>
-
-          
-                             <div class="post-preview">
-                 <a href="http://tatsuyano.github.io/2015/07/26/replacing-sitemap-of-hugo/">
-                      <h2 class="post-title">Hugoに同時ドメインを適応したので、sitemap.xmlを置換する</h2>
-                      <h3 class="post-subtitle"></h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Tatsuyano</a> on Sun, Jul 26, 2015
-                    <br />
-                    In 
-
-                    <br />
-                    Tags <a href="http://tatsuyano.github.io/tags/blog" >blog</a> 
-
-                  </p>
-                </div>
-                <hr>
-
-          
-                             <div class="post-preview">
-                 <a href="http://tatsuyano.github.io/2015/07/25/switch-hugo/">
-                      <h2 class="post-title">ブログをGhostからHugoに移行した</h2>
-                      <h3 class="post-subtitle"></h3>
-                    </a>
-                    <p class="post-meta">Posted by <a href="#">Tatsuyano</a> on Sat, Jul 25, 2015
-                    <br />
-                    In 
-
-                    <br />
-                    Tags <a href="http://tatsuyano.github.io/tags/ruby" >ruby</a> <a href="http://tatsuyano.github.io/tags/blog" >blog</a> 
-
-                  </p>
-                </div>
-                <hr>
-
-          
-          
-          <ul class="pager">
-            <li class="next">
-              <a href="http://tatsuyano.github.io/post/">Older Posts &rarr;</a>
-            </li>
-          </ul>
+            </div>
         </div>
-      </div>
-    </div>
+    </article>
 
     <hr>
     

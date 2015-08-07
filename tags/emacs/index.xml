@@ -6,8 +6,96 @@
     <description>Recent content in Emacs on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Tue, 28 Jul 2015 11:51:00 +0900</lastBuildDate>
+    <lastBuildDate>Thu, 06 Aug 2015 16:51:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/tags/emacs/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>EmacsにternをインストールしてjQueryを補完する</title>
+      <link>http://tatsuyano.github.io/2015/08/06/how-to-install-and-setup-tern/</link>
+      <pubDate>Thu, 06 Aug 2015 16:51:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/08/06/how-to-install-and-setup-tern/</guid>
+      <description>
+
+&lt;p&gt;EmacsでjQueryの補完をするには、&lt;a href=&#34;http://ternjs.net/&#34;&gt;Tern&lt;/a&gt;というツールを使うことで実現できる。&lt;/p&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;ternのインストール:fbb0e51f3f221aa6ee9a86ae15128c18&#34;&gt;Ternのインストール&lt;/h3&gt;
+
+&lt;p&gt;まずはTern本体をインストール。このTernとEmacs(tern-mode)が裏で通信しながら補完を行う。
+Rubyでいうところのrobeと同じ形。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;npm install -g tern
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;tern-tern-auto-completeのインストール:fbb0e51f3f221aa6ee9a86ae15128c18&#34;&gt;tern、tern-auto-completeのインストール&lt;/h3&gt;
+
+&lt;p&gt;自分はCaskで管理しているので、Caskファイルに追加し、インストール。
+&lt;code&gt;tern-auto-complate&lt;/code&gt;は「auto-complate」を使ってpopupで補完候補を表示する。&lt;/p&gt;
+
+&lt;p&gt;Cask&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(depends-on &amp;quot;tern&amp;quot;)
+(depends-on &amp;quot;tern-auto-complete&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;「js2-mode」が起動したら&lt;code&gt;tern-mode&lt;/code&gt;と&lt;code&gt;tern-auto-complate&lt;/code&gt;も起動するよう設定する。&lt;/p&gt;
+
+&lt;p&gt;init_loader/03_javascript.el&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;(autoload &#39;js2-mode &amp;quot;js2-mode&amp;quot; nil t)
+(add-to-list &#39;auto-mode-alist &#39;(&amp;quot;\.js$&amp;quot; . js2-mode))
+(add-hook &#39;js2-mode-hook
+          (lambda ()
+            (tern-mode t)))
+ 
+(eval-after-load &#39;tern
+   &#39;(progn
+      (require &#39;tern-auto-complete)
+      (tern-ac-setup)))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;tern-configの設定:fbb0e51f3f221aa6ee9a86ae15128c18&#34;&gt;tern-configの設定&lt;/h3&gt;
+
+&lt;p&gt;ホーム直下に&lt;code&gt;.tern-config&lt;/code&gt;というJsonファイルを設定する。ここで補完するライブラリなどを指定できる。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;{
+  &amp;quot;libs&amp;quot;: [
+    &amp;quot;browser&amp;quot;,
+    &amp;quot;jquery&amp;quot;
+  ],
+  &amp;quot;plugins&amp;quot;: {
+     &amp;quot;node&amp;quot;: {}
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;tern-modeの実行:fbb0e51f3f221aa6ee9a86ae15128c18&#34;&gt;tern-modeの実行&lt;/h3&gt;
+
+&lt;p&gt;正常にインストールが完了すると、以下のようにポップアップで補完が出るようになる。&lt;/p&gt;
+
+&lt;p&gt;&lt;center&gt;
+&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-install-and-setup-tern_01.png&#34; alt=&#34;&#34; /&gt;
+&lt;/center&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;参考サイト:fbb0e51f3f221aa6ee9a86ae15128c18&#34;&gt;参考サイト&lt;/h2&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://ternjs.net/doc/demo.html&#34;&gt;Tern demo&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://syati.info/?p=2163&#34;&gt;emacs で javascript なら js2-mode, tern-mode&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://suzuki.tdiary.net/20150120.html&#34;&gt;Emacs の JavaScript 開発環境を整備する(Tern編)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>Emacsにflymake-jshintをインストールする</title>
@@ -1640,55 +1728,6 @@ auto-install用のディレクトリとパスの設定をします。&lt;/p&gt;
   ...
   (require &#39;auto-install)
   (setq auto-install-directory &amp;quot;~/.emacs.d/elisp/auto-install/&amp;quot;) ;; auto-installでインストールしたパッケージの置場所を指定
-&lt;/code&gt;&lt;/pre&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>coffee-modeでauto-completeを使えるようにする</title>
-      <link>http://tatsuyano.github.io/2013/03/19/coffee-mode-used-ac-dict/</link>
-      <pubDate>Tue, 19 Mar 2013 03:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2013/03/19/coffee-mode-used-ac-dict/</guid>
-      <description>
-
-&lt;p&gt;まずは coffee-mode.el を el-get で通常通りにインストールします。&lt;/p&gt;
-
-&lt;h2 id=&#34;auto-complete-で補完に使うdict-辞書-について:2538bac7ceee9429f96840d33dd3dcf5&#34;&gt;auto-complete で補完に使うdict(辞書)について&lt;/h2&gt;
-
-&lt;p&gt;補完をするときに参照している辞書は、.emacs.d/elisp/el-get/auto-complete/dict/ 配下にあります。&lt;br /&gt;
-デフォルトでは、coffee-mode 用のdictがないので、js2-mode 用に公開されていた辞書をインストールします。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cd .emacs.d/elisp/el-get/auto-complete/dict/
-wget https://raw.github.com/sandai/dotfiles/master/.emacs.d/ac-dict/js2-mode
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;設定:2538bac7ceee9429f96840d33dd3dcf5&#34;&gt;設定&lt;/h2&gt;
-
-&lt;p&gt;coffee-mode でauto-complete を使えるようにし、指定した辞書で補完するようにします。&lt;/p&gt;
-
-&lt;p&gt;52-coffee-mode.el&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(require &#39;coffee-mode)
-
-;; デフォルトだとインデントが８スペースなので、２スペースに変更
-;; http://qiita.com/items/a8d96ae95a1838500e37
-(defun coffee-custom ()
-  &amp;quot;coffee-mode-hook&amp;quot;
-  (set (make-local-variable &#39;tab-width) 2)
-  (setq coffee-tab-width 2))
-(add-hook &#39;coffee-mode-hook
-  &#39;(lambda() (coffee-custom)))
-
-;; auto-complete
-(add-to-list &#39;ac-modes &#39;coffee-mode) ;; coffee-modeでACを使えるようにする
-
-;; coffee-modeで、追加したjs2-modeのdict(辞書)で補完するようにする
-;; wget https://raw.github.com/sandai/dotfiles/master/.emacs.d/ac-dict/js2-mode
-(add-hook &#39;coffee-mode-hook
-  &#39;(lambda ()
-    (add-to-list &#39;ac-dictionary-files &amp;quot;~/.emacs.d/elisp/el-get/auto-complete/dict/js2-mode&amp;quot;)
-))
 &lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
