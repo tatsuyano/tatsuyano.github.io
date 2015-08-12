@@ -102,9 +102,9 @@
 
 <h3 id="postfixのインストール:7598d049eaa8c628e37dee32b9bf32be">Postfixのインストール</h3>
 
-<p>Postfix のインストール前に Sendmail がインストールされている場合は止めておく。</p>
+<p>まず Postfix のインストール前に Sendmail がインストールされている場合は止めておきます。</p>
 
-<pre><code class="language-bash">$ sudo chkconfig sendmail off
+<pre><code>$ sudo chkconfig sendmail off
 $ sudo /etc/init.d/sendmail stop
 
 $ sudo yum -y install postfix
@@ -115,21 +115,18 @@ $ sudo /etc/init.d/postfix start
 
 <p>メールサーバー(MTA)を postfix に切り替え</p>
 
-<pre><code class="language-bash">$ sudo update-alternatives --set mta /usr/sbin/sendmail.postfix
+<pre><code>$ sudo update-alternatives --set mta /usr/sbin/sendmail.postfix
 </code></pre>
-<br>
 
-### postfix の設定
+<p><br></p>
 
-設定は主に`/etc/postfix/`配下の3ファイル
+<h3 id="postfix-の設定:7598d049eaa8c628e37dee32b9bf32be">postfix の設定</h3>
 
-* /etc/postfix/main.cf      => 設定全般
-* /etc/postfix/aliases.reg  => メールを受信するユーザの設定
-* /etc/postfix/virtual      => ドメインの設定
+<p>設定は主に<code>/etc/postfix/</code>配下の3ファイル</p>
 
-#### /etc/postfix/main.cf
+<h4 id="etc-postfix-main-cf-設定全般:7598d049eaa8c628e37dee32b9bf32be">/etc/postfix/main.cf (設定全般)</h4>
 
-<pre><code class="language-bash"># mydomainを設定しない場合、メールのホスト名としても使われる(と思われる)
+<pre><code># mydomainを設定しない場合、メールのホスト名としても使われる(と思われる)
 myhostname = hogehoge.net
 
 # メールをローカルで受信するドメイン名を設定
@@ -162,30 +159,35 @@ virtual_maps = hash:/etc/postfix/virtual
 alias_maps = hash:/etc/aliases,regexp:/etc/postfix/aliases.reg
 </code></pre>
 
-<h4 id="etc-postfix-aliases-reg:7598d049eaa8c628e37dee32b9bf32be">/etc/postfix/aliases.reg</h4>
+<p><p></p>
 
-<p>メールアドレスにパラメータを含めたい場合、<code>aliases.reg</code>に正規表現を使って、受信したメールを指定のユーザ(メールアドレス)に送ることができる。</p>
+<h4 id="etc-postfix-aliases-reg-メールを受信するユーザの設定:7598d049eaa8c628e37dee32b9bf32be">/etc/postfix/aliases.reg (メールを受信するユーザの設定)</h4>
 
-<p>例では <code>support-1@hogehoge.net</code>宛のメールを<code>support@hogehoge.net</code>と同じユーザ(メールアドレス)に送る。</p>
-
-<pre><code class="language-bash">/^support-[0|1](@hogehoge.net)?$/ support
+<pre><code>/^support-[0|1](@hogehoge.net)?$/ support
 /^support(@hogehoge.net)?$/ support
 </code></pre>
 
-<h4 id="etc-postfix-virtual:7598d049eaa8c628e37dee32b9bf32be">/etc/postfix/virtual</h4>
+<p>メールアドレスにパラメータを含めたい場合、<code>aliases.reg</code>に正規表現を使って、受信したメールを指定のユーザ(メールアドレス)に送ることができる。<br />
+例では <code>support-1@hogehoge.net</code>宛のメールを<code>support@hogehoge.net</code>と同じユーザ(メールアドレス)に送る。</p>
+
+<p><p></p>
+
+<h4 id="etc-postfix-virtual-ドメインの設定:7598d049eaa8c628e37dee32b9bf32be">/etc/postfix/virtual (ドメインの設定)</h4>
+
+<pre><code>@mail.hogehoge.net  support
+</code></pre>
 
 <p>サブドメインなど、別ドメインも指定したい場合に設定する。<br />
-例では、<code>@mail.hogehoge.net</code>というドメインに来たアドレスも<code>support</code>ユーザに配送されるようにしている。</p>
+例では、<code>@mail.hogehoge.net</code>というドメインに来たアドレスも<code>support</code>ユーザに配送されるようにしている。
+<p></p>
 
-<pre><code class="language-bash">@mail.hogehoge.net  support
-</code></pre>
+<p>また<code>virtual</code>の設定を反映させるには、<code>postmap</code>コマンドで<code>virtual.db</code>を作成し、postfix を再起動する。</p>
 
-<p><code>virtual</code>の設定を反映させるには、<code>postmap</code>コマンドで<code>virtual.db</code>を作成し、postfix を再起動する。</p>
-
-<p><pre><code class="language-bash">$ sudo postmap /etc/postfix/virtual
+<pre><code>$ sudo postmap /etc/postfix/virtual
 $ sudo /etc/init.d/postfix reload
 </code></pre>
-<br></p>
+
+<p><br></p>
 
 <h3 id="参考サイト:7598d049eaa8c628e37dee32b9bf32be">参考サイト</h3>
 

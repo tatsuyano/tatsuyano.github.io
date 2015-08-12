@@ -110,34 +110,34 @@
 
 <p>まずはGemfileの設定し、インストール。</p>
 
-<pre><code class="language-bash">$ cat Gemfile
-gem "bower-rails"
+<pre><code>$ cat Gemfile
+gem &quot;bower-rails&quot;
 
 $ bundle install
 </code></pre>
-<br>
 
-次に、Nodeモジュールを管理するための設定ファイル(Gemfileみたいなもの)の形式を決める。
+<p><p></p>
 
-形式はjson形式の`bower.json`の場合か
+<p>次に、Nodeモジュールを管理するための設定ファイル(Gemfileみたいなもの)の形式を決める。
+形式はjson形式の<code>bower.json</code>の場合か、</p>
 
-<pre><code class="language-bash">$ rails g bower_rails:initialize json
+<pre><code>$ rails g bower_rails:initialize json
       create  bower.json
       create  config/initializers/bower_rails.rb
 </code></pre>
 
 <p>DSL形式の<code>Bowerfile</code>のどちらか選べる。今回はこちらの方法を選択。</p>
 
-<pre><code class="language-bash">$  rails g bower_rails:initialize
+<pre><code>$  rails g bower_rails:initialize
       create  Bowerfile
       create  config/initializers/bower_rails.rb
 </code></pre>
-<br>
 
-`bower-rails`の設定は`config/initializers/bower_rails.rb`で行う。
-今回は特に設定なし(デフォルトのまま)。
+<p><p>
+<code>bower-rails</code>の設定は<code>config/initializers/bower_rails.rb</code>で行う。
+今回は特に設定なし(デフォルトのまま)。</p>
 
-<pre><code class="language-bash">BowerRails.configure do |bower_rails|
+<pre><code>BowerRails.configure do |bower_rails|
    # Tell bower-rails what path should be considered as root. Defaults to Dir.pwd
    # bower_rails.root_path = Dir.pwd
 
@@ -154,74 +154,87 @@ $ bundle install
    # bower_rails.use_bower_install_deployment = true
 end
 </code></pre>
-<br>
-## jquery-readyselectorのインストール
 
-まずはインストールするNodeモジュールを設定し、インストールの実行。
+<p><br></p>
 
-<pre><code class="language-ruby">$ cat Bowerfile
+<h2 id="jquery-readyselectorのインストール:81d2c341e61d33f963f82806634eede6">jquery-readyselectorのインストール</h2>
+
+<p>まずはインストールするNodeモジュールを設定し、インストールの実行。</p>
+
+<pre><code>$ cat Bowerfile
 asset 'jquery-readyselector'
 
 $ bundle exec rake bower:install
 </code></pre>
 
+<p><p></p>
+
 <p>すると<code>vendor/assets</code>配下に<code>bower_components</code>というディレクトリが生成され、
 その中にNodeモジュールがインストールされる。</p>
 
-<pre><code class="language-bash">$ ll vendor/assets/bower_components/
+<pre><code>$ ll vendor/assets/bower_components/
 query-readyselector/
 ...
 </code></pre>
 
+<p><p></p>
+
 <p><code>bower-rails</code>でインストールしたNodeモジュールは、<code>bower-rails</code>側で管理したかったので、gitignore した。</p>
 
-<p><pre><code class="language-ruby">$ cat .gitignore
+<pre><code>$ cat .gitignore
 vendor/assets/bower_components/*
 </code></pre>
-<br></p>
+
+<p><p></p>
 
 <p>インストールしたNodeモジュールのpathを設定する。</p>
 
-<p><pre><code class="language-ruby">$ cat config/application.rb
-config.assets.paths &lt;&lt; Rails.root.join(&lsquo;vendor&rsquo;, &lsquo;assets&rsquo;, &lsquo;bower_components&rsquo;)
+<pre><code>$ cat config/application.rb
+config.assets.paths &lt;&lt; Rails.root.join('vendor', 'assets', 'bower_components')
 </code></pre>
-<br></p>
+
+<p><p></p>
 
 <p>次に<code>jquery-readyselector</code>を<code>application.js</code>に読み込む。</p>
 
-<p><pre><code class="language-ruby">$ cat app/assets/javascripts/application.js
+<pre><code>$ cat app/assets/javascripts/application.js
 //= require jquery-readyselector
 //= require_tree .
 </code></pre>
-<br></p>
+
+<p><p></p>
 
 <p>最後にbodyタグに、アクセスされた時の<code>コントローラ名</code>と<code>アクション名</code>をclassに設定するようにする。</p>
 
-<p><pre><code class="language-ruby">$ emacs app/views/layouts/application.html.erb
-<body class="<%= controller_name -%> &lt;%= action_name -%&gt;&ldquo;&gt;
+<pre><code>$ emacs app/views/layouts/application.html.erb
+&lt;body class=&quot;&lt;%= controller_name -%&gt; &lt;%= action_name -%&gt;&quot;&gt;
 </code></pre>
-<br></p>
+
+<p><br></p>
 
 <h2 id="ページ別にjsが読み込まれているか確認:81d2c341e61d33f963f82806634eede6">ページ別にJsが読み込まれているか確認</h2>
 
-<p>まずは適当なページ(<a href="http://localhost:3000/books)を用意する。">http://localhost:3000/books)を用意する。</a></p>
+<p>まずは適当なページ<code>http://localhost:3000/books</code>を用意する。</p>
 
-<p><pre><code class="language-bash">$ rails g scaffold Book title:string price:integer
-&hellip;
+<pre><code>$ rails g scaffold Book title:string price:integer
+...
 app/assets/javascripts/books.coffee
-&hellip;</p>
+...
 
-<p>$ rake db:migrate
+$ rake db:migrate
 </code></pre>
-<br></p>
+
+<p><p></p>
 
 <p>次に生成されたJs(coffee)に、ページ単位(action単位)にコードを書く。
-<code>http://localhost:3000/books</code>にアクセスした時のみ、<code>alert</code>がでれば成功。
-<pre><code class="language-bash">$ emacs app/assets/javascripts/books.coffee
-$(&lsquo;.books.index&rsquo;).ready -&gt;
-  alert(&lsquo;book#index&rsquo;)
+<code>http://localhost:3000/books</code>にアクセスした時のみ、<code>alert</code>がでれば成功。</p>
+
+<pre><code>$ emacs app/assets/javascripts/books.coffee
+$('.books.index').ready -&gt;
+  alert('book#index')
 </code></pre>
-<br></p>
+
+<p><br></p>
 
 <h3 id="参考サイト:81d2c341e61d33f963f82806634eede6">参考サイト</h3>
 

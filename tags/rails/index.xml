@@ -100,34 +100,34 @@ $ heroku config:add TWITTER_API_SECRET=&amp;ldquo;fugafuga&amp;rdquo; &amp;ndash
 
 &lt;p&gt;まずはGemfileの設定し、インストール。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ cat Gemfile
-gem &#34;bower-rails&#34;
+&lt;pre&gt;&lt;code&gt;$ cat Gemfile
+gem &amp;quot;bower-rails&amp;quot;
 
 $ bundle install
 &lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
 
-次に、Nodeモジュールを管理するための設定ファイル(Gemfileみたいなもの)の形式を決める。
+&lt;p&gt;&lt;p&gt;&lt;/p&gt;
 
-形式はjson形式の`bower.json`の場合か
+&lt;p&gt;次に、Nodeモジュールを管理するための設定ファイル(Gemfileみたいなもの)の形式を決める。
+形式はjson形式の&lt;code&gt;bower.json&lt;/code&gt;の場合か、&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ rails g bower_rails:initialize json
+&lt;pre&gt;&lt;code&gt;$ rails g bower_rails:initialize json
       create  bower.json
       create  config/initializers/bower_rails.rb
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;DSL形式の&lt;code&gt;Bowerfile&lt;/code&gt;のどちらか選べる。今回はこちらの方法を選択。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$  rails g bower_rails:initialize
+&lt;pre&gt;&lt;code&gt;$  rails g bower_rails:initialize
       create  Bowerfile
       create  config/initializers/bower_rails.rb
 &lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
 
-`bower-rails`の設定は`config/initializers/bower_rails.rb`で行う。
-今回は特に設定なし(デフォルトのまま)。
+&lt;p&gt;&lt;p&gt;
+&lt;code&gt;bower-rails&lt;/code&gt;の設定は&lt;code&gt;config/initializers/bower_rails.rb&lt;/code&gt;で行う。
+今回は特に設定なし(デフォルトのまま)。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;BowerRails.configure do |bower_rails|
+&lt;pre&gt;&lt;code&gt;BowerRails.configure do |bower_rails|
    # Tell bower-rails what path should be considered as root. Defaults to Dir.pwd
    # bower_rails.root_path = Dir.pwd
 
@@ -144,74 +144,87 @@ $ bundle install
    # bower_rails.use_bower_install_deployment = true
 end
 &lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-## jquery-readyselectorのインストール
 
-まずはインストールするNodeモジュールを設定し、インストールの実行。
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$ cat Bowerfile
+&lt;h2 id=&#34;jquery-readyselectorのインストール:81d2c341e61d33f963f82806634eede6&#34;&gt;jquery-readyselectorのインストール&lt;/h2&gt;
+
+&lt;p&gt;まずはインストールするNodeモジュールを設定し、インストールの実行。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ cat Bowerfile
 asset &#39;jquery-readyselector&#39;
 
 $ bundle exec rake bower:install
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;p&gt;&lt;p&gt;&lt;/p&gt;
+
 &lt;p&gt;すると&lt;code&gt;vendor/assets&lt;/code&gt;配下に&lt;code&gt;bower_components&lt;/code&gt;というディレクトリが生成され、
 その中にNodeモジュールがインストールされる。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ ll vendor/assets/bower_components/
+&lt;pre&gt;&lt;code&gt;$ ll vendor/assets/bower_components/
 query-readyselector/
 ...
 &lt;/code&gt;&lt;/pre&gt;
 
+&lt;p&gt;&lt;p&gt;&lt;/p&gt;
+
 &lt;p&gt;&lt;code&gt;bower-rails&lt;/code&gt;でインストールしたNodeモジュールは、&lt;code&gt;bower-rails&lt;/code&gt;側で管理したかったので、gitignore した。&lt;/p&gt;
 
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$ cat .gitignore
+&lt;pre&gt;&lt;code&gt;$ cat .gitignore
 vendor/assets/bower_components/*
 &lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;p&gt;&lt;/p&gt;
 
 &lt;p&gt;インストールしたNodeモジュールのpathを設定する。&lt;/p&gt;
 
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$ cat config/application.rb
-config.assets.paths &amp;lt;&amp;lt; Rails.root.join(&amp;lsquo;vendor&amp;rsquo;, &amp;lsquo;assets&amp;rsquo;, &amp;lsquo;bower_components&amp;rsquo;)
+&lt;pre&gt;&lt;code&gt;$ cat config/application.rb
+config.assets.paths &amp;lt;&amp;lt; Rails.root.join(&#39;vendor&#39;, &#39;assets&#39;, &#39;bower_components&#39;)
 &lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;p&gt;&lt;/p&gt;
 
 &lt;p&gt;次に&lt;code&gt;jquery-readyselector&lt;/code&gt;を&lt;code&gt;application.js&lt;/code&gt;に読み込む。&lt;/p&gt;
 
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$ cat app/assets/javascripts/application.js
+&lt;pre&gt;&lt;code&gt;$ cat app/assets/javascripts/application.js
 //= require jquery-readyselector
 //= require_tree .
 &lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;p&gt;&lt;/p&gt;
 
 &lt;p&gt;最後にbodyタグに、アクセスされた時の&lt;code&gt;コントローラ名&lt;/code&gt;と&lt;code&gt;アクション名&lt;/code&gt;をclassに設定するようにする。&lt;/p&gt;
 
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;$ emacs app/views/layouts/application.html.erb
-&lt;body class=&#34;&lt;%= controller_name -%&gt; &amp;lt;%= action_name -%&amp;gt;&amp;ldquo;&amp;gt;
+&lt;pre&gt;&lt;code&gt;$ emacs app/views/layouts/application.html.erb
+&amp;lt;body class=&amp;quot;&amp;lt;%= controller_name -%&amp;gt; &amp;lt;%= action_name -%&amp;gt;&amp;quot;&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
 
 &lt;h2 id=&#34;ページ別にjsが読み込まれているか確認:81d2c341e61d33f963f82806634eede6&#34;&gt;ページ別にJsが読み込まれているか確認&lt;/h2&gt;
 
-&lt;p&gt;まずは適当なページ(&lt;a href=&#34;http://localhost:3000/books)を用意する。&#34;&gt;http://localhost:3000/books)を用意する。&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;まずは適当なページ&lt;code&gt;http://localhost:3000/books&lt;/code&gt;を用意する。&lt;/p&gt;
 
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ rails g scaffold Book title:string price:integer
-&amp;hellip;
+&lt;pre&gt;&lt;code&gt;$ rails g scaffold Book title:string price:integer
+...
 app/assets/javascripts/books.coffee
-&amp;hellip;&lt;/p&gt;
+...
 
-&lt;p&gt;$ rake db:migrate
+$ rake db:migrate
 &lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;p&gt;&lt;/p&gt;
 
 &lt;p&gt;次に生成されたJs(coffee)に、ページ単位(action単位)にコードを書く。
-&lt;code&gt;http://localhost:3000/books&lt;/code&gt;にアクセスした時のみ、&lt;code&gt;alert&lt;/code&gt;がでれば成功。
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ emacs app/assets/javascripts/books.coffee
-$(&amp;lsquo;.books.index&amp;rsquo;).ready -&amp;gt;
-  alert(&amp;lsquo;book#index&amp;rsquo;)
+&lt;code&gt;http://localhost:3000/books&lt;/code&gt;にアクセスした時のみ、&lt;code&gt;alert&lt;/code&gt;がでれば成功。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ emacs app/assets/javascripts/books.coffee
+$(&#39;.books.index&#39;).ready -&amp;gt;
+  alert(&#39;book#index&#39;)
 &lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;参考サイト:81d2c341e61d33f963f82806634eede6&#34;&gt;参考サイト&lt;/h3&gt;
 

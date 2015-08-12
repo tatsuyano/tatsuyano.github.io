@@ -259,9 +259,9 @@ $ sudo /etc/init.d/td-agent stop
 
 &lt;h3 id=&#34;postfixのインストール:7598d049eaa8c628e37dee32b9bf32be&#34;&gt;Postfixのインストール&lt;/h3&gt;
 
-&lt;p&gt;Postfix のインストール前に Sendmail がインストールされている場合は止めておく。&lt;/p&gt;
+&lt;p&gt;まず Postfix のインストール前に Sendmail がインストールされている場合は止めておきます。&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ sudo chkconfig sendmail off
+&lt;pre&gt;&lt;code&gt;$ sudo chkconfig sendmail off
 $ sudo /etc/init.d/sendmail stop
 
 $ sudo yum -y install postfix
@@ -272,21 +272,18 @@ $ sudo /etc/init.d/postfix start
 
 &lt;p&gt;メールサーバー(MTA)を postfix に切り替え&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ sudo update-alternatives --set mta /usr/sbin/sendmail.postfix
+&lt;pre&gt;&lt;code&gt;$ sudo update-alternatives --set mta /usr/sbin/sendmail.postfix
 &lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
 
-### postfix の設定
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
 
-設定は主に`/etc/postfix/`配下の3ファイル
+&lt;h3 id=&#34;postfix-の設定:7598d049eaa8c628e37dee32b9bf32be&#34;&gt;postfix の設定&lt;/h3&gt;
 
-* /etc/postfix/main.cf      =&gt; 設定全般
-* /etc/postfix/aliases.reg  =&gt; メールを受信するユーザの設定
-* /etc/postfix/virtual      =&gt; ドメインの設定
+&lt;p&gt;設定は主に&lt;code&gt;/etc/postfix/&lt;/code&gt;配下の3ファイル&lt;/p&gt;
 
-#### /etc/postfix/main.cf
+&lt;h4 id=&#34;etc-postfix-main-cf-設定全般:7598d049eaa8c628e37dee32b9bf32be&#34;&gt;/etc/postfix/main.cf (設定全般)&lt;/h4&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# mydomainを設定しない場合、メールのホスト名としても使われる(と思われる)
+&lt;pre&gt;&lt;code&gt;# mydomainを設定しない場合、メールのホスト名としても使われる(と思われる)
 myhostname = hogehoge.net
 
 # メールをローカルで受信するドメイン名を設定
@@ -319,30 +316,35 @@ virtual_maps = hash:/etc/postfix/virtual
 alias_maps = hash:/etc/aliases,regexp:/etc/postfix/aliases.reg
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;etc-postfix-aliases-reg:7598d049eaa8c628e37dee32b9bf32be&#34;&gt;/etc/postfix/aliases.reg&lt;/h4&gt;
+&lt;p&gt;&lt;p&gt;&lt;/p&gt;
 
-&lt;p&gt;メールアドレスにパラメータを含めたい場合、&lt;code&gt;aliases.reg&lt;/code&gt;に正規表現を使って、受信したメールを指定のユーザ(メールアドレス)に送ることができる。&lt;/p&gt;
+&lt;h4 id=&#34;etc-postfix-aliases-reg-メールを受信するユーザの設定:7598d049eaa8c628e37dee32b9bf32be&#34;&gt;/etc/postfix/aliases.reg (メールを受信するユーザの設定)&lt;/h4&gt;
 
-&lt;p&gt;例では &lt;code&gt;support-1@hogehoge.net&lt;/code&gt;宛のメールを&lt;code&gt;support@hogehoge.net&lt;/code&gt;と同じユーザ(メールアドレス)に送る。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;/^support-[0|1](@hogehoge.net)?$/ support
+&lt;pre&gt;&lt;code&gt;/^support-[0|1](@hogehoge.net)?$/ support
 /^support(@hogehoge.net)?$/ support
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h4 id=&#34;etc-postfix-virtual:7598d049eaa8c628e37dee32b9bf32be&#34;&gt;/etc/postfix/virtual&lt;/h4&gt;
+&lt;p&gt;メールアドレスにパラメータを含めたい場合、&lt;code&gt;aliases.reg&lt;/code&gt;に正規表現を使って、受信したメールを指定のユーザ(メールアドレス)に送ることができる。&lt;br /&gt;
+例では &lt;code&gt;support-1@hogehoge.net&lt;/code&gt;宛のメールを&lt;code&gt;support@hogehoge.net&lt;/code&gt;と同じユーザ(メールアドレス)に送る。&lt;/p&gt;
+
+&lt;p&gt;&lt;p&gt;&lt;/p&gt;
+
+&lt;h4 id=&#34;etc-postfix-virtual-ドメインの設定:7598d049eaa8c628e37dee32b9bf32be&#34;&gt;/etc/postfix/virtual (ドメインの設定)&lt;/h4&gt;
+
+&lt;pre&gt;&lt;code&gt;@mail.hogehoge.net  support
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;サブドメインなど、別ドメインも指定したい場合に設定する。&lt;br /&gt;
-例では、&lt;code&gt;@mail.hogehoge.net&lt;/code&gt;というドメインに来たアドレスも&lt;code&gt;support&lt;/code&gt;ユーザに配送されるようにしている。&lt;/p&gt;
+例では、&lt;code&gt;@mail.hogehoge.net&lt;/code&gt;というドメインに来たアドレスも&lt;code&gt;support&lt;/code&gt;ユーザに配送されるようにしている。
+&lt;p&gt;&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;@mail.hogehoge.net  support
-&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;また&lt;code&gt;virtual&lt;/code&gt;の設定を反映させるには、&lt;code&gt;postmap&lt;/code&gt;コマンドで&lt;code&gt;virtual.db&lt;/code&gt;を作成し、postfix を再起動する。&lt;/p&gt;
 
-&lt;p&gt;&lt;code&gt;virtual&lt;/code&gt;の設定を反映させるには、&lt;code&gt;postmap&lt;/code&gt;コマンドで&lt;code&gt;virtual.db&lt;/code&gt;を作成し、postfix を再起動する。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ sudo postmap /etc/postfix/virtual
+&lt;pre&gt;&lt;code&gt;$ sudo postmap /etc/postfix/virtual
 $ sudo /etc/init.d/postfix reload
 &lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br&gt;&lt;/p&gt;
 
 &lt;h3 id=&#34;参考サイト:7598d049eaa8c628e37dee32b9bf32be&#34;&gt;参考サイト&lt;/h3&gt;
 
