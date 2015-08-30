@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>package化したboxを使うときによく出るエラー -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Package化したboxを使うときによく出るエラー</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Fri, Aug 28, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/middleware" >middleware</a> <a href="http://tatsuyano.github.io/tags/vagrant" >vagrant</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p><code>vagrant package</code>コマンドでパッケージ化したboxで仮想環境を作成(<code>vagrant up</code>)するさいによく出るエラーをまとめました。</p>
+
+<h2 id="an-error-occurred-while-downloading-the-remote-file-モートファイルのダウンロード中にエラーが発生しました:cce2e29dfeda9f5936787415d1f692b6">An error occurred while downloading the remote file(モートファイルのダウンロード中にエラーが発生しました)</h2>
+
+<pre><code>An error occurred while downloading the remote file. The error
+message, if any, is reproduced below. Please fix this error and try
+again.
+
+Couldn't open file xxxxxxxxxxxx
+</code></pre>
+
+<p><em>解決方法</em><br>
+パッケージ(コピー)元のboxと同じ設定のbox(パッケージ化したboxで生成した仮想環境)がバッティングしている？
+パッケージ元の仮想環境を<code>vagrant destroy</code>して削除する。
+<br><br></p>
+
+<h2 id="authentication-failure-retrying-認証の失敗-再試行:cce2e29dfeda9f5936787415d1f692b6">Authentication failure. Retrying&hellip;(認証の失敗。再試行)</h2>
+
+<pre><code>    default: SSH username: vagrant
+    default: SSH auth method: private key
+    default: Warning: Connection timeout. Retrying...
+    default: Warning: Authentication failure. Retrying...
+    default: Warning: Authentication failure. Retrying...
+    default: Warning: Authentication failure. Retrying...
+</code></pre>
+
+<p><em>解決方法</em><br>
+<code>vagrant up</code>したさいに生成される秘密鍵と、パッケージしたbox(ゲストOS)に設定してある公開鍵がマッチしないためにエラーになる。
+<code>vagrant ssh-config</code>で表示される秘密鍵から公開鍵を生成し、公開鍵を設定する。</p>
+
+<p>1.秘密鍵を確認</p>
+
+<pre><code>$ vagrant ssh-config
+...
+  IdentityFile xxxx/vagrant_private_key
+</code></pre>
+
+<p>2.公開鍵を生成</p>
+
+<pre><code>ssh-keygen -yf xxxx/vagrant_private_key &gt; public_key
+</code></pre>
+
+<p>3.ゲストOSに生成した公開鍵を設定する</p>
+
+<pre><code>$ vagrant ssh
+
+vagrant at localhost in ~
+$ vi /home/vagrant/.ssh/authorized_keys # 生成した公開鍵を設定する
+</code></pre>
+
+<h3 id="参考サイト:cce2e29dfeda9f5936787415d1f692b6">参考サイト</h3>
+
+<ul>
+<li><a href="http://qiita.com/megane42/items/1d8ae7444d8c1b10bbd7">Vagrant で作った VM にやってはいけない2つのこと</a>
+<br><br></li>
+</ul>
+
+<h2 id="the-following-ssh-command-responded-with-a-non-zero-exit-status-sshコマンドがゼロ以外の終了ステータスで応答しました:cce2e29dfeda9f5936787415d1f692b6">The following SSH command responded with a non-zero exit status(SSHコマンドがゼロ以外の終了ステータスで応答しました)</h2>
+
+<pre><code>The following SSH command responded with a non-zero exit status.
+Vagrant assumes that this means the command failed!
+
+ARPCHECK=no /sbin/ifup eth1 2&gt; /dev/null
+
+Stdout from the command:
+
+Device eth1 does not seem to be present, delaying initialization.
+
+
+Stderr from the command:
+</code></pre>
+
+<p><em>解決方法</em></br>
+MACアドレスとのマッピングを無効にし、再起動<code>vagrant reload</code>する。</p>
+
+<pre><code>$ vagrant ssh
+
+vagrant at localhost in ~
+$ sudo ln -s -f /dev/null /etc/udev/rules.d/70-persistent-net.rules
+$ exit
+
+$ vagrant reload
+</code></pre>
+
+<h3 id="参考サイト-1:cce2e29dfeda9f5936787415d1f692b6">参考サイト</h3>
+
+<ul>
+<li><a href="http://qiita.com/tarr1124/items/8276e609c0f7cdec79e7">macで作られたvagrant boxをもらったときに出るネットワークエラーの対処法</a></li>
+<li><a href="http://blog.monochromegane.com/blog/2013/04/06/vagrant-network-error/">Vagrantのネットワークが起動しないときは</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-53372032-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+</body>
+
+</html>
+

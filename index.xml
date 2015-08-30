@@ -6,8 +6,109 @@
     <description>Recent content on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Thu, 13 Aug 2015 14:40:00 +0900</lastBuildDate>
+    <lastBuildDate>Fri, 28 Aug 2015 19:00:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>package化したboxを使うときによく出るエラー</title>
+      <link>http://tatsuyano.github.io/2015/08/28/errors-out-when-using-to-package-the-box/</link>
+      <pubDate>Fri, 28 Aug 2015 19:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/08/28/errors-out-when-using-to-package-the-box/</guid>
+      <description>
+
+&lt;p&gt;&lt;code&gt;vagrant package&lt;/code&gt;コマンドでパッケージ化したboxで仮想環境を作成(&lt;code&gt;vagrant up&lt;/code&gt;)するさいによく出るエラーをまとめました。&lt;/p&gt;
+
+&lt;h2 id=&#34;an-error-occurred-while-downloading-the-remote-file-モートファイルのダウンロード中にエラーが発生しました:cce2e29dfeda9f5936787415d1f692b6&#34;&gt;An error occurred while downloading the remote file(モートファイルのダウンロード中にエラーが発生しました)&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;An error occurred while downloading the remote file. The error
+message, if any, is reproduced below. Please fix this error and try
+again.
+
+Couldn&#39;t open file xxxxxxxxxxxx
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;解決方法&lt;/em&gt;&lt;br&gt;
+パッケージ(コピー)元のboxと同じ設定のbox(パッケージ化したboxで生成した仮想環境)がバッティングしている？
+パッケージ元の仮想環境を&lt;code&gt;vagrant destroy&lt;/code&gt;して削除する。
+&lt;br&gt;&lt;br&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;authentication-failure-retrying-認証の失敗-再試行:cce2e29dfeda9f5936787415d1f692b6&#34;&gt;Authentication failure. Retrying&amp;hellip;(認証の失敗。再試行)&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;    default: SSH username: vagrant
+    default: SSH auth method: private key
+    default: Warning: Connection timeout. Retrying...
+    default: Warning: Authentication failure. Retrying...
+    default: Warning: Authentication failure. Retrying...
+    default: Warning: Authentication failure. Retrying...
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;解決方法&lt;/em&gt;&lt;br&gt;
+&lt;code&gt;vagrant up&lt;/code&gt;したさいに生成される秘密鍵と、パッケージしたbox(ゲストOS)に設定してある公開鍵がマッチしないためにエラーになる。
+&lt;code&gt;vagrant ssh-config&lt;/code&gt;で表示される秘密鍵から公開鍵を生成し、公開鍵を設定する。&lt;/p&gt;
+
+&lt;p&gt;1.秘密鍵を確認&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ vagrant ssh-config
+...
+  IdentityFile xxxx/vagrant_private_key
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;2.公開鍵を生成&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ssh-keygen -yf xxxx/vagrant_private_key &amp;gt; public_key
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;3.ゲストOSに生成した公開鍵を設定する&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ vagrant ssh
+
+vagrant at localhost in ~
+$ vi /home/vagrant/.ssh/authorized_keys # 生成した公開鍵を設定する
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;参考サイト:cce2e29dfeda9f5936787415d1f692b6&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/megane42/items/1d8ae7444d8c1b10bbd7&#34;&gt;Vagrant で作った VM にやってはいけない2つのこと&lt;/a&gt;
+&lt;br&gt;&lt;br&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&#34;the-following-ssh-command-responded-with-a-non-zero-exit-status-sshコマンドがゼロ以外の終了ステータスで応答しました:cce2e29dfeda9f5936787415d1f692b6&#34;&gt;The following SSH command responded with a non-zero exit status(SSHコマンドがゼロ以外の終了ステータスで応答しました)&lt;/h2&gt;
+
+&lt;pre&gt;&lt;code&gt;The following SSH command responded with a non-zero exit status.
+Vagrant assumes that this means the command failed!
+
+ARPCHECK=no /sbin/ifup eth1 2&amp;gt; /dev/null
+
+Stdout from the command:
+
+Device eth1 does not seem to be present, delaying initialization.
+
+
+Stderr from the command:
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;em&gt;解決方法&lt;/em&gt;&lt;/br&gt;
+MACアドレスとのマッピングを無効にし、再起動&lt;code&gt;vagrant reload&lt;/code&gt;する。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;$ vagrant ssh
+
+vagrant at localhost in ~
+$ sudo ln -s -f /dev/null /etc/udev/rules.d/70-persistent-net.rules
+$ exit
+
+$ vagrant reload
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;参考サイト-1:cce2e29dfeda9f5936787415d1f692b6&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://qiita.com/tarr1124/items/8276e609c0f7cdec79e7&#34;&gt;macで作られたvagrant boxをもらったときに出るネットワークエラーの対処法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.monochromegane.com/blog/2013/04/06/vagrant-network-error/&#34;&gt;Vagrantのネットワークが起動しないときは&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
     
     <item>
       <title>台湾に旅行に行ってきた</title>
@@ -1218,63 +1319,6 @@ end
 &lt;li&gt;&lt;a href=&#34;http://morizyun.github.io/blog/rails4-application-templates-heroku/&#34;&gt;Rails 4.2 + Bootstrap の Application Template
 1コマンドでモダンRailsが！&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://github.com/tatsuyano/rails-template&#34;&gt;tatsuyano/rails-template&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Rails4でBootstrap3を導入(sass版)</title>
-      <link>http://tatsuyano.github.io/2015/03/31/introduced-bootstrap3-to-rails4-sass/</link>
-      <pubDate>Tue, 31 Mar 2015 01:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2015/03/31/introduced-bootstrap3-to-rails4-sass/</guid>
-      <description>
-
-&lt;p&gt;以前、&lt;code&gt;twitter-bootstrap-rails&lt;/code&gt; をつかって&lt;a href=&#34;http://tatsuyano.github.io/2015/02/18/introduced-bootstrap3-to-rails4/&#34;&gt;Bootstrap3を導入&lt;/a&gt;という記事を書いたんですが、
-Twitter社が提供している&lt;code&gt;bootstrap-sass&lt;/code&gt;のほうが導入が簡単だったので、今後はこちらを使っていきたいと思います。&lt;/p&gt;
-
-&lt;h2 id=&#34;設定:1d26c675b81c51ae89761728b91077a7&#34;&gt;設定&lt;/h2&gt;
-
-&lt;p&gt;まずはGemfileの設定から。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;cat Gemfile
-gem &amp;lsquo;bootstrap-sass&amp;rsquo;, &amp;lsquo;~&amp;gt; 3.3.4&amp;rsquo;
-gem &amp;lsquo;sass-rails&amp;rsquo;, &amp;lsquo;&amp;gt;= 3.2&amp;rsquo;&lt;/p&gt;
-
-&lt;p&gt;$ bundle install
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;application.css&lt;/code&gt; を削除し、新たに &lt;code&gt;application.sass&lt;/code&gt; を生成します。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ rm app/assets/stylesheets/application.css
-$ cat &amp;gt; app/assets/stylesheets/application.scss
-@import &amp;ldquo;bootstrap-sprockets&amp;rdquo;;
-@import &amp;ldquo;bootstrap&amp;rdquo;;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;application.js&lt;/code&gt; の設定を変更します。読み込み順に注意してください。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ cat &amp;gt; app/assets/javascripts/application.js
-//= require jquery
-//= require bootstrap-sprockets
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;p&gt;これでGlyphicons(Webフォント)も使えるようになります。便利ですね。&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:1d26c675b81c51ae89761728b91077a7&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/twbs/bootstrap-sass&#34;&gt;twbs/bootstrap-sass&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/masamitsu-konya/items/e3630046774ac1fbd346&#34;&gt;全部はいらないよね？bootstrap-sassをカスタマイズして使う方法&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;関連する記事:1d26c675b81c51ae89761728b91077a7&#34;&gt;関連する記事&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/02/18/introduced-bootstrap3-to-rails4/&#34;&gt;Rails4でBootstrap3を導入&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>
