@@ -111,6 +111,31 @@ $ vagrant reload
     </item>
     
     <item>
+      <title>YAPC::Asia2015に行ってきた</title>
+      <link>http://tatsuyano.github.io/2015/08/22/yapc-asia-2015/</link>
+      <pubDate>Sat, 22 Aug 2015 08:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/08/22/yapc-asia-2015/</guid>
+      <description>&lt;p&gt;6年ぶりに&lt;a href=&#34;http://yapcasia.org/2015/&#34;&gt;YAPC&lt;/a&gt;に行ってきた。思っていた以上に混んでいて、
+メイン会場以外での人気のセッションだと、部屋にも入れないほどの盛況ぶりだった。&lt;/p&gt;
+
+&lt;p&gt;前の会社の同僚も結構来ていてみたいだったので、顔を合わせたら声かけようと思っていたが、
+見ていたセッションがまったくかぶらず、開発言語が変わると(自分はPerlから今はPHPをメインで使っている)、
+こうも趣向が変わるのかと少し切なかった。&lt;/p&gt;
+
+&lt;p&gt;2日目は1日目の失敗を踏まえ、なるべく部屋を移動しないよう工夫してみたが、結局ランチセッションは逃した。&lt;/p&gt;
+
+&lt;p&gt;予定していたセッションは半分ぐらいしか聞けなかったが、セッションを聞いているうち、無性にプログラミングがしたくなったので途中で帰った。&lt;/p&gt;
+
+&lt;p&gt;セッションの自体は&lt;a href=&#34;https://www.youtube.com/channel/UCTqv2OjSox70MM7iYftlsIw&#34;&gt;Youtube&lt;/a&gt;などにすぐに上がるし、
+ただ見たいだけなら直接行くメリットは実はあまりないんだけど、こうやって熱に当てられることで頑張ろうと思えるところが、
+イベントのイイトコなのかなと思う。&lt;/p&gt;
+
+&lt;p&gt;最後に楽しいイベント、ありがとうございました。&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>台湾に旅行に行ってきた</title>
       <link>http://tatsuyano.github.io/2015/08/13/i-went-to-travel-to-taiwan/</link>
       <pubDate>Thu, 13 Aug 2015 14:40:00 +0900</pubDate>
@@ -1147,178 +1172,6 @@ config/environments/*.local.yml
 &lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/4778627/is-it-possible-to-import-a-whole-directory-in-sass-using-import&#34;&gt;Is it possible to import a whole directory in sass using
 @import?&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://qiita.com/natsu871/items/53b38a2543df97df751d&#34;&gt;Rails での適切な Sass の構成手法について（翻訳）&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>アプリケーションテンプレートを使って、プロジェクトのひな形を作る</title>
-      <link>http://tatsuyano.github.io/2015/03/31/use-rails-application-templates/</link>
-      <pubDate>Tue, 31 Mar 2015 02:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2015/03/31/use-rails-application-templates/</guid>
-      <description>
-
-&lt;p&gt;Railsアプリを作っていると、ある程度決まったRuby Gemを使うようになってきたり、
-同じ設定(config周りとか)を繰り返すようになってきます。&lt;/p&gt;
-
-&lt;p&gt;そこでRailsのアプリケーションテンプレート機能を使うと、
-そういった決まった作業をコード化することができるようになります。&lt;/p&gt;
-
-&lt;p&gt;今回は、主にデータベースをPostgreSQL、テストFWをRSpec、CSSFWにTwitterBootStrapの初期設定を行い、最後に&lt;code&gt;git commit -m &#39;Initial commit&#39;&lt;/code&gt;するまでのアプリケーションテンプレートを作ってみたいと思います。&lt;/p&gt;
-
-&lt;h2 id=&#34;作業の流れ:c7250590061089d461e23945943d79e3&#34;&gt;作業の流れ&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;templateファイルを作成&lt;/li&gt;
-&lt;li&gt;templateファイルをGitHubなどにpush&lt;/li&gt;
-&lt;li&gt;templateファイルを使って、Railsアプリを作ってみる&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&#34;template-rb:c7250590061089d461e23945943d79e3&#34;&gt;template.rb&lt;/h2&gt;
-
-&lt;p&gt;コードを実際見てもらえばわかるように、templateファイルといっても特別なものではなく、
-Gemfileと同じように、必要なGemを指定し、実際の作業を明文化したファイルになります。&lt;/p&gt;
-
-&lt;p&gt;※ 最新のソースは&lt;a href=&#34;https://github.com/tatsuyano/rails-template&#34;&gt;こちら&lt;/a&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;# -*- coding: utf-8 -*-
-
-@app_name = app_name
-
-gem &#39;rails&#39;, &#39;4.2.0&#39;
-gem &#39;pg&#39;
-gem &#39;sass-rails&#39;, &#39;~&gt; 5.0&#39;
-gem &#39;uglifier&#39;, &#39;&gt;= 1.3.0&#39;
-gem &#39;coffee-rails&#39;, &#39;~&gt; 4.1.0&#39;
-gem &#39;jquery-rails&#39;
-gem &#39;turbolinks&#39;
-gem &#39;jbuilder&#39;, &#39;~&gt; 2.0&#39;
-gem &#39;annotate&#39; # modelクラスにスキーマ情報の注釈をつける
-gem &#39;bootstrap-sass&#39; # bootstrap
-
-gem_group :development, :test do
-  gem &#39;spring&#39;
-  gem &#39;pry-rails&#39;
-  gem &#39;pry-byebug&#39;
-  gem &#39;better_errors&#39;
-  gem &#39;binding_of_caller&#39;
-  gem &#39;rspec-rails&#39;
-  gem &#39;guard-rspec&#39;                        # railsでguardを使うためのGem
-  gem &#39;spring-commands-rspec&#39; , &#39;~&gt; 1.0.2&#39; # springでキャッシュした状態でguardを使うためのGem
-  gem &#34;factory_girl_rails&#34; , &#34;~&gt; 4.4.1&#34;    # テストデータの作成
-end
-
-gem_group :test do
-  gem &#39;byebug&#39;
-  gem &#39;web-console&#39;, &#39;~&gt; 2.0&#39;
-  gem &#39;shoulda-matchers&#39;, require: false # rspecで使うmatcher
-  gem &#34;faker&#34; , &#34;~&gt; 1.4.3&#34;              # 名前やメールアドレス、その他のプレースホルダをファクトリに提供
-  gem &#34;database_cleaner&#34; , &#34;~&gt; 1.3.0&#34;   # まっさらな状態で各specが実行できるように、テストデータベースのデータを掃除
-#  gem &#34;capybara&#34; , &#34;~&gt; 2.4.3&#34;           # ユーザとWebアプリケーションのやりとりをプログラム上でシミュレートできる
-#  gem &#34;launchy&#34; , &#34;~&gt; 2.4.2&#34;            # 好きなタイミングでデフォルトのwebブラウザを開く
-#  gem &#34;selenium-webdriver&#34; , &#34;~&gt; 2.43.0&#34;# ブラウザ上でJavaScriptを利用する機能をCapybaraでテストできる
-end
-
-gem_group :production do
-  gem &#39;rails_12factor&#39;
-end
-
-# rspec initalize setting
-run &#39;bundle install&#39;
-run &#39;rm -rf test&#39;
-generate &#39;rspec:install&#39;
-
-# guard initalize setting
-run &#39;bundle exec spring binstub rspec&#39;
-run &#39;bundle exec guard init rspec&#39;
-
-# rm unused files
-run &#34;rm README.rdoc&#34;
-
-# database
-run &#39;rm config/database.yml&#39;
-
-database_yml = &lt;&lt;-FILE
-default: &amp;default
-  adapter: postgresql
-  encoding: unicode
-  pool: 5
-development:
-  &lt;&lt;: *default
-  database: #{@app_name}
-  username: postgres
-  password: postgres
-test:
-  &lt;&lt;: *default
-  database: #{@app_name}_test
-  username: postgres
-  password: postgres
-FILE
-  
-File.open(&#34;config/database.yml&#34;,&#34;w&#34;) do |file|
-  file.puts database_yml
-end
-
-run &#39;bundle exec rake db:create&#39;
-run &#39;rails g annotate:install&#39;
-
-# config/application
-environment &#34;config.time_zone = &#39;Tokyo&#39;&#34;
-environment &#34;config.active_record.default_timezone = :local&#34;
-
-# bootstrap
-run &#34;rm app/assets/stylesheets/application.css&#34;
-run &#34;rm app/assets/javascripts/application.js&#34;
-
-File.open(&#34;app/assets/stylesheets/application.scss&#34;,&#34;w&#34;) do |file|
-  file.puts &lt;&lt;-SCSS
-@import &#34;bootstrap-sprockets&#34;;
-@import &#34;bootstrap&#34;;
-SCSS
-end
-
-File.open(&#34;app/assets/javascripts/application.js&#34;,&#34;w&#34;) do |file|
-  file.puts &lt;&lt;-JS
-//= require jquery
-//= require bootstrap-sprockets
-JS
-end
-
-# git initalize setting
-after_bundle do
-  git :init
-  git add: &#39;.&#39;
-  git commit: %Q{ -m &#39;Initial commit&#39; }
-end
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-## 確認
-
-まずはテンプレートにエラーがないかに、Githubにpushする前に直接指定し`rails new`してみます。
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ rails new app_name -m template.rb
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;エラーがでなければ、Githubにpushして、今後はURLを指定して&lt;code&gt;rails new&lt;/code&gt;してください。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ rails new app_name -m
-&lt;a href=&#34;https://raw.githubusercontent.com/tatsuyano/rails-template/master/template.rb&#34;&gt;https://raw.githubusercontent.com/tatsuyano/rails-template/master/template.rb&lt;/a&gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;p&gt;テンプレートを一度作るまでは面倒ですが、作業がコード化できるなど、メリットが大きいので作ることをおすすめします。&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:c7250590061089d461e23945943d79e3&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://nanapi.co.jp/blog/2015/01/27/rails-template/&#34;&gt;Rails Templateでプロジェクト作成を楽にしよう&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/tachiba/items/26b2e9dc271bd8e6907d&#34;&gt;RailsのApplication templateを使って開発の初速をあげよう！&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://railsguides.jp/rails_application_templates.html&#34;&gt;Rails のアプリケーションテンプレート&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://morizyun.github.io/blog/rails4-application-templates-heroku/&#34;&gt;Rails 4.2 + Bootstrap の Application Template
-1コマンドでモダンRailsが！&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/tatsuyano/rails-template&#34;&gt;tatsuyano/rails-template&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

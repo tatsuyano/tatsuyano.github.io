@@ -6,8 +6,33 @@
     <description>Recent content in Perl on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 07 Apr 2013 01:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Sat, 22 Aug 2015 08:00:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/tags/perl/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>YAPC::Asia2015に行ってきた</title>
+      <link>http://tatsuyano.github.io/2015/08/22/yapc-asia-2015/</link>
+      <pubDate>Sat, 22 Aug 2015 08:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2015/08/22/yapc-asia-2015/</guid>
+      <description>&lt;p&gt;6年ぶりに&lt;a href=&#34;http://yapcasia.org/2015/&#34;&gt;YAPC&lt;/a&gt;に行ってきた。思っていた以上に混んでいて、
+メイン会場以外での人気のセッションだと、部屋にも入れないほどの盛況ぶりだった。&lt;/p&gt;
+
+&lt;p&gt;前の会社の同僚も結構来ていてみたいだったので、顔を合わせたら声かけようと思っていたが、
+見ていたセッションがまったくかぶらず、開発言語が変わると(自分はPerlから今はPHPをメインで使っている)、
+こうも趣向が変わるのかと少し切なかった。&lt;/p&gt;
+
+&lt;p&gt;2日目は1日目の失敗を踏まえ、なるべく部屋を移動しないよう工夫してみたが、結局ランチセッションは逃した。&lt;/p&gt;
+
+&lt;p&gt;予定していたセッションは半分ぐらいしか聞けなかったが、セッションを聞いているうち、無性にプログラミングがしたくなったので途中で帰った。&lt;/p&gt;
+
+&lt;p&gt;セッションの自体は&lt;a href=&#34;https://www.youtube.com/channel/UCTqv2OjSox70MM7iYftlsIw&#34;&gt;Youtube&lt;/a&gt;などにすぐに上がるし、
+ただ見たいだけなら直接行くメリットは実はあまりないんだけど、こうやって熱に当てられることで頑張ろうと思えるところが、
+イベントのイイトコなのかなと思う。&lt;/p&gt;
+
+&lt;p&gt;最後に楽しいイベント、ありがとうございました。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>ディレクトリ中のファイルサイズの合計値を再帰的に集計したい その２</title>
