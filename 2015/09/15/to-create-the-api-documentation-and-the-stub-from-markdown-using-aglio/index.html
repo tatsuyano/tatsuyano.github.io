@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>aglioを使ってmarkdownからAPIドキュメントとStubを作成する -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Aglioを使ってmarkdownからAPIドキュメントとStubを作成する</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Tue, Sep 15, 2015
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/nodejs" >nodejs</a> <a href="http://tatsuyano.github.io/tags/js" >js</a> <a href="http://tatsuyano.github.io/tags/gulp" >gulp</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>仕事で簡単なAPIを実装する必要があったので、簡単にAPIドキュメントを公開したり、ドキュメントからStubを自動で用意する方法を調べてみた。</p>
+
+<p>で、<a href="http://dackdive.hateblo.jp/entry/2015/08/07/181723">こちらの記事</a>にやりたいことがまんま載っていた(ありがとうございます！)ので、
+記事を参考に<a href="https://github.com/tatsuyano/aglio-template">自分用のテンプレート</a>を用意した。</p>
+
+<p><br></p>
+
+<h3 id="blueprint:8e9313d6f2703a165c9d67a103a4eac0">Blueprint</h3>
+
+<p>Blueprintの記述は下記をページを参照。</p>
+
+<ul>
+<li><a href="https://github.com/apiaryio/api-blueprint/blob/master/Tutorial.md">API Blueprint Tutorial</a></li>
+<li><a href="https://github.com/apiaryio/api-blueprint/tree/master/examples">API Blueprint examples</a></li>
+</ul>
+
+<p><br></p>
+
+<h3 id="api-mockの起動をgulpに設定する:8e9313d6f2703a165c9d67a103a4eac0">api-mockの起動をgulpに設定する</h3>
+
+<p>以下のように設定し、<code>$ gulp mock</code></p>
+
+<pre><code>var gulp    = require('gulp'),
+    aglio   = require('gulp-aglio'),
+    ApiMock = require('api-mock');
+
+var TEMPLATE_FILES = ['apidocs/*.md'],
+LAYOUT_FILE    = 'apidocs/layout.md',
+PUBLISHED_DIR  = 'published';
+
+gulp.task('api-mock', function () {
+  var mockServer = new ApiMock({
+    blueprintPath: PUBLISHED_DIR + '/index.md',
+    options: {
+      port: 3000
+    }
+  });
+  mockServer.run();
+});
+
+gulp.task('mock', ['api-mock']);
+</code></pre>
+
+<p><br></p>
+
+<h3 id="vagrantで使う場合-ポートを開ける:8e9313d6f2703a165c9d67a103a4eac0">Vagrantで使う場合、ポートを開ける</h3>
+
+<p>vagrant上からaglioとapi-mockを使うには、デフォルトだと<code>8088</code>と<code>3000</code>を開ける必要があるので、<code>Vagrant</code>ファイルに以下の設定を加える。</p>
+
+<pre><code>config.vm.network &quot;forwarded_port&quot;, guest: 3000, host: 3000
+config.vm.network &quot;forwarded_port&quot;, guest: 8088, host: 8088
+</code></pre>
+
+<ul>
+<li>APIドキュメントを閲覧　 =&gt; <code>http://localhost:8088</code></li>
+<li>StubでAPIのテストをする =&gt; <code>http://localhost:3000/questions</code></li>
+</ul>
+
+<p><br></p>
+
+<h3 id="postでjsonのテストをする:8e9313d6f2703a165c9d67a103a4eac0">POSTでJSONのテストをする</h3>
+
+<p>GETの場合は、ブラウザからそのままAPIをそのまま叩けばいいが、POSTの場合は curl を使う。</p>
+
+<pre><code>curl -v -H &quot;Accept: application/json&quot; -H &quot;Content-type: application/json&quot; -X POST \
+-d '{&quot;name&quot;: &quot;hoge&quot; }' \
+http://localhost:3000/user
+</code></pre>
+
+<p>もしくはChromeアプリの<a href="https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo/related">Advanced REST client</a>などを使ってテストする。</p>
+
+<p><br></p>
+
+<h3 id="参考サイト:8e9313d6f2703a165c9d67a103a4eac0">参考サイト</h3>
+
+<ul>
+<li><a href="http://dackdive.hateblo.jp/entry/2015/08/07/181723">APIドキュメント作成ツールならApiary.ioよりaglioの方が良かった</a></li>
+<li><a href="https://github.com/tatsuyano/aglio-template">GitHub: aglio-template</a></li>
+<li><a href="https://github.com/apiaryio/api-blueprint/blob/master/Tutorial.md">API Blueprint Tutorial</a></li>
+<li><a href="https://github.com/apiaryio/api-blueprint/tree/master/examples">API Blueprint examples</a></li>
+<li><a href="http://takuya71.hatenablog.com/entry/2012/11/10/143415">curl を使って JSONデータをPOSTする</a></li>
+<li><a href="https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo/related">Advanced REST client</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-53372032-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+</body>
+
+</html>
+
