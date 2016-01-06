@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Apple on blog.10rane.com</title>
+    <link>http://tatsuyano.github.io/tags/apple/</link>
+    <description>Recent content in Apple on blog.10rane.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Wed, 06 Jan 2016 10:40:00 +0900</lastBuildDate>
+    <atom:link href="http://tatsuyano.github.io/tags/apple/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>SwiftからObjective-Cを呼ぶ方法</title>
+      <link>http://tatsuyano.github.io/2016/01/06/how-to-call-objective-c-from-swift/</link>
+      <pubDate>Wed, 06 Jan 2016 10:40:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2016/01/06/how-to-call-objective-c-from-swift/</guid>
+      <description>
+
+&lt;p&gt;Swiftで開発していて、Objective-Cのライブラリを使いたいケースがよくあります。
+試しに、&lt;a href=&#34;https://github.com/TheLevelUp/LUKeychainAccess&#34;&gt;LUKeychainAccess&lt;/a&gt;というKeychain ServicesのラッパークラスををSwiftから呼び出したいと思います。
+&lt;em&gt;今回はLUKeychainAccessのインストールは、CocoaPodなどを使わず手動で行います&lt;/em&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;実装の流れ:0097856035acae65dbe27799660c00e8&#34;&gt;実装の流れ&lt;/h3&gt;
+
+&lt;p&gt;実装の流れは以下のようになります。&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Swiftのプロジェクトを作成し、Objective-Cのライブラリを追加&lt;/li&gt;
+&lt;li&gt;ブリッジファイルを作成し、Objective-Cのライブラリのをimport&lt;/li&gt;
+&lt;li&gt;SwiftのからObjective-Cのコードを呼び出す&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&#34;swiftのプロジェクトを作成し-objective-cのライブラリを追加:0097856035acae65dbe27799660c00e8&#34;&gt;Swiftのプロジェクトを作成し、Objective-Cのライブラリを追加&lt;/h3&gt;
+
+&lt;p&gt;まずは、いつもどおりSwiftのプロジェクトを作成します。
+テンプレートは「SingleViewApplication」、プロジェクト名は「LUKeychainFromSwift」で作成します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-call-objective-c-from-swift_001.png&#34; width=&#34;100%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;次にダウンロードしたLUKeychainAccessのヘッダーファイルなどが入っているディレクトリ(LUKeychainAccess/LUKeychainAccess)をD&amp;amp;Dで、プロジェクトにコピーします。
+今回はプロジェクト内にライブラリを追加したいので、&lt;code&gt;Copy items if needed&lt;/code&gt;と&lt;code&gt;Create groups&lt;/code&gt;にチェックを入れてください。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-call-objective-c-from-swift_002.png&#34; width=&#34;100%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;ライブラリを追加すると、自動で&lt;code&gt;Build Phases &amp;gt; Compile Sources&lt;/code&gt; に&lt;code&gt;LUKeychainAccess.m&lt;/code&gt;と&lt;code&gt;LUKeychainServices.m&lt;/code&gt;が追加されます。
+追加されていない場合は手動で追加してください。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-call-objective-c-from-swift_003.png&#34; width=&#34;100%&#34;&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;ブリッジファイルを作成し-objective-cのライブラリをimport:0097856035acae65dbe27799660c00e8&#34;&gt;ブリッジファイルを作成し、Objective-Cのライブラリをimport&lt;/h3&gt;
+
+&lt;p&gt;ブリッジファイルを作成して、呼び出したいライブラリ(ヘッダーファイル)を指定(import)します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;File &amp;gt; New &amp;gt; File... &amp;gt; Header File&lt;/code&gt; からヘッダーファイルを選択し、ブリッジファイル「LUKeychainFromSwift-Bridging-Header.h」を作成します。
+作成したブリッジファイルにimport先のライブラリ(&lt;code&gt;LUKeychainAccess.h&lt;/code&gt;)を指定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-call-objective-c-from-swift_004.png&#34; width=&#34;100%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;※ 今回は自前でObjective-Cのクラスを実装しないので、手動でブリッジファイルを用意しましたが、
+新規にObjective-Cのファイルを作成することで、自動でブリッジファイルを作成することが可能です。くわしくは下記サイトを確認してください。&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://easyramble.com/setup-bridging-header-easily.html&#34;&gt;Bridging Headerのファイル作成と設定を簡単に行う手順&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&#34;build-setting-に作成したブリッジファイルを指定する:0097856035acae65dbe27799660c00e8&#34;&gt;Build Setting に作成したブリッジファイルを指定する&lt;/h3&gt;
+
+&lt;p&gt;次に&lt;code&gt;Build Setting &amp;gt; Swift Compiler - Code Generation &amp;gt; Objective-C Bridgeing Header&lt;/code&gt;に作成したブリッジファイル名を設定します。
+以上で設定は完了です。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-call-objective-c-from-swift_005.png&#34; width=&#34;100%&#34;&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;swiftのからobjective-cのコードを参照する:0097856035acae65dbe27799660c00e8&#34;&gt;SwiftのからObjective-Cのコードを参照する&lt;/h3&gt;
+
+&lt;p&gt;設定が正常に完了していれば、コード補完が機能されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-call-objective-c-from-swift_006.png&#34; width=&#34;100%&#34;&gt;&lt;/p&gt;
+
+&lt;p&gt;ためしに実行してみると、Keychain Servicesに保存した値が引っ張ってこれることが確認できます。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-call-objective-c-from-swift_007.png&#34; width=&#34;100%&#34;&gt;&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:0097856035acae65dbe27799660c00e8&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://crunchtimer.jp/blog/technology/swift/3312/&#34;&gt;Objective-CプログラムをSwiftから呼び出す方法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://easyramble.com/setup-bridging-header-easily.html&#34;&gt;Bridging Headerのファイル作成と設定を簡単に行う手順&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/24002369/how-to-call-objective-c-code-from-swift/24005242#24005242&#34;&gt;How to call Objective C code from Swift&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://blog.ch3cooh.jp/entry/20130204/1359942207&#34;&gt;Undefined symbols for architecture armv7:〜という警告が出たときの対策方法&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

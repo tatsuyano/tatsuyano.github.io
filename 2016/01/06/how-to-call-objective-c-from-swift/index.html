@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SwiftからObjective-Cを呼ぶ方法 -- blog.10rane.com</title>
+
+    
+
+    
+    <link href="http://tatsuyano.github.io/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://tatsuyano.github.io/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://tatsuyano.github.io/">blog.10rane.com</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://tatsuyano.github.io/post/">Archives</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>SwiftからObjective-Cを呼ぶ方法</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Jan 6, 2016
+                 <br />
+                 In 
+
+                 <br />
+                 Tags <a href="http://tatsuyano.github.io/tags/apple" >apple</a> <a href="http://tatsuyano.github.io/tags/swift" >swift</a> 
+
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<p>Swiftで開発していて、Objective-Cのライブラリを使いたいケースがよくあります。
+試しに、<a href="https://github.com/TheLevelUp/LUKeychainAccess">LUKeychainAccess</a>というKeychain ServicesのラッパークラスををSwiftから呼び出したいと思います。
+<em>今回はLUKeychainAccessのインストールは、CocoaPodなどを使わず手動で行います</em></p>
+
+<h3 id="実装の流れ:0097856035acae65dbe27799660c00e8">実装の流れ</h3>
+
+<p>実装の流れは以下のようになります。</p>
+
+<ol>
+<li>Swiftのプロジェクトを作成し、Objective-Cのライブラリを追加</li>
+<li>ブリッジファイルを作成し、Objective-Cのライブラリのをimport</li>
+<li>SwiftのからObjective-Cのコードを呼び出す</li>
+</ol>
+
+<h3 id="swiftのプロジェクトを作成し-objective-cのライブラリを追加:0097856035acae65dbe27799660c00e8">Swiftのプロジェクトを作成し、Objective-Cのライブラリを追加</h3>
+
+<p>まずは、いつもどおりSwiftのプロジェクトを作成します。
+テンプレートは「SingleViewApplication」、プロジェクト名は「LUKeychainFromSwift」で作成します。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-call-objective-c-from-swift_001.png" width="100%"></p>
+
+<p>次にダウンロードしたLUKeychainAccessのヘッダーファイルなどが入っているディレクトリ(LUKeychainAccess/LUKeychainAccess)をD&amp;Dで、プロジェクトにコピーします。
+今回はプロジェクト内にライブラリを追加したいので、<code>Copy items if needed</code>と<code>Create groups</code>にチェックを入れてください。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-call-objective-c-from-swift_002.png" width="100%"></p>
+
+<p>ライブラリを追加すると、自動で<code>Build Phases &gt; Compile Sources</code> に<code>LUKeychainAccess.m</code>と<code>LUKeychainServices.m</code>が追加されます。
+追加されていない場合は手動で追加してください。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-call-objective-c-from-swift_003.png" width="100%"></p>
+
+<h3 id="ブリッジファイルを作成し-objective-cのライブラリをimport:0097856035acae65dbe27799660c00e8">ブリッジファイルを作成し、Objective-Cのライブラリをimport</h3>
+
+<p>ブリッジファイルを作成して、呼び出したいライブラリ(ヘッダーファイル)を指定(import)します。</p>
+
+<p><code>File &gt; New &gt; File... &gt; Header File</code> からヘッダーファイルを選択し、ブリッジファイル「LUKeychainFromSwift-Bridging-Header.h」を作成します。
+作成したブリッジファイルにimport先のライブラリ(<code>LUKeychainAccess.h</code>)を指定します。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-call-objective-c-from-swift_004.png" width="100%"></p>
+
+<p>※ 今回は自前でObjective-Cのクラスを実装しないので、手動でブリッジファイルを用意しましたが、
+新規にObjective-Cのファイルを作成することで、自動でブリッジファイルを作成することが可能です。くわしくは下記サイトを確認してください。</p>
+
+<ul>
+<li><a href="http://easyramble.com/setup-bridging-header-easily.html">Bridging Headerのファイル作成と設定を簡単に行う手順</a></li>
+</ul>
+
+<h3 id="build-setting-に作成したブリッジファイルを指定する:0097856035acae65dbe27799660c00e8">Build Setting に作成したブリッジファイルを指定する</h3>
+
+<p>次に<code>Build Setting &gt; Swift Compiler - Code Generation &gt; Objective-C Bridgeing Header</code>に作成したブリッジファイル名を設定します。
+以上で設定は完了です。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-call-objective-c-from-swift_005.png" width="100%"></p>
+
+<h3 id="swiftのからobjective-cのコードを参照する:0097856035acae65dbe27799660c00e8">SwiftのからObjective-Cのコードを参照する</h3>
+
+<p>設定が正常に完了していれば、コード補完が機能されます。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-call-objective-c-from-swift_006.png" width="100%"></p>
+
+<p>ためしに実行してみると、Keychain Servicesに保存した値が引っ張ってこれることが確認できます。</p>
+
+<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-call-objective-c-from-swift_007.png" width="100%"></p>
+
+<h3 id="参考サイト:0097856035acae65dbe27799660c00e8">参考サイト</h3>
+
+<ul>
+<li><a href="http://crunchtimer.jp/blog/technology/swift/3312/">Objective-CプログラムをSwiftから呼び出す方法</a></li>
+<li><a href="http://easyramble.com/setup-bridging-header-easily.html">Bridging Headerのファイル作成と設定を簡単に行う手順</a></li>
+<li><a href="http://stackoverflow.com/questions/24002369/how-to-call-objective-c-code-from-swift/24005242#24005242">How to call Objective C code from Swift</a></li>
+<li><a href="http://blog.ch3cooh.jp/entry/20130204/1359942207">Undefined symbols for architecture armv7:〜という警告が出たときの対策方法</a></li>
+</ul>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="mailto:">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/tatsuyano">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted"></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://tatsuyano.github.io/js/jquery.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://tatsuyano.github.io/js/clean-blog.js"></script>
+
+    
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-53372032-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+</body>
+
+</html>
+
