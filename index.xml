@@ -553,7 +553,7 @@ flymake-jshintは「js2-mode」に必須のようなので、インストール�
     </item>
     
     <item>
-      <title>Hugoに同時ドメインを適応したので、sitemap.xmlを置換する</title>
+      <title>Hugoに独自ドメインを適応したので、sitemap.xmlを置換する</title>
       <link>http://tatsuyano.github.io/2015/07/26/replacing-sitemap-of-hugo/</link>
       <pubDate>Sun, 26 Jul 2015 21:15:01 +0900</pubDate>
       
