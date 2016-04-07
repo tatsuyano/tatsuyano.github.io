@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Hugoに独自ドメインを適応したので、sitemap.xmlを置換する -- blog.10rane.com</title>
+    <title>CasperJSのajaxでPOSTの送信ができない -- blog.10rane.com</title>
 
     
 
@@ -75,14 +75,14 @@
         <div class="row">
            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
              <div class="post-heading">
-               <h1>Hugoに独自ドメインを適応したので、sitemap.Xmlを置換する</h1>
+               <h1>CasperJSのajaxでPOSTの送信ができない</h1>
                <h2 class="subheading"></h2>
-               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Sun, Jul 26, 2015
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Apr 6, 2016
                  <br />
                  In 
 
                  <br />
-                 Tags <a href="http://tatsuyano.github.io/tags/blog" >blog</a> 
+                 Tags <a href="http://tatsuyano.github.io/tags/js" >js</a> <a href="http://tatsuyano.github.io/tags/nodejs" >nodejs</a> <a href="http://tatsuyano.github.io/tags/casperjs" >casperjs</a> 
 
                </span>
              </div>
@@ -96,13 +96,25 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                  <p>Hugoに独自ドメインを適応したところ、自動生成されるsitemap.xmlが<br />
-Github pagesのURLで生成されていたので、deploy.shにsedコマンドを追加した。</p>
+                  <p>地味にハマった。Chromeだとパラメータに<code>type:&quot;POST&quot;</code>がなくてもPOSTでリクエストを送信してくれるが、
+CasperJsのブラウザでは、<code>type:&quot;POST&quot;</code>を明示しないと<code>GET</code>でリクエストを送信してしまう。</p>
 
-<p>sedコマンドで上書き置換(sed -i)したら、バックアップファイルが自動で生成<br />
-されるを止めるのはどうしたらいいのだろうか。。</p>
+<pre><code class="language-javascript">$.ajax({
+    url:  &quot;/shopping/addpoint/&quot;,
+    type: &quot;POST&quot;, // &lt;-このパラメータが必須
+    data: data,
+    success: function(data, dataType) {
+        var data_arr = JSON.parse(data);
+        $('#point').text(data_arr['point']);
+        alert(data_arr['msg']);
+    }
+});
+</code></pre>
 
-<script src="https://gist.github.com/tatsuyano/57c42f1b050402abd7ea.js"></script>
+<p>手動で操作するぶんには問題なく動いていたので(typeパラメータが設定されていなくても)、
+CasperJs(自分で書いたソース)側に問題があると思い込んでしまった。</p>
+
+<p>思い込みで判断せずに、まずはアクセスログを確認しようという教訓でした。</p>
 
                 </div>
             </div>

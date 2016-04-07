@@ -6,8 +6,165 @@
     <description>Recent content on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Wed, 06 Jan 2016 10:40:00 +0900</lastBuildDate>
+    <lastBuildDate>Wed, 06 Apr 2016 19:00:00 +0900</lastBuildDate>
     <atom:link href="http://tatsuyano.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>CasperJsの使い方メモ</title>
+      <link>http://tatsuyano.github.io/2016/04/06/how-to-use-casperjs/</link>
+      <pubDate>Wed, 06 Apr 2016 19:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2016/04/06/how-to-use-casperjs/</guid>
+      <description>
+
+&lt;h3 id=&#34;日本語のページのキャプチャを取る:0f17afad2dfafdb4933c4127f2233642&#34;&gt;日本語のページのキャプチャを取る&lt;/h3&gt;
+
+&lt;p&gt;日本語のページのキャプチャを撮るには、CasperJsを実行するサーバーに日本語フォントが入っている必要がある。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;sudo yum -y groupinstall &amp;quot;Japanese Support&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;casperjsを一時停止させる:0f17afad2dfafdb4933c4127f2233642&#34;&gt;CasperJsを一時停止させる&lt;/h3&gt;
+
+&lt;p&gt;3秒プログラムを停止させてからキャプチャを撮る&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;casper.then(function() {
+  this.wait(3000, function() {
+    console.log(&#39;3秒後&#39;);
+    this.capture(&#39;capture/test.png&#39;);
+  });
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;casperjsからjsonをpostする:0f17afad2dfafdb4933c4127f2233642&#34;&gt;CasperJsからJSONをPOSTする&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;casper.start();
+casper.open(&#39;http://hoge.com/api/hoge&#39;, {
+  method: &#39;post&#39;,
+  headers: {
+    &#39;Accept-Language&#39;: &#39;ja&#39;
+  },
+  data: {
+    uuid   : &#39;UUID&#39;,
+    secret : &#39;SECRET&#39;
+  }
+});
+
+// this.getPageContent()で結果を取得できる
+casper.then(function(response) {
+  var json = JSON.parse(this.getPageContent());
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;casperjsにメソッドを定義する:0f17afad2dfafdb4933c4127f2233642&#34;&gt;CasperJsにメソッドを定義する&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;casper.then(function() {
+  this.createMarkdown(&#39;title&#39;,&#39;describe&#39;);
+});
+
+casper.createMarkdown = function(title,describe){
+  template = fs.read(&#39;result/api_template.md&#39;, &#39;utf8&#39;);
+  template = template.replace(/{{title}}/g    ,title);
+  template = template.replace(/{{describe}}/g ,describe);
+  fs.write(&#39;result/&#39;+title+&#39;.md&#39;, template);
+};
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>CasperJsでAlert、Confirmのイベントをキャッチする</title>
+      <link>http://tatsuyano.github.io/2016/04/06/i-have-catched-alert-or-confirm-events-in-casperjs/</link>
+      <pubDate>Wed, 06 Apr 2016 15:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2016/04/06/i-have-catched-alert-or-confirm-events-in-casperjs/</guid>
+      <description>
+
+&lt;p&gt;AlertやConfirmダイアログのOKボタン、キャンセルボタンを押下するには、&lt;code&gt;casper.page.onAlert&lt;/code&gt;、&lt;code&gt;casper.page.onConfirm&lt;/code&gt;を使う。&lt;/p&gt;
+
+&lt;p&gt;下の例では、購入ボタン(#buy)を押下すると、
+Confirmダイアログが立ち上がり &lt;code&gt;商品を購入します。よろしいですか？&lt;/code&gt;とメッセージが表示される。
+OKボタンを押下すると、商品購入処理が実行され
+商品の購入が成功すれば &lt;code&gt;商品を購入しました&lt;/code&gt;、
+ポイントが足りず購入に失敗すると &lt;code&gt;ポイントが足りません&lt;/code&gt; とメッセージが表示される。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var casper = require(&#39;casper&#39;).create({clientScripts: [&#39;./src/includes/jquery.min.js&#39;]});
+
+var point = 100;
+
+casper.start();
+casper.open(&#39;http://192.168.33.10/shopping/cart&#39;).viewport(1024, 690);
+
+casper.then(function() {
+
+  // AlertダイアログはOKボタンしかないので、返り値は必ずtrueを返す。
+  // 同一画面で、複数のダイアログを表示する場合は、引数のメッセージで分岐する
+  this.page.onAlert = function(message) {
+    if (message == &#39;商品を購入しました&#39;) {
+        return true;
+    }
+    else if (message == &#39;ポイントが足りません&#39;) {
+        return true;
+    }
+  };
+
+  // Confirmダイアログが立ち上がると発火する。
+  // trueを返すとOKボタンが押下され、falseを返すとキャンセルボタンが押下される
+  this.page.onConfirm = function(message) {
+    if (message == &#39;商品を購入します。よろしいですか？&#39;) {
+        return true;
+    }
+  };
+
+  // #add_pointというテキストフィールドに100ポイントを入力し、#buyボタンを押下する
+  this.evaluate(function(p) {
+    $(&#39;#add_point&#39;).val(p);
+    document.getElementById(&amp;quot;buy&amp;quot;).click();
+  }, point);
+});
+
+casper.run();
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;CasperJsはPhantomJsを拡張(内封)しているライブラリなので、PhantomJsをメソッドをそのまま?使うことができる。
+今回の&lt;code&gt;onAlert&lt;/code&gt;などもPhantomJsで定義されているメソッドで、&lt;code&gt;this.page&lt;/code&gt;の中にPhantomJsが入っている。&lt;/p&gt;
+
+&lt;h3 id=&#34;参考サイト:2df5b4a29a5fedc7180a179aec02fce4&#34;&gt;参考サイト&lt;/h3&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://tetsuwo.tumblr.com/post/58696806251/jasmine-phantomjs-alert-confirm-prompt&#34;&gt;PhantomJS + Jasmine で alert, confirm, prompt などの標準ダイアログのテスト方法&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://docs.casperjs.org/en/latest/modules/casper.html#onalert&#34;&gt;onAlert&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>CasperJSのajaxでPOSTの送信ができない</title>
+      <link>http://tatsuyano.github.io/2016/04/06/if-you-can-not-send-post-in-ajax-of-casperjs/</link>
+      <pubDate>Wed, 06 Apr 2016 12:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2016/04/06/if-you-can-not-send-post-in-ajax-of-casperjs/</guid>
+      <description>&lt;p&gt;地味にハマった。Chromeだとパラメータに&lt;code&gt;type:&amp;quot;POST&amp;quot;&lt;/code&gt;がなくてもPOSTでリクエストを送信してくれるが、
+CasperJsのブラウザでは、&lt;code&gt;type:&amp;quot;POST&amp;quot;&lt;/code&gt;を明示しないと&lt;code&gt;GET&lt;/code&gt;でリクエストを送信してしまう。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;$.ajax({
+    url:  &amp;quot;/shopping/addpoint/&amp;quot;,
+    type: &amp;quot;POST&amp;quot;, // &amp;lt;-このパラメータが必須
+    data: data,
+    success: function(data, dataType) {
+        var data_arr = JSON.parse(data);
+        $(&#39;#point&#39;).text(data_arr[&#39;point&#39;]);
+        alert(data_arr[&#39;msg&#39;]);
+    }
+});
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;手動で操作するぶんには問題なく動いていたので(typeパラメータが設定されていなくても)、
+CasperJs(自分で書いたソース)側に問題があると思い込んでしまった。&lt;/p&gt;
+
+&lt;p&gt;思い込みで判断せずに、まずはアクセスログを確認しようという教訓でした。&lt;/p&gt;
+</description>
+    </item>
     
     <item>
       <title>SwiftからObjective-Cを呼ぶ方法</title>
@@ -553,7 +710,7 @@ flymake-jshintは「js2-mode」に必須のようなので、インストール�
     </item>
     
     <item>
-      <title>Hugoに同時ドメインを適応したので、sitemap.xmlを置換する</title>
+      <title>Hugoに独自ドメインを適応したので、sitemap.xmlを置換する</title>
       <link>http://tatsuyano.github.io/2015/07/26/replacing-sitemap-of-hugo/</link>
       <pubDate>Sun, 26 Jul 2015 21:15:01 +0900</pubDate>
       
@@ -904,265 +1061,6 @@ $ http-server -p 4000
 
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/&#34;&gt;Promiseを使って、非同期処理を任意のタイミングで実行する&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Promiseを使って、非同期処理を任意のタイミングで実行する</title>
-      <link>http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/</link>
-      <pubDate>Tue, 02 Jun 2015 01:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/</guid>
-      <description>
-
-&lt;p&gt;Promiseを使って、非同期処理を任意の順番で実行するサンプル。
-ES5でも順番を指定して実行する事ができるが、Promiseを使うと綺麗に実装できる。&lt;/p&gt;
-
-&lt;p&gt;&lt;script src=&#34;http://gist-it.appspot.com/https://github.com/tatsuyano/study-es6promise/blob/master/sample01-nodejs.js&#34;&gt;
-&lt;/script&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:4211bdcec880eb9ef23695a021bec295&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://azu.github.io/promises-book/&#34;&gt;JavaScript Promiseの本&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.html5rocks.com/ja/tutorials/es6/promises/&#34;&gt;JavaScript Promises&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/jakearchibald/es6-promise&#34;&gt;es6-promise&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://babeljs.io/repl/&#34;&gt;Babel repl&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;関連する記事:4211bdcec880eb9ef23695a021bec295&#34;&gt;関連する記事&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/&#34;&gt;webpackを使ってes6-promiseを読み込む&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Rails4の非公開情報をdotenvで管理する</title>
-      <link>http://tatsuyano.github.io/2015/05/13/dotenv-manages-secret-of-rails4/</link>
-      <pubDate>Wed, 13 May 2015 01:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2015/05/13/dotenv-manages-secret-of-rails4/</guid>
-      <description>
-
-&lt;p&gt;TwitterのAPIキーなど、公開したくない情報をどこに設定すればいいか調べたところ、
-&lt;code&gt;config/secrets.yml&lt;/code&gt;に設定して、&lt;code&gt;.gitignore&lt;/code&gt;して使うようなので、設定してみました。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;# config/secrets.yml
-development:
-  twitter_api_key: hogefuga.....
-
-# 呼び出し側
-key = Rails.application.secrets.twitter_api_key
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-しかしherokuを利用する場合、この`secrets.yml`というファイル自体必須なので、`.gitignore`するわけにはいきません。
-
-* [How to solve error &#34;Missing secret_key_base   for production environment&#34; on
-Heroku](http://stackoverflow.com/questions/23180650/how-to-solve-error-missing-secret-key-base-for-production-environment-on-h)
-
-## dotenv-railsの設定
-
-そこで検討した結果、`dotenv-rails`というGemを使うことにしました。
-このGemを使うと、アプリケーションごとに環境変数(非公開情報)が設定できるようになり、
-`secrets.yml`に公開したくない情報を設定しなくても良くなります。
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;# Gemfile
-gem &#39;dotenv-rails&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;まず、アプリケーションのディレクトリの直下に&lt;code&gt;.env&lt;/code&gt;というファイルを作成し、環境変数を設定します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;# .env
-TWITTER_API_KEY=&#34;hogehoge&#34;
-TWITTER_API_SECRET=&#34;fugafuga&#34;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;読み出す時は、以下のように指定します。
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;puts ENV[&amp;lsquo;TWITTER_API_KEY&amp;rsquo;] # =&amp;gt; &amp;ldquo;hogehoge&amp;rdquo;
-&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-
-&lt;p&gt;最後に&lt;code&gt;.env&lt;/code&gt;ファイルを&lt;code&gt;.gitignore&lt;/code&gt;します。&lt;br /&gt;
-以上で完了です。&lt;/p&gt;
-
-&lt;h2 id=&#34;herokuに環境変数を設定する:51a96cd6c0e962b72bbcd741a4bc7fd0&#34;&gt;herokuに環境変数を設定する&lt;/h2&gt;
-
-&lt;p&gt;ちなみに、herokuに環境変数を設定するには以下のように指定します。&lt;/p&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#39;language-bash&#39;&gt;$ heroku config:add TWITTER_API_KEY=&amp;ldquo;hogehoge&amp;rdquo;    &amp;ndash;app アプリ名
-$ heroku config:add TWITTER_API_SECRET=&amp;ldquo;fugafuga&amp;rdquo; &amp;ndash;app アプリ名
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:51a96cd6c0e962b72bbcd741a4bc7fd0&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://xoyip.hatenablog.com/entry/2014/04/09/214405&#34;&gt;Rails4.1のsecrets.ymlはfigaroと違うの？&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://railsguides.jp/security.html#%E5%88%A9%E7%94%A8%E7%92%B0%E5%A2%83%E3%81%AE%E3%82%BB%E3%82%AD%E3%83%A5%E3%83%AA%E3%83%86%E3%82%A3&#34;&gt;Rails セキュリティガイド 10 利用環境のセキュリティ
-&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://jangajan.com/blog/2014/10/05/secrets-dot-yml-on-heroku-in-rails4-dot-1/&#34;&gt;Rails4.1でherokuへのデプロイに失敗(Missing &amp;lsquo;secret_key_base&amp;rsquo;)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://t4traw.github.io/20141215/study-rails-secrets-yml.html&#34;&gt;RailsチュートリアルをRails(4.1)で勉強する：secret_key_baseからsecrets.yml&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/closer/items/f8d8ba00ae86d7051764&#34;&gt;環境によって変わる設定値はdotenvを使うと便利&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>jquery-readyselectorとbower-railsを使って、ページ単位でJsを管理する</title>
-      <link>http://tatsuyano.github.io/2015/04/28/using-jquery-readyselector-and-bower-rails-to-manage-js-on-a-page-by-page/</link>
-      <pubDate>Tue, 28 Apr 2015 01:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2015/04/28/using-jquery-readyselector-and-bower-rails-to-manage-js-on-a-page-by-page/</guid>
-      <description>
-
-&lt;p&gt;ページごとに読み込むJsを制限したいなあと思って、ググってみたところいろいろ出てくる。
-ただ、今回はできるかぎりシンプルにやりたかったので&lt;code&gt;jquery-readyselector&lt;/code&gt;というJqueryプラグインを使うことにした。&lt;/p&gt;
-
-&lt;p&gt;このプラグインはBowerで管理されている(Node)モジュールみたいなので、まずは&lt;code&gt;bower-rails&lt;/code&gt;をインストールして、
-&lt;code&gt;bower-rails&lt;/code&gt;経由で&lt;code&gt;jquery-readyselector&lt;/code&gt;をインストールすることにした。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;bower-railsを使うには、事前にBowerをインストールしておく必要がある&lt;/em&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;bower-railsのインストール:81d2c341e61d33f963f82806634eede6&#34;&gt;bower-railsのインストール&lt;/h2&gt;
-
-&lt;p&gt;まずはGemfileの設定し、インストール。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cat Gemfile
-gem &amp;quot;bower-rails&amp;quot;
-
-$ bundle install
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;次に、Nodeモジュールを管理するための設定ファイル(Gemfileみたいなもの)の形式を決める。
-形式はjson形式の&lt;code&gt;bower.json&lt;/code&gt;の場合か、&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ rails g bower_rails:initialize json
-      create  bower.json
-      create  config/initializers/bower_rails.rb
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;DSL形式の&lt;code&gt;Bowerfile&lt;/code&gt;のどちらか選べる。今回はこちらの方法を選択。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$  rails g bower_rails:initialize
-      create  Bowerfile
-      create  config/initializers/bower_rails.rb
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;p&gt;
-&lt;code&gt;bower-rails&lt;/code&gt;の設定は&lt;code&gt;config/initializers/bower_rails.rb&lt;/code&gt;で行う。
-今回は特に設定なし(デフォルトのまま)。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;BowerRails.configure do |bower_rails|
-   # Tell bower-rails what path should be considered as root. Defaults to Dir.pwd
-   # bower_rails.root_path = Dir.pwd
-
-   # Invokes rake bower:install before precompilation. Defaults to false
-   # bower_rails.install_before_precompile = true
-
-   # Invokes rake bower:resolve before precompilation. Defaults to false
-   # bower_rails.resolve_before_precompile = true
-
-   # Invokes rake bower:clean before precompilation. Defaults to false
-   # bower_rails.clean_before_precompile = true
-
-   # Invokes rake bower:install:deployment instead rake bower:install. Defaults to false
-   # bower_rails.use_bower_install_deployment = true
-end
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;jquery-readyselectorのインストール:81d2c341e61d33f963f82806634eede6&#34;&gt;jquery-readyselectorのインストール&lt;/h2&gt;
-
-&lt;p&gt;まずはインストールするNodeモジュールを設定し、インストールの実行。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cat Bowerfile
-asset &#39;jquery-readyselector&#39;
-
-$ bundle exec rake bower:install
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;すると&lt;code&gt;vendor/assets&lt;/code&gt;配下に&lt;code&gt;bower_components&lt;/code&gt;というディレクトリが生成され、
-その中にNodeモジュールがインストールされる。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ ll vendor/assets/bower_components/
-query-readyselector/
-...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;bower-rails&lt;/code&gt;でインストールしたNodeモジュールは、&lt;code&gt;bower-rails&lt;/code&gt;側で管理したかったので、gitignore した。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cat .gitignore
-vendor/assets/bower_components/*
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;インストールしたNodeモジュールのpathを設定する。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cat config/application.rb
-config.assets.paths &amp;lt;&amp;lt; Rails.root.join(&#39;vendor&#39;, &#39;assets&#39;, &#39;bower_components&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;次に&lt;code&gt;jquery-readyselector&lt;/code&gt;を&lt;code&gt;application.js&lt;/code&gt;に読み込む。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cat app/assets/javascripts/application.js
-//= require jquery-readyselector
-//= require_tree .
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;最後にbodyタグに、アクセスされた時の&lt;code&gt;コントローラ名&lt;/code&gt;と&lt;code&gt;アクション名&lt;/code&gt;をclassに設定するようにする。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ emacs app/views/layouts/application.html.erb
-&amp;lt;body class=&amp;quot;&amp;lt;%= controller_name -%&amp;gt; &amp;lt;%= action_name -%&amp;gt;&amp;quot;&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;ページ別にjsが読み込まれているか確認:81d2c341e61d33f963f82806634eede6&#34;&gt;ページ別にJsが読み込まれているか確認&lt;/h2&gt;
-
-&lt;p&gt;まずは適当なページ&lt;code&gt;http://localhost:3000/books&lt;/code&gt;を用意する。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ rails g scaffold Book title:string price:integer
-...
-app/assets/javascripts/books.coffee
-...
-
-$ rake db:migrate
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;p&gt;&lt;/p&gt;
-
-&lt;p&gt;次に生成されたJs(coffee)に、ページ単位(action単位)にコードを書く。
-&lt;code&gt;http://localhost:3000/books&lt;/code&gt;にアクセスした時のみ、&lt;code&gt;alert&lt;/code&gt;がでれば成功。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ emacs app/assets/javascripts/books.coffee
-$(&#39;.books.index&#39;).ready -&amp;gt;
-  alert(&#39;book#index&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:81d2c341e61d33f963f82806634eede6&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.mah-lab.com/2014/04/14/bower-rails/&#34;&gt;Railsで外部JavaScriptライブラリなどのAssetを管理するなら、bower-railsが便利&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/rharriso/bower-rails&#34;&gt;bower-rails&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.hello-world.jp.net/javascript/1673/&#34;&gt;bodyにclassを付けて特定のページでのみjsが動作するようにする&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
     </item>

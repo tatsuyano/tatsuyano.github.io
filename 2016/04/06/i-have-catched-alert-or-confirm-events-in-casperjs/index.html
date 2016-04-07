@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Hugoに独自ドメインを適応したので、sitemap.xmlを置換する -- blog.10rane.com</title>
+    <title>CasperJsでAlert、Confirmのイベントをキャッチする -- blog.10rane.com</title>
 
     
 
@@ -75,14 +75,14 @@
         <div class="row">
            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
              <div class="post-heading">
-               <h1>Hugoに独自ドメインを適応したので、sitemap.Xmlを置換する</h1>
+               <h1>CasperJsでAlert、Confirmのイベントをキャッチする</h1>
                <h2 class="subheading"></h2>
-               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Sun, Jul 26, 2015
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Apr 6, 2016
                  <br />
                  In 
 
                  <br />
-                 Tags <a href="http://tatsuyano.github.io/tags/blog" >blog</a> 
+                 Tags <a href="http://tatsuyano.github.io/tags/js" >js</a> <a href="http://tatsuyano.github.io/tags/nodejs" >nodejs</a> <a href="http://tatsuyano.github.io/tags/casperjs" >casperjs</a> 
 
                </span>
              </div>
@@ -96,13 +96,63 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                  <p>Hugoに独自ドメインを適応したところ、自動生成されるsitemap.xmlが<br />
-Github pagesのURLで生成されていたので、deploy.shにsedコマンドを追加した。</p>
+                  
 
-<p>sedコマンドで上書き置換(sed -i)したら、バックアップファイルが自動で生成<br />
-されるを止めるのはどうしたらいいのだろうか。。</p>
+<p>AlertやConfirmダイアログのOKボタン、キャンセルボタンを押下するには、<code>casper.page.onAlert</code>、<code>casper.page.onConfirm</code>を使う。</p>
 
-<script src="https://gist.github.com/tatsuyano/57c42f1b050402abd7ea.js"></script>
+<p>下の例では、購入ボタン(#buy)を押下すると、
+Confirmダイアログが立ち上がり <code>商品を購入します。よろしいですか？</code>とメッセージが表示される。
+OKボタンを押下すると、商品購入処理が実行され
+商品の購入が成功すれば <code>商品を購入しました</code>、
+ポイントが足りず購入に失敗すると <code>ポイントが足りません</code> とメッセージが表示される。</p>
+
+<pre><code class="language-javascript">var casper = require('casper').create({clientScripts: ['./src/includes/jquery.min.js']});
+
+var point = 100;
+
+casper.start();
+casper.open('http://192.168.33.10/shopping/cart').viewport(1024, 690);
+
+casper.then(function() {
+
+  // AlertダイアログはOKボタンしかないので、返り値は必ずtrueを返す。
+  // 同一画面で、複数のダイアログを表示する場合は、引数のメッセージで分岐する
+  this.page.onAlert = function(message) {
+    if (message == '商品を購入しました') {
+        return true;
+    }
+    else if (message == 'ポイントが足りません') {
+        return true;
+    }
+  };
+
+  // Confirmダイアログが立ち上がると発火する。
+  // trueを返すとOKボタンが押下され、falseを返すとキャンセルボタンが押下される
+  this.page.onConfirm = function(message) {
+    if (message == '商品を購入します。よろしいですか？') {
+        return true;
+    }
+  };
+
+  // #add_pointというテキストフィールドに100ポイントを入力し、#buyボタンを押下する
+  this.evaluate(function(p) {
+    $('#add_point').val(p);
+    document.getElementById(&quot;buy&quot;).click();
+  }, point);
+});
+
+casper.run();
+</code></pre>
+
+<p>CasperJsはPhantomJsを拡張(内封)しているライブラリなので、PhantomJsをメソッドをそのまま?使うことができる。
+今回の<code>onAlert</code>などもPhantomJsで定義されているメソッドで、<code>this.page</code>の中にPhantomJsが入っている。</p>
+
+<h3 id="参考サイト:2df5b4a29a5fedc7180a179aec02fce4">参考サイト</h3>
+
+<ul>
+<li><a href="http://tetsuwo.tumblr.com/post/58696806251/jasmine-phantomjs-alert-confirm-prompt">PhantomJS + Jasmine で alert, confirm, prompt などの標準ダイアログのテスト方法</a></li>
+<li><a href="http://docs.casperjs.org/en/latest/modules/casper.html#onalert">onAlert</a></li>
+</ul>
 
                 </div>
             </div>

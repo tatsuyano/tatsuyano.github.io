@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Hugoに独自ドメインを適応したので、sitemap.xmlを置換する -- blog.10rane.com</title>
+    <title>CasperJsの使い方メモ -- blog.10rane.com</title>
 
     
 
@@ -75,14 +75,14 @@
         <div class="row">
            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
              <div class="post-heading">
-               <h1>Hugoに独自ドメインを適応したので、sitemap.Xmlを置換する</h1>
+               <h1>CasperJsの使い方メモ</h1>
                <h2 class="subheading"></h2>
-               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Sun, Jul 26, 2015
+               <span class="meta">Posted by <a href="#">Tatsuyano</a> on Wed, Apr 6, 2016
                  <br />
                  In 
 
                  <br />
-                 Tags <a href="http://tatsuyano.github.io/tags/blog" >blog</a> 
+                 Tags <a href="http://tatsuyano.github.io/tags/js" >js</a> <a href="http://tatsuyano.github.io/tags/nodejs" >nodejs</a> <a href="http://tatsuyano.github.io/tags/casperjs" >casperjs</a> 
 
                </span>
              </div>
@@ -96,13 +96,60 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                  <p>Hugoに独自ドメインを適応したところ、自動生成されるsitemap.xmlが<br />
-Github pagesのURLで生成されていたので、deploy.shにsedコマンドを追加した。</p>
+                  
 
-<p>sedコマンドで上書き置換(sed -i)したら、バックアップファイルが自動で生成<br />
-されるを止めるのはどうしたらいいのだろうか。。</p>
+<h3 id="日本語のページのキャプチャを取る:0f17afad2dfafdb4933c4127f2233642">日本語のページのキャプチャを取る</h3>
 
-<script src="https://gist.github.com/tatsuyano/57c42f1b050402abd7ea.js"></script>
+<p>日本語のページのキャプチャを撮るには、CasperJsを実行するサーバーに日本語フォントが入っている必要がある。</p>
+
+<pre><code class="language-shell">sudo yum -y groupinstall &quot;Japanese Support&quot;
+</code></pre>
+
+<h3 id="casperjsを一時停止させる:0f17afad2dfafdb4933c4127f2233642">CasperJsを一時停止させる</h3>
+
+<p>3秒プログラムを停止させてからキャプチャを撮る</p>
+
+<pre><code class="language-javascript">casper.then(function() {
+  this.wait(3000, function() {
+    console.log('3秒後');
+    this.capture('capture/test.png');
+  });
+});
+</code></pre>
+
+<h3 id="casperjsからjsonをpostする:0f17afad2dfafdb4933c4127f2233642">CasperJsからJSONをPOSTする</h3>
+
+<pre><code class="language-javascript">casper.start();
+casper.open('http://hoge.com/api/hoge', {
+  method: 'post',
+  headers: {
+    'Accept-Language': 'ja'
+  },
+  data: {
+    uuid   : 'UUID',
+    secret : 'SECRET'
+  }
+});
+
+// this.getPageContent()で結果を取得できる
+casper.then(function(response) {
+  var json = JSON.parse(this.getPageContent());
+});
+</code></pre>
+
+<h3 id="casperjsにメソッドを定義する:0f17afad2dfafdb4933c4127f2233642">CasperJsにメソッドを定義する</h3>
+
+<pre><code class="language-javascript">casper.then(function() {
+  this.createMarkdown('title','describe');
+});
+
+casper.createMarkdown = function(title,describe){
+  template = fs.read('result/api_template.md', 'utf8');
+  template = template.replace(/{{title}}/g    ,title);
+  template = template.replace(/{{describe}}/g ,describe);
+  fs.write('result/'+title+'.md', template);
+};
+</code></pre>
 
                 </div>
             </div>
