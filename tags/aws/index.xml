@@ -7,7 +7,9 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Fri, 26 Sep 2014 01:00:00 +0900</lastBuildDate>
-    <atom:link href="http://tatsuyano.github.io/tags/aws/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://tatsuyano.github.io/tags/aws/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>AWSのセキュリティを強化する</title>
@@ -15,88 +17,18 @@
       <pubDate>Fri, 26 Sep 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/09/26/enhanced-security-of-aws/</guid>
-      <description>
-
-&lt;p&gt;AWSを本格的に使い始めて来たので、&lt;a href=&#34;http://qiita.com/yoshidashingo/items/cd206daca0596659b440&#34;&gt;こちらの記事&lt;/a&gt;を参考にセキュリティの設定を行いました。改めて記事にするか迷いましたが、いちよ備忘のために残しておこうと思います。&lt;/p&gt;
-
-&lt;p&gt;今回の作業の流れは以下になります。&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Authyを使ってrootアカウントに2段階認証を導入する&lt;/li&gt;
-&lt;li&gt;IAMユーザを作成し、IAMユーザでAWSを運用する&lt;/li&gt;
-&lt;li&gt;rootアカウントのAccessKeyを削除する&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&#34;authyの設定-インストール:92967808d8e82a6b1f0dee3fa3859785&#34;&gt;Authyの設定、インストール&lt;/h3&gt;
-
-&lt;p&gt;セキュリティといってもいろいろあると思うのですが、まずはAWSコンソールにログインできるrootアカウント
-のセキュリティを強化することだと思います。&lt;/p&gt;
-
-&lt;p&gt;今回はAuthyというアプリケーションを使って、AWSに2段階認証を導入しようと思います。&lt;/p&gt;
-
-&lt;p&gt;通常の2段階認証だと、ログインする度に事前に登録してあるSMSにPINコードを送ってもらい、そのPINコードを入力すると思うのですが、
-Authyを使うことで、Authyが生成するPINコードを入力してログインが可能になります。&lt;/p&gt;
-
-&lt;p&gt;Authyの設定は&lt;a href=&#34;http://www.appbank.net/2014/02/13/iphone-application/750689.php&#34;&gt;こちらの記事&lt;/a&gt;を参考にしてください。&lt;/p&gt;
-
-&lt;h3 id=&#34;mfaを有効にし-rootアカウントを2段階認証に対応させる:92967808d8e82a6b1f0dee3fa3859785&#34;&gt;MFAを有効にし、rootアカウントを2段階認証に対応させる&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://console.aws.amazon.com/iam/home&#34;&gt;IAM&lt;/a&gt;に、MFA(multi-factor authentication)という外部のサービスを使って
-2段階認証する機能を使って、AuthyにrootアカウントのPINコードを生成できるように設定します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_01.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_02.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_03.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;iamユーザを作成する:92967808d8e82a6b1f0dee3fa3859785&#34;&gt;IAMユーザを作成する&lt;/h3&gt;
-
-&lt;p&gt;Administrator権限のIAMユーザを作成し、こちらもAuthyに紐付けます。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_04.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_05.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_06.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_07.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_08.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_09.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_10.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_11.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_12.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_13.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_14.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_15.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;rootアカウントのaccesskeyを削除する:92967808d8e82a6b1f0dee3fa3859785&#34;&gt;rootアカウントのAccessKeyを削除する&lt;/h3&gt;
-
-&lt;p&gt;今後rootアカウントを使って、インスタンスの操作はしないので、&lt;code&gt;AccessKey&lt;/code&gt;を削除します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_16.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_17.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/enhanced-security-of-aws_18.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;ここまでの作業で、&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;rootアカウントに2段階認証の導入&lt;/li&gt;
-&lt;li&gt;IAMユーザの作成、及び2段階認証の導入&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;今後はコンソールにもIAMユーザでログインして作業してください。
-お疲れ様でした。&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:92967808d8e82a6b1f0dee3fa3859785&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.appbank.net/2014/02/13/iphone-application/750689.php&#34;&gt;Authy: 2段階認証のコードをまとめて管理! 紛失時の復元・データ同期もできる&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/yoshidashingo/items/cd206daca0596659b440&#34;&gt;AWSアカウント作ったらこれだけはやっとけ！IAMユーザーとAuthyを使ったMFAで2段階認証&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;関連する記事:92967808d8e82a6b1f0dee3fa3859785&#34;&gt;関連する記事&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/09/11/using-the-dns-of-route53/&#34;&gt;Route53のDNSを使う&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/09/16/transferred-a-domain-to-route53/&#34;&gt;Route53にドメインを移管する&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description> AWSを本格的に使い始めて来たので、こちらの記事を参考にセキュリティの設定を行いました。改めて記事にするか迷いましたが、いちよ備忘のために残しておこうと思います。
+今回の作業の流れは以下になります。
+ Authyを使ってrootアカウントに2段階認証を導入する IAMユーザを作成し、IAMユーザでAWSを運用する rootアカウントのAccessKeyを削除する  Authyの設定、インストール セキュリティといってもいろいろあると思うのですが、まずはAWSコンソールにログインできるrootアカウント のセキュリティを強化することだと思います。
+今回はAuthyというアプリケーションを使って、AWSに2段階認証を導入しようと思います。
+通常の2段階認証だと、ログインする度に事前に登録してあるSMSにPINコードを送ってもらい、そのPINコードを入力すると思うのですが、 Authyを使うことで、Authyが生成するPINコードを入力してログインが可能になります。
+Authyの設定はこちらの記事を参考にしてください。
+MFAを有効にし、rootアカウントを2段階認証に対応させる IAMに、MFA(multi-factor authentication)という外部のサービスを使って 2段階認証する機能を使って、AuthyにrootアカウントのPINコードを生成できるように設定します。
+IAMユーザを作成する Administrator権限のIAMユーザを作成し、こちらもAuthyに紐付けます。
+rootアカウントのAccessKeyを削除する 今後rootアカウントを使って、インスタンスの操作はしないので、AccessKeyを削除します。
+ここまでの作業で、
+ rootアカウントに2段階認証の導入 IAMユーザの作成、及び2段階認証の導入  今後はコンソールにもIAMユーザでログインして作業してください。 お疲れ様でした。
+参考サイト  Authy: 2段階認証のコードをまとめて管理! 紛失時の復元・データ同期もできる AWSアカウント作ったらこれだけはやっとけ！IAMユーザーとAuthyを使ったMFAで2段階認証  関連する記事  Route53のDNSを使う Route53にドメインを移管する  </description>
     </item>
     
     <item>
@@ -105,67 +37,19 @@ Authyを使うことで、Authyが生成するPINコードを入力してログ�
       <pubDate>Tue, 16 Sep 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/09/16/transferred-a-domain-to-route53/</guid>
-      <description>
-
-&lt;p&gt;Route53のDNSを使うようにしたので、続けてドメインも移管したいと思います。&lt;/p&gt;
-
-&lt;h3 id=&#34;authcodeの取得:1f4cf55a40853aaa1040625edf216e8c&#34;&gt;AuthCodeの取得&lt;/h3&gt;
-
-&lt;p&gt;value-domainから&lt;code&gt;AuthCode&lt;/code&gt;を取得します。&lt;/p&gt;
-
-&lt;p&gt;まずは&lt;code&gt;AuthCode&lt;/code&gt;を取得する前に、whois代行を利用している場合は
-先に自分の情報に変更します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_1.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;whois情報を自分の情報に変更後、一度saveをし、
-再度同じページを開くと、画面下側に&lt;code&gt;AuthCode&lt;/code&gt;が表示されています。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_2.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;ドメインの移管:1f4cf55a40853aaa1040625edf216e8c&#34;&gt;ドメインの移管&lt;/h3&gt;
-
-&lt;p&gt;ドメインの移管時にドメインが利用している&lt;code&gt;NS&lt;/code&gt;を入力するので、事前に確認しておきます。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_3.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;次にドメインがRoute53で移管できるか確認します。
-ちなみに&lt;code&gt;.com&lt;/code&gt;ドメインの移管料は$12.00でした。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;移管をすると、ドメインの利用期間が1年伸びます&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_4.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;whois情報を登録します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_5.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_6.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_7.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;「Thank you for transferring your domain to Route 53」とメッセージがでれば完了です。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_8.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/route53_domain_9.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;登録完了後、数日後に確認メールが来るのでaccept(許可)してください。&lt;br /&gt;
-ちなみに移管が完了するまでに、7日かかりました。。&lt;/p&gt;
-
-&lt;p&gt;以上で完了です。お疲れ様でした。&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:1f4cf55a40853aaa1040625edf216e8c&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://yoshidashingo.hatenablog.com/entry/2014/08/01/132312&#34;&gt;Amazon Route 53にドメインを移管してみた&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://server-domain.info/reportd/transfer-value-domain-onamae-com.html&#34;&gt;Value Domainからお名前.comへドメインを移管してみた&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;関連する記事:1f4cf55a40853aaa1040625edf216e8c&#34;&gt;関連する記事&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/09/11/using-the-dns-of-route53/&#34;&gt;Route53のDNSを使う&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/21/start-aws/&#34;&gt;aws はじめました。&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description> Route53のDNSを使うようにしたので、続けてドメインも移管したいと思います。
+AuthCodeの取得 value-domainからAuthCodeを取得します。
+まずはAuthCodeを取得する前に、whois代行を利用している場合は 先に自分の情報に変更します。
+whois情報を自分の情報に変更後、一度saveをし、 再度同じページを開くと、画面下側にAuthCodeが表示されています。
+ドメインの移管 ドメインの移管時にドメインが利用しているNSを入力するので、事前に確認しておきます。
+次にドメインがRoute53で移管できるか確認します。 ちなみに.comドメインの移管料は$12.00でした。
+移管をすると、ドメインの利用期間が1年伸びます
+whois情報を登録します。
+「Thank you for transferring your domain to Route 53」とメッセージがでれば完了です。
+登録完了後、数日後に確認メールが来るのでaccept(許可)してください。
+ちなみに移管が完了するまでに、7日かかりました。。
+以上で完了です。お疲れ様でした。
+参考サイト  Amazon Route 53にドメインを移管してみた Value Domainからお名前.comへドメインを移管してみた  関連する記事  Route53のDNSを使う aws はじめました。  </description>
     </item>
     
     <item>
@@ -174,120 +58,10 @@ Authyを使うことで、Authyが生成するPINコードを入力してログ�
       <pubDate>Thu, 11 Sep 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/09/11/using-the-dns-of-route53/</guid>
-      <description>
-
-&lt;p&gt;BlogをEC2で運用しているので、せっかくなのでネームサーバーもAmazonが提供しているRoute53 を使ってみたいと思います。
-料金が少し気になるところですが、個人のサイトなら100円/月ぐらい見ておけばよさそうです(未確認)。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.lancork.net/2014/05/amazon-route53-monthly-cost/&#34;&gt;個人サイトでAmazon Route 53を一ヶ月間使った場合の料金&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://aws.amazon.com/jp/route53/pricing/&#34;&gt;Amazon Route 53 料金表&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;今回変更するドメイン(10rane.com)はvalue-domainで管理しています。
-作業の流れとしては、以下になります。&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Route53にレコードを登録&lt;/li&gt;
-&lt;li&gt;レジストラ(value-domain)に設定しているネームサーバーを変更&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&#34;変更前のネームサーバーの状態を確認:41103ae6f2f5c979c26ff43dc235d329&#34;&gt;変更前のネームサーバーの状態を確認&lt;/h3&gt;
-
-&lt;p&gt;value-domainのネームサーバーを利用していることがわかります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ nslookup -type=any 10rane.com
-10rane.com      nameserver = ns1.value-domain.com.
-10rane.com      nameserver = ns2.value-domain.com.
-10rane.com
-        origin = ns1.value-domain.com
-        mail addr = hostmaster.10rane.com
-        serial = 1410401066
-        refresh = 16384
-        retry = 2048
-        expire = 1048576
-        minimum = 2560
-        Name:   10rane.com
-        Address: 49.212.146.214
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ dig 10rane.com ns
-;; ANSWER SECTION:
-10rane.com.             1124    IN      NS      ns2.value-domain.com.
-10rane.com.             1124    IN      NS      ns1.value-domain.com.
-
-$ dig 10rane.com soa
-;; ANSWER SECTION:
-10rane.com.             802     IN      SOA     ns1.value-domain.com. hostmaster.10rane.com. 1410401066 16384 2048 1048576 2560
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;route53でzoneの設定:41103ae6f2f5c979c26ff43dc235d329&#34;&gt;Route53でZoneの設定&lt;/h3&gt;
-
-&lt;p&gt;まずは&lt;code&gt;Zone&lt;/code&gt;の設定をします。&lt;code&gt;Zone&lt;/code&gt;を設定すると&lt;code&gt;NS&lt;/code&gt;と&lt;code&gt;SOA&lt;/code&gt;のレコードが自動で作成されます。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/route53_1.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/route53_2.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;次にサブドメインの&lt;code&gt;A&lt;/code&gt;レコードを登録します。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/route53_3.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/route53_4.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;ネームサーバーの変更:41103ae6f2f5c979c26ff43dc235d329&#34;&gt;ネームサーバーの変更&lt;/h3&gt;
-
-&lt;p&gt;レジストラ(value-domain)に設定しているネームサーバーをRoute53のネームサーバーに切り替えます。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/route53_5.jpg&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/route53_6.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;変更後のネームサーバーの状態を確認:41103ae6f2f5c979c26ff43dc235d329&#34;&gt;変更後のネームサーバーの状態を確認&lt;/h3&gt;
-
-&lt;p&gt;1,2時間くらいで、DNSが切り替わります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ nslookup -type=any 10rane.com
-10rane.com      nameserver = ns-918.awsdns-50.net.
-10rane.com      nameserver = ns-1101.awsdns-09.org.
-10rane.com      nameserver = ns-1918.awsdns-47.co.uk.
-10rane.com      nameserver = ns-157.awsdns-19.com.
-10rane.com
-        origin = ns-918.awsdns-50.net
-        mail addr = awsdns-hostmaster.amazon.com
-        serial = 1
-        refresh = 7200
-        retry = 900
-        expire = 1209600
-        minimum = 86400
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ dig 10rane.com ns
-10rane.com.             86400   IN      NS      ns-157.awsdns-19.com.
-10rane.com.             86400   IN      NS      ns-918.awsdns-50.net.
-10rane.com.             86400   IN      NS      ns-1918.awsdns-47.co.uk.
-10rane.com.             86400   IN      NS      ns-1101.awsdns-09.org.
-
-$ dig 10rane.com soa
-10rane.com.             888     IN      SOA     ns-918.awsdns-50.net. awsdns-hostmaster.amazon.com. 1 7200 900 1209600 86400
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;参考サイト:41103ae6f2f5c979c26ff43dc235d329&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/SatoHiroyuki/items/7d45bd98a477f021cc82&#34;&gt;Route53 : ValueDomain&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.dondari.com/%E3%81%AF%E3%81%98%E3%82%81%E3%81%A6%E3%81%AERoute_53&#34;&gt;はじめてのRoute 53&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.serverworks.co.jp/tech/2013/03/08/route53_basic/&#34;&gt;営業でも簡単！Route 53の基本設定&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;関連する記事:41103ae6f2f5c979c26ff43dc235d329&#34;&gt;関連する記事&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/09/16/transferred-a-domain-to-route53/&#34;&gt;Route53にドメインを移管する&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/21/start-aws/&#34;&gt;aws はじめました。&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>BlogをEC2で運用しているので、せっかくなのでネームサーバーもAmazonが提供しているRoute53 を使ってみたいと思います。 料金が少し気になるところですが、個人のサイトなら100円/月ぐらい見ておけばよさそうです(未確認)。
+ 個人サイトでAmazon Route 53を一ヶ月間使った場合の料金 Amazon Route 53 料金表  今回変更するドメイン(10rane.com)はvalue-domainで管理しています。 作業の流れとしては、以下になります。
+ Route53にレコードを登録 レジストラ(value-domain)に設定しているネームサーバーを変更  変更前のネームサーバーの状態を確認 value-domainのネームサーバーを利用していることがわかります。
+$ nslookup -type=any 10rane.com 10rane.com nameserver = ns1.value-domain.com. 10rane.com nameserver = ns2.value-domain.com. 10rane.com origin = ns1.value-domain.com mail addr = hostmaster.10rane.com serial = 1410401066 refresh = 16384 retry = 2048 expire = 1048576 minimum = 2560 Name: 10rane.com Address: 49.212.146.214  　$ dig 10rane.com ns ;; ANSWER SECTION: 10rane.com. 1124 IN NS ns2.</description>
     </item>
     
     <item>
@@ -296,110 +70,8 @@ $ dig 10rane.com soa
       <pubDate>Mon, 21 Jul 2014 03:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/07/21/install-vagrant-aws-plugin/</guid>
-      <description>
-
-&lt;p&gt;vagrant-awsプラグインを使うことで、コマンドラインで
-インスタンスの作成、起動ができるようになります。&lt;/p&gt;
-
-&lt;h3 id=&#34;vagrant-aws-plugin-のインストール:fd8b071654156cd5d19727f6c2bcdb56&#34;&gt;vagrant-aws(plugin)のインストール&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ vagrant plugin install vagrant-aws
-Installing the &#39;vagrant-aws&#39; plugin. This can take a few minutes...
-Installed the plugin &#39;vagrant-aws (0.4.1)&#39;!
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;インストールされているpluginの確認:fd8b071654156cd5d19727f6c2bcdb56&#34;&gt;インストールされているpluginの確認&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ vagrant plugin list
-vagrant-aws (0.4.1)
-vagrant-login (1.0.1, system)
-vagrant-share (1.0.1, system)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;boxのインストール:fd8b071654156cd5d19727f6c2bcdb56&#34;&gt;BOXのインストール&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box
-==&amp;gt; box: Adding box &#39;dummy&#39; (v0) for provider:
-    box: Downloading: https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box
-    ==&amp;gt; box: Successfully added box &#39;dummy&#39; (v0) for &#39;aws&#39;!
-$ vagrant box list
-chef/centos-6.5 (virtualbox, 1.0.0)
-dummy           (aws, 0)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;aws用のディレクトリを作成-初期化:fd8b071654156cd5d19727f6c2bcdb56&#34;&gt;aws用のディレクトリを作成 &amp;amp; 初期化&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ mkdir -p Vagrant/Aws
-$ cd Vagrant/Aws
-$ vagrant init dummy
-A `Vagrantfile` has been placed in this directory. You are now
-ready to `vagrant up` your first virtual environment! Please read
-the comments in the Vagrantfile as well as documentation on
-`vagrantup.com` for more information on using Vagrant.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;access-key-idとsecret-access-keyの設定:fd8b071654156cd5d19727f6c2bcdb56&#34;&gt;Access_Key_IDとSecret_Access_Keyの設定&lt;/h3&gt;
-
-&lt;p&gt;自分のアカウントのIDとKeyを設定するか、
-もしくはIAMでユーザを作成し、そのユーザのIDとKeyを設定する&lt;/p&gt;
-
-&lt;h4 id=&#34;自分のアカウントのidとkey:fd8b071654156cd5d19727f6c2bcdb56&#34;&gt;自分のアカウントのIDとKey&lt;/h4&gt;
-
-&lt;p&gt;&lt;img width=&#34;70%&#34; src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_12.png&#34; /&gt;&lt;/p&gt;
-
-&lt;h4 id=&#34;iamのidとkey:fd8b071654156cd5d19727f6c2bcdb56&#34;&gt;IAMのIDとKey&lt;/h4&gt;
-
-&lt;p&gt;&lt;img width=&#34;70%&#34; src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_10.png&#34; /&gt;
-&lt;img width=&#34;70%&#34; src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_11.png&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;vagrantfileの設定:fd8b071654156cd5d19727f6c2bcdb56&#34;&gt;Vagrantfileの設定&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;VAGRANTFILE_API_VERSION = &amp;quot;2&amp;quot;
-Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  config.vm.box = &amp;quot;dummy&amp;quot;
-  config.vm.provider :aws do |aws, override|
-    aws.access_key_id = &#39;XXXX&#39;
-    aws.secret_access_key = &#39;XXXX&#39;
-    aws.region = &amp;quot;ap-northeast-1&amp;quot; # Tokyo
-    aws.ami = &#39;ami-c9562fc8&#39; # Amazon Linux AMI 2014.03.1
-    aws.instance_type = &#39;t1.micro&#39;
-    aws.security_groups = [&#39;XXXX&#39;] # 複数設定可
-    aws.keypair_name = &#39;XXXX&#39; # 事前に作成した秘密鍵
-    aws.tags = {
-      &#39;Name&#39; =&amp;gt; &#39;XXXX&#39;
-    }
-    override.ssh.username = &amp;quot;ec2-user&amp;quot;
-    override.ssh.private_key_path = &#39;DLした秘密鍵のフルパス&#39;
-  end
-end
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;インスタンスの起動:fd8b071654156cd5d19727f6c2bcdb56&#34;&gt;インスタンスの起動&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ vagrant up --provider=aws
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;インスタンスへの接続:fd8b071654156cd5d19727f6c2bcdb56&#34;&gt;インスタンスへの接続&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ vagrant ssh
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;参考サイト:fd8b071654156cd5d19727f6c2bcdb56&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/Humangas/items/2997cc6701aa90687c04&#34;&gt;Vagrantで AWS EC2インスタンス（RHEL5.5）を作成する&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/yuma_iwasaki/items/817d54cf075a67778a0a&#34;&gt;vagrant-awsを使用する際のVagrantファイル詳細&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://docs.aws.amazon.com/ja_jp/IAM/latest/UserGuide/IAM_Introduction.html&#34;&gt;IAM とは?&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/tuboc/items/38da97cb96b2ebc69f88#1-5&#34;&gt;EC2インスタンス作成＆最初にしたこと&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;関連する記事:fd8b071654156cd5d19727f6c2bcdb56&#34;&gt;関連する記事&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/21/install-vagrant-and-virtualbox/&#34;&gt;VagrantとVirtualBoxのインストール&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/21/start-aws/&#34;&gt;aws はじめました。&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>vagrant-awsプラグインを使うことで、コマンドラインで インスタンスの作成、起動ができるようになります。
+vagrant-aws(plugin)のインストール $ vagrant plugin install vagrant-aws Installing the &#39;vagrant-aws&#39; plugin. This can take a few minutes... Installed the plugin &#39;vagrant-aws (0.4.1)&#39;!  インストールされているpluginの確認 $ vagrant plugin list vagrant-aws (0.4.1) vagrant-login (1.0.1, system) vagrant-share (1.0.1, system)  BOXのインストール $ vagrant box add dummy https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box ==&amp;gt; box: Adding box &#39;dummy&#39; (v0) for provider: box: Downloading: https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box ==&amp;gt; box: Successfully added box &#39;dummy&#39; (v0) for &#39;aws&#39;! $ vagrant box list chef/centos-6.</description>
     </item>
     
     <item>
@@ -408,125 +80,12 @@ end
       <pubDate>Mon, 21 Jul 2014 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/07/21/start-aws/</guid>
-      <description>
-
-&lt;p&gt;現在AWSの無料キャンペーンをやっているので、試してみました。&lt;/p&gt;
-
-&lt;h2 id=&#34;awsのアカウント作成:d726b6a1995770a0563910c631db8cb1&#34;&gt;AWSのアカウント作成&lt;/h2&gt;
-
-&lt;p&gt;こちらAmazonのサイトに詳細な説明があるので、省略。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://aws.amazon.com/jp/register-flow/&#34;&gt;無料アカウント作成の流れ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;インスタンスの作成:d726b6a1995770a0563910c631db8cb1&#34;&gt;インスタンスの作成&lt;/h2&gt;
-
-&lt;p&gt;まずはEC2のコンソール画面を開きます。
-&lt;img width=&#34;70%&#34; src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_0.png&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;regionの選択:d726b6a1995770a0563910c631db8cb1&#34;&gt;REGIONの選択&lt;/h3&gt;
-
-&lt;p&gt;レスポンスが気になるので、REGIONは「Tokyo」に。真ん中あたりの「Launch Instance」で作成画面に遷移します。
-&lt;img width=&#34;70%&#34; src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_1.png&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;image-ami-の選択:d726b6a1995770a0563910c631db8cb1&#34;&gt;Image(AMI)の選択&lt;/h3&gt;
-
-&lt;p&gt;「Free tier only」が無料Image(AMI)なので、「Amazon Linux」を選択。
-&lt;img width=&#34;70%&#34; src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_2.png&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;instanceの選択:d726b6a1995770a0563910c631db8cb1&#34;&gt;Instanceの選択&lt;/h3&gt;
-
-&lt;p&gt;こちらも無料の「Micro instances」を選択。
-&lt;img width=&#34;70%&#34; src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_3.png&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;instanceにtagをつける:d726b6a1995770a0563910c631db8cb1&#34;&gt;InstanceにTagをつける&lt;/h3&gt;
-
-&lt;p&gt;とりあえず Name というkeyに、「amz_tokyo」というvalueをつけました。
-&lt;img width=&#34;70%&#34; src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_4.png&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;firewallの設定:d726b6a1995770a0563910c631db8cb1&#34;&gt;firewallの設定&lt;/h3&gt;
-
-&lt;p&gt;allow(許可)の条件を設定する模様。固定IPがあるので、SSHにIPを指定します。
-とりあえずHTTPとping(Custom ICMP Rule)も設定しました。
-&lt;img width=&#34;70%&#34; src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_5.png&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;秘密鍵の作成-及びダウンロード:d726b6a1995770a0563910c631db8cb1&#34;&gt;秘密鍵の作成、及びダウンロード&lt;/h3&gt;
-
-&lt;p&gt;最後に秘密鍵を作成しダウンロードします。
-&lt;img width=&#34;70%&#34; src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_6.png&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;DLした秘密鍵のpermissionを600にしてください。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ chmod 600 .ssh/amz_tokyo.pem
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;dns経由で-ssh接続:d726b6a1995770a0563910c631db8cb1&#34;&gt;DNS経由で、ssh接続&lt;/h2&gt;
-
-&lt;p&gt;ユーザは「ec2-user」、接続先IPは、public DNSのURLを指定します。
-&lt;img width=&#34;70%&#34; src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_9.png&#34; /&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ ssh -i .ssh/amz_tokyo.pem ec2-user@ec2-xxxx-xxxx-.ap-northeast-1.compute.amazonaws.com
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code&gt;   __|  __|_  )
-   _|  (     /   Amazon Linux AMI
-  ___|\___|___|
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;dnsから固定ip-elastic-ips-に変更する:d726b6a1995770a0563910c631db8cb1&#34;&gt;DNSから固定IP(Elastic Ips)に変更する&lt;/h2&gt;
-
-&lt;h3 id=&#34;elastic-ips-eip-の料金について:d726b6a1995770a0563910c631db8cb1&#34;&gt;Elastic Ips(EIP)の料金について&lt;/h3&gt;
-
-&lt;p&gt;インスタンスが「起動」しているIPに対してEIPを割り当てても無料だが、
-「停止」しているインスタンスに対して、EIPを割り当てたまま放置しておくと1hに$0.01課金されるので注意。&lt;/p&gt;
-
-&lt;h3 id=&#34;instanceを指定し-固定ipと紐付ける:d726b6a1995770a0563910c631db8cb1&#34;&gt;Instanceを指定し、固定IPと紐付ける&lt;/h3&gt;
-
-&lt;p&gt;&lt;img width=&#34;70%&#34; src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_7.png&#34; /&gt;
-&lt;img width=&#34;70%&#34; src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/aws_ec2_8.png&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;firewallの再設定:d726b6a1995770a0563910c631db8cb1&#34;&gt;firewallの再設定&lt;/h3&gt;
-
-&lt;p&gt;固定IPに変更したので、先ほど設定したfirewallの設定が再度行う。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.happyquality.com/2013/06/21/2675.htm&#34;&gt;EC2でpingを許可する&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;pingでレスポンスの測定:d726b6a1995770a0563910c631db8cb1&#34;&gt;pingでレスポンスの測定&lt;/h3&gt;
-
-&lt;p&gt;「Tokyo」以外のREGIONと比較しないと意味がないが、計測方法をメモ。
-下記のコマンドは 64byteのリクエストを10回投げて、レスポンスが帰ってくるまで計測結果。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ ping -c 10 54.178.xxx.xxx
-PING 54.178.xxx.xxx (54.178.xxx.xxx): 56 data bytes
-64 bytes from 54.178.xxx.xxx: icmp_seq=0 ttl=56 time=14.303 ms
-...
---- 54.178.xxx.xxx ping statistics ---
-10 packets transmitted, 10 packets received, 0.0% packet loss
-round-trip min/avg/max/stddev = 14.269/15.842/19.001/1.569 ms  -&amp;gt; avg = 15.842ms
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;コマンドラインツールのインストール:d726b6a1995770a0563910c631db8cb1&#34;&gt;コマンドラインツールのインストール&lt;/h2&gt;
-
-&lt;p&gt;まだ試していないが、とりあえずインストールだけしてみた。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://halucolor.blogspot.jp/2014/02/macawsaws.html&#34;&gt;awsのコマンドラインツールをインストール&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://aws.amazon.com/jp/cli/&#34;&gt;AWS コマンドラインインターフェイス&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/rx7/20130813/p1&#34;&gt;AWS Command Line Interface(awscli)を使ってみた&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;関連する記事:d726b6a1995770a0563910c631db8cb1&#34;&gt;関連する記事&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/21/install-vagrant-and-virtualbox/&#34;&gt;VagrantとVirtualBoxのインストール&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/21/install-vagrant-aws-plugin/&#34;&gt;vagrant-aws-pluginをインストール&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/09/11/using-the-dns-of-route53/&#34;&gt;Route53のDNSを使う&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/09/16/transferred-a-domain-to-route53/&#34;&gt;Route53にドメインを移管する&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>現在AWSの無料キャンペーンをやっているので、試してみました。
+AWSのアカウント作成 こちらAmazonのサイトに詳細な説明があるので、省略。
+ 無料アカウント作成の流れ  インスタンスの作成 まずはEC2のコンソール画面を開きます。 REGIONの選択 レスポンスが気になるので、REGIONは「Tokyo」に。真ん中あたりの「Launch Instance」で作成画面に遷移します。 Image(AMI)の選択 「Free tier only」が無料Image(AMI)なので、「Amazon Linux」を選択。 Instanceの選択 こちらも無料の「Micro instances」を選択。 InstanceにTagをつける とりあえず Name というkeyに、「amz_tokyo」というvalueをつけました。 firewallの設定 allow(許可)の条件を設定する模様。固定IPがあるので、SSHにIPを指定します。 とりあえずHTTPとping(Custom ICMP Rule)も設定しました。 秘密鍵の作成、及びダウンロード 最後に秘密鍵を作成しダウンロードします。 DLした秘密鍵のpermissionを600にしてください。
+$ chmod 600 .ssh/amz_tokyo.pem  DNS経由で、ssh接続 ユーザは「ec2-user」、接続先IPは、public DNSのURLを指定します。 $ ssh -i .ssh/amz_tokyo.pem ec2-user@ec2-xxxx-xxxx-.ap-northeast-1.compute.amazonaws.com   __| __|_ ) _| ( / Amazon Linux AMI ___|\___|___|  DNSから固定IP(Elastic Ips)に変更する Elastic Ips(EIP)の料金について インスタンスが「起動」しているIPに対してEIPを割り当てても無料だが、 「停止」しているインスタンスに対して、EIPを割り当てたまま放置しておくと1hに$0.01課金されるので注意。
+Instanceを指定し、固定IPと紐付ける firewallの再設定 固定IPに変更したので、先ほど設定したfirewallの設定が再度行う。
+ EC2でpingを許可する  pingでレスポンスの測定 「Tokyo」以外のREGIONと比較しないと意味がないが、計測方法をメモ。 下記のコマンドは 64byteのリクエストを10回投げて、レスポンスが帰ってくるまで計測結果。</description>
     </item>
     
   </channel>

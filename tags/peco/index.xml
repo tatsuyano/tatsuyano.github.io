@@ -7,7 +7,9 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Thu, 21 Aug 2014 01:00:00 +0900</lastBuildDate>
-    <atom:link href="http://tatsuyano.github.io/tags/peco/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://tatsuyano.github.io/tags/peco/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>pecoで接続先hostを選ぶスクリプトを書いた</title>
@@ -15,42 +17,12 @@
       <pubDate>Thu, 21 Aug 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/08/21/select-host-for-peco/</guid>
-      <description>
-
-&lt;p&gt;pecoを使って、sshするhostを選択するスクリプトを書きました。&lt;/p&gt;
-
-&lt;p&gt;.oh-my-zsh/custom/peco.zsh&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;function peco-select-host () {
-    host=$(grep -iE &#39;^host\s+(\w|\d)+&#39; ~/.ssh/config | awk &#39;{print $2}&#39; | peco)
-
-    if [ -n &amp;quot;$host&amp;quot; ]; then
-        ssh $host
-    fi
-}
-alias hs=peco-select-host
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;元々ある&lt;code&gt;~/.ssh/config&lt;/code&gt;をgrepしてhost名を渡してるだけ。&lt;br /&gt;
-1、2文字のキーバインド(ストローク？)がなかったので、aliasで&lt;code&gt;hs&lt;/code&gt;にしました。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ hs
-QUERY&amp;gt;
-clgit
-support
-test01
-ghost    #&amp;lt;-接続先のhostを選ぶ
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;peco楽しいですね。お疲れ様でした。&lt;/p&gt;
-
-&lt;h4 id=&#34;関連する記事:c729515682ab26a58fb1a624c7927aa0&#34;&gt;関連する記事&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/02/installed-the-peco-to-centos/&#34;&gt;流行りのpecoをcentosにインストールしました&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/14/updating-the-package-go/&#34;&gt;goパッケージ(peco)のバージョンを上げる&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description> pecoを使って、sshするhostを選択するスクリプトを書きました。
+.oh-my-zsh/custom/peco.zsh
+function peco-select-host () { host=$(grep -iE &#39;^host\s+(\w|\d)+&#39; ~/.ssh/config | awk &#39;{print $2}&#39; | peco) if [ -n &amp;quot;$host&amp;quot; ]; then ssh $host fi } alias hs=peco-select-host  元々ある~/.ssh/configをgrepしてhost名を渡してるだけ。
+1、2文字のキーバインド(ストローク？)がなかったので、aliasでhsにしました。
+$ hs QUERY&amp;gt; clgit support test01 ghost #&amp;lt;-接続先のhostを選ぶ  peco楽しいですね。お疲れ様でした。
+関連する記事  流行りのpecoをcentosにインストールしました goパッケージ(peco)のバージョンを上げる  </description>
     </item>
     
     <item>
@@ -59,40 +31,11 @@ ghost    #&amp;lt;-接続先のhostを選ぶ
       <pubDate>Thu, 14 Aug 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/08/14/updating-the-package-go/</guid>
-      <description>
-
-&lt;p&gt;&lt;code&gt;--prompt&lt;/code&gt; オプションを使いたかったので、バージョンをv0.1-&amp;gt;v0.2.4にあげました。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;GOROOT&lt;/code&gt;と&lt;code&gt;GOPATH&lt;/code&gt;の設定が必要なので、&lt;a href=&#34;http://blog.10rane.com/2014/08/14/take-over-the-environment/&#34;&gt;環境変数&lt;/a&gt;が引き継いだ状態でroot昇格します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo -E bash
-
-# printenv |grep GO
-GOROOT=/usr/local/go
-GOPATH=/usr/local/mygo
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;go get -u&lt;/code&gt;でアップデートされます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# go get -u github.com/peco/peco/cmd/peco
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;バージョンが上がりました。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# peco --verision
-peco: v0.2.4
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/10383498/how-does-go-update-third-party-packages&#34;&gt;How does Go update third-party packages?&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;関連する記事:04456f398ac9a290ee9bc158a501a1f8&#34;&gt;関連する記事&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/07/02/installed-the-peco-to-centos/&#34;&gt;流行りのpecoをcentosにインストールしました&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description> --prompt オプションを使いたかったので、バージョンをv0.1-&amp;gt;v0.2.4にあげました。
+GOROOTとGOPATHの設定が必要なので、環境変数が引き継いだ状態でroot昇格します。
+$ sudo -E bash # printenv |grep GO GOROOT=/usr/local/go GOPATH=/usr/local/mygo  go get -uでアップデートされます。
+# go get -u github.com/peco/peco/cmd/peco  バージョンが上がりました。
+# peco --verision peco: v0.2.4   How does Go update third-party packages?  関連する記事  流行りのpecoをcentosにインストールしました  </description>
     </item>
     
     <item>
@@ -101,77 +44,16 @@ peco: v0.2.4
       <pubDate>Wed, 02 Jul 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/07/02/installed-the-peco-to-centos/</guid>
-      <description>
-
-&lt;p&gt;最近購読しているブログとかに、pecoインストールしました的な記事をよく見かけるようになったので、御多分に洩れず入れてみました。&lt;/p&gt;
-
-&lt;p&gt;で、そもそもpecoって何なの？って話なんですが、&lt;a href=&#34;https://github.com/peco/peco/blob/master/README.md&#34;&gt;README&lt;/a&gt;に書いてあるように、コマンドの履歴をいい感じにフィルタリングしてくれるツールみたいです。&lt;/p&gt;
-
-&lt;p&gt;元々はpercolというpythonで作られたツールを、JPAのMakiさんがgolangで作りなおしたものらしいです。
-ツール作るのに、golang流行ってますね。。&lt;/p&gt;
-
-&lt;p&gt;こうやってperlの人が他の言語で開発しているのを見ると、少しノスタルジックな気持ちになるのは秘密です。&lt;/p&gt;
-
-&lt;h3 id=&#34;golangのインストール:1b538b817e1d98866f03b0778d8ea0b8&#34;&gt;golangのインストール&lt;/h3&gt;
-
-&lt;p&gt;anyenvでバージョン管理できるのかなと思ったけどなかった &amp;amp; yumのリストになかった(&lt;sup&gt;2014&lt;/sup&gt;&amp;frasl;&lt;sub&gt;06&lt;/sub&gt;)ので、手動でmake?しました。
-まずは&lt;a href=&#34;http://golang.org/dl/&#34;&gt;golangのパッケージ&lt;/a&gt;を選びます。対象はcentos6の64bit(&lt;sup&gt;2014&lt;/sup&gt;&amp;frasl;&lt;sub&gt;06&lt;/sub&gt;)。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://golang.jp/install#install&#34;&gt;インストール方法&lt;/a&gt;は、詳しくは本家の翻訳サイトに乗っています。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo bash
-$ cd /usr/local/src
-# wget http://golang.org/dl/go1.3.linux-amd64.tar.gz
-# tar -C /usr/local -xzf go1.3.linux-amd64.tar.gz
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;golangの環境変数:1b538b817e1d98866f03b0778d8ea0b8&#34;&gt;golangの環境変数&lt;/h3&gt;
-
-&lt;p&gt;今回はシステムワイドにインストールしたので、/etc/profileに設定します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# emacs /etc/profile
-
-export GOROOT=/usr/local/go
-export GOPATH=/usr/local/mygo
-export PATH=$PATH:$GOPATH/bin:$GOROOT/bin
-
-# source /etc/profile
-
-# which go
-/usr/local/go/bin/go
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;GOPATH&lt;/code&gt;には、golangのソフトウェア(pecoとか)が入ります。&lt;/p&gt;
-
-&lt;h3 id=&#34;pecoのインストール:1b538b817e1d98866f03b0778d8ea0b8&#34;&gt;pecoのインストール&lt;/h3&gt;
-
-&lt;p&gt;golangのソフトウェアは、&lt;code&gt;go get&lt;/code&gt;コマンドを使うみたいです。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# go get github.com/peco/peco/cmd/peco
-
-# which peco
-/usr/local/mygo/bin/peco
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;Ctrl-r&lt;/code&gt; &amp;hellip; リスト(履歴)の表示&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;Ctrl-g&lt;/code&gt; &amp;hellip; リストから抜ける&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;pecoの設定:1b538b817e1d98866f03b0778d8ea0b8&#34;&gt;pecoの設定&lt;/h3&gt;
-
-&lt;p&gt;pecoの設定はこちら(&lt;a href=&#34;http://shibayu36.hatenablog.com/entry/2014/06/27/223538&#34;&gt;pecoを使い始めた&lt;/a&gt;)を参考にさせてもらいました。&lt;/p&gt;
-
-&lt;p&gt;どうでもいい事なんですが、キーバインドのファイルはhome直下に&lt;code&gt;.config&lt;/code&gt;というディレクトリを掘って、
-設定ファイルを置く感じなんですが、home直下がかなりカオスな感じです。。みなさんどうしているんですかね。&lt;/p&gt;
-
-&lt;h4 id=&#34;関連する記事:1b538b817e1d98866f03b0778d8ea0b8&#34;&gt;関連する記事&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/14/updating-the-package-go/&#34;&gt;goパッケージ(peco)のバージョンを上げる&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/21/select-host-for-peco/&#34;&gt;pecoで接続先hostを選ぶスクリプトを書いた&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>最近購読しているブログとかに、pecoインストールしました的な記事をよく見かけるようになったので、御多分に洩れず入れてみました。
+で、そもそもpecoって何なの？って話なんですが、READMEに書いてあるように、コマンドの履歴をいい感じにフィルタリングしてくれるツールみたいです。
+元々はpercolというpythonで作られたツールを、JPAのMakiさんがgolangで作りなおしたものらしいです。 ツール作るのに、golang流行ってますね。。
+こうやってperlの人が他の言語で開発しているのを見ると、少しノスタルジックな気持ちになるのは秘密です。
+golangのインストール anyenvでバージョン管理できるのかなと思ったけどなかった &amp;amp; yumのリストになかった(2014&amp;frasl;06)ので、手動でmake?しました。 まずはgolangのパッケージを選びます。対象はcentos6の64bit(2014&amp;frasl;06)。
+インストール方法は、詳しくは本家の翻訳サイトに乗っています。
+$ sudo bash $ cd /usr/local/src # wget http://golang.org/dl/go1.3.linux-amd64.tar.gz # tar -C /usr/local -xzf go1.3.linux-amd64.tar.gz  golangの環境変数 今回はシステムワイドにインストールしたので、/etc/profileに設定します。
+# emacs /etc/profile export GOROOT=/usr/local/go export GOPATH=/usr/local/mygo export PATH=$PATH:$GOPATH/bin:$GOROOT/bin # source /etc/profile # which go /usr/local/go/bin/go  GOPATHには、golangのソフトウェア(pecoとか)が入ります。
+pecoのインストール golangのソフトウェアは、go getコマンドを使うみたいです。
+# go get github.com/peco/peco/cmd/peco # which peco /usr/local/mygo/bin/peco   Ctrl-r &amp;hellip; リスト(履歴)の表示 Ctrl-g &amp;hellip; リストから抜ける  pecoの設定 pecoの設定はこちら(pecoを使い始めた)を参考にさせてもらいました。</description>
     </item>
     
   </channel>

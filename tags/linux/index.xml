@@ -7,7 +7,9 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Sun, 17 Sep 2017 14:00:00 +0900</lastBuildDate>
-    <atom:link href="http://tatsuyano.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://tatsuyano.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>fishをインストールする</title>
@@ -15,141 +17,11 @@
       <pubDate>Sun, 17 Sep 2017 14:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2017/09/17/install-fish/</guid>
-      <description>
-
-&lt;h1 id=&#34;fish-fishermanのインストール:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;fish &amp;amp; fishermanのインストール&lt;/h1&gt;
-
-&lt;p&gt;macを新調したので、shellもzshからfishに乗り換えてみた。&lt;/p&gt;
-
-&lt;h2 id=&#34;install-fish:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;install fish&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ brew install fish
-
-$ fish -v
-fish, version 2.6.0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;fishをログインシェルにせず-bashから起動する:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;fishをログインシェルにせず、bashから起動する&lt;/h2&gt;
-
-&lt;p&gt;ログインシェルをfishにするとfishに問題があったときにterminalが動かなくなってしまうので、bash_profileの一番下で&lt;code&gt;exec fish&lt;/code&gt;を実行する。
-またanyenvがfishに 完全に対応していないので、bashでanyenvを動かしてからfishを動かす。&lt;/p&gt;
-
-&lt;p&gt;＄HOME/.bash_profile&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;if [ -d $HOME/.anyenv ]; then
-   export PATH=$HOME/.anyenv/bin:$PATH
-   eval &amp;quot;$(anyenv init -)&amp;quot;
-fi
-
-exec fish
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/tak-onda/items/a90b63d9618d6b15c18c&#34;&gt;ログインシェルはbashのままfishを利用する&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://ja.stackoverflow.com/questions/33694/fish%E3%82%B7%E3%82%A7%E3%83%AB%E3%81%A7anyenv%E3%82%92%E8%A8%AD%E5%AE%9A%E3%81%97%E3%81%9F%E3%81%A8%E3%81%8D%E3%81%ABcalled-during-startup%E3%82%A8%E3%83%A9%E3%83%BC%E3%81%8C%E5%87%BA%E3%82%8B&#34;&gt;fishシェルでanyenvを設定したときにcalled during startupエラーが出る&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;install-fisherman:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;install fisherman&lt;/h2&gt;
-
-&lt;p&gt;PluginManagerはfishermanを選択&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher
-
-$ fisher -v
-fisherman version 2.13.1 ~/.config/fish/functions/fisher.fish
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/fisherman/fisherman&#34;&gt;fisherman/fisherman&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://futurismo.biz/archives/6079&#34;&gt;oh-my-fish は古い！fisherman で置き換えられる&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/ryotako/items/2d9d6fb646d2f3644dc8&#34;&gt;fishのプラグインマネージャ比較&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;テーマはOhMyFishのagnosterを選択。別のテーマに変更する場合は、再度installすると変更される&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ fisher install omf/theme-agnoster
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;pluginのインストール。pecoの代わりにfzfを使ってみる。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ brew install fzf
-$ fisher install z fzf decors/fish-ghq 0rax/fish-bd
-
-$ fisher ls // themeの前には*が付く
-* agnoster        await           bd              fzf             get             getopts         ghq             last_job_id     z
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;fisher edc/bass&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://futurismo.biz/archives/6087&#34;&gt;fish ユーザなら入れておきたいプラグイン 13 選&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/b4b4r07/items/9e1bbffb1be70b6ce033&#34;&gt;おい、peco もいいけど fzf 使えよ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;alliasとfunctionを設定する:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;alliasとfunctionを設定する&lt;/h2&gt;
-
-&lt;p&gt;自分用のaliasとfunctionは下記ファイルに設定&lt;/p&gt;
-
-&lt;p&gt;$HOME/.config/fish/config.fish&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;# git alias
-alias ga  &amp;quot;git add&amp;quot;
-alias gd  &amp;quot;git diff&amp;quot;
-alias gb  &amp;quot;git branch&amp;quot;
-alias gco &amp;quot;git checkout&amp;quot;
-alias gst &amp;quot;git status&amp;quot;
-
-# colordiff or diff
-set tmp (which colordiff) #実行結果を変数にsetすることで、標準出力に出力させないようにする
-if test $status -eq 0
-    alias diff &amp;quot;colordiff -u&amp;quot;
-else
-    alias diff &amp;quot;diff -u&amp;quot;
-end
-
-# tmux
-function tmr
-    tmux new -s $argv[1]; or tmux attach -d -t $argv[1]
-end
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;参考サイト:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.hsbt.org/diary/20170421.html&#34;&gt;zsh から fish にした&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://dev.classmethod.jp/etc/fish-shell-life/&#34;&gt;fish shell を使いたい人生だった&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/susieyy/items/ac2133e249f252dc9a34&#34;&gt;詳解 fishでモダンなシェル環境の構築&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;peco-ghq:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;peco &amp;amp; ghq&lt;/h1&gt;
-
-&lt;p&gt;$ brew install peco ghq
-$ fisher ghq peco yoshiori/fish-peco_select_zsh_history yoshiori/fish-peco_select_ghq_repository&lt;/p&gt;
-
-&lt;h2 id=&#34;ctrl-f-のキーバインドを変える:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;Ctrl+F のキーバインドを変える&lt;/h2&gt;
-
-&lt;p&gt;デフォルトだと&lt;code&gt;Ctrl+F&lt;/code&gt;はautosuggestionがbindされている。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-fish&#34;&gt;bind \cf &#39;forward-word&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://fish.rubikitch.com/bind/&#34;&gt;bind キーバインドを設定・削除 使えるキーを一覧する&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://fishshell.com/&#34;&gt;fish shell main page&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://fishshell.com/docs/current/index.html&#34;&gt;Autosuggestions&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;To accept the autosuggestion (replacing the command line contents), press right arrow or Control+F.
-To accept the first suggested word, press Alt+→ or Alt+F. 
-If the autosuggestion is not what you want, just ignore it: it won&#39;t execute unless you accept it.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://blog.nijohando.jp/post/starting-fishshell/&#34;&gt;fish shellを使う&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>fish &amp;amp; fishermanのインストール macを新調したので、shellもzshからfishに乗り換えてみた。
+install fish $ brew install fish $ fish -v fish, version 2.6.0  fishをログインシェルにせず、bashから起動する ログインシェルをfishにするとfishに問題があったときにterminalが動かなくなってしまうので、bash_profileの一番下でexec fishを実行する。 またanyenvがfishに 完全に対応していないので、bashでanyenvを動かしてからfishを動かす。
+＄HOME/.bash_profile
+if [ -d $HOME/.anyenv ]; then export PATH=$HOME/.anyenv/bin:$PATH eval &amp;quot;$(anyenv init -)&amp;quot; fi exec fish   ログインシェルはbashのままfishを利用する fishシェルでanyenvを設定したときにcalled during startupエラーが出る  install fisherman PluginManagerはfishermanを選択
+$ curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher $ fisher -v fisherman version 2.13.1 ~/.config/fish/functions/fisher.fish   fisherman/fisherman oh-my-fish は古い！fisherman で置き換えられる fishのプラグインマネージャ比較  テーマはOhMyFishのagnosterを選択。別のテーマに変更する場合は、再度installすると変更される</description>
     </item>
     
     <item>
@@ -158,85 +30,13 @@ If the autosuggestion is not what you want, just ignore it: it won&#39;t execute
       <pubDate>Mon, 11 Apr 2016 14:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2016/04/11/check-the-status-of-the-port-using-the-netcat/</guid>
-      <description>
-
-&lt;p&gt;ローカルマシン(今回はWindows)から、ホストのLinux(ローカルマシン内のVagrant)に、
-メッセージを送ってポートの確認を行う方法&lt;/p&gt;
-
-&lt;h3 id=&#34;netcatのインストール:7a56d6968e5ac92315baa20c4b893314&#34;&gt;netcatのインストール&lt;/h3&gt;
-
-&lt;p&gt;まずはyumでLinuxにインストール&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;sudo yum -y install nc.x86_64
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;次に下記URLからWindowsにインストール&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://eternallybored.org/misc/netcat/netcat-win32-1.12.zip&#34;&gt;windows版のnetcat&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;windowsからlinuxの指定のポートにメッセージを送る:7a56d6968e5ac92315baa20c4b893314&#34;&gt;WindowsからLinuxの指定のポートにメッセージを送る&lt;/h3&gt;
-
-&lt;p&gt;Windowsのコンソールを立ち上げ、Linux(192.168,33.10)の(例えば)8082ポートにecho
-これで8082ポートが開いている確認できる&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;C:\Program Files (x86)\netcat&amp;gt; echo &#39;hello&#39; | nc 192.168.33.10 8082
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;次に Linux側で8082ポートをListen。すると期待どおりメッセージが表示される&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ nc -l 8082
-&#39;hello&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;ホスト側の現在開いているポートを確認する:7a56d6968e5ac92315baa20c4b893314&#34;&gt;ホスト側の現在開いているポートを確認する&lt;/h3&gt;
-
-&lt;p&gt;ホスト側でポート状況を確認するには、以下のパラーメータをつける&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ netstat -ant
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;オプション:7a56d6968e5ac92315baa20c4b893314&#34;&gt;オプション&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;-t TCPポートを表示する&lt;/li&gt;
-&lt;li&gt;-u UDPポートを表示する&lt;/li&gt;
-&lt;li&gt;-a すべての有効なポートを表示する&lt;/li&gt;
-&lt;li&gt;-n 一切の名前解決を行なわない&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;!--
-### telnetをつかったポートの状況確認
-
-telnetをつかっても確認ができる。下記のコマンドは8082ポート
-
-http://togattti.hateblo.jp/entry/2014/01/19/124912
-
-```
-$ telnet localhost 8082
-Trying ::1...
-telnet: connect to address ::1: Connection refused
-Trying 127.0.0.1...
-Connected to localhost.
-Escape character is &#39;^]&#39;.
-```
-8082がLISTENできる場合は、`Connected to xxx` と表示される
-
-
-* [telnetとnetstatでポート番号の状態を確認する](http://togattti.hateblo.jp/entry/2014/01/19/124912)
-* [TELNETプロトコルでリモートマシンに接続 - Linuxコマンド](http://webkaru.net/linux/telnet-command/)
-
---&gt;
-
-&lt;h3 id=&#34;参考サイト:7a56d6968e5ac92315baa20c4b893314&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.usupi.org/sysad/190.html&#34;&gt;Netcat でネットワークをもう少し活用する&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.atmarkit.co.jp/ait/articles/0207/20/news003.html&#34;&gt;netstatコマンドを使いこなす&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://itpro.nikkeibp.co.jp/article/COLUMN/20100308/345506/&#34;&gt;netstat（1）――TCP通信の接続状況を調べる&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description> ローカルマシン(今回はWindows)から、ホストのLinux(ローカルマシン内のVagrant)に、 メッセージを送ってポートの確認を行う方法
+netcatのインストール まずはyumでLinuxにインストール
+sudo yum -y install nc.x86_64  次に下記URLからWindowsにインストール
+ windows版のnetcat  WindowsからLinuxの指定のポートにメッセージを送る Windowsのコンソールを立ち上げ、Linux(192.168,33.10)の(例えば)8082ポートにecho これで8082ポートが開いている確認できる
+C:\Program Files (x86)\netcat&amp;gt; echo &#39;hello&#39; | nc 192.168.33.10 8082  次に Linux側で8082ポートをListen。すると期待どおりメッセージが表示される
+$ nc -l 8082 &#39;hello&#39;  ホスト側の現在開いているポートを確認する ホスト側でポート状況を確認するには、以下のパラーメータをつける
+$ netstat -ant  オプション  -t TCPポートを表示する -u UDPポートを表示する -a すべての有効なポートを表示する -n 一切の名前解決を行なわない  参考サイト  Netcat でネットワークをもう少し活用する netstatコマンドを使いこなす netstat（1）――TCP通信の接続状況を調べる  </description>
     </item>
     
     <item>
@@ -245,30 +45,9 @@ Escape character is &#39;^]&#39;.
       <pubDate>Wed, 18 Feb 2015 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/02/18/how-to-install-htop/</guid>
-      <description>
-
-&lt;p&gt;centos6とamazon-linuxにhtopをインストールしたときのメモです。&lt;/p&gt;
-
-&lt;h2 id=&#34;yumでインストール:3323358dd18793b9bf060d56a51210fe&#34;&gt;yumでインストール&lt;/h2&gt;
-
-&lt;p&gt;&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;# wget &lt;a href=&#34;http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm&#34;&gt;http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm&lt;/a&gt;&lt;/p&gt;
-
-&lt;h1 id=&#34;rpm-uhv-rpmforge-release-rf-x86-64-rpm:3323358dd18793b9bf060d56a51210fe&#34;&gt;rpm -Uhv rpmforge-release*.rf.x86_64.rpm&lt;/h1&gt;
-
-&lt;h1 id=&#34;yum-enablerepo-epel-install-y-htop:3323358dd18793b9bf060d56a51210fe&#34;&gt;yum &amp;ndash;enablerepo=epel install -y htop&lt;/h1&gt;
-
-&lt;p&gt;&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:3323358dd18793b9bf060d56a51210fe&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://loumo.jp/wp/archive/20121217084642/&#34;&gt;top の代わりに htop を使ってみた。&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.dreamcreative.net/2013/07/install-htop-in-centos/&#34;&gt;Install htop in CentOS&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.submit.ne.jp/379&#34;&gt;htopを使ってサーバのプロセスの状態を詳しく見る方法&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://rishida.hatenablog.com/entry/2013/09/21/054234&#34;&gt;htopのCPU付加とメモリ使用量の色の意味&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description> centos6とamazon-linuxにhtopをインストールしたときのメモです。
+yumでインストール # wget http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm
+rpm -Uhv rpmforge-release*.rf.x86_64.rpm yum &amp;ndash;enablerepo=epel install -y htop  参考サイト  top の代わりに htop を使ってみた。 Install htop in CentOS htopを使ってサーバのプロセスの状態を詳しく見る方法 htopのCPU付加とメモリ使用量の色の意味  </description>
     </item>
     
     <item>
@@ -277,104 +56,12 @@ Escape character is &#39;^]&#39;.
       <pubDate>Thu, 25 Sep 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/09/25/how-to-install-and-setup-jq/</guid>
-      <description>
-
-&lt;p&gt;&lt;a href=&#34;http://shibayu36.hatenablog.com/entry/2014/09/22/211719&#34;&gt;こちらのサイト&lt;/a&gt;を参考に、&lt;code&gt;jq&lt;/code&gt;をインストールしてみました。&lt;br /&gt;
-思っていた以上に必要なライブラリがあって、ちょっと時間がかかりました。&lt;/p&gt;
-
-&lt;h4 id=&#34;libtoolとflexのインストール:e1aa39b645b7967617fbe829bb703a8a&#34;&gt;libtoolとflexのインストール&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ sudo yum -y install libtool flex
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;bisonのインストール:e1aa39b645b7967617fbe829bb703a8a&#34;&gt;bisonのインストール&lt;/h4&gt;
-
-&lt;p&gt;バージョン3.0以上が必要です。&lt;br /&gt;
-&lt;code&gt;configure: error: You need bison version 3.0 or greater.&lt;/code&gt;&lt;br /&gt;
-初めは&lt;code&gt;yum&lt;/code&gt;でインストールしましたが、バージョンが2.4.1だったので、手動で&lt;code&gt;make&lt;/code&gt;しました。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ sudo bash
-# cd /usr/local/src
-# wget http://ftp.gnu.org/gnu/bison/bison-3.0.2.tar.gz
-# tar xvzf bison-3.0.2.tar.gz
-# cd bison-3.0.2
-# ./configure
-# make
-# make install
-# ln -s /usr/local/bin/bison /usr/bin/bison
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;bisonにyaccコマンドをaliasする:e1aa39b645b7967617fbe829bb703a8a&#34;&gt;bisonにyaccコマンドをaliasする&lt;/h4&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ alias yacc=&#39;bison&#39;
-/usr/bin/bison
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/16420756/make-file-yacc-command-not-found-and-y-tab-c-error-127-after-installing-biso&#34;&gt;yacc command not found and y.tab.c error 127 after installing bison&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;鬼車のインストール:e1aa39b645b7967617fbe829bb703a8a&#34;&gt;鬼車のインストール&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;oniguruma-5.9.5&lt;/code&gt;のインストール。&lt;code&gt;ruby&lt;/code&gt;に標準に入っているものではなく、単体版が必要な模様。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ sudo bash
-# cd /tmp/
-# wget http://www.geocities.jp/kosako3/oniguruma/archive/onig-5.9.5.tar.gz
-# tar xvzf onig-5.9.5.tar.gz
-# cd onig-5.9.5
-# ./configure --prefix=/usr
-# make
-# make install
-# ldconfig
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/IT7C/20100828/1283007564&#34;&gt;CentOS 5.5に正規表現ライブラリ 鬼車 4.7.1 をインストールしてみる。&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;jqのインストール:e1aa39b645b7967617fbe829bb703a8a&#34;&gt;jqのインストール&lt;/h3&gt;
-
-&lt;p&gt;やっと&lt;code&gt;jq&lt;/code&gt;のインストールです。ソースが&lt;code&gt;git&lt;/code&gt;にあるので今回も&lt;code&gt;ghq&lt;/code&gt;で取得します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ ghq get https://github.com/stedolan/jq.git
-$ sudo bash
-# autoreconf -i
-# ./configure
-# make
-# make install
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;環境によっては、他にも必要なライブラリがあると思いますので、&lt;a href=&#34;http://stedolan.github.io/jq/download/&#34;&gt;本家サイト&lt;/a&gt;を確認してください。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;To build it from a git clone, you’ll need to install a few packages first:&lt;/em&gt;&lt;br /&gt;
-&lt;em&gt;Flex&lt;/em&gt;&lt;br /&gt;
-&lt;em&gt;Bison&lt;/em&gt;&lt;br /&gt;
-&lt;em&gt;GCC&lt;/em&gt;&lt;br /&gt;
-&lt;em&gt;Make&lt;/em&gt;&lt;br /&gt;
-&lt;em&gt;Autotools&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;インストールが正常に終わったら、下記のコマンドで違いを確認してみてください。&lt;br /&gt;
-お疲れ様でした。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ curl &#39;https://api.github.com/repos/stedolan/jq/commits?per_page=5&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;pretty化&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ curl &#39;https://api.github.com/repos/stedolan/jq/commits?per_page=5&#39; | jq &#39;.&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;参考サイト:e1aa39b645b7967617fbe829bb703a8a&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://shibayu36.hatenablog.com/entry/2014/09/22/211719&#34;&gt;curlとjqで簡単にAPIの調査をする&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/16420756/make-file-yacc-command-not-found-and-y-tab-c-error-127-after-installing-biso&#34;&gt;yacc command not found and y.tab.c error 127 after installing bison&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/IT7C/20100828/1283007564&#34;&gt;CentOS 5.5に正規表現ライブラリ 鬼車 4.7.1 をインストールしてみる。&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://stedolan.github.io/jq/download/&#34;&gt;jq:Download jq&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://stedolan.github.io/jq/tutorial/&#34;&gt;jq:Tutorial&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>こちらのサイトを参考に、jqをインストールしてみました。
+思っていた以上に必要なライブラリがあって、ちょっと時間がかかりました。
+libtoolとflexのインストール $ sudo yum -y install libtool flex  bisonのインストール バージョン3.0以上が必要です。
+configure: error: You need bison version 3.0 or greater.
+初めはyumでインストールしましたが、バージョンが2.4.1だったので、手動でmakeしました。
+$ sudo bash # cd /usr/local/src # wget http://ftp.gnu.org/gnu/bison/bison-3.0.2.tar.gz # tar xvzf bison-3.0.2.tar.gz # cd bison-3.0.2 # ./configure # make # make install # ln -s /usr/local/bin/bison /usr/bin/bison  bisonにyaccコマンドをaliasする $ alias yacc=&#39;bison&#39; /usr/bin/bison   yacc command not found and y.tab.c error 127 after installing bison  鬼車のインストール oniguruma-5.</description>
     </item>
     
     <item>
@@ -383,15 +70,8 @@ $ sudo bash
       <pubDate>Thu, 14 Aug 2014 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/08/14/take-over-the-environment/</guid>
-      <description>&lt;p&gt;知らなかった。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo -E bash
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://mikio.github.io/article/2012/03/10_sudo.html&#34;&gt;sudoで環境変数を引き継ぎたい&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>知らなかった。
+$ sudo -E bash   sudoで環境変数を引き継ぎたい  </description>
     </item>
     
     <item>
@@ -400,77 +80,14 @@ $ sudo bash
       <pubDate>Sun, 17 Mar 2013 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/03/17/mosh/</guid>
-      <description>
-
-&lt;p&gt;去年ぐらいから流行っているmoshを入れてみる。&lt;/p&gt;
-
-&lt;p&gt;moshを利用するには、クライアント、サーバー両方にmoshをインストールする必要がある。&lt;br /&gt;
-またmosh内でsshを利用するため、sshの代価というわけではない。&lt;/p&gt;
-
-&lt;h2 id=&#34;centosにmoshをmake-install:eae08781c9d2f0d48da6559cbf7fd1e7&#34;&gt;centosにmoshをmake install&lt;/h2&gt;
-
-&lt;p&gt;git cloneして、インストールスクリプトを実行したほうがいいかも。。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;yum --enablerepo=epel install -y protobuf-compiler protobuf-devel boost-devel
-wget https://github.com/downloads/keithw/mosh/mosh-1.2.3.tar.gz
-tar xvzf mosh-1.2.3.tar.gz
-cd mosh-1.2.3
-./configure
-make
-make install
-
-# インストール先
-which mosh
-/usr/local/bin/mosh
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;iptablesに追加:eae08781c9d2f0d48da6559cbf7fd1e7&#34;&gt;iptablesに追加&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;emacs /etc/sysconfig/iptables
--A INPUT -p udp -m udp --dport 60000:61000 -j ACCEPT
-
-/etc/init.d/iptables restart
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;macにmoshにインストール:eae08781c9d2f0d48da6559cbf7fd1e7&#34;&gt;macにmoshにインストール&lt;/h2&gt;
-
-&lt;p&gt;mosh(mobile-shell)をbrewでインストール&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;brew update
-brew install mobile-shell
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;IO::Ptyというperlモジュールも必要なので、cpanmでインストール&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cpanm IO::Pty
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;zshrcに補完関数を追加&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cat &amp;gt;&amp;gt; .zshrc
-# moshcompdef
-mosh=ssh
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;利用方法:eae08781c9d2f0d48da6559cbf7fd1e7&#34;&gt;利用方法&lt;/h2&gt;
-
-&lt;p&gt;利用方法はsshと同じ。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;mosh &amp;lt;server-name&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;回線がすぐ切れるような環境でないと、あまり恩恵は感じないと思うが、とりあえず使ってみようと思います。&lt;/p&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/karasuyamatengu/20120411/1334092521&#34;&gt;mosh: MITからモバイル時代のSSH代替品&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://mosh.mit.edu/&#34;&gt;本家サイト&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/mutsune/20120416/1334590736&#34;&gt;mosh のインストール&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://gihyo.jp/admin/serial/01/ubuntu-recipe/0220&#34;&gt;第220回　Ubuntuでモバイルシェル「Mosh」を使う&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;[&lt;a href=&#34;http://d.hatena.ne.jp/naoya/20130108/1357630895&#34;&gt;近頃の開発環境 : Mosh、z、tmux、Emacs、Perl について&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>去年ぐらいから流行っているmoshを入れてみる。
+moshを利用するには、クライアント、サーバー両方にmoshをインストールする必要がある。
+またmosh内でsshを利用するため、sshの代価というわけではない。
+centosにmoshをmake install git cloneして、インストールスクリプトを実行したほうがいいかも。。
+yum --enablerepo=epel install -y protobuf-compiler protobuf-devel boost-devel wget https://github.com/downloads/keithw/mosh/mosh-1.2.3.tar.gz tar xvzf mosh-1.2.3.tar.gz cd mosh-1.2.3 ./configure make make install # インストール先 which mosh /usr/local/bin/mosh  iptablesに追加 emacs /etc/sysconfig/iptables -A INPUT -p udp -m udp --dport 60000:61000 -j ACCEPT /etc/init.d/iptables restart  macにmoshにインストール mosh(mobile-shell)をbrewでインストール
+brew update brew install mobile-shell  IO::Ptyというperlモジュールも必要なので、cpanmでインストール
+cpanm IO::Pty  zshrcに補完関数を追加
+cat &amp;gt;&amp;gt; .zshrc # moshcompdef mosh=ssh  利用方法 利用方法はsshと同じ。</description>
     </item>
     
     <item>
@@ -479,15 +96,10 @@ mosh=ssh
       <pubDate>Tue, 12 Mar 2013 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/03/12/tmux-copy/</guid>
-      <description>&lt;p&gt;tmux.confに「set-window-option -g mode-mouse on」を追加する方法もあるが、&lt;br /&gt;
-これだと、「カーソルで文字を反転させて(文字を選んで)、コピペ」ができなくなってしまう。&lt;/p&gt;
-
-&lt;p&gt;なので、代わりにコピーモードで標準出力を見る方法&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;C-z [ # コピーモード、C-n、C-pで上下に移動
-q # コピーモードをぬける
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+      <description>tmux.confに「set-window-option -g mode-mouse on」を追加する方法もあるが、
+これだと、「カーソルで文字を反転させて(文字を選んで)、コピペ」ができなくなってしまう。
+なので、代わりにコピーモードで標準出力を見る方法
+C-z [ # コピーモード、C-n、C-pで上下に移動 q # コピーモードをぬける  </description>
     </item>
     
     <item>
@@ -496,96 +108,14 @@ q # コピーモードをぬける
       <pubDate>Mon, 28 Jan 2013 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/01/28/tmuxinator/</guid>
-      <description>
-
-&lt;h2 id=&#34;rubygemsからtmuxinatorのインストール:e5099a13c3d99a0364a2c4d3a34bb28a&#34;&gt;RubyGemsからtmuxinatorのインストール&lt;/h2&gt;
-
-&lt;p&gt;念のため、RubyGemsをupdateしてからインストール&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;gem update
-gem install tmuxinator
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;tmuxinatorがインストールされているか確認&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;gem which tmuxinator
-usr/local/Cellar/ruby/1.9.3-p0/lib/ruby/gems/1.9.1/gems/tmuxinator-0.5.0/lib/tmuxinator.rb
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;メッセージに従い-初期設定:e5099a13c3d99a0364a2c4d3a34bb28a&#34;&gt;メッセージに従い、初期設定&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;echo &amp;quot;[[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] &amp;amp;&amp;amp; source $HOME/.tmuxinator/scripts/tmuxinator&amp;quot; &amp;gt;&amp;gt; ~/.zshrc
-source ~/.zshrc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;shell-editorの確認:e5099a13c3d99a0364a2c4d3a34bb28a&#34;&gt;$SHELL、$EDITORの確認&lt;/h2&gt;
-
-&lt;p&gt;設定が必須なので確認&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;echo $EDITOR $SHELL
-emacs /bin/bash
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;tmuxinatorを移動させる:e5099a13c3d99a0364a2c4d3a34bb28a&#34;&gt;.tmuxinatorを移動させる&lt;/h2&gt;
-
-&lt;p&gt;他のdotfile同様、Dropboxのディレクトリ配下に移動させ、リンクをはる。&lt;br /&gt;
-ただし「.tmuxinator」をリネームして「tmuxinator」としてはいけない。&lt;br /&gt;
-隠しファイルでないと、再度「.tmuxinator」というディレクトリが作成されてしまう。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;mv .tmuxinator Dropbox/dotfile/
-ln -s Dropbox/dotfile/.tmuxinator .tmuxinator
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;rubygemsの環境変数をbash-profileに設定:e5099a13c3d99a0364a2c4d3a34bb28a&#34;&gt;RubyGemsの環境変数をbash_profileに設定&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;cat .bash_profile
-export GEM_BIN=$(ruby -e &#39;require &amp;quot;rubygems&amp;quot;; puts Gem::bindir&#39;)
-export PATH=$GEM_BIN:$PATH
-
-source .bash_profile
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;環境変数の確認&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;printenv | grep ruby
-GEM_BIN=/usr/local/Cellar/ruby/1.9.3-p0/bin
-PATH=/usr/local/Cellar/ruby/1.9.3-p0/bin:....
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;tmuxinatorのプロジェクトを作成:e5099a13c3d99a0364a2c4d3a34bb28a&#34;&gt;tmuxinatorのプロジェクトを作成&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;mux new php
-# ~/.tmuxinator/php.yml
-# you can make as many tabs as you wish...
-
-project_name: php
-project_root: ~/
-tabs:
-  - doc:
-        layout: main-vertical
-        panes:
-          - emacs Dropbox/doc/memo.md
-          - #empty, will just run plain bash
-          - sql: ./mysql -uroot -proot
-          - hoge: ssh hoge
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;作成したプロジェクトの実行&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;mux php
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;プロジェクトを変更、反映するには、一度tmuxのセッションを閉じる&lt;/p&gt;
-
-&lt;h2 id=&#34;参考にしたサイト:e5099a13c3d99a0364a2c4d3a34bb28a&#34;&gt;参考にしたサイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/akishin999/20121204/1354621657&#34;&gt;tmux + tmuxinator が便利&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://rh7.hateblo.jp/entry/20110220/1298209273&#34;&gt;カッとなってUbuntu/DebianでRubygems実行コマンドのパスを通した&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>RubyGemsからtmuxinatorのインストール 念のため、RubyGemsをupdateしてからインストール
+gem update gem install tmuxinator  tmuxinatorがインストールされているか確認
+gem which tmuxinator usr/local/Cellar/ruby/1.9.3-p0/lib/ruby/gems/1.9.1/gems/tmuxinator-0.5.0/lib/tmuxinator.rb  メッセージに従い、初期設定 echo &amp;quot;[[ -s $HOME/.tmuxinator/scripts/tmuxinator ]] &amp;amp;&amp;amp; source $HOME/.tmuxinator/scripts/tmuxinator&amp;quot; &amp;gt;&amp;gt; ~/.zshrc source ~/.zshrc  $SHELL、$EDITORの確認 設定が必須なので確認
+echo $EDITOR $SHELL emacs /bin/bash  .tmuxinatorを移動させる 他のdotfile同様、Dropboxのディレクトリ配下に移動させ、リンクをはる。
+ただし「.tmuxinator」をリネームして「tmuxinator」としてはいけない。
+隠しファイルでないと、再度「.tmuxinator」というディレクトリが作成されてしまう。
+mv .tmuxinator Dropbox/dotfile/ ln -s Dropbox/dotfile/.tmuxinator .tmuxinator  RubyGemsの環境変数をbash_profileに設定 cat .bash_profile export GEM_BIN=$(ruby -e &#39;require &amp;quot;rubygems&amp;quot;; puts Gem::bindir&#39;) export PATH=$GEM_BIN:$PATH source .bash_profile  環境変数の確認
+printenv | grep ruby GEM_BIN=/usr/local/Cellar/ruby/1.9.3-p0/bin PATH=/usr/local/Cellar/ruby/1.</description>
     </item>
     
   </channel>

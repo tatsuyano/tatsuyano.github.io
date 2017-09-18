@@ -7,7 +7,9 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Wed, 06 Apr 2016 19:00:00 +0900</lastBuildDate>
-    <atom:link href="http://tatsuyano.github.io/tags/nodejs/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://tatsuyano.github.io/tags/nodejs/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>CasperJsの使い方メモ</title>
@@ -15,77 +17,9 @@
       <pubDate>Wed, 06 Apr 2016 19:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2016/04/06/how-to-use-casperjs/</guid>
-      <description>
-
-&lt;h3 id=&#34;日本語のページのキャプチャを取る:0f17afad2dfafdb4933c4127f2233642&#34;&gt;日本語のページのキャプチャを取る&lt;/h3&gt;
-
-&lt;p&gt;日本語のページのキャプチャを撮るには、CasperJsを実行するサーバーに日本語フォントが入っている必要がある。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;sudo yum -y groupinstall &amp;quot;Japanese Support&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;casperjsを一時停止させる:0f17afad2dfafdb4933c4127f2233642&#34;&gt;CasperJsを一時停止させる&lt;/h3&gt;
-
-&lt;p&gt;3秒プログラムを停止させてからキャプチャを撮る&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;casper.then(function() {
-  this.wait(3000, function() {
-    console.log(&#39;3秒後&#39;);
-    this.capture(&#39;capture/test.png&#39;);
-  });
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;casperjsからjsonをpostする:0f17afad2dfafdb4933c4127f2233642&#34;&gt;CasperJsからJSONをPOSTする&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;casper.start();
-casper.open(&#39;http://hoge.com/api/hoge&#39;, {
-  method: &#39;post&#39;,
-  headers: {
-    &#39;Accept-Language&#39;: &#39;ja&#39;
-  },
-  data: {
-    uuid   : &#39;UUID&#39;,
-    secret : &#39;SECRET&#39;
-  }
-});
-
-// this.getPageContent()で結果を取得できる
-casper.then(function(response) {
-  var json = JSON.parse(this.getPageContent());
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;casperjsにメソッドを定義する:0f17afad2dfafdb4933c4127f2233642&#34;&gt;CasperJsにメソッドを定義する&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;casper.then(function() {
-  this.createMarkdown(&#39;title&#39;,&#39;describe&#39;);
-});
-
-casper.createMarkdown = function(title,describe){
-  template = fs.read(&#39;result/api_template.md&#39;, &#39;utf8&#39;);
-  template = template.replace(/{{title}}/g    ,title);
-  template = template.replace(/{{describe}}/g ,describe);
-  fs.write(&#39;result/&#39;+title+&#39;.md&#39;, template);
-};
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;ファイルアップロード-type-file-を操作する:0f17afad2dfafdb4933c4127f2233642&#34;&gt;ファイルアップロード(type=&amp;ldquo;file&amp;rdquo;)を操作する&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt; casper.then(function() {
-   // 画像はフルパスで、evaluate()の外で実行する
-   this.page.uploadFile(&#39;input[type=&amp;quot;file&amp;quot;]&#39;, &#39;/vagrant/sample_image.jpg&#39;);
-
-   this.evaluate(function(number, title) {
-     $(&#39;[name=&amp;quot;coupon[number]&amp;quot;]&#39;).val(number);
-     $(&#39;[name=&amp;quot;coupon[title]&amp;quot;]&#39;).val(title);
-
-     document.querySelector(&#39;form&#39;).submit();
-
-   }, &#39;999&#39;, &#39;title_test&#39;);
- });
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+      <description>日本語のページのキャプチャを取る 日本語のページのキャプチャを撮るには、CasperJsを実行するサーバーに日本語フォントが入っている必要がある。
+sudo yum -y groupinstall &amp;quot;Japanese Support&amp;quot;  CasperJsを一時停止させる 3秒プログラムを停止させてからキャプチャを撮る
+casper.then(function() { this.wait(3000, function() { console.log(&#39;3秒後&#39;); this.capture(&#39;capture/test.png&#39;); }); });  CasperJsからJSONをPOSTする casper.start(); casper.open(&#39;http://hoge.com/api/hoge&#39;, { method: &#39;post&#39;, headers: { &#39;Accept-Language&#39;: &#39;ja&#39; }, data: { uuid : &#39;UUID&#39;, secret : &#39;SECRET&#39; } }); // this.getPageContent()で結果を取得できる casper.then(function(response) { var json = JSON.parse(this.getPageContent()); });  CasperJsにメソッドを定義する casper.then(function() { this.createMarkdown(&#39;title&#39;,&#39;describe&#39;); }); casper.createMarkdown = function(title,describe){ template = fs.read(&#39;result/api_template.md&#39;, &#39;utf8&#39;); template = template.replace(/{{title}}/g ,title); template = template.</description>
     </item>
     
     <item>
@@ -94,64 +28,9 @@ casper.createMarkdown = function(title,describe){
       <pubDate>Wed, 06 Apr 2016 15:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2016/04/06/i-have-catched-alert-or-confirm-events-in-casperjs/</guid>
-      <description>
-
-&lt;p&gt;AlertやConfirmダイアログのOKボタン、キャンセルボタンを押下するには、&lt;code&gt;casper.page.onAlert&lt;/code&gt;、&lt;code&gt;casper.page.onConfirm&lt;/code&gt;を使う。&lt;/p&gt;
-
-&lt;p&gt;下の例では、購入ボタン(#buy)を押下すると、
-Confirmダイアログが立ち上がり &lt;code&gt;商品を購入します。よろしいですか？&lt;/code&gt;とメッセージが表示される。
-OKボタンを押下すると、商品購入処理が実行され
-商品の購入が成功すれば &lt;code&gt;商品を購入しました&lt;/code&gt;、
-ポイントが足りず購入に失敗すると &lt;code&gt;ポイントが足りません&lt;/code&gt; とメッセージが表示される。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var casper = require(&#39;casper&#39;).create({clientScripts: [&#39;./src/includes/jquery.min.js&#39;]});
-
-var point = 100;
-
-casper.start();
-casper.open(&#39;http://192.168.33.10/shopping/cart&#39;).viewport(1024, 690);
-
-casper.then(function() {
-
-  // AlertダイアログはOKボタンしかないので、返り値は必ずtrueを返す。
-  // 同一画面で、複数のダイアログを表示する場合は、引数のメッセージで分岐する
-  this.page.onAlert = function(message) {
-    if (message == &#39;商品を購入しました&#39;) {
-        return true;
-    }
-    else if (message == &#39;ポイントが足りません&#39;) {
-        return true;
-    }
-  };
-
-  // Confirmダイアログが立ち上がると発火する。
-  // trueを返すとOKボタンが押下され、falseを返すとキャンセルボタンが押下される
-  this.page.onConfirm = function(message) {
-    if (message == &#39;商品を購入します。よろしいですか？&#39;) {
-        return true;
-    }
-  };
-
-  // #add_pointというテキストフィールドに100ポイントを入力し、#buyボタンを押下する
-  this.evaluate(function(p) {
-    $(&#39;#add_point&#39;).val(p);
-    document.getElementById(&amp;quot;buy&amp;quot;).click();
-  }, point);
-});
-
-casper.run();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;CasperJsはPhantomJsを拡張(内封)しているライブラリなので、PhantomJsをメソッドをそのまま?使うことができる。
-今回の&lt;code&gt;onAlert&lt;/code&gt;などもPhantomJsで定義されているメソッドで、&lt;code&gt;this.page&lt;/code&gt;の中にPhantomJsが入っている。&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:2df5b4a29a5fedc7180a179aec02fce4&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://tetsuwo.tumblr.com/post/58696806251/jasmine-phantomjs-alert-confirm-prompt&#34;&gt;PhantomJS + Jasmine で alert, confirm, prompt などの標準ダイアログのテスト方法&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://docs.casperjs.org/en/latest/modules/casper.html#onalert&#34;&gt;onAlert&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>AlertやConfirmダイアログのOKボタン、キャンセルボタンを押下するには、casper.page.onAlert、casper.page.onConfirmを使う。
+下の例では、購入ボタン(#buy)を押下すると、 Confirmダイアログが立ち上がり 商品を購入します。よろしいですか？とメッセージが表示される。 OKボタンを押下すると、商品購入処理が実行され 商品の購入が成功すれば 商品を購入しました、 ポイントが足りず購入に失敗すると ポイントが足りません とメッセージが表示される。
+var casper = require(&#39;casper&#39;).create({clientScripts: [&#39;./src/includes/jquery.min.js&#39;]}); var point = 100; casper.start(); casper.open(&#39;http://192.168.33.10/shopping/cart&#39;).viewport(1024, 690); casper.then(function() { // AlertダイアログはOKボタンしかないので、返り値は必ずtrueを返す。 // 同一画面で、複数のダイアログを表示する場合は、引数のメッセージで分岐する this.page.onAlert = function(message) { if (message == &#39;商品を購入しました&#39;) { return true; } else if (message == &#39;ポイントが足りません&#39;) { return true; } }; // Confirmダイアログが立ち上がると発火する。 // trueを返すとOKボタンが押下され、falseを返すとキャンセルボタンが押下される this.page.onConfirm = function(message) { if (message == &#39;商品を購入します。よろしいですか？&#39;) { return true; } }; // #add_pointというテキストフィールドに100ポイントを入力し、#buyボタンを押下する this.</description>
     </item>
     
     <item>
@@ -160,26 +39,9 @@ casper.run();
       <pubDate>Wed, 06 Apr 2016 12:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2016/04/06/if-you-can-not-send-post-in-ajax-of-casperjs/</guid>
-      <description>&lt;p&gt;地味にハマった。Chromeだとパラメータに&lt;code&gt;type:&amp;quot;POST&amp;quot;&lt;/code&gt;がなくてもPOSTでリクエストを送信してくれるが、
-CasperJsのブラウザでは、&lt;code&gt;type:&amp;quot;POST&amp;quot;&lt;/code&gt;を明示しないと&lt;code&gt;GET&lt;/code&gt;でリクエストを送信してしまう。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;$.ajax({
-    url:  &amp;quot;/shopping/addpoint/&amp;quot;,
-    type: &amp;quot;POST&amp;quot;, // &amp;lt;-このパラメータが必須
-    data: data,
-    success: function(data, dataType) {
-        var data_arr = JSON.parse(data);
-        $(&#39;#point&#39;).text(data_arr[&#39;point&#39;]);
-        alert(data_arr[&#39;msg&#39;]);
-    }
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;手動で操作するぶんには問題なく動いていたので(typeパラメータが設定されていなくても)、
-CasperJs(自分で書いたソース)側に問題があると思い込んでしまった。&lt;/p&gt;
-
-&lt;p&gt;思い込みで判断せずに、まずはアクセスログを確認しようという教訓でした。&lt;/p&gt;
-</description>
+      <description>地味にハマった。Chromeだとパラメータにtype:&amp;quot;POST&amp;quot;がなくてもPOSTでリクエストを送信してくれるが、 CasperJsのブラウザでは、type:&amp;quot;POST&amp;quot;を明示しないとGETでリクエストを送信してしまう。
+$.ajax({ url: &amp;quot;/shopping/addpoint/&amp;quot;, type: &amp;quot;POST&amp;quot;, // &amp;lt;-このパラメータが必須 data: data, success: function(data, dataType) { var data_arr = JSON.parse(data); $(&#39;#point&#39;).text(data_arr[&#39;point&#39;]); alert(data_arr[&#39;msg&#39;]); } });  手動で操作するぶんには問題なく動いていたので(typeパラメータが設定されていなくても)、 CasperJs(自分で書いたソース)側に問題があると思い込んでしまった。
+思い込みで判断せずに、まずはアクセスログを確認しようという教訓でした。</description>
     </item>
     
     <item>
@@ -188,92 +50,15 @@ CasperJs(自分で書いたソース)側に問題があると思い込んでし�
       <pubDate>Tue, 15 Sep 2015 15:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/09/15/to-create-the-api-documentation-and-the-stub-from-markdown-using-aglio/</guid>
-      <description>
+      <description>仕事で簡単なAPIを実装する必要があったので、簡単にAPIドキュメントを公開したり、ドキュメントからStubを自動で用意する方法を調べてみた。
+で、こちらの記事にやりたいことがまんま載っていた(ありがとうございます！)ので、 記事を参考に自分用のテンプレートを用意した。
 
-&lt;p&gt;仕事で簡単なAPIを実装する必要があったので、簡単にAPIドキュメントを公開したり、ドキュメントからStubを自動で用意する方法を調べてみた。&lt;/p&gt;
-
-&lt;p&gt;で、&lt;a href=&#34;http://dackdive.hateblo.jp/entry/2015/08/07/181723&#34;&gt;こちらの記事&lt;/a&gt;にやりたいことがまんま載っていた(ありがとうございます！)ので、
-記事を参考に&lt;a href=&#34;https://github.com/tatsuyano/aglio-template&#34;&gt;自分用のテンプレート&lt;/a&gt;を用意した。&lt;/p&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;blueprint:8e9313d6f2703a165c9d67a103a4eac0&#34;&gt;Blueprint&lt;/h3&gt;
-
-&lt;p&gt;Blueprintの記述は下記をページを参照。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/blob/master/Tutorial.md&#34;&gt;API Blueprint Tutorial&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/tree/master/examples&#34;&gt;API Blueprint examples&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;api-mockの起動をgulpに設定する:8e9313d6f2703a165c9d67a103a4eac0&#34;&gt;api-mockの起動をgulpに設定する&lt;/h3&gt;
-
-&lt;p&gt;以下のように設定し、&lt;code&gt;$ gulp mock&lt;/code&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;var gulp    = require(&#39;gulp&#39;),
-    aglio   = require(&#39;gulp-aglio&#39;),
-    ApiMock = require(&#39;api-mock&#39;);
-
-var TEMPLATE_FILES = [&#39;apidocs/*.md&#39;],
-LAYOUT_FILE    = &#39;apidocs/layout.md&#39;,
-PUBLISHED_DIR  = &#39;published&#39;;
-
-gulp.task(&#39;api-mock&#39;, function () {
-  var mockServer = new ApiMock({
-    blueprintPath: PUBLISHED_DIR + &#39;/index.md&#39;,
-    options: {
-      port: 3000
-    }
-  });
-  mockServer.run();
-});
-
-gulp.task(&#39;mock&#39;, [&#39;api-mock&#39;]);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;vagrantで使う場合-ポートを開ける:8e9313d6f2703a165c9d67a103a4eac0&#34;&gt;Vagrantで使う場合、ポートを開ける&lt;/h3&gt;
-
-&lt;p&gt;vagrant上からaglioとapi-mockを使うには、デフォルトだと&lt;code&gt;8088&lt;/code&gt;と&lt;code&gt;3000&lt;/code&gt;を開ける必要があるので、&lt;code&gt;Vagrant&lt;/code&gt;ファイルに以下の設定を加える。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;config.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 3000, host: 3000
-config.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 8088, host: 8088
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;APIドキュメントを閲覧　 =&amp;gt; &lt;code&gt;http://localhost:8088&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;StubでAPIのテストをする =&amp;gt; &lt;code&gt;http://localhost:3000/questions&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;postでjsonのテストをする:8e9313d6f2703a165c9d67a103a4eac0&#34;&gt;POSTでJSONのテストをする&lt;/h3&gt;
-
-&lt;p&gt;GETの場合は、ブラウザからそのままAPIをそのまま叩けばいいが、POSTの場合は curl を使う。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;curl -v -H &amp;quot;Accept: application/json&amp;quot; -H &amp;quot;Content-type: application/json&amp;quot; -X POST \
--d &#39;{&amp;quot;name&amp;quot;: &amp;quot;hoge&amp;quot; }&#39; \
-http://localhost:3000/user
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;もしくはChromeアプリの&lt;a href=&#34;https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo/related&#34;&gt;Advanced REST client&lt;/a&gt;などを使ってテストする。&lt;/p&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:8e9313d6f2703a165c9d67a103a4eac0&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://dackdive.hateblo.jp/entry/2015/08/07/181723&#34;&gt;APIドキュメント作成ツールならApiary.ioよりaglioの方が良かった&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/tatsuyano/aglio-template&#34;&gt;GitHub: aglio-template&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/blob/master/Tutorial.md&#34;&gt;API Blueprint Tutorial&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/tree/master/examples&#34;&gt;API Blueprint examples&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://takuya71.hatenablog.com/entry/2012/11/10/143415&#34;&gt;curl を使って JSONデータをPOSTする&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo/related&#34;&gt;Advanced REST client&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+Blueprint Blueprintの記述は下記をページを参照。
+ API Blueprint Tutorial API Blueprint examples  
+api-mockの起動をgulpに設定する 以下のように設定し、$ gulp mock
+var gulp = require(&#39;gulp&#39;), aglio = require(&#39;gulp-aglio&#39;), ApiMock = require(&#39;api-mock&#39;); var TEMPLATE_FILES = [&#39;apidocs/*.md&#39;], LAYOUT_FILE = &#39;apidocs/layout.md&#39;, PUBLISHED_DIR = &#39;published&#39;; gulp.task(&#39;api-mock&#39;, function () { var mockServer = new ApiMock({ blueprintPath: PUBLISHED_DIR + &#39;/index.md&#39;, options: { port: 3000 } }); mockServer.run(); }); gulp.task(&#39;mock&#39;, [&#39;api-mock&#39;]);  
+Vagrantで使う場合、ポートを開ける vagrant上からaglioとapi-mockを使うには、デフォルトだと8088と3000を開ける必要があるので、Vagrantファイルに以下の設定を加える。
+config.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 3000, host: 3000 config.</description>
     </item>
     
     <item>
@@ -282,100 +67,15 @@ http://localhost:3000/user
       <pubDate>Wed, 03 Jun 2015 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/</guid>
-      <description>
-
-&lt;p&gt;最近勉強中のPromiseですが、現段階(15/06/03)ではIE11に対応していません。
-PromiseをIEに対応させるためには、es6-promiseというNode.jsのライブラリをフロントエンドで読み込む必要があります。&lt;/p&gt;
-
-&lt;p&gt;しかしNode.jsのライブラリは、そのままではフロントエンドで使えないので、
-webpackでフロントエンド向けにBuildする必要があります。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;-webpackは他にも多くの機能がありますが、ここではNode.jsのモジュールをフロントエンドで使うため方法のみにフォーカスします。-&lt;/em&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;webpackを使うための準備:bf105b025d29d59e69f389ae56581628&#34;&gt;webpackを使うための準備&lt;/h3&gt;
-
-&lt;p&gt;まずは本体のインストール。
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install webpack -g
-&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-
-&lt;p&gt;次に適当なディレクトリを作成します。
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ mkdir webpack-sample &amp;amp;&amp;amp; cd webpack-sample
-&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-
-&lt;p&gt;今回使うライブラリ(es6-promise)をディレクトリにインストールします。
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install es6-promise
-&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-
-&lt;p&gt;ライブラリはglobalではなく、ディレクトリ直下(/webpack-sample/node_modules)にインストールしてください。&lt;/p&gt;
-
-&lt;h3 id=&#34;jsのbuild方法:bf105b025d29d59e69f389ae56581628&#34;&gt;JsのBuild方法&lt;/h3&gt;
-
-&lt;p&gt;次に(Node.jsの)ライブラリを読み込むJs(main.js)をビルドします。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ webpack main.js bundle.js
-Hash: de7b4a8a87c6e52d026f
-Version: webpack 1.9.10
-Time: 109ms
-    Asset     Size  Chunks             Chunk Names
-bundle.js  40.1 kB       0  [emitted]  main
-   [0] ./main.js 255 bytes {0} [built]
-   + 6 hidden modules
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-BuildしたJs(bundle.js)は、main.jsが依存しているライブラリ(es6-promise等)も含んだ一つのファイルに圧縮されます。
-このJsのみをHTMLに読み込むだけで、Node.jsが利用できるようになります。
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;&amp;lt;script&amp;nbsp;src=&amp;quot;bundle.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-&lt;b&gt;main.js&lt;/b&gt;
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;&#39;use strict&#39;
-var Promise = require(&#39;es6-promise&#39;).Promise;
-
-var promise = function(code) {
-    return new Promise(function (resolve,reject) {
-        resolve(&#39;Hello Promise !!&#39;);
-    });
-}
-
-promise().then(function (result) {
-    console.log(result);
-});
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-### 確認
-
-今回は、node.jsのhttp-serverを使って確認しようと思います。
-
-* [Node.jsのhttp-serverっていうコマンドラインのウェブサーバーが便利](https://firegoby.jp/archives/5706)
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install -g http-server
-$ http-server -p 4000
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;サーバー起動し、IEのconsoleにメッセージが表示されれば、確認OKです。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/use-webpack-to-read-the-es6-promise_01.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:bf105b025d29d59e69f389ae56581628&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://webpack.github.io/&#34;&gt;webpack&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/jakearchibald/es6-promise&#34;&gt;es6-promise&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://ameblo.jp/ca-1pixel/entry-11884453208.html&#34;&gt;RequireJS等はもう古い。WebPackとは？&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://thujikun.github.io/blog/2014/12/07/webpack/&#34;&gt;Webpackを使い倒す&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.twopipe.com/front-end/2014/12/22/react-webpack-env.html&#34;&gt;ReactとStylusをwebpackで使うための開発環境構築&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;関連する記事:bf105b025d29d59e69f389ae56581628&#34;&gt;関連する記事&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/&#34;&gt;Promiseを使って、非同期処理を任意のタイミングで実行する&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>最近勉強中のPromiseですが、現段階(15/06/03)ではIE11に対応していません。 PromiseをIEに対応させるためには、es6-promiseというNode.jsのライブラリをフロントエンドで読み込む必要があります。
+しかしNode.jsのライブラリは、そのままではフロントエンドで使えないので、 webpackでフロントエンド向けにBuildする必要があります。
+-webpackは他にも多くの機能がありますが、ここではNode.jsのモジュールをフロントエンドで使うため方法のみにフォーカスします。-
+webpackを使うための準備 まずは本体のインストール。 $ npm install webpack -g 
+次に適当なディレクトリを作成します。 $ mkdir webpack-sample &amp;amp;&amp;amp; cd webpack-sample 
+今回使うライブラリ(es6-promise)をディレクトリにインストールします。 $ npm install es6-promise 
+ライブラリはglobalではなく、ディレクトリ直下(/webpack-sample/node_modules)にインストールしてください。
+JsのBuild方法 次に(Node.jsの)ライブラリを読み込むJs(main.js)をビルドします。
+$ webpack main.js bundle.js Hash: de7b4a8a87c6e52d026f Version: webpack 1.9.10 Time: 109ms Asset Size Chunks Chunk Names bundle.js 40.1 kB 0 [emitted] main [0] ./main.js 255 bytes {0} [built] + 6 hidden modules  BuildしたJs(bundle.js)は、main.jsが依存しているライブラリ(es6-promise等)も含んだ一つのファイルに圧縮されます。 このJsのみをHTMLに読み込むだけで、Node.jsが利用できるようになります。 &amp;lt;script&amp;nbsp;src=&amp;quot;bundle.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;  main.js &#39;use strict&#39; var Promise = require(&#39;es6-promise&#39;).</description>
     </item>
     
     <item>
@@ -384,30 +84,8 @@ $ http-server -p 4000
       <pubDate>Tue, 02 Jun 2015 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/</guid>
-      <description>
-
-&lt;p&gt;Promiseを使って、非同期処理を任意の順番で実行するサンプル。
-ES5でも順番を指定して実行する事ができるが、Promiseを使うと綺麗に実装できる。&lt;/p&gt;
-
-&lt;p&gt;&lt;script src=&#34;http://gist-it.appspot.com/https://github.com/tatsuyano/study-es6promise/blob/master/sample01-nodejs.js&#34;&gt;
-&lt;/script&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:4211bdcec880eb9ef23695a021bec295&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://azu.github.io/promises-book/&#34;&gt;JavaScript Promiseの本&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.html5rocks.com/ja/tutorials/es6/promises/&#34;&gt;JavaScript Promises&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/jakearchibald/es6-promise&#34;&gt;es6-promise&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://babeljs.io/repl/&#34;&gt;Babel repl&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;関連する記事:4211bdcec880eb9ef23695a021bec295&#34;&gt;関連する記事&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/&#34;&gt;webpackを使ってes6-promiseを読み込む&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description> Promiseを使って、非同期処理を任意の順番で実行するサンプル。 ES5でも順番を指定して実行する事ができるが、Promiseを使うと綺麗に実装できる。
+ 参考サイト  JavaScript Promiseの本 JavaScript Promises es6-promise Babel repl  関連する記事  webpackを使ってes6-promiseを読み込む  </description>
     </item>
     
     <item>
@@ -416,116 +94,16 @@ ES5でも順番を指定して実行する事ができるが、Promiseを使う�
       <pubDate>Tue, 19 Aug 2014 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/08/19/install-anyenv/</guid>
-      <description>
-
-&lt;p&gt;以前導入したanyenvのインストール方法を忘れないようメモしておきます。&lt;/p&gt;
-
-&lt;p&gt;anyenvは ruby、perl、python、nodejs、php(phpenv) のバージョン管理を一元化してくれるツールです。これでhome直下がずいぶんスッキリ。素敵です。&lt;/p&gt;
-
-&lt;h3 id=&#34;インストール:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;インストール&lt;/h3&gt;
-
-&lt;p&gt;ダウンロード&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ git clone https://github.com/riywo/anyenv ~/.anyenv
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;$HOME/.zshrc&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ echo &#39;export PATH=&amp;quot;$HOME/.anyenv/bin:$PATH&amp;quot;&#39; &amp;gt;&amp;gt; ~/.zshrc
-$ echo &#39;eval &amp;quot;$(anyenv init - zsh)&amp;quot;&#39; &amp;gt;&amp;gt; ~/.zshrc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;私は&lt;code&gt;oh-my-zsh&lt;/code&gt;を使っているので、実際は&lt;code&gt;~/.zshrc&lt;/code&gt;ではなく、&lt;code&gt;~/.oh-my-zsh/custom/main.zsh&lt;/code&gt;に設定しています。&lt;/p&gt;
-
-&lt;p&gt;シェルを再実行し、anyenvの設定を反映させます。&lt;br /&gt;
-&lt;code&gt;source $HOME/.zshrc&lt;/code&gt; でも結構です。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ exec $SHELL -l
-$ which anyenv
-~/.anyenv/bin/anyenv
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/luckypool/items/f1e756e9d3e9786ad9ea&#34;&gt;anyenvで開発環境を整える&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/DQNEO/items/ebf50c39f83970f1127c&#34;&gt;completions/plenv.bash:16: command not found: completeの対処法&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;rubyのインストール:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;rubyのインストール&lt;/h3&gt;
-
-&lt;p&gt;とりあえずanyenv経由でrubyをインストールします。
-rubyをインストールするには、事前にOpenSSL系のライブラリが必要なのでインストールしておきます。&lt;/p&gt;
-
-&lt;p&gt;また&lt;a href=&#34;http://blog.10rane.com/2014/09/01/set-up-ruby-mode-of-emacs/&#34;&gt;別記事&lt;/a&gt;で紹介している&lt;code&gt;robe&lt;/code&gt;を使うには、&lt;code&gt;read-line&lt;/code&gt;が必要なので、入れておきます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo yum -y install openssl-devel
-$ sudo yum -y install readline-devel
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://futurismo.biz/archives/1389&#34;&gt;CentOSに rbenv 経路で Ruby 2.0.0-p195を入れようとしたら、エラー&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;まずはrbenvはインストールします。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ anyenv install rbenv
-$ anyenv versions
-rbenv:
-* system (set by /home/$USER/.anyenv/envs/rbenv/version)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;バージョンは2.1.0を入れてみます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ rbenv install 2.1.0
-$ rbenv global 2.1.0
-
-$ anyenv versions
-rbenv:
-system
-* 2.1.0 (set by /home/$USER/.anyenv/envs/rbenv/version)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;em&gt;反映されない時は&lt;/em&gt;&lt;code&gt;source $HOME/.zshrc&lt;/code&gt;&lt;em&gt;で設定を読み込み直して下さい。&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;試しに&lt;code&gt;bundler&lt;/code&gt;をインストールしてみます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ which gem
-/home/$USER/.anyenv/envs/rbenv/shims/gem
-$ gem install bundler
-$ which bundle
-/home/$USER/.anyenv/envs/rbenv/shims/bundle
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;pythonのインストール:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;pythonのインストール&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo yum -y install patch
-$ anyenv install pyenv
-$ pyenv install 3.3.3
-$ pyenv global 3.3.3
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;node-jsのインストール:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;node.jsのインストール&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ anyenv install ndenv
-$ ndenv install v0.10.26
-$ ndenv global v0.10.26
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;他の言語も流れは同じです。&lt;br /&gt;
-お疲れ様でした。&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/luckypool/items/f1e756e9d3e9786ad9ea&#34;&gt;anyenvで開発環境を整える&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/DQNEO/items/ebf50c39f83970f1127c&#34;&gt;completions/plenv.bash:16: command not found: completeの対処法&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;関連する記事:14bcb1cdd9b62f61ca95a6e6fd5293c5&#34;&gt;関連する記事&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2014/12/04/how-to-install-and-setup-phpenv/&#34;&gt;phpenvを導入する&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>以前導入したanyenvのインストール方法を忘れないようメモしておきます。
+anyenvは ruby、perl、python、nodejs、php(phpenv) のバージョン管理を一元化してくれるツールです。これでhome直下がずいぶんスッキリ。素敵です。
+インストール ダウンロード
+$ git clone https://github.com/riywo/anyenv ~/.anyenv  $HOME/.zshrc
+$ echo &#39;export PATH=&amp;quot;$HOME/.anyenv/bin:$PATH&amp;quot;&#39; &amp;gt;&amp;gt; ~/.zshrc $ echo &#39;eval &amp;quot;$(anyenv init - zsh)&amp;quot;&#39; &amp;gt;&amp;gt; ~/.zshrc  私はoh-my-zshを使っているので、実際は~/.zshrcではなく、~/.oh-my-zsh/custom/main.zshに設定しています。
+シェルを再実行し、anyenvの設定を反映させます。
+source $HOME/.zshrc でも結構です。
+$ exec $SHELL -l $ which anyenv ~/.anyenv/bin/anyenv   anyenvで開発環境を整える completions/plenv.bash:16: command not found: completeの対処法  rubyのインストール とりあえずanyenv経由でrubyをインストールします。 rubyをインストールするには、事前にOpenSSL系のライブラリが必要なのでインストールしておきます。
+また別記事で紹介しているrobeを使うには、read-lineが必要なので、入れておきます。
+$ sudo yum -y install openssl-devel $ sudo yum -y install readline-devel   CentOSに rbenv 経路で Ruby 2.</description>
     </item>
     
     <item>
@@ -534,33 +112,9 @@ $ ndenv global v0.10.26
       <pubDate>Thu, 14 Mar 2013 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/03/14/uglify-js/</guid>
-      <description>
-
-&lt;pre&gt;&lt;code&gt;npm install -g uglify-js
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;パラメータの-gは「global」の意味。「global」はnodeのインストールディレクトリ、&lt;br /&gt;
-そうでなければカレントパッケージのルートかカレントワーキングディレクトリ。&lt;/p&gt;
-
-&lt;h2 id=&#34;npmの参考サイト:92f440448a468cdfe1fe1ea456af8f60&#34;&gt;npmの参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://npmjs.org/doc/config.html&#34;&gt;Manage the npm configuration file&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://kysnm.hatenablog.com/entry/20111225/1324828008&#34;&gt;npm についてまとめてみる&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;uglify-jsの使い方:92f440448a468cdfe1fe1ea456af8f60&#34;&gt;uglify-jsの使い方&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;-b, &amp;ndash;beautify     整形(軽量化の逆)&lt;/li&gt;
-&lt;li&gt;-o,&amp;ndash;output &lt;file&gt; 出力ファイルの指定&lt;/li&gt;
-&lt;li&gt;&amp;ndash;overwrite        軽量化後のコードで入力ファイルを上書きします&lt;/li&gt;
-&lt;li&gt;&amp;ndash;unsafe           コードをより短い表現に変換&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code&gt;uglifyjs -o min.js jquery-1.9.1.js
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+      <description> npm install -g uglify-js  パラメータの-gは「global」の意味。「global」はnodeのインストールディレクトリ、
+そうでなければカレントパッケージのルートかカレントワーキングディレクトリ。
+npmの参考サイト  Manage the npm configuration file npm についてまとめてみる  uglify-jsの使い方  -b, &amp;ndash;beautify 整形(軽量化の逆) -o,&amp;ndash;output  出力ファイルの指定 &amp;ndash;overwrite 軽量化後のコードで入力ファイルを上書きします &amp;ndash;unsafe コードをより短い表現に変換  uglifyjs -o min.js jquery-1.9.1.js  </description>
     </item>
     
     <item>
@@ -569,76 +123,12 @@ $ ndenv global v0.10.26
       <pubDate>Thu, 07 Mar 2013 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/03/07/nvm-vpm/</guid>
-      <description>
-
-&lt;p&gt;&lt;a href=&#34;https://github.com/creationix/nvm&#34;&gt;nvm(Node Version Manager)&lt;/a&gt; とは、node.js本体のバージョン管理するツール。&lt;br /&gt;
-&lt;a href=&#34;https://npmjs.org/&#34;&gt;npm(Node Packaged Modules)&lt;/a&gt; とは、node.jsで作ったパッケージを管理するツール。&lt;br /&gt;
-nvmをインストールするとnpmも自動でインストールされる。&lt;/p&gt;
-
-&lt;h2 id=&#34;nvmのインストール:62e930a18105a784dc9149751609f7b3&#34;&gt;nvmのインストール&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;git clone git://github.com/creationix/nvm.git .nvm
-source .nvm/nvm.sh  # nvmで使う環境変数などを設定する
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;node-js本体のインストール:62e930a18105a784dc9149751609f7b3&#34;&gt;node.js本体のインストール&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;nvm ls-remote # 現在までにリリースされているバージョンの確認
-nvm install v0.10.0
-
-nvm ls # インストールしてあるバージョンと、現在設定してあるバージョンを確認
-v0.9.4 v0.8.14 v0.10.0
-current:  v0.10.0
-
-nvm use 0.10.0 # 毎回使うバージョンを指定する必要がある
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;node.jsを使うためには、ターミナルを立ち上げるたびに、nvm.shの読み込みと、nodeのバージョンを指定しないといけない。&lt;br /&gt;
-なので、事前に zshrcに設定しておく。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cat &amp;gt;&amp;gt; .zshrc
-[[ -s $HOME/.nvm/nvm.sh ]] &amp;amp;&amp;amp; source $HOME/.nvm/nvm.sh
-[[ -s $HOME/.nvm/nvm.sh ]] &amp;amp;&amp;amp; nvm use 0.10.0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;coffeescriptなどのnpm-node-packaged-modules-のインストール方法:62e930a18105a784dc9149751609f7b3&#34;&gt;CoffeeScriptなどのnpm(Node Packaged Modules)のインストール方法&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;npm install -g coffee-script
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;インストールには、「ローカルインストール」と「グローバルインストール(パラメータに「g」をつける）」がある。&lt;br /&gt;
-ローカルインストールすると&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;npm bin
-/Users/hoge/node_modules/.bin
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;にインストールされ、「g」をつけてグローバルインストールにすると、&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;npm bin -g
-/Users/hoge/.nvm/v0.10.0/bin
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;にインストールされるので、通常は「g」をつけてインストールすること。&lt;/p&gt;
-
-&lt;p&gt;またCoffeeScriptなどパッケージの実際のソースは、$HOME/.npm/配下にインストールされる。&lt;br /&gt;
-/Users/hoge/.nvm/v0.10.0/bin/配下には、リンクが貼られている。&lt;/p&gt;
-
-&lt;h2 id=&#34;npm-を移動させ-シムリンクで管理することはできない:62e930a18105a784dc9149751609f7b3&#34;&gt;.npm を移動させ、シムリンクで管理することはできない&lt;/h2&gt;
-
-&lt;p&gt;いつものように、Dropbox/dotfile/配下にディレクトリを移動させ、$HOME　直下にリンクを貼って管理したかったが、&lt;br /&gt;
-.npmディレクトリを移動させると、Not Foundなどのエラーがでてきてしまうので、.nvmと.npmはDropboxで共有しないようにする。&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:62e930a18105a784dc9149751609f7b3&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://tmlife.net/programming/javascript/npm-node-js-require-module-memo.html&#34;&gt;npm と Node.js 上で require を使ったモジュール読み込みの仕組みについてメモ&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://kysnm.hatenablog.com/entry/20111225/1324828008&#34;&gt;npm についてまとめてみる&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://npmjs.org/doc/config.html&#34;&gt;Manage the npm configuration file&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>nvm(Node Version Manager) とは、node.js本体のバージョン管理するツール。
+npm(Node Packaged Modules) とは、node.jsで作ったパッケージを管理するツール。
+nvmをインストールするとnpmも自動でインストールされる。
+nvmのインストール git clone git://github.com/creationix/nvm.git .nvm source .nvm/nvm.sh # nvmで使う環境変数などを設定する  node.js本体のインストール nvm ls-remote # 現在までにリリースされているバージョンの確認 nvm install v0.10.0 nvm ls # インストールしてあるバージョンと、現在設定してあるバージョンを確認 v0.9.4 v0.8.14 v0.10.0 current: v0.10.0 nvm use 0.10.0 # 毎回使うバージョンを指定する必要がある  node.jsを使うためには、ターミナルを立ち上げるたびに、nvm.shの読み込みと、nodeのバージョンを指定しないといけない。
+なので、事前に zshrcに設定しておく。
+cat &amp;gt;&amp;gt; .zshrc [[ -s $HOME/.nvm/nvm.sh ]] &amp;amp;&amp;amp; source $HOME/.nvm/nvm.sh [[ -s $HOME/.nvm/nvm.sh ]] &amp;amp;&amp;amp; nvm use 0.10.0  CoffeeScriptなどのnpm(Node Packaged Modules)のインストール方法 npm install -g coffee-script  インストールには、「ローカルインストール」と「グローバルインストール(パラメータに「g」をつける）」がある。</description>
     </item>
     
   </channel>

@@ -7,7 +7,9 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Sat, 22 Aug 2015 08:00:00 +0900</lastBuildDate>
-    <atom:link href="http://tatsuyano.github.io/tags/perl/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://tatsuyano.github.io/tags/perl/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>YAPC::Asia2015に行ってきた</title>
@@ -15,23 +17,12 @@
       <pubDate>Sat, 22 Aug 2015 08:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/08/22/yapc-asia-2015/</guid>
-      <description>&lt;p&gt;6年ぶりに&lt;a href=&#34;http://yapcasia.org/2015/&#34;&gt;YAPC&lt;/a&gt;に行ってきた。思っていた以上に混んでいて、
-メイン会場以外での人気のセッションだと、部屋にも入れないほどの盛況ぶりだった。&lt;/p&gt;
-
-&lt;p&gt;前の会社の同僚も結構来ていてみたいだったので、顔を合わせたら声かけようと思っていたが、
-見ていたセッションがまったくかぶらず、開発言語が変わると(自分はPerlから今はPHPをメインで使っている)、
-こうも趣向が変わるのかと少し切なかった。&lt;/p&gt;
-
-&lt;p&gt;2日目は1日目の失敗を踏まえ、なるべく部屋を移動しないよう工夫してみたが、結局ランチセッションは逃した。&lt;/p&gt;
-
-&lt;p&gt;予定していたセッションは半分ぐらいしか聞けなかったが、セッションを聞いているうち、無性にプログラミングがしたくなったので途中で帰った。&lt;/p&gt;
-
-&lt;p&gt;セッションの自体は&lt;a href=&#34;https://www.youtube.com/channel/UCTqv2OjSox70MM7iYftlsIw&#34;&gt;Youtube&lt;/a&gt;などにすぐに上がるし、
-ただ見たいだけなら直接行くメリットは実はあまりないんだけど、こうやって熱に当てられることで頑張ろうと思えるところが、
-イベントのイイトコなのかなと思う。&lt;/p&gt;
-
-&lt;p&gt;最後に楽しいイベント、ありがとうございました。&lt;/p&gt;
-</description>
+      <description>6年ぶりにYAPCに行ってきた。思っていた以上に混んでいて、 メイン会場以外での人気のセッションだと、部屋にも入れないほどの盛況ぶりだった。
+前の会社の同僚も結構来ていてみたいだったので、顔を合わせたら声かけようと思っていたが、 見ていたセッションがまったくかぶらず、開発言語が変わると(自分はPerlから今はPHPをメインで使っている)、 こうも趣向が変わるのかと少し切なかった。
+2日目は1日目の失敗を踏まえ、なるべく部屋を移動しないよう工夫してみたが、結局ランチセッションは逃した。
+予定していたセッションは半分ぐらいしか聞けなかったが、セッションを聞いているうち、無性にプログラミングがしたくなったので途中で帰った。
+セッションの自体はYoutubeなどにすぐに上がるし、 ただ見たいだけなら直接行くメリットは実はあまりないんだけど、こうやって熱に当てられることで頑張ろうと思えるところが、 イベントのイイトコなのかなと思う。
+最後に楽しいイベント、ありがとうございました。</description>
     </item>
     
     <item>
@@ -40,106 +31,8 @@
       <pubDate>Sun, 07 Apr 2013 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/04/07/find-cmd-on-mac-2/</guid>
-      <description>
-
-&lt;p&gt;前回の&lt;a href=&#34;http://blog.10rane.com/2013/04/06/find-cmd-on-mac-1/&#34;&gt;ディレクトリ中のファイルサイズの合計値を再帰的に集計したい その１&lt;/a&gt;でmac用、linux用のワンライナーを関数として登録したのですが、
-mac用のワンライナーが厳密には、期待した結果とは違うので、作り直してみました。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;#!/usr/bin/env perl
-use strict;
-use constant DELETED_STDOUT    =&amp;gt; &amp;quot;\x1b[1A&amp;quot;;
-use constant INITIALIZE_STDOUT =&amp;gt; &amp;quot; &amp;quot;;
-
-my $dir = $ARGV[0] || &amp;quot;.&amp;quot;;
-my $info = file_info($dir);
-
-printf INITIALIZE_STDOUT;
-print_info($info);
-
-sub file_info {
-  my $dir = shift;
-  my @list = ();
-  my $info = { file_size   =&amp;gt; 0,
-               directories =&amp;gt; 0,
-               files       =&amp;gt; 0 };
-
-  opendir(DIR, $dir) or die(&amp;quot;Can not open directory:$dir ($!)&amp;quot;);
-  @list = readdir(DIR);
-  closedir(DIR);
-
-  foreach my $file (sort @list){
-    next if $file =~ /^\.{1,2}$/;
-
-    if( -d &amp;quot;$dir/$file&amp;quot; ){
-      my $hash = file_info(&amp;quot;$dir/$file&amp;quot;);
-      $info-&amp;gt;{file_size}   += $hash-&amp;gt;{file_size};
-      $info-&amp;gt;{directories} += $hash-&amp;gt;{directories};
-      $info-&amp;gt;{files}       += $hash-&amp;gt;{files};
-
-      $info-&amp;gt;{directories}++;
-    }else{
-      $info-&amp;gt;{file_size} += -s &amp;quot;$dir/$file&amp;quot;;
-      $info-&amp;gt;{files}++;
-    }
-  }
-
-  print_info($info);
-  printf DELETED_STDOUT;
-  return $info;
-}
-
-sub print_info {
-  my $info = shift;
-  
-  printf &amp;quot;%d directories, %d files, %s\n&amp;quot;,
-    $info-&amp;gt;{directories},
-    $info-&amp;gt;{files},
-    format_kmgt($info-&amp;gt;{file_size});
-}
-
-sub format_kmgt {
-  my $byte = shift;
-  my @prefix = (&amp;quot;B&amp;quot;,&amp;quot;K&amp;quot;,&amp;quot;M&amp;quot;,&amp;quot;G&amp;quot;,&amp;quot;T&amp;quot;);  
-
-  while(1024 &amp;lt; $byte){
-    $byte = $byte / 1024;
-    shift @prefix;
-  }
-
-  return sprintf &amp;quot;%.1f%s&amp;quot;,$byte,shift @prefix; 
-}
-
-1;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;プログラムの置場所をどこにするべきか少し悩んだのですが、Dropbox以下にPATHを通したディレクトリを用意し、そこに置くことにしました。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;mkdir /Users/$HOME/Dropbox/dotfile/mybin
-chmod 755 /Users/$HOME/Dropbox/dotfile/mybin
-chmod 755 /Users/$HOME/Dropbox/dotfile/mybin/bu
-cat &amp;gt;&amp;gt; .zshrc export PATH=$PATH:$HOME/Dropbox/dotfile/mybin
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;perlのプログラムなので&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;/Users/$HOME/perl5/perlbrew/perls/perl-5.14.2/bin/
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;や、自前のプログラムということで、&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;/usr/local/bin
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;がいいのかもしれません。&lt;/p&gt;
-
-&lt;h4 id=&#34;参考サイト:57025a99225589d64e06e81287723885&#34;&gt;参考サイト&lt;/h4&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://dqn.sakusakutto.jp/2011/08/linux_usrlocal.html&#34;&gt;/usr/local/の使い方まとめ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>前回のディレクトリ中のファイルサイズの合計値を再帰的に集計したい その１でmac用、linux用のワンライナーを関数として登録したのですが、 mac用のワンライナーが厳密には、期待した結果とは違うので、作り直してみました。
+#!/usr/bin/env perl use strict; use constant DELETED_STDOUT =&amp;gt; &amp;quot;\x1b[1A&amp;quot;; use constant INITIALIZE_STDOUT =&amp;gt; &amp;quot; &amp;quot;; my $dir = $ARGV[0] || &amp;quot;.&amp;quot;; my $info = file_info($dir); printf INITIALIZE_STDOUT; print_info($info); sub file_info { my $dir = shift; my @list = (); my $info = { file_size =&amp;gt; 0, directories =&amp;gt; 0, files =&amp;gt; 0 }; opendir(DIR, $dir) or die(&amp;quot;Can not open directory:$dir ($!)&amp;quot;); @list = readdir(DIR); closedir(DIR); foreach my $file (sort @list){ next if $file =~ /^\.</description>
     </item>
     
     <item>
@@ -148,44 +41,13 @@ cat &amp;gt;&amp;gt; .zshrc export PATH=$PATH:$HOME/Dropbox/dotfile/mybin
       <pubDate>Sat, 06 Apr 2013 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/04/06/find-cmd-on-mac-1/</guid>
-      <description>
-
-&lt;p&gt;たまにディレクトリ中のファイルサイズの合計値を、再帰的に集計したいときがある。&lt;br /&gt;
-で、いつも考えなしにこちらのサイトで紹介されているコマンドを叩いていたわけなんですが、&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://sonic64.com/2004-05-26.html&#34;&gt;ディレクトリ中のファイルサイズ合計値を バイト表示&lt;/a&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;find -type f -printf &amp;quot;%s\n&amp;quot; |perl -ne &#39;$i++; $byte += $_; $str = &amp;quot;\r$i files, $byte byte&amp;quot;; $str =~ s/(\d{1,3})(?=(?:\d\d\d)+(?!\d))/$1,/g; print $str&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;mac(osx)だと動かない。どうやらmacのfindのオプションに printf がないもよう。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://stackoverflow.com/questions/752818/why-does-macs-find-not-have-the-option-printf&#34;&gt;Why does Mac&amp;rsquo;s $find not have the option -printf?&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;そこで printf f &amp;lsquo;%s\n&amp;rsquo; のかわりに stat -f &amp;lsquo;%z&amp;rsquo; を代用してみた。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;find ./ -print0 | xargs -0 stat -f &#39;%z&#39; | perl -ne &#39;$i++; $byte += $_; $str = &amp;quot;\r$i files, $byte byte&amp;quot;; $str =~ s/(\d{1,3})(?=(?:\d\d\d)+(?!\d))/$1,/g; print $str&#39;;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;とりあえず期待した結果になるが、カレントディレクトリのサイズも合計されてしまう。。&lt;br /&gt;
-ちょっとカレントディレクトリのサイズを除外する方法がわからなかったので、このまま関数にして使うことにした。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# linux
-function bu(){ find -type f -printf &amp;quot;%s\n&amp;quot; |perl -ne &#39;$i++; $byte += $_; $str = &amp;quot;\r$i files, $byte byte&amp;quot;; $str =~ s/(\d{1,3})(?=(?:\d\d\d)+(?!\d))/$1,/g; print $str&#39;; }
-
-# mac
-function bu(){ find ./ -print0 | xargs -0 stat -f &#39;%z&#39; | perl -ne &#39;$i++; $byte += $_; $str = &amp;quot;\r$i files, $byte byte&amp;quot;; $str =~ s/(\d{1,3})(?=(?:\d\d\d)+(?!\d))/$1,/g; print $str&#39;; }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;参考サイト:c51f341ca7222ab82e3f3155acb51908&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://sonic64.com/2004-05-26.html&#34;&gt;ディレクトリ中のファイルサイズ合計値を バイト表示&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://stackoverflow.com/questions/752818/why-does-macs-find-not-have-the-option-printf&#34;&gt;Why does Mac&amp;rsquo;s $find not have the option -printf?&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>たまにディレクトリ中のファイルサイズの合計値を、再帰的に集計したいときがある。
+で、いつも考えなしにこちらのサイトで紹介されているコマンドを叩いていたわけなんですが、
+ディレクトリ中のファイルサイズ合計値を バイト表示
+find -type f -printf &amp;quot;%s\n&amp;quot; |perl -ne &#39;$i++; $byte += $_; $str = &amp;quot;\r$i files, $byte byte&amp;quot;; $str =~ s/(\d{1,3})(?=(?:\d\d\d)+(?!\d))/$1,/g; print $str&#39;  mac(osx)だと動かない。どうやらmacのfindのオプションに printf がないもよう。
+Why does Mac&amp;rsquo;s $find not have the option -printf?
+そこで printf f &amp;lsquo;%s\n&amp;rsquo; のかわりに stat -f &amp;lsquo;%z&amp;rsquo; を代用してみた。
+find ./ -print0 | xargs -0 stat -f &#39;%z&#39; | perl -ne &#39;$i++; $byte += $_; $str = &amp;quot;\r$i files, $byte byte&amp;quot;; $str =~ s/(\d{1,3})(?</description>
     </item>
     
     <item>
@@ -194,55 +56,14 @@ function bu(){ find ./ -print0 | xargs -0 stat -f &#39;%z&#39; | perl -ne &#39;$
       <pubDate>Tue, 04 Sep 2012 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2012/09/04/cpanm-dbd-mysql/</guid>
-      <description>
-
-&lt;h2 id=&#34;インストール:8a4d78145dafb1a26bc6d195a1e1eade&#34;&gt;インストール&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-perl&#34;&gt;cpanm DBD::mysql
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;しようするとエラーが。。build.logを確認してみると&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;emacs .cpanm/build.log
-...
-dbdimp.h:24:49: error: mysql.h: そのようなファイルやディレクトリはありません
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;とのこと。ググったところ、「mysql.h」は「mysql-devel」に入っているらしいので、mysql-develをインストールし、再度 cpanm DBD::mysqlを実行。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;sudo yum -y install mysql-devel
-...
-cpanm DBD::mysql
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;今度は&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;emacs .cpanm/build.log
-...
-make: *** [test_dynamic] エラー 255
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;エラーの原因がよくわからなかったので、再度で検索したところ、下記のサイトの方法で対応できました。&lt;br /&gt;
-&lt;a href=&#34;http://shibayu36.hatenablog.com/entry/20100605/1275754485&#34;&gt;Mac OS XにDBD::mysqlをインストール&lt;/a&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cd .cpanm/latest-build/DBD-mysql*
-perl Makefile.PL --testuser=&#39;hoge&#39; --testpassword=&#39;piyo&#39;
-make
-make test
-make install
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;mysqlの接続でしけていたんですね。勉強になりました。&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:8a4d78145dafb1a26bc6d195a1e1eade&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://shibayu36.hatenablog.com/entry/20100605/1275754485&#34;&gt;Mac OS XにDBD::mysqlをインストール&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/eisenbach/20111019/1319021855&#34;&gt;Rails3の bundle install で mysql.h が見つからないというエラー&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description> インストール cpanm DBD::mysql  しようするとエラーが。。build.logを確認してみると
+emacs .cpanm/build.log ... dbdimp.h:24:49: error: mysql.h: そのようなファイルやディレクトリはありません  とのこと。ググったところ、「mysql.h」は「mysql-devel」に入っているらしいので、mysql-develをインストールし、再度 cpanm DBD::mysqlを実行。
+sudo yum -y install mysql-devel ... cpanm DBD::mysql  今度は
+emacs .cpanm/build.log ... make: *** [test_dynamic] エラー 255  エラーの原因がよくわからなかったので、再度で検索したところ、下記のサイトの方法で対応できました。
+Mac OS XにDBD::mysqlをインストール
+cd .cpanm/latest-build/DBD-mysql* perl Makefile.PL --testuser=&#39;hoge&#39; --testpassword=&#39;piyo&#39; make make test make install  mysqlの接続でしけていたんですね。勉強になりました。
+参考サイト 以下のサイトを参考にさせていただきました。ありがとうございます！
+ Mac OS XにDBD::mysqlをインストール Rails3の bundle install で mysql.h が見つからないというエラー  </description>
     </item>
     
     <item>
@@ -251,79 +72,12 @@ make install
       <pubDate>Tue, 21 Aug 2012 03:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2012/08/21/emacs-perltidy/</guid>
-      <description>
-
-&lt;h2 id=&#34;はじめに:14bf98b614540e06f6b830ab8bbf49f8&#34;&gt;はじめに&lt;/h2&gt;
-
-&lt;p&gt;perltidyとはperlのソースを指定したフォーマットに整形してくれるツールです。&lt;/p&gt;
-
-&lt;h2 id=&#34;インストール:14bf98b614540e06f6b830ab8bbf49f8&#34;&gt;インストール&lt;/h2&gt;
-
-&lt;p&gt;私の環境はCentOSなので、&lt;del datetime=&#34;2012-09-04T06:43:23+00:00&#34;&gt;yumでインストールします。&lt;/del&gt;&lt;br /&gt;
-macとCentOS両方同じ方法でインストールしたいので、Perlモジュールのperltidyを使用することにします。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cpanm Perl::Tidy
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;フォーマットを指定する:14bf98b614540e06f6b830ab8bbf49f8&#34;&gt;フォーマットを指定する&lt;/h2&gt;
-
-&lt;p&gt;ホームディレクトリに「.perltidyrc」というファイルを生成し、フォーマットを指定します。&lt;br /&gt;
-以下の設定は、書籍「Perl Best Practices」のものらしいです。。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cat &amp;gt; .perltidyrc
--l=78   # Max line width is 78 cols
--i=4    # Indent level is 4 cols
--ci=4   # Continuation indent is 4 cols
--st     # Output to STDOUT
--se     # Errors to STDERR
--vt=2   # Maximal vertical tightness
--cti=0  # No extra indentation for closing brackets
--pt=1   # Medium parenthesis tightness
--bt=1   # Medium brace tightness
--sbt=1  # Medium square brace tightness
--bbt=1  # Medium block brace tightness
--nsfs   # No space before semicolons
--nolq   # Don&#39;t outdent long quoted strings
--wbb=&amp;quot;% + - * / x != == &amp;gt;= &amp;lt;= =~ !~ &amp;lt; &amp;gt; | &amp;amp; &amp;gt;= &amp;lt; = **= += *= &amp;amp;= &amp;lt;&amp;lt;= &amp;amp;&amp;amp;= -= /= |= &amp;gt;&amp;gt;= ||= .= %= ^= x=&amp;quot;
-        # Break before all operators
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;使用例:14bf98b614540e06f6b830ab8bbf49f8&#34;&gt;使用例&lt;/h2&gt;
-
-&lt;p&gt;コマンドとして単体で使うには以下のように使ってください。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;perltidy hoge.pl
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;emacsの設定:14bf98b614540e06f6b830ab8bbf49f8&#34;&gt;.emacsの設定&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;;; perl tidy
-;; sudo yum -y install perltidy
-
-;; リージョン内のperlソースを整形する。
-(defun perltidy-region ()
-  &amp;quot;Run perltidy on the current region.&amp;quot;
-      (interactive)
-          (save-excursion
-                (shell-command-on-region (point) (mark) &amp;quot;perltidy -q&amp;quot; nil t)))
-                (global-set-key &amp;quot;\C-ct&amp;quot; &#39;perltidy-region)
-
-;; ソースすべてを整形する。
-(defun perltidy-defun ()
-  &amp;quot;Run perltidy on the current defun.&amp;quot;
-    (interactive)
-      (save-excursion (mark-defun) (perltidy-region)))
-      (global-set-key &amp;quot;\C-c\C-t&amp;quot; &#39;perltidy-defun)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;参考サイト:14bf98b614540e06f6b830ab8bbf49f8&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/supermassiveblackhole/20100723/1279874404&#34;&gt;UbuntuでEmacsからPerlの整形ツールperltidyを使う設定&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>はじめに perltidyとはperlのソースを指定したフォーマットに整形してくれるツールです。
+インストール 私の環境はCentOSなので、yumでインストールします。
+macとCentOS両方同じ方法でインストールしたいので、Perlモジュールのperltidyを使用することにします。
+cpanm Perl::Tidy  フォーマットを指定する ホームディレクトリに「.perltidyrc」というファイルを生成し、フォーマットを指定します。
+以下の設定は、書籍「Perl Best Practices」のものらしいです。。
+cat &amp;gt; .perltidyrc -l=78 # Max line width is 78 cols -i=4 # Indent level is 4 cols -ci=4 # Continuation indent is 4 cols -st # Output to STDOUT -se # Errors to STDERR -vt=2 # Maximal vertical tightness -cti=0 # No extra indentation for closing brackets -pt=1 # Medium parenthesis tightness -bt=1 # Medium brace tightness -sbt=1 # Medium square brace tightness -bbt=1 # Medium block brace tightness -nsfs # No space before semicolons -nolq # Don&#39;t outdent long quoted strings -wbb=&amp;quot;% + - * / x !</description>
     </item>
     
     <item>
@@ -332,72 +86,8 @@ macとCentOS両方同じ方法でインストールしたいので、Perlモジ�
       <pubDate>Tue, 21 Aug 2012 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2012/08/21/emacs-flymake/</guid>
-      <description>
-
-&lt;h2 id=&#34;はじめに:750098d471aaed018fe4f2ca674feeea&#34;&gt;はじめに&lt;/h2&gt;
-
-&lt;p&gt;perlのシンタックスチェックをflymakeで行うには、事前に「set-perl5lib.el」をインストールする必要があります。&lt;/p&gt;
-
-&lt;h2 id=&#34;set-perl5lib-elのインストール:750098d471aaed018fe4f2ca674feeea&#34;&gt;set-perl5lib.elのインストール&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;cd .emacs.d/elisp/
-wget http://svn.coderepos.org/share/lang/elisp/set-perl5lib/set-perl5lib.el
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;emacsの設定:750098d471aaed018fe4f2ca674feeea&#34;&gt;.emacsの設定&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;;; flymake for perl
-(require &#39;flymake)
-(require &#39;set-perl5lib) ;; http://svn.coderepos.org/share/lang/elisp/set-perl5lib/set-perl5lib.el
-
-(defvar flymake-perl-err-line-patterns &#39;((&amp;quot;\\(.*\\) at \\([^ \n]+\\) line \\([0-9]+\\)[,.\n]&amp;quot; 2 3 nil 1)))
-(defconst flymake-allowed-perl-file-name-masks &#39;((&amp;quot;\\.pl$&amp;quot; flymake-perl-init)
-                                                (&amp;quot;\\.pm$&amp;quot; flymake-perl-init)
-                                                (&amp;quot;\\.t$&amp;quot; flymake-perl-init)
-                                                ))
-
-(defun flymake-perl-init ()
-  (let* ((temp-file (flymake-init-create-temp-buffer-copy
-                       &#39;flymake-create-temp-inplace))
-         (local-file (file-relative-name
-                      temp-file
-                      (file-name-directory buffer-file-name))))
-  (list &amp;quot;perl&amp;quot; (list &amp;quot;-wc&amp;quot; local-file))))
-
-(defun flymake-perl-load ()
-  (interactive)
-  (set-perl5lib)
-  (defadvice flymake-post-syntax-check (before flymake-force-check-was-interrupted)
-    (setq flymake-check-was-interrupted t))
-  (ad-activate &#39;flymake-post-syntax-check)
-  (setq flymake-allowed-file-name-masks (append flymake-allowed-file-name-masks flymake-allowed-perl-file-name-masks))
-  (setq flymake-err-line-patterns flymake-perl-err-line-patterns)
-  (flymake-mode t))
-
-(add-hook &#39;cperl-mode-hook &#39;(lambda () (flymake-perl-load)))
-
-(defun next-flymake-error ()
-  (interactive)
-  (flymake-goto-next-error)
-  (let ((err (get-char-property (point) &#39;help-echo)))
-    (when err
-      (message err))))
-(global-set-key &amp;quot;\M-e&amp;quot; &#39;next-flymake-error)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;実行画面:750098d471aaed018fe4f2ca674feeea&#34;&gt;実行画面&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/flymark001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:750098d471aaed018fe4f2ca674feeea&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://typester.stfuawsc.com/slides/perlcasual2/start.html&#34;&gt;Perl Hacks on Emacs&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://tech.lampetty.net/tech/index.php/archives/384&#34;&gt;Perl開発環境としてのEmacsの設定&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>はじめに perlのシンタックスチェックをflymakeで行うには、事前に「set-perl5lib.el」をインストールする必要があります。
+set-perl5lib.elのインストール cd .emacs.d/elisp/ wget http://svn.coderepos.org/share/lang/elisp/set-perl5lib/set-perl5lib.el  .emacsの設定 ;; flymake for perl (require &#39;flymake) (require &#39;set-perl5lib) ;; http://svn.coderepos.org/share/lang/elisp/set-perl5lib/set-perl5lib.el (defvar flymake-perl-err-line-patterns &#39;((&amp;quot;\\(.*\\) at \\([^ \n]+\\) line \\([0-9]+\\)[,.\n]&amp;quot; 2 3 nil 1))) (defconst flymake-allowed-perl-file-name-masks &#39;((&amp;quot;\\.pl$&amp;quot; flymake-perl-init) (&amp;quot;\\.pm$&amp;quot; flymake-perl-init) (&amp;quot;\\.t$&amp;quot; flymake-perl-init) )) (defun flymake-perl-init () (let* ((temp-file (flymake-init-create-temp-buffer-copy &#39;flymake-create-temp-inplace)) (local-file (file-relative-name temp-file (file-name-directory buffer-file-name)))) (list &amp;quot;perl&amp;quot; (list &amp;quot;-wc&amp;quot; local-file)))) (defun flymake-perl-load () (interactive) (set-perl5lib) (defadvice flymake-post-syntax-check (before flymake-force-check-was-interrupted) (setq flymake-check-was-interrupted t)) (ad-activate &#39;flymake-post-syntax-check) (setq flymake-allowed-file-name-masks (append flymake-allowed-file-name-masks flymake-allowed-perl-file-name-masks)) (setq flymake-err-line-patterns flymake-perl-err-line-patterns) (flymake-mode t)) (add-hook &#39;cperl-mode-hook &#39;(lambda () (flymake-perl-load))) (defun next-flymake-error () (interactive) (flymake-goto-next-error) (let ((err (get-char-property (point) &#39;help-echo))) (when err (message err)))) (global-set-key &amp;quot;\M-e&amp;quot; &#39;next-flymake-error)  実行画面 参考サイト 以下のサイトを参考にさせていただきました。ありがとうございます！</description>
     </item>
     
     <item>
@@ -406,51 +96,16 @@ wget http://svn.coderepos.org/share/lang/elisp/set-perl5lib/set-perl5lib.el
       <pubDate>Mon, 20 Aug 2012 04:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2012/08/20/emacs-perl-completion/</guid>
-      <description>
-
-&lt;h2 id=&#34;はじめに:a7315aec9c127b1b8964b39f45f18efb&#34;&gt;はじめに&lt;/h2&gt;
-
-&lt;p&gt;すでにauto-intall.elがインストールされている前提で話をすすめます。&lt;br /&gt;
-auto-installのインストール手順は&lt;a href=&#34;http://tatsuyano.github.io/2012/08/20/emacs-auto-install/&#34;&gt;こちら&lt;/a&gt;をご覧ください。&lt;/p&gt;
-
-&lt;h2 id=&#34;インストール手順:a7315aec9c127b1b8964b39f45f18efb&#34;&gt;インストール手順&lt;/h2&gt;
-
-&lt;p&gt;emacsを起動し、&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;M-x auto-install-batch &amp;lt;RET&amp;gt;
-Extension name: perl-completionn &amp;lt;RET&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;auto-isntall-batchを実行、次にインストールしたいパッケージ名(perl-completion)を入力します。&lt;/p&gt;
-
-&lt;p&gt;すると自動で複数ソースのダウンロードが始まります。&lt;br /&gt;
-ダウンロードし終わると「モード行」に&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Type C-c C-c to continue; Type C-c C-d for view diff; Type C-c C-q to quit.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;というメッセージが出てくるので、「C-c C-c」と入力し、ダウンロードしたソースを順番にコンパイルしていきます。&lt;br /&gt;
-すべてコンパイルし終えると、以下のようなメッセージが表示され、インストールが完了します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Installation is completed.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;emacsの設定:a7315aec9c127b1b8964b39f45f18efb&#34;&gt;.emacsの設定&lt;/h2&gt;
-
-&lt;p&gt;cperl-mode時に、auto-completion(とauto-complete)を有効にするように設定します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;;; perl-completion
-(add-hook  &#39;cperl-mode-hook (lambda ()
-                              (require &#39;auto-complete)
-                              (require &#39;perl-completion)
-                              (add-to-list &#39;ac-sources &#39;ac-source-perl-completion)
-                              (perl-completion-mode t)))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;実行画面:a7315aec9c127b1b8964b39f45f18efb&#34;&gt;実行画面&lt;/h2&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/perl-completion001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-</description>
+      <description> はじめに すでにauto-intall.elがインストールされている前提で話をすすめます。
+auto-installのインストール手順はこちらをご覧ください。
+インストール手順 emacsを起動し、
+M-x auto-install-batch &amp;lt;RET&amp;gt; Extension name: perl-completionn &amp;lt;RET&amp;gt;  auto-isntall-batchを実行、次にインストールしたいパッケージ名(perl-completion)を入力します。
+すると自動で複数ソースのダウンロードが始まります。
+ダウンロードし終わると「モード行」に
+Type C-c C-c to continue; Type C-c C-d for view diff; Type C-c C-q to quit.  というメッセージが出てくるので、「C-c C-c」と入力し、ダウンロードしたソースを順番にコンパイルしていきます。
+すべてコンパイルし終えると、以下のようなメッセージが表示され、インストールが完了します。
+Installation is completed.  .emacsの設定 cperl-mode時に、auto-completion(とauto-complete)を有効にするように設定します。
+;; perl-completion (add-hook &#39;cperl-mode-hook (lambda () (require &#39;auto-complete) (require &#39;perl-completion) (add-to-list &#39;ac-sources &#39;ac-source-perl-completion) (perl-completion-mode t)))  実行画面 </description>
     </item>
     
   </channel>

@@ -7,7 +7,9 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Tue, 15 Sep 2015 15:00:00 +0900</lastBuildDate>
-    <atom:link href="http://tatsuyano.github.io/tags/gulp/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://tatsuyano.github.io/tags/gulp/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>aglioを使ってmarkdownからAPIドキュメントとStubを作成する</title>
@@ -15,92 +17,15 @@
       <pubDate>Tue, 15 Sep 2015 15:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/09/15/to-create-the-api-documentation-and-the-stub-from-markdown-using-aglio/</guid>
-      <description>
+      <description>仕事で簡単なAPIを実装する必要があったので、簡単にAPIドキュメントを公開したり、ドキュメントからStubを自動で用意する方法を調べてみた。
+で、こちらの記事にやりたいことがまんま載っていた(ありがとうございます！)ので、 記事を参考に自分用のテンプレートを用意した。
 
-&lt;p&gt;仕事で簡単なAPIを実装する必要があったので、簡単にAPIドキュメントを公開したり、ドキュメントからStubを自動で用意する方法を調べてみた。&lt;/p&gt;
-
-&lt;p&gt;で、&lt;a href=&#34;http://dackdive.hateblo.jp/entry/2015/08/07/181723&#34;&gt;こちらの記事&lt;/a&gt;にやりたいことがまんま載っていた(ありがとうございます！)ので、
-記事を参考に&lt;a href=&#34;https://github.com/tatsuyano/aglio-template&#34;&gt;自分用のテンプレート&lt;/a&gt;を用意した。&lt;/p&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;blueprint:8e9313d6f2703a165c9d67a103a4eac0&#34;&gt;Blueprint&lt;/h3&gt;
-
-&lt;p&gt;Blueprintの記述は下記をページを参照。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/blob/master/Tutorial.md&#34;&gt;API Blueprint Tutorial&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/tree/master/examples&#34;&gt;API Blueprint examples&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;api-mockの起動をgulpに設定する:8e9313d6f2703a165c9d67a103a4eac0&#34;&gt;api-mockの起動をgulpに設定する&lt;/h3&gt;
-
-&lt;p&gt;以下のように設定し、&lt;code&gt;$ gulp mock&lt;/code&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;var gulp    = require(&#39;gulp&#39;),
-    aglio   = require(&#39;gulp-aglio&#39;),
-    ApiMock = require(&#39;api-mock&#39;);
-
-var TEMPLATE_FILES = [&#39;apidocs/*.md&#39;],
-LAYOUT_FILE    = &#39;apidocs/layout.md&#39;,
-PUBLISHED_DIR  = &#39;published&#39;;
-
-gulp.task(&#39;api-mock&#39;, function () {
-  var mockServer = new ApiMock({
-    blueprintPath: PUBLISHED_DIR + &#39;/index.md&#39;,
-    options: {
-      port: 3000
-    }
-  });
-  mockServer.run();
-});
-
-gulp.task(&#39;mock&#39;, [&#39;api-mock&#39;]);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;vagrantで使う場合-ポートを開ける:8e9313d6f2703a165c9d67a103a4eac0&#34;&gt;Vagrantで使う場合、ポートを開ける&lt;/h3&gt;
-
-&lt;p&gt;vagrant上からaglioとapi-mockを使うには、デフォルトだと&lt;code&gt;8088&lt;/code&gt;と&lt;code&gt;3000&lt;/code&gt;を開ける必要があるので、&lt;code&gt;Vagrant&lt;/code&gt;ファイルに以下の設定を加える。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;config.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 3000, host: 3000
-config.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 8088, host: 8088
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;APIドキュメントを閲覧　 =&amp;gt; &lt;code&gt;http://localhost:8088&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;StubでAPIのテストをする =&amp;gt; &lt;code&gt;http://localhost:3000/questions&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;postでjsonのテストをする:8e9313d6f2703a165c9d67a103a4eac0&#34;&gt;POSTでJSONのテストをする&lt;/h3&gt;
-
-&lt;p&gt;GETの場合は、ブラウザからそのままAPIをそのまま叩けばいいが、POSTの場合は curl を使う。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;curl -v -H &amp;quot;Accept: application/json&amp;quot; -H &amp;quot;Content-type: application/json&amp;quot; -X POST \
--d &#39;{&amp;quot;name&amp;quot;: &amp;quot;hoge&amp;quot; }&#39; \
-http://localhost:3000/user
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;もしくはChromeアプリの&lt;a href=&#34;https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo/related&#34;&gt;Advanced REST client&lt;/a&gt;などを使ってテストする。&lt;/p&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:8e9313d6f2703a165c9d67a103a4eac0&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://dackdive.hateblo.jp/entry/2015/08/07/181723&#34;&gt;APIドキュメント作成ツールならApiary.ioよりaglioの方が良かった&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/tatsuyano/aglio-template&#34;&gt;GitHub: aglio-template&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/blob/master/Tutorial.md&#34;&gt;API Blueprint Tutorial&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/tree/master/examples&#34;&gt;API Blueprint examples&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://takuya71.hatenablog.com/entry/2012/11/10/143415&#34;&gt;curl を使って JSONデータをPOSTする&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo/related&#34;&gt;Advanced REST client&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+Blueprint Blueprintの記述は下記をページを参照。
+ API Blueprint Tutorial API Blueprint examples  
+api-mockの起動をgulpに設定する 以下のように設定し、$ gulp mock
+var gulp = require(&#39;gulp&#39;), aglio = require(&#39;gulp-aglio&#39;), ApiMock = require(&#39;api-mock&#39;); var TEMPLATE_FILES = [&#39;apidocs/*.md&#39;], LAYOUT_FILE = &#39;apidocs/layout.md&#39;, PUBLISHED_DIR = &#39;published&#39;; gulp.task(&#39;api-mock&#39;, function () { var mockServer = new ApiMock({ blueprintPath: PUBLISHED_DIR + &#39;/index.md&#39;, options: { port: 3000 } }); mockServer.run(); }); gulp.task(&#39;mock&#39;, [&#39;api-mock&#39;]);  
+Vagrantで使う場合、ポートを開ける vagrant上からaglioとapi-mockを使うには、デフォルトだと8088と3000を開ける必要があるので、Vagrantファイルに以下の設定を加える。
+config.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 3000, host: 3000 config.</description>
     </item>
     
   </channel>

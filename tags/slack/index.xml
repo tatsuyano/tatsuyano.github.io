@@ -7,7 +7,9 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Fri, 13 Mar 2015 02:00:00 +0900</lastBuildDate>
-    <atom:link href="http://tatsuyano.github.io/tags/slack/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://tatsuyano.github.io/tags/slack/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>WerckerのBuild結果をSlackに通知する</title>
@@ -15,91 +17,10 @@
       <pubDate>Fri, 13 Mar 2015 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/03/13/notification-build-results-of-wercker-to-slack/</guid>
-      <description>
-
-&lt;p&gt;Werckerに登録したアプリケーションのBuild結果をSlackのwebHookという機能を使うことで、Slackに通知することができるようになります。&lt;/p&gt;
-
-&lt;h2 id=&#34;slackにwebhookを追加する:5b40b8b3e2b3d99797e44fdca35fc89e&#34;&gt;SlackにWebHookを追加する&lt;/h2&gt;
-
-&lt;ol&gt;
-&lt;li&gt;&lt;p&gt;サイドメニューの  Configure Integrations を押下してください。
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/notification-build-results-of-wercker-to-slack_01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;code&gt;Incoming WebHooks&lt;/code&gt;を追加してください。
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/notification-build-results-of-wercker-to-slack_02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;どのチャンネルに追加するか選択してください。
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/notification-build-results-of-wercker-to-slack_03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;URLをコピーし、&lt;code&gt;Save Settings&lt;/code&gt;を押下します。
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/notification-build-results-of-wercker-to-slack_04.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&#34;werckerにslackのtokenを設定する:5b40b8b3e2b3d99797e44fdca35fc89e&#34;&gt;WerckerにSlackのTOKENを設定する&lt;/h2&gt;
-
-&lt;p&gt;先ほどコピーしたURLの一番後ろについているパラーメータがSLACK_TOKENになります。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;https://hooks.slack.com/services/aaaaa/bbbbb/[SLACK-TOKEN]&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;SLACK_TOKEN&lt;/code&gt;は&lt;code&gt;Protected&lt;/code&gt;にチェックした状態でSAVEしてください。&lt;code&gt;Protected&lt;/code&gt;をチェックすると、ログ上で値が非表示になります。
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/notification-build-results-of-wercker-to-slack_05.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;wercker-ymlに-after-steps-を追加:5b40b8b3e2b3d99797e44fdca35fc89e&#34;&gt;wercker.ymlに&lt;code&gt;after-steps&lt;/code&gt;を追加&lt;/h2&gt;
-
-&lt;p&gt;Build後(build: after-steps)に、Slackに通知するようwercker.ymlを設定します。&lt;code&gt;subdomain&lt;/code&gt;はSlackのURL&lt;code&gt;http://hoge.slack.com&lt;/code&gt;の&lt;code&gt;hoge&lt;/code&gt;の部分にあたります。
-&lt;pre&gt;&lt;code class=&#39;language-ruby&#39;&gt;box: wercker/ruby
- services:
-     - wercker/postgresql
- build:
-     steps:
-       - bundle-install
-       - rails-database-yml:
-           service: postgresql
-       - script:
-           name: echo ruby information
-           code: |
-               echo &amp;ldquo;ruby version $(ruby &amp;ndash;version) running!&amp;rdquo;
-               echo &amp;ldquo;from location $(which ruby)&amp;rdquo;
-               echo -p &amp;ldquo;gem list: $(gem list)&amp;rdquo;
-       - script:
-           name: Set up db
-           code: RAILS_ENV=test bundle exec rake db:schema:load
-       - script:
-           name: Run RSpec
-           code: bundle exec rspec
-     # ここから追加 &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;
-     after-steps:
-       - sherzberg/slack-notify:
-           subdomain: hoge
-           token: $SLACK_TOKEN
-           channel: &amp;ldquo;#general&amp;rdquo;
-           username: wercker
-           icon_url: &lt;a href=&#34;https://avatars3.githubusercontent.com/u/1695193?s=140&#34;&gt;https://avatars3.githubusercontent.com/u/1695193?s=140&lt;/a&gt;
-     # ここまで&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;
- deploy:
-     steps:
-         - heroku-deploy:
-             install-toolbelt: true
-         - script:
-             name: Update database
-             code: heroku run rake db:migrate &amp;ndash;app $APP_NAME
-         - script:
-             name: Update assets
-             code: heroku run rake add_static_assets &amp;ndash;app $APP_NAME
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;p&gt;wercker.yml を更新したので&lt;code&gt;git push&lt;/code&gt;してください。
-正しく設定できれていれば、下記のようなメッセージがSlackに通知されます。
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/notification-build-results-of-wercker-to-slack_06.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:5b40b8b3e2b3d99797e44fdca35fc89e&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/tbpgr/items/7705995c9f679d97a382&#34;&gt;Wercker|ビルド結果をSlackに通知する&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/sherzberg/wercker-step-slack-notify&#34;&gt;wercker-step-slack-notify:github&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>Werckerに登録したアプリケーションのBuild結果をSlackのwebHookという機能を使うことで、Slackに通知することができるようになります。
+SlackにWebHookを追加する  サイドメニューの Configure Integrations を押下してください。  Incoming WebHooksを追加してください。  どのチャンネルに追加するか選択してください。  URLをコピーし、Save Settingsを押下します。   WerckerにSlackのTOKENを設定する 先ほどコピーしたURLの一番後ろについているパラーメータがSLACK_TOKENになります。
+https://hooks.slack.com/services/aaaaa/bbbbb/[SLACK-TOKEN]
+SLACK_TOKENはProtectedにチェックした状態でSAVEしてください。Protectedをチェックすると、ログ上で値が非表示になります。 wercker.ymlにafter-stepsを追加 Build後(build: after-steps)に、Slackに通知するようwercker.ymlを設定します。subdomainはSlackのURLhttp://hoge.slack.comのhogeの部分にあたります。 box: wercker/ruby services: - wercker/postgresql build: steps: - bundle-install - rails-database-yml: service: postgresql - script: name: echo ruby information code: | echo &amp;ldquo;ruby version $(ruby &amp;ndash;version) running!&amp;rdquo; echo &amp;ldquo;from location $(which ruby)&amp;rdquo; echo -p &amp;ldquo;gem list: $(gem list)&amp;rdquo; - script: name: Set up db code: RAILS_ENV=test bundle exec rake db:schema:load - script: name: Run RSpec code: bundle exec rspec # ここから追加 &amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash;&amp;mdash; after-steps: - sherzberg/slack-notify: subdomain: hoge token: $SLACK_TOKEN channel: &amp;ldquo;#general&amp;rdquo; username: wercker icon_url: https://avatars3.</description>
     </item>
     
   </channel>

@@ -7,7 +7,9 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Wed, 06 Apr 2016 19:00:00 +0900</lastBuildDate>
-    <atom:link href="http://tatsuyano.github.io/tags/js/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://tatsuyano.github.io/tags/js/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>CasperJsの使い方メモ</title>
@@ -15,77 +17,9 @@
       <pubDate>Wed, 06 Apr 2016 19:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2016/04/06/how-to-use-casperjs/</guid>
-      <description>
-
-&lt;h3 id=&#34;日本語のページのキャプチャを取る:0f17afad2dfafdb4933c4127f2233642&#34;&gt;日本語のページのキャプチャを取る&lt;/h3&gt;
-
-&lt;p&gt;日本語のページのキャプチャを撮るには、CasperJsを実行するサーバーに日本語フォントが入っている必要がある。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;sudo yum -y groupinstall &amp;quot;Japanese Support&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;casperjsを一時停止させる:0f17afad2dfafdb4933c4127f2233642&#34;&gt;CasperJsを一時停止させる&lt;/h3&gt;
-
-&lt;p&gt;3秒プログラムを停止させてからキャプチャを撮る&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;casper.then(function() {
-  this.wait(3000, function() {
-    console.log(&#39;3秒後&#39;);
-    this.capture(&#39;capture/test.png&#39;);
-  });
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;casperjsからjsonをpostする:0f17afad2dfafdb4933c4127f2233642&#34;&gt;CasperJsからJSONをPOSTする&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;casper.start();
-casper.open(&#39;http://hoge.com/api/hoge&#39;, {
-  method: &#39;post&#39;,
-  headers: {
-    &#39;Accept-Language&#39;: &#39;ja&#39;
-  },
-  data: {
-    uuid   : &#39;UUID&#39;,
-    secret : &#39;SECRET&#39;
-  }
-});
-
-// this.getPageContent()で結果を取得できる
-casper.then(function(response) {
-  var json = JSON.parse(this.getPageContent());
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;casperjsにメソッドを定義する:0f17afad2dfafdb4933c4127f2233642&#34;&gt;CasperJsにメソッドを定義する&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;casper.then(function() {
-  this.createMarkdown(&#39;title&#39;,&#39;describe&#39;);
-});
-
-casper.createMarkdown = function(title,describe){
-  template = fs.read(&#39;result/api_template.md&#39;, &#39;utf8&#39;);
-  template = template.replace(/{{title}}/g    ,title);
-  template = template.replace(/{{describe}}/g ,describe);
-  fs.write(&#39;result/&#39;+title+&#39;.md&#39;, template);
-};
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;ファイルアップロード-type-file-を操作する:0f17afad2dfafdb4933c4127f2233642&#34;&gt;ファイルアップロード(type=&amp;ldquo;file&amp;rdquo;)を操作する&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt; casper.then(function() {
-   // 画像はフルパスで、evaluate()の外で実行する
-   this.page.uploadFile(&#39;input[type=&amp;quot;file&amp;quot;]&#39;, &#39;/vagrant/sample_image.jpg&#39;);
-
-   this.evaluate(function(number, title) {
-     $(&#39;[name=&amp;quot;coupon[number]&amp;quot;]&#39;).val(number);
-     $(&#39;[name=&amp;quot;coupon[title]&amp;quot;]&#39;).val(title);
-
-     document.querySelector(&#39;form&#39;).submit();
-
-   }, &#39;999&#39;, &#39;title_test&#39;);
- });
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+      <description>日本語のページのキャプチャを取る 日本語のページのキャプチャを撮るには、CasperJsを実行するサーバーに日本語フォントが入っている必要がある。
+sudo yum -y groupinstall &amp;quot;Japanese Support&amp;quot;  CasperJsを一時停止させる 3秒プログラムを停止させてからキャプチャを撮る
+casper.then(function() { this.wait(3000, function() { console.log(&#39;3秒後&#39;); this.capture(&#39;capture/test.png&#39;); }); });  CasperJsからJSONをPOSTする casper.start(); casper.open(&#39;http://hoge.com/api/hoge&#39;, { method: &#39;post&#39;, headers: { &#39;Accept-Language&#39;: &#39;ja&#39; }, data: { uuid : &#39;UUID&#39;, secret : &#39;SECRET&#39; } }); // this.getPageContent()で結果を取得できる casper.then(function(response) { var json = JSON.parse(this.getPageContent()); });  CasperJsにメソッドを定義する casper.then(function() { this.createMarkdown(&#39;title&#39;,&#39;describe&#39;); }); casper.createMarkdown = function(title,describe){ template = fs.read(&#39;result/api_template.md&#39;, &#39;utf8&#39;); template = template.replace(/{{title}}/g ,title); template = template.</description>
     </item>
     
     <item>
@@ -94,64 +28,9 @@ casper.createMarkdown = function(title,describe){
       <pubDate>Wed, 06 Apr 2016 15:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2016/04/06/i-have-catched-alert-or-confirm-events-in-casperjs/</guid>
-      <description>
-
-&lt;p&gt;AlertやConfirmダイアログのOKボタン、キャンセルボタンを押下するには、&lt;code&gt;casper.page.onAlert&lt;/code&gt;、&lt;code&gt;casper.page.onConfirm&lt;/code&gt;を使う。&lt;/p&gt;
-
-&lt;p&gt;下の例では、購入ボタン(#buy)を押下すると、
-Confirmダイアログが立ち上がり &lt;code&gt;商品を購入します。よろしいですか？&lt;/code&gt;とメッセージが表示される。
-OKボタンを押下すると、商品購入処理が実行され
-商品の購入が成功すれば &lt;code&gt;商品を購入しました&lt;/code&gt;、
-ポイントが足りず購入に失敗すると &lt;code&gt;ポイントが足りません&lt;/code&gt; とメッセージが表示される。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var casper = require(&#39;casper&#39;).create({clientScripts: [&#39;./src/includes/jquery.min.js&#39;]});
-
-var point = 100;
-
-casper.start();
-casper.open(&#39;http://192.168.33.10/shopping/cart&#39;).viewport(1024, 690);
-
-casper.then(function() {
-
-  // AlertダイアログはOKボタンしかないので、返り値は必ずtrueを返す。
-  // 同一画面で、複数のダイアログを表示する場合は、引数のメッセージで分岐する
-  this.page.onAlert = function(message) {
-    if (message == &#39;商品を購入しました&#39;) {
-        return true;
-    }
-    else if (message == &#39;ポイントが足りません&#39;) {
-        return true;
-    }
-  };
-
-  // Confirmダイアログが立ち上がると発火する。
-  // trueを返すとOKボタンが押下され、falseを返すとキャンセルボタンが押下される
-  this.page.onConfirm = function(message) {
-    if (message == &#39;商品を購入します。よろしいですか？&#39;) {
-        return true;
-    }
-  };
-
-  // #add_pointというテキストフィールドに100ポイントを入力し、#buyボタンを押下する
-  this.evaluate(function(p) {
-    $(&#39;#add_point&#39;).val(p);
-    document.getElementById(&amp;quot;buy&amp;quot;).click();
-  }, point);
-});
-
-casper.run();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;CasperJsはPhantomJsを拡張(内封)しているライブラリなので、PhantomJsをメソッドをそのまま?使うことができる。
-今回の&lt;code&gt;onAlert&lt;/code&gt;などもPhantomJsで定義されているメソッドで、&lt;code&gt;this.page&lt;/code&gt;の中にPhantomJsが入っている。&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:2df5b4a29a5fedc7180a179aec02fce4&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://tetsuwo.tumblr.com/post/58696806251/jasmine-phantomjs-alert-confirm-prompt&#34;&gt;PhantomJS + Jasmine で alert, confirm, prompt などの標準ダイアログのテスト方法&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://docs.casperjs.org/en/latest/modules/casper.html#onalert&#34;&gt;onAlert&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>AlertやConfirmダイアログのOKボタン、キャンセルボタンを押下するには、casper.page.onAlert、casper.page.onConfirmを使う。
+下の例では、購入ボタン(#buy)を押下すると、 Confirmダイアログが立ち上がり 商品を購入します。よろしいですか？とメッセージが表示される。 OKボタンを押下すると、商品購入処理が実行され 商品の購入が成功すれば 商品を購入しました、 ポイントが足りず購入に失敗すると ポイントが足りません とメッセージが表示される。
+var casper = require(&#39;casper&#39;).create({clientScripts: [&#39;./src/includes/jquery.min.js&#39;]}); var point = 100; casper.start(); casper.open(&#39;http://192.168.33.10/shopping/cart&#39;).viewport(1024, 690); casper.then(function() { // AlertダイアログはOKボタンしかないので、返り値は必ずtrueを返す。 // 同一画面で、複数のダイアログを表示する場合は、引数のメッセージで分岐する this.page.onAlert = function(message) { if (message == &#39;商品を購入しました&#39;) { return true; } else if (message == &#39;ポイントが足りません&#39;) { return true; } }; // Confirmダイアログが立ち上がると発火する。 // trueを返すとOKボタンが押下され、falseを返すとキャンセルボタンが押下される this.page.onConfirm = function(message) { if (message == &#39;商品を購入します。よろしいですか？&#39;) { return true; } }; // #add_pointというテキストフィールドに100ポイントを入力し、#buyボタンを押下する this.</description>
     </item>
     
     <item>
@@ -160,26 +39,9 @@ casper.run();
       <pubDate>Wed, 06 Apr 2016 12:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2016/04/06/if-you-can-not-send-post-in-ajax-of-casperjs/</guid>
-      <description>&lt;p&gt;地味にハマった。Chromeだとパラメータに&lt;code&gt;type:&amp;quot;POST&amp;quot;&lt;/code&gt;がなくてもPOSTでリクエストを送信してくれるが、
-CasperJsのブラウザでは、&lt;code&gt;type:&amp;quot;POST&amp;quot;&lt;/code&gt;を明示しないと&lt;code&gt;GET&lt;/code&gt;でリクエストを送信してしまう。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;$.ajax({
-    url:  &amp;quot;/shopping/addpoint/&amp;quot;,
-    type: &amp;quot;POST&amp;quot;, // &amp;lt;-このパラメータが必須
-    data: data,
-    success: function(data, dataType) {
-        var data_arr = JSON.parse(data);
-        $(&#39;#point&#39;).text(data_arr[&#39;point&#39;]);
-        alert(data_arr[&#39;msg&#39;]);
-    }
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;手動で操作するぶんには問題なく動いていたので(typeパラメータが設定されていなくても)、
-CasperJs(自分で書いたソース)側に問題があると思い込んでしまった。&lt;/p&gt;
-
-&lt;p&gt;思い込みで判断せずに、まずはアクセスログを確認しようという教訓でした。&lt;/p&gt;
-</description>
+      <description>地味にハマった。Chromeだとパラメータにtype:&amp;quot;POST&amp;quot;がなくてもPOSTでリクエストを送信してくれるが、 CasperJsのブラウザでは、type:&amp;quot;POST&amp;quot;を明示しないとGETでリクエストを送信してしまう。
+$.ajax({ url: &amp;quot;/shopping/addpoint/&amp;quot;, type: &amp;quot;POST&amp;quot;, // &amp;lt;-このパラメータが必須 data: data, success: function(data, dataType) { var data_arr = JSON.parse(data); $(&#39;#point&#39;).text(data_arr[&#39;point&#39;]); alert(data_arr[&#39;msg&#39;]); } });  手動で操作するぶんには問題なく動いていたので(typeパラメータが設定されていなくても)、 CasperJs(自分で書いたソース)側に問題があると思い込んでしまった。
+思い込みで判断せずに、まずはアクセスログを確認しようという教訓でした。</description>
     </item>
     
     <item>
@@ -188,92 +50,15 @@ CasperJs(自分で書いたソース)側に問題があると思い込んでし�
       <pubDate>Tue, 15 Sep 2015 15:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/09/15/to-create-the-api-documentation-and-the-stub-from-markdown-using-aglio/</guid>
-      <description>
+      <description>仕事で簡単なAPIを実装する必要があったので、簡単にAPIドキュメントを公開したり、ドキュメントからStubを自動で用意する方法を調べてみた。
+で、こちらの記事にやりたいことがまんま載っていた(ありがとうございます！)ので、 記事を参考に自分用のテンプレートを用意した。
 
-&lt;p&gt;仕事で簡単なAPIを実装する必要があったので、簡単にAPIドキュメントを公開したり、ドキュメントからStubを自動で用意する方法を調べてみた。&lt;/p&gt;
-
-&lt;p&gt;で、&lt;a href=&#34;http://dackdive.hateblo.jp/entry/2015/08/07/181723&#34;&gt;こちらの記事&lt;/a&gt;にやりたいことがまんま載っていた(ありがとうございます！)ので、
-記事を参考に&lt;a href=&#34;https://github.com/tatsuyano/aglio-template&#34;&gt;自分用のテンプレート&lt;/a&gt;を用意した。&lt;/p&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;blueprint:8e9313d6f2703a165c9d67a103a4eac0&#34;&gt;Blueprint&lt;/h3&gt;
-
-&lt;p&gt;Blueprintの記述は下記をページを参照。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/blob/master/Tutorial.md&#34;&gt;API Blueprint Tutorial&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/tree/master/examples&#34;&gt;API Blueprint examples&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;api-mockの起動をgulpに設定する:8e9313d6f2703a165c9d67a103a4eac0&#34;&gt;api-mockの起動をgulpに設定する&lt;/h3&gt;
-
-&lt;p&gt;以下のように設定し、&lt;code&gt;$ gulp mock&lt;/code&gt;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;var gulp    = require(&#39;gulp&#39;),
-    aglio   = require(&#39;gulp-aglio&#39;),
-    ApiMock = require(&#39;api-mock&#39;);
-
-var TEMPLATE_FILES = [&#39;apidocs/*.md&#39;],
-LAYOUT_FILE    = &#39;apidocs/layout.md&#39;,
-PUBLISHED_DIR  = &#39;published&#39;;
-
-gulp.task(&#39;api-mock&#39;, function () {
-  var mockServer = new ApiMock({
-    blueprintPath: PUBLISHED_DIR + &#39;/index.md&#39;,
-    options: {
-      port: 3000
-    }
-  });
-  mockServer.run();
-});
-
-gulp.task(&#39;mock&#39;, [&#39;api-mock&#39;]);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;vagrantで使う場合-ポートを開ける:8e9313d6f2703a165c9d67a103a4eac0&#34;&gt;Vagrantで使う場合、ポートを開ける&lt;/h3&gt;
-
-&lt;p&gt;vagrant上からaglioとapi-mockを使うには、デフォルトだと&lt;code&gt;8088&lt;/code&gt;と&lt;code&gt;3000&lt;/code&gt;を開ける必要があるので、&lt;code&gt;Vagrant&lt;/code&gt;ファイルに以下の設定を加える。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;config.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 3000, host: 3000
-config.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 8088, host: 8088
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;APIドキュメントを閲覧　 =&amp;gt; &lt;code&gt;http://localhost:8088&lt;/code&gt;&lt;/li&gt;
-&lt;li&gt;StubでAPIのテストをする =&amp;gt; &lt;code&gt;http://localhost:3000/questions&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;postでjsonのテストをする:8e9313d6f2703a165c9d67a103a4eac0&#34;&gt;POSTでJSONのテストをする&lt;/h3&gt;
-
-&lt;p&gt;GETの場合は、ブラウザからそのままAPIをそのまま叩けばいいが、POSTの場合は curl を使う。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;curl -v -H &amp;quot;Accept: application/json&amp;quot; -H &amp;quot;Content-type: application/json&amp;quot; -X POST \
--d &#39;{&amp;quot;name&amp;quot;: &amp;quot;hoge&amp;quot; }&#39; \
-http://localhost:3000/user
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;もしくはChromeアプリの&lt;a href=&#34;https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo/related&#34;&gt;Advanced REST client&lt;/a&gt;などを使ってテストする。&lt;/p&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:8e9313d6f2703a165c9d67a103a4eac0&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://dackdive.hateblo.jp/entry/2015/08/07/181723&#34;&gt;APIドキュメント作成ツールならApiary.ioよりaglioの方が良かった&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/tatsuyano/aglio-template&#34;&gt;GitHub: aglio-template&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/blob/master/Tutorial.md&#34;&gt;API Blueprint Tutorial&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/apiaryio/api-blueprint/tree/master/examples&#34;&gt;API Blueprint examples&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://takuya71.hatenablog.com/entry/2012/11/10/143415&#34;&gt;curl を使って JSONデータをPOSTする&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo/related&#34;&gt;Advanced REST client&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+Blueprint Blueprintの記述は下記をページを参照。
+ API Blueprint Tutorial API Blueprint examples  
+api-mockの起動をgulpに設定する 以下のように設定し、$ gulp mock
+var gulp = require(&#39;gulp&#39;), aglio = require(&#39;gulp-aglio&#39;), ApiMock = require(&#39;api-mock&#39;); var TEMPLATE_FILES = [&#39;apidocs/*.md&#39;], LAYOUT_FILE = &#39;apidocs/layout.md&#39;, PUBLISHED_DIR = &#39;published&#39;; gulp.task(&#39;api-mock&#39;, function () { var mockServer = new ApiMock({ blueprintPath: PUBLISHED_DIR + &#39;/index.md&#39;, options: { port: 3000 } }); mockServer.run(); }); gulp.task(&#39;mock&#39;, [&#39;api-mock&#39;]);  
+Vagrantで使う場合、ポートを開ける vagrant上からaglioとapi-mockを使うには、デフォルトだと8088と3000を開ける必要があるので、Vagrantファイルに以下の設定を加える。
+config.vm.network &amp;quot;forwarded_port&amp;quot;, guest: 3000, host: 3000 config.</description>
     </item>
     
     <item>
@@ -282,86 +67,21 @@ http://localhost:3000/user
       <pubDate>Thu, 06 Aug 2015 16:51:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/08/06/how-to-install-and-setup-tern/</guid>
-      <description>
+      <description> EmacsでjQueryの補完をするには、Ternというツールを使うことで実現できる。
 
-&lt;p&gt;EmacsでjQueryの補完をするには、&lt;a href=&#34;http://ternjs.net/&#34;&gt;Tern&lt;/a&gt;というツールを使うことで実現できる。&lt;/p&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;ternのインストール:fbb0e51f3f221aa6ee9a86ae15128c18&#34;&gt;Ternのインストール&lt;/h3&gt;
-
-&lt;p&gt;まずはTern本体をインストール。このTernとEmacs(tern-mode)が裏で通信しながら補完を行う。
-Rubyでいうところのrobeと同じ形。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;npm install -g tern
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;tern-tern-auto-completeのインストール:fbb0e51f3f221aa6ee9a86ae15128c18&#34;&gt;tern、tern-auto-completeのインストール&lt;/h3&gt;
-
-&lt;p&gt;自分はCaskで管理しているので、Caskファイルに追加し、インストール。
-&lt;code&gt;tern-auto-complate&lt;/code&gt;は「auto-complate」を使ってpopupで補完候補を表示する。&lt;/p&gt;
-
-&lt;p&gt;Cask&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;(depends-on &amp;quot;tern&amp;quot;)
-(depends-on &amp;quot;tern-auto-complete&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;「js2-mode」が起動したら&lt;code&gt;tern-mode&lt;/code&gt;と&lt;code&gt;tern-auto-complate&lt;/code&gt;も起動するよう設定する。&lt;/p&gt;
-
-&lt;p&gt;init_loader/03_javascript.el&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;(autoload &#39;js2-mode &amp;quot;js2-mode&amp;quot; nil t)
-(add-to-list &#39;auto-mode-alist &#39;(&amp;quot;\.js$&amp;quot; . js2-mode))
-(add-hook &#39;js2-mode-hook
-          (lambda ()
-            (tern-mode t)))
+Ternのインストール まずはTern本体をインストール。このTernとEmacs(tern-mode)が裏で通信しながら補完を行う。 Rubyでいうところのrobeと同じ形。
+npm install -g tern  
+tern、tern-auto-completeのインストール 自分はCaskで管理しているので、Caskファイルに追加し、インストール。 tern-auto-complateは「auto-complate」を使ってpopupで補完候補を表示する。
+Cask
+(depends-on &amp;quot;tern&amp;quot;) (depends-on &amp;quot;tern-auto-complete&amp;quot;)  「js2-mode」が起動したらtern-modeとtern-auto-complateも起動するよう設定する。
+init_loader/03_javascript.el
+(autoload &#39;js2-mode &amp;quot;js2-mode&amp;quot; nil t) (add-to-list &#39;auto-mode-alist &#39;(&amp;quot;\.js$&amp;quot; . js2-mode)) (add-hook &#39;js2-mode-hook (lambda () (tern-mode t))) (eval-after-load &#39;tern &#39;(progn (require &#39;tern-auto-complete) (tern-ac-setup)))  
+tern-configの設定 ホーム直下に.tern-configというJsonファイルを設定する。ここで補完するライブラリなどを指定できる。
+{ &amp;quot;libs&amp;quot;: [ &amp;quot;browser&amp;quot;, &amp;quot;jquery&amp;quot; ], &amp;quot;plugins&amp;quot;: { &amp;quot;node&amp;quot;: {} } }  
+tern-modeの実行 正常にインストールが完了すると、以下のようにポップアップで補完が出るようになる。
  
-(eval-after-load &#39;tern
-   &#39;(progn
-      (require &#39;tern-auto-complete)
-      (tern-ac-setup)))
-&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;tern-configの設定:fbb0e51f3f221aa6ee9a86ae15128c18&#34;&gt;tern-configの設定&lt;/h3&gt;
-
-&lt;p&gt;ホーム直下に&lt;code&gt;.tern-config&lt;/code&gt;というJsonファイルを設定する。ここで補完するライブラリなどを指定できる。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;{
-  &amp;quot;libs&amp;quot;: [
-    &amp;quot;browser&amp;quot;,
-    &amp;quot;jquery&amp;quot;
-  ],
-  &amp;quot;plugins&amp;quot;: {
-     &amp;quot;node&amp;quot;: {}
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;tern-modeの実行:fbb0e51f3f221aa6ee9a86ae15128c18&#34;&gt;tern-modeの実行&lt;/h3&gt;
-
-&lt;p&gt;正常にインストールが完了すると、以下のようにポップアップで補完が出るようになる。&lt;/p&gt;
-
-&lt;p&gt;&lt;center&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-install-and-setup-tern_01.png&#34; alt=&#34;&#34; /&gt;
-&lt;/center&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:fbb0e51f3f221aa6ee9a86ae15128c18&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://ternjs.net/doc/demo.html&#34;&gt;Tern demo&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://syati.info/?p=2163&#34;&gt;emacs で javascript なら js2-mode, tern-mode&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://suzuki.tdiary.net/20150120.html&#34;&gt;Emacs の JavaScript 開発環境を整備する(Tern編)&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+参考サイト  Tern demo emacs で javascript なら js2-mode, tern-mode Emacs の JavaScript 開発環境を整備する(Tern編)  </description>
     </item>
     
     <item>
@@ -370,56 +90,14 @@ Rubyでいうところのrobeと同じ形。&lt;/p&gt;
       <pubDate>Tue, 28 Jul 2015 11:51:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/07/28/how-to-install-and-setup-jshint/</guid>
-      <description>
-
-&lt;p&gt;今読んでいる &lt;a href=&#34;http://www.oreilly.co.jp/books/9784873116730/&#34;&gt;シングルページWebアプリケーション&lt;/a&gt; の
-サンプルコードが「JSLint」を使っていたので、インストールしようと思ったが
-「JSHint」のほうが良さそうなのでEmacsに「flymake-jshint」をCask経由でインストールした。&lt;/p&gt;
-
-&lt;h3 id=&#34;jshintのインストール:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;JSHintのインストール&lt;/h3&gt;
-
-&lt;p&gt;まずはnpmでJSHint本体をインストール。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;npm install -g jshint
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;flymake-jshintのインストール:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;flymake-jshintのインストール&lt;/h3&gt;
-
-&lt;p&gt;自分はCaskで管理しているので、Caskファイルに追加しインストール。
-flymake-jshintは「js2-mode」に必須のようなので、インストールしていない場合は先にインストールする。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# Cask
-(depends-on &amp;quot;flymake-jshint&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;JSHintのパスを通し、js2-modeが起動したら、JSHintがロードするよう設定する。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# init_loader/03_javascript.el
-(setq exec-path (append exec-path &#39;(&amp;quot;~/.anyenv/envs/ndenv/shims/&amp;quot;)))
-(add-hook &#39;js2-mode-hook &#39;(lambda ()
-                              (require &#39;flymake-jshint)
-                              (flymake-jshint-load)))
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;jshintの実行:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;JSHintの実行&lt;/h3&gt;
-
-&lt;p&gt;正常にインストールが完了すると、タイポなどミスがあると以下のようにポップアップで警告が出るようになる。
-うまくいかない場合は&lt;code&gt;M-x flymake-jshint-load&lt;/code&gt;で手動でJSHintを起動し、エラーを確認すること。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/how-to-install-and-setup-jshint_01.png&#34; alt=&#34;&#34; /&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;参考サイト:f7ec3808b192c40a23b60d0e92adce7b&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.node.ws/?p=1379&#34;&gt;JSLint から JSHint をフォークした理由(翻訳)&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://safx-dev.blogspot.jp/2013/05/emacsflymake-jshintjavascript.html&#34;&gt;Emacsでflymake-jshintを利用してリアルタイムでのJavaScript文法チェックができるようにする&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description> 今読んでいる シングルページWebアプリケーション の サンプルコードが「JSLint」を使っていたので、インストールしようと思ったが 「JSHint」のほうが良さそうなのでEmacsに「flymake-jshint」をCask経由でインストールした。
+JSHintのインストール まずはnpmでJSHint本体をインストール。
+npm install -g jshint  
+flymake-jshintのインストール 自分はCaskで管理しているので、Caskファイルに追加しインストール。 flymake-jshintは「js2-mode」に必須のようなので、インストールしていない場合は先にインストールする。
+# Cask (depends-on &amp;quot;flymake-jshint&amp;quot;)  JSHintのパスを通し、js2-modeが起動したら、JSHintがロードするよう設定する。
+# init_loader/03_javascript.el (setq exec-path (append exec-path &#39;(&amp;quot;~/.anyenv/envs/ndenv/shims/&amp;quot;))) (add-hook &#39;js2-mode-hook &#39;(lambda () (require &#39;flymake-jshint) (flymake-jshint-load)))  
+JSHintの実行 正常にインストールが完了すると、タイポなどミスがあると以下のようにポップアップで警告が出るようになる。 うまくいかない場合はM-x flymake-jshint-loadで手動でJSHintを起動し、エラーを確認すること。
+参考サイト  JSLint から JSHint をフォークした理由(翻訳) Emacsでflymake-jshintを利用してリアルタイムでのJavaScript文法チェックができるようにする  </description>
     </item>
     
     <item>
@@ -428,102 +106,8 @@ flymake-jshintは「js2-mode」に必須のようなので、インストール�
       <pubDate>Mon, 08 Jun 2015 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/06/08/for-the-scope-of-the-js/</guid>
-      <description>
-
-&lt;h2 id=&#34;グローバルスコープとローカルスコープしかない:12cd6967166e7d3f6ae4d2a16d321c1d&#34;&gt;グローバルスコープとローカルスコープしかない&lt;/h2&gt;
-
-&lt;p&gt;Jsには2種類のスコープしかない。グローバルスコープ内で宣言した変数をグローバル変数、ローカルスコープ内で宣言した変数をローカル変数という。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;スクリプト全体(トップレベル)で有効なグローバル変数
-
-&lt;ul&gt;
-&lt;li&gt;プログラム終了時までメモリを確保してしまう&lt;/li&gt;
-&lt;li&gt;多用すると、名前がバッティングする可能性がある
-&lt;br&gt;&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;li&gt;関数内でのみ有効なローカル変数
-
-&lt;ul&gt;
-&lt;li&gt;関数終了時にメモリが開放される&lt;/li&gt;
-&lt;li&gt;宣言時に&lt;code&gt;var&lt;/code&gt;をつけないと、*グローバル変数*として認識されてしまう&lt;/li&gt;
-&lt;/ul&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var hoge = &#39;global&#39;;  // =&gt; グローバル変数
-
-function func () {
-  var fuga = &#39;local&#39;; // =&gt; ローカル変数、必ずvarをつける
-  console.log(fuga);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-また、他言語のようにブロックスコープは存在しない。
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;if (true) {
-  var hoge = &#39;block&#39;;
-}
-
-console.log(hoge); // =&gt; block ブロック内で宣言した変数も参照できてしまう
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-## 変数の巻き上げ(hoisting)
-
-Jsには「変数の巻き上げ」という概念がある。
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var hoge = &#39;global&#39;;
-
-function func() {
-  console.log(hoge); // =&gt; undefined なぜか global と出力されない
-
-  var hoge = &#39;local&#39;;
-  console.log(hoge); // =&gt; local 期待どおりの出力
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;一回目の&lt;code&gt;console.log(hoge);&lt;/code&gt;で、なぜか&lt;code&gt;undefined&lt;/code&gt;が出力されている。これが「変数の巻き上げ」の挙動。&lt;/p&gt;
-
-&lt;p&gt;何が起きているかというと、Jsでは、&lt;em&gt;関数内のどこで変数宣言をしても、関数の先頭で、宣言のみしたと認識されてしまうため。&lt;/em&gt;&lt;/p&gt;
-
-&lt;p&gt;つまり上記のコードは以下のように処理されている。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var hoge = &#39;global&#39;;
-
-function func() {
-  var hoge; // 初期値は入っていない。宣言のみ
-  console.log(hoge); // =&gt; 初期値が入っていないので、undefined
-
-  hoge = &#39;local&#39;;
-  console.log(hoge); // =&gt; 値が入っているので、local
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;これを防ぐには、変数宣言は、*関数の先頭*で行うようにする。&lt;/p&gt;
-
-&lt;h2 id=&#34;まとめ:12cd6967166e7d3f6ae4d2a16d321c1d&#34;&gt;まとめ&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;グローバル変数は多用しない&lt;/li&gt;
-&lt;li&gt;変数宣言時は、必ず var をつける&lt;/li&gt;
-&lt;li&gt;ローカル変数は、関数の先頭で宣言する&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;参考サイト:12cd6967166e7d3f6ae4d2a16d321c1d&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://tacamy.hatenablog.com/entry/2012/12/30/191125&#34;&gt;JavaScript のスコープを理解する&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://itpro.nikkeibp.co.jp/atcl/column/14/091700069/091700002/&#34;&gt;JavaScriptのスコープを理解しよう&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://analogic.jp/hoisting/&#34;&gt;知らないと怖い「変数の巻き上げ」とは？&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;関連記事:12cd6967166e7d3f6ae4d2a16d321c1d&#34;&gt;関連記事&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/08/for-function-of-js/&#34;&gt;Jsの関数について&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>グローバルスコープとローカルスコープしかない Jsには2種類のスコープしかない。グローバルスコープ内で宣言した変数をグローバル変数、ローカルスコープ内で宣言した変数をローカル変数という。
+ スクリプト全体(トップレベル)で有効なグローバル変数  プログラム終了時までメモリを確保してしまう 多用すると、名前がバッティングする可能性がある   関数内でのみ有効なローカル変数  関数終了時にメモリが開放される 宣言時にvarをつけないと、*グローバル変数*として認識されてしまう   var hoge = &#39;global&#39;; // = グローバル変数 function func () { var fuga = &#39;local&#39;; // = ローカル変数、必ずvarをつける console.log(fuga); }  また、他言語のようにブロックスコープは存在しない。 if (true) { var hoge = &#39;block&#39;; } console.log(hoge); // = block ブロック内で宣言した変数も参照できてしまう  ## 変数の巻き上げ(hoisting) Jsには「変数の巻き上げ」という概念がある。 var hoge = &#39;global&#39;; function func() { console.log(hoge); // = undefined なぜか global と出力されない var hoge = &#39;local&#39;; console.</description>
     </item>
     
     <item>
@@ -532,104 +116,8 @@ function func() {
       <pubDate>Mon, 08 Jun 2015 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/06/08/for-function-of-js/</guid>
-      <description>
-
-&lt;p&gt;Jsには主に「Function文」と「Function式(関数リテラル)」という２つの関数の宣言方法がある。
-※本当は「Functionコンストラクタ」という方法もあるが、あまり実用的ではないので省略。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;// Function文
-function func () {
-  console.log(&#39;statements&#39;);
-}
-
-// Function式
-var func = function func() {
-  console.log(&#39;expression&#39;);
-};
-
-//関数の呼び出し方法は同じ
-func();
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-違いは評価のタイミング。「Function文」は関数が静的な構造として宣言される。つまり、Jsの実行環境がコードを解析するタイミングで関数が静的に登録され、これにより「関数をどこで定義していても呼び出せる」ようになります。
-
-
-&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;func(); // =&gt; 宣言前に読み出してもエラーにならない
-
-function func () {
-  console.log(&#39;statements&#39;);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-逆に「Function式」は、変数に代入された段階で評価される。そのため、宣言後に呼び出さないとエラーになる。
-
-&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;func(); // =&gt; TypeError: undefined is not a function
-
-var func = function func () {
-  console.log(&#39;expression&#39;);
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-## 無名関数
-
-「無名関数」とは、Function式の関数名を省略した形
-。Function式を使う場合は、主に無名関数が使われる。
-
-&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;// 無名関数
-var func = function () {
-  console.log(&#39;expression&#39;);
-};
-
-func();
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-## 即時関数
-
-「即時関数」とは、関数を()で囲んだ状態で実行することで、関数宣言と同時にその関数を実行する書き方です。
-
-&lt;pre&gt;&lt;code class=&#39;language-javascript&#39;&gt;// 即時関数
-(function () {
-  console.log(&#39;Hello&#39;);
-})();
-
-// ()();の代わりに、().call(this);とも書ける
-(function () {
-  console.log(&#39;Hello&#39;);
-}).call(this);
-
-// 即時関数に引数を渡す場合
-(function (val,val2) {
-  console.log(val + &#39; &#39; + val2);
-})(&#39;Hello&#39;,&#39;World&#39;);
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;即時関数を使うことで、関数内で宣言した変数のスコープは、関数内でしか使えないようになる。
-つまり、ブロックスコープと同じ効果となる。&lt;/p&gt;
-
-&lt;h2 id=&#34;まとめ:faca702768e957c2e4fade9d48317c0a&#34;&gt;まとめ&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;変数宣言は無名関数を使う&lt;/li&gt;
-&lt;li&gt;即時関数を使えば、ブロックスコープと同じ効果が得られる&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;参考サイト:faca702768e957c2e4fade9d48317c0a&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://itpro.nikkeibp.co.jp/atcl/column/14/091700069/091700001/&#34;&gt;現代プログラマの必須知識、JavaScript&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://d.hatena.ne.jp/amachang/20080208/1202448348&#34;&gt;(function(){})() と function(){}()&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;関連記事:faca702768e957c2e4fade9d48317c0a&#34;&gt;関連記事&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/08/for-the-scope-of-the-js/&#34;&gt;Jsのスコープについて&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>Jsには主に「Function文」と「Function式(関数リテラル)」という２つの関数の宣言方法がある。 ※本当は「Functionコンストラクタ」という方法もあるが、あまり実用的ではないので省略。
+// Function文 function func () { console.log(&#39;statements&#39;); } // Function式 var func = function func() { console.log(&#39;expression&#39;); }; //関数の呼び出し方法は同じ func();  違いは評価のタイミング。「Function文」は関数が静的な構造として宣言される。つまり、Jsの実行環境がコードを解析するタイミングで関数が静的に登録され、これにより「関数をどこで定義していても呼び出せる」ようになります。 func(); // = 宣言前に読み出してもエラーにならない function func () { console.log(&#39;statements&#39;); }  逆に「Function式」は、変数に代入された段階で評価される。そのため、宣言後に呼び出さないとエラーになる。 func(); // = TypeError: undefined is not a function var func = function func () { console.log(&#39;expression&#39;); }  ## 無名関数 「無名関数」とは、Function式の関数名を省略した形 。Function式を使う場合は、主に無名関数が使われる。 // 無名関数 var func = function () { console.log(&#39;expression&#39;); }; func();  ## 即時関数 「即時関数」とは、関数を()で囲んだ状態で実行することで、関数宣言と同時にその関数を実行する書き方です。 // 即時関数 (function () { console.</description>
     </item>
     
     <item>
@@ -638,100 +126,15 @@ func();
       <pubDate>Wed, 03 Jun 2015 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/</guid>
-      <description>
-
-&lt;p&gt;最近勉強中のPromiseですが、現段階(15/06/03)ではIE11に対応していません。
-PromiseをIEに対応させるためには、es6-promiseというNode.jsのライブラリをフロントエンドで読み込む必要があります。&lt;/p&gt;
-
-&lt;p&gt;しかしNode.jsのライブラリは、そのままではフロントエンドで使えないので、
-webpackでフロントエンド向けにBuildする必要があります。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;-webpackは他にも多くの機能がありますが、ここではNode.jsのモジュールをフロントエンドで使うため方法のみにフォーカスします。-&lt;/em&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;webpackを使うための準備:bf105b025d29d59e69f389ae56581628&#34;&gt;webpackを使うための準備&lt;/h3&gt;
-
-&lt;p&gt;まずは本体のインストール。
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install webpack -g
-&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-
-&lt;p&gt;次に適当なディレクトリを作成します。
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ mkdir webpack-sample &amp;amp;&amp;amp; cd webpack-sample
-&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-
-&lt;p&gt;今回使うライブラリ(es6-promise)をディレクトリにインストールします。
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install es6-promise
-&lt;/code&gt;&lt;/pre&gt;&lt;/p&gt;
-
-&lt;p&gt;ライブラリはglobalではなく、ディレクトリ直下(/webpack-sample/node_modules)にインストールしてください。&lt;/p&gt;
-
-&lt;h3 id=&#34;jsのbuild方法:bf105b025d29d59e69f389ae56581628&#34;&gt;JsのBuild方法&lt;/h3&gt;
-
-&lt;p&gt;次に(Node.jsの)ライブラリを読み込むJs(main.js)をビルドします。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ webpack main.js bundle.js
-Hash: de7b4a8a87c6e52d026f
-Version: webpack 1.9.10
-Time: 109ms
-    Asset     Size  Chunks             Chunk Names
-bundle.js  40.1 kB       0  [emitted]  main
-   [0] ./main.js 255 bytes {0} [built]
-   + 6 hidden modules
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-BuildしたJs(bundle.js)は、main.jsが依存しているライブラリ(es6-promise等)も含んだ一つのファイルに圧縮されます。
-このJsのみをHTMLに読み込むだけで、Node.jsが利用できるようになります。
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;&amp;lt;script&amp;nbsp;src=&amp;quot;bundle.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-&lt;b&gt;main.js&lt;/b&gt;
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;&#39;use strict&#39;
-var Promise = require(&#39;es6-promise&#39;).Promise;
-
-var promise = function(code) {
-    return new Promise(function (resolve,reject) {
-        resolve(&#39;Hello Promise !!&#39;);
-    });
-}
-
-promise().then(function (result) {
-    console.log(result);
-});
-&lt;/code&gt;&lt;/pre&gt;
-&lt;br&gt;
-
-### 確認
-
-今回は、node.jsのhttp-serverを使って確認しようと思います。
-
-* [Node.jsのhttp-serverっていうコマンドラインのウェブサーバーが便利](https://firegoby.jp/archives/5706)
-
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;$ npm install -g http-server
-$ http-server -p 4000
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;サーバー起動し、IEのconsoleにメッセージが表示されれば、確認OKです。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/use-webpack-to-read-the-es6-promise_01.jpg&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:bf105b025d29d59e69f389ae56581628&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://webpack.github.io/&#34;&gt;webpack&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/jakearchibald/es6-promise&#34;&gt;es6-promise&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://ameblo.jp/ca-1pixel/entry-11884453208.html&#34;&gt;RequireJS等はもう古い。WebPackとは？&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://thujikun.github.io/blog/2014/12/07/webpack/&#34;&gt;Webpackを使い倒す&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.twopipe.com/front-end/2014/12/22/react-webpack-env.html&#34;&gt;ReactとStylusをwebpackで使うための開発環境構築&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;関連する記事:bf105b025d29d59e69f389ae56581628&#34;&gt;関連する記事&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/&#34;&gt;Promiseを使って、非同期処理を任意のタイミングで実行する&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>最近勉強中のPromiseですが、現段階(15/06/03)ではIE11に対応していません。 PromiseをIEに対応させるためには、es6-promiseというNode.jsのライブラリをフロントエンドで読み込む必要があります。
+しかしNode.jsのライブラリは、そのままではフロントエンドで使えないので、 webpackでフロントエンド向けにBuildする必要があります。
+-webpackは他にも多くの機能がありますが、ここではNode.jsのモジュールをフロントエンドで使うため方法のみにフォーカスします。-
+webpackを使うための準備 まずは本体のインストール。 $ npm install webpack -g 
+次に適当なディレクトリを作成します。 $ mkdir webpack-sample &amp;amp;&amp;amp; cd webpack-sample 
+今回使うライブラリ(es6-promise)をディレクトリにインストールします。 $ npm install es6-promise 
+ライブラリはglobalではなく、ディレクトリ直下(/webpack-sample/node_modules)にインストールしてください。
+JsのBuild方法 次に(Node.jsの)ライブラリを読み込むJs(main.js)をビルドします。
+$ webpack main.js bundle.js Hash: de7b4a8a87c6e52d026f Version: webpack 1.9.10 Time: 109ms Asset Size Chunks Chunk Names bundle.js 40.1 kB 0 [emitted] main [0] ./main.js 255 bytes {0} [built] + 6 hidden modules  BuildしたJs(bundle.js)は、main.jsが依存しているライブラリ(es6-promise等)も含んだ一つのファイルに圧縮されます。 このJsのみをHTMLに読み込むだけで、Node.jsが利用できるようになります。 &amp;lt;script&amp;nbsp;src=&amp;quot;bundle.js&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;  main.js &#39;use strict&#39; var Promise = require(&#39;es6-promise&#39;).</description>
     </item>
     
     <item>
@@ -740,30 +143,8 @@ $ http-server -p 4000
       <pubDate>Tue, 02 Jun 2015 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/06/02/use-the-promise-to-perform-the-async-processing-at-anytime/</guid>
-      <description>
-
-&lt;p&gt;Promiseを使って、非同期処理を任意の順番で実行するサンプル。
-ES5でも順番を指定して実行する事ができるが、Promiseを使うと綺麗に実装できる。&lt;/p&gt;
-
-&lt;p&gt;&lt;script src=&#34;http://gist-it.appspot.com/https://github.com/tatsuyano/study-es6promise/blob/master/sample01-nodejs.js&#34;&gt;
-&lt;/script&gt;
-&lt;br&gt;&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:4211bdcec880eb9ef23695a021bec295&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://azu.github.io/promises-book/&#34;&gt;JavaScript Promiseの本&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.html5rocks.com/ja/tutorials/es6/promises/&#34;&gt;JavaScript Promises&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/jakearchibald/es6-promise&#34;&gt;es6-promise&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://babeljs.io/repl/&#34;&gt;Babel repl&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;関連する記事:4211bdcec880eb9ef23695a021bec295&#34;&gt;関連する記事&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://tatsuyano.github.io/2015/06/03/use-webpack-to-read-the-es6-promise/&#34;&gt;webpackを使ってes6-promiseを読み込む&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description> Promiseを使って、非同期処理を任意の順番で実行するサンプル。 ES5でも順番を指定して実行する事ができるが、Promiseを使うと綺麗に実装できる。
+ 参考サイト  JavaScript Promiseの本 JavaScript Promises es6-promise Babel repl  関連する記事  webpackを使ってes6-promiseを読み込む  </description>
     </item>
     
   </channel>

@@ -7,7 +7,9 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Wed, 06 Apr 2016 19:00:00 +0900</lastBuildDate>
-    <atom:link href="http://tatsuyano.github.io/tags/casperjs/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://tatsuyano.github.io/tags/casperjs/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>CasperJsの使い方メモ</title>
@@ -15,77 +17,9 @@
       <pubDate>Wed, 06 Apr 2016 19:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2016/04/06/how-to-use-casperjs/</guid>
-      <description>
-
-&lt;h3 id=&#34;日本語のページのキャプチャを取る:0f17afad2dfafdb4933c4127f2233642&#34;&gt;日本語のページのキャプチャを取る&lt;/h3&gt;
-
-&lt;p&gt;日本語のページのキャプチャを撮るには、CasperJsを実行するサーバーに日本語フォントが入っている必要がある。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;sudo yum -y groupinstall &amp;quot;Japanese Support&amp;quot;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;casperjsを一時停止させる:0f17afad2dfafdb4933c4127f2233642&#34;&gt;CasperJsを一時停止させる&lt;/h3&gt;
-
-&lt;p&gt;3秒プログラムを停止させてからキャプチャを撮る&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;casper.then(function() {
-  this.wait(3000, function() {
-    console.log(&#39;3秒後&#39;);
-    this.capture(&#39;capture/test.png&#39;);
-  });
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;casperjsからjsonをpostする:0f17afad2dfafdb4933c4127f2233642&#34;&gt;CasperJsからJSONをPOSTする&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;casper.start();
-casper.open(&#39;http://hoge.com/api/hoge&#39;, {
-  method: &#39;post&#39;,
-  headers: {
-    &#39;Accept-Language&#39;: &#39;ja&#39;
-  },
-  data: {
-    uuid   : &#39;UUID&#39;,
-    secret : &#39;SECRET&#39;
-  }
-});
-
-// this.getPageContent()で結果を取得できる
-casper.then(function(response) {
-  var json = JSON.parse(this.getPageContent());
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;casperjsにメソッドを定義する:0f17afad2dfafdb4933c4127f2233642&#34;&gt;CasperJsにメソッドを定義する&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;casper.then(function() {
-  this.createMarkdown(&#39;title&#39;,&#39;describe&#39;);
-});
-
-casper.createMarkdown = function(title,describe){
-  template = fs.read(&#39;result/api_template.md&#39;, &#39;utf8&#39;);
-  template = template.replace(/{{title}}/g    ,title);
-  template = template.replace(/{{describe}}/g ,describe);
-  fs.write(&#39;result/&#39;+title+&#39;.md&#39;, template);
-};
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;ファイルアップロード-type-file-を操作する:0f17afad2dfafdb4933c4127f2233642&#34;&gt;ファイルアップロード(type=&amp;ldquo;file&amp;rdquo;)を操作する&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt; casper.then(function() {
-   // 画像はフルパスで、evaluate()の外で実行する
-   this.page.uploadFile(&#39;input[type=&amp;quot;file&amp;quot;]&#39;, &#39;/vagrant/sample_image.jpg&#39;);
-
-   this.evaluate(function(number, title) {
-     $(&#39;[name=&amp;quot;coupon[number]&amp;quot;]&#39;).val(number);
-     $(&#39;[name=&amp;quot;coupon[title]&amp;quot;]&#39;).val(title);
-
-     document.querySelector(&#39;form&#39;).submit();
-
-   }, &#39;999&#39;, &#39;title_test&#39;);
- });
-&lt;/code&gt;&lt;/pre&gt;
-</description>
+      <description>日本語のページのキャプチャを取る 日本語のページのキャプチャを撮るには、CasperJsを実行するサーバーに日本語フォントが入っている必要がある。
+sudo yum -y groupinstall &amp;quot;Japanese Support&amp;quot;  CasperJsを一時停止させる 3秒プログラムを停止させてからキャプチャを撮る
+casper.then(function() { this.wait(3000, function() { console.log(&#39;3秒後&#39;); this.capture(&#39;capture/test.png&#39;); }); });  CasperJsからJSONをPOSTする casper.start(); casper.open(&#39;http://hoge.com/api/hoge&#39;, { method: &#39;post&#39;, headers: { &#39;Accept-Language&#39;: &#39;ja&#39; }, data: { uuid : &#39;UUID&#39;, secret : &#39;SECRET&#39; } }); // this.getPageContent()で結果を取得できる casper.then(function(response) { var json = JSON.parse(this.getPageContent()); });  CasperJsにメソッドを定義する casper.then(function() { this.createMarkdown(&#39;title&#39;,&#39;describe&#39;); }); casper.createMarkdown = function(title,describe){ template = fs.read(&#39;result/api_template.md&#39;, &#39;utf8&#39;); template = template.replace(/{{title}}/g ,title); template = template.</description>
     </item>
     
     <item>
@@ -94,64 +28,9 @@ casper.createMarkdown = function(title,describe){
       <pubDate>Wed, 06 Apr 2016 15:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2016/04/06/i-have-catched-alert-or-confirm-events-in-casperjs/</guid>
-      <description>
-
-&lt;p&gt;AlertやConfirmダイアログのOKボタン、キャンセルボタンを押下するには、&lt;code&gt;casper.page.onAlert&lt;/code&gt;、&lt;code&gt;casper.page.onConfirm&lt;/code&gt;を使う。&lt;/p&gt;
-
-&lt;p&gt;下の例では、購入ボタン(#buy)を押下すると、
-Confirmダイアログが立ち上がり &lt;code&gt;商品を購入します。よろしいですか？&lt;/code&gt;とメッセージが表示される。
-OKボタンを押下すると、商品購入処理が実行され
-商品の購入が成功すれば &lt;code&gt;商品を購入しました&lt;/code&gt;、
-ポイントが足りず購入に失敗すると &lt;code&gt;ポイントが足りません&lt;/code&gt; とメッセージが表示される。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;var casper = require(&#39;casper&#39;).create({clientScripts: [&#39;./src/includes/jquery.min.js&#39;]});
-
-var point = 100;
-
-casper.start();
-casper.open(&#39;http://192.168.33.10/shopping/cart&#39;).viewport(1024, 690);
-
-casper.then(function() {
-
-  // AlertダイアログはOKボタンしかないので、返り値は必ずtrueを返す。
-  // 同一画面で、複数のダイアログを表示する場合は、引数のメッセージで分岐する
-  this.page.onAlert = function(message) {
-    if (message == &#39;商品を購入しました&#39;) {
-        return true;
-    }
-    else if (message == &#39;ポイントが足りません&#39;) {
-        return true;
-    }
-  };
-
-  // Confirmダイアログが立ち上がると発火する。
-  // trueを返すとOKボタンが押下され、falseを返すとキャンセルボタンが押下される
-  this.page.onConfirm = function(message) {
-    if (message == &#39;商品を購入します。よろしいですか？&#39;) {
-        return true;
-    }
-  };
-
-  // #add_pointというテキストフィールドに100ポイントを入力し、#buyボタンを押下する
-  this.evaluate(function(p) {
-    $(&#39;#add_point&#39;).val(p);
-    document.getElementById(&amp;quot;buy&amp;quot;).click();
-  }, point);
-});
-
-casper.run();
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;CasperJsはPhantomJsを拡張(内封)しているライブラリなので、PhantomJsをメソッドをそのまま?使うことができる。
-今回の&lt;code&gt;onAlert&lt;/code&gt;などもPhantomJsで定義されているメソッドで、&lt;code&gt;this.page&lt;/code&gt;の中にPhantomJsが入っている。&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:2df5b4a29a5fedc7180a179aec02fce4&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://tetsuwo.tumblr.com/post/58696806251/jasmine-phantomjs-alert-confirm-prompt&#34;&gt;PhantomJS + Jasmine で alert, confirm, prompt などの標準ダイアログのテスト方法&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://docs.casperjs.org/en/latest/modules/casper.html#onalert&#34;&gt;onAlert&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>AlertやConfirmダイアログのOKボタン、キャンセルボタンを押下するには、casper.page.onAlert、casper.page.onConfirmを使う。
+下の例では、購入ボタン(#buy)を押下すると、 Confirmダイアログが立ち上がり 商品を購入します。よろしいですか？とメッセージが表示される。 OKボタンを押下すると、商品購入処理が実行され 商品の購入が成功すれば 商品を購入しました、 ポイントが足りず購入に失敗すると ポイントが足りません とメッセージが表示される。
+var casper = require(&#39;casper&#39;).create({clientScripts: [&#39;./src/includes/jquery.min.js&#39;]}); var point = 100; casper.start(); casper.open(&#39;http://192.168.33.10/shopping/cart&#39;).viewport(1024, 690); casper.then(function() { // AlertダイアログはOKボタンしかないので、返り値は必ずtrueを返す。 // 同一画面で、複数のダイアログを表示する場合は、引数のメッセージで分岐する this.page.onAlert = function(message) { if (message == &#39;商品を購入しました&#39;) { return true; } else if (message == &#39;ポイントが足りません&#39;) { return true; } }; // Confirmダイアログが立ち上がると発火する。 // trueを返すとOKボタンが押下され、falseを返すとキャンセルボタンが押下される this.page.onConfirm = function(message) { if (message == &#39;商品を購入します。よろしいですか？&#39;) { return true; } }; // #add_pointというテキストフィールドに100ポイントを入力し、#buyボタンを押下する this.</description>
     </item>
     
     <item>
@@ -160,26 +39,9 @@ casper.run();
       <pubDate>Wed, 06 Apr 2016 12:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2016/04/06/if-you-can-not-send-post-in-ajax-of-casperjs/</guid>
-      <description>&lt;p&gt;地味にハマった。Chromeだとパラメータに&lt;code&gt;type:&amp;quot;POST&amp;quot;&lt;/code&gt;がなくてもPOSTでリクエストを送信してくれるが、
-CasperJsのブラウザでは、&lt;code&gt;type:&amp;quot;POST&amp;quot;&lt;/code&gt;を明示しないと&lt;code&gt;GET&lt;/code&gt;でリクエストを送信してしまう。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;$.ajax({
-    url:  &amp;quot;/shopping/addpoint/&amp;quot;,
-    type: &amp;quot;POST&amp;quot;, // &amp;lt;-このパラメータが必須
-    data: data,
-    success: function(data, dataType) {
-        var data_arr = JSON.parse(data);
-        $(&#39;#point&#39;).text(data_arr[&#39;point&#39;]);
-        alert(data_arr[&#39;msg&#39;]);
-    }
-});
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;手動で操作するぶんには問題なく動いていたので(typeパラメータが設定されていなくても)、
-CasperJs(自分で書いたソース)側に問題があると思い込んでしまった。&lt;/p&gt;
-
-&lt;p&gt;思い込みで判断せずに、まずはアクセスログを確認しようという教訓でした。&lt;/p&gt;
-</description>
+      <description>地味にハマった。Chromeだとパラメータにtype:&amp;quot;POST&amp;quot;がなくてもPOSTでリクエストを送信してくれるが、 CasperJsのブラウザでは、type:&amp;quot;POST&amp;quot;を明示しないとGETでリクエストを送信してしまう。
+$.ajax({ url: &amp;quot;/shopping/addpoint/&amp;quot;, type: &amp;quot;POST&amp;quot;, // &amp;lt;-このパラメータが必須 data: data, success: function(data, dataType) { var data_arr = JSON.parse(data); $(&#39;#point&#39;).text(data_arr[&#39;point&#39;]); alert(data_arr[&#39;msg&#39;]); } });  手動で操作するぶんには問題なく動いていたので(typeパラメータが設定されていなくても)、 CasperJs(自分で書いたソース)側に問題があると思い込んでしまった。
+思い込みで判断せずに、まずはアクセスログを確認しようという教訓でした。</description>
     </item>
     
   </channel>

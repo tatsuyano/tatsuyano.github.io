@@ -7,7 +7,9 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Sun, 26 Jul 2015 21:15:01 +0900</lastBuildDate>
-    <atom:link href="http://tatsuyano.github.io/tags/blog/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://tatsuyano.github.io/tags/blog/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Hugoに独自ドメインを適応したので、sitemap.xmlを置換する</title>
@@ -15,14 +17,11 @@
       <pubDate>Sun, 26 Jul 2015 21:15:01 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/07/26/replacing-sitemap-of-hugo/</guid>
-      <description>&lt;p&gt;Hugoに独自ドメインを適応したところ、自動生成されるsitemap.xmlが&lt;br /&gt;
-Github pagesのURLで生成されていたので、deploy.shにsedコマンドを追加した。&lt;/p&gt;
-
-&lt;p&gt;sedコマンドで上書き置換(sed -i)したら、バックアップファイルが自動で生成&lt;br /&gt;
-されるを止めるのはどうしたらいいのだろうか。。&lt;/p&gt;
-
-&lt;script src=&#34;https://gist.github.com/tatsuyano/57c42f1b050402abd7ea.js&#34;&gt;&lt;/script&gt;
-</description>
+      <description>Hugoに独自ドメインを適応したところ、自動生成されるsitemap.xmlが
+Github pagesのURLで生成されていたので、deploy.shにsedコマンドを追加した。
+sedコマンドで上書き置換(sed -i)したら、バックアップファイルが自動で生成
+されるを止めるのはどうしたらいいのだろうか。。
+ </description>
     </item>
     
     <item>
@@ -31,26 +30,12 @@ Github pagesのURLで生成されていたので、deploy.shにsedコマンド�
       <pubDate>Sat, 25 Jul 2015 18:15:01 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2015/07/25/switch-hugo/</guid>
-      <description>
-
-&lt;p&gt;今までaws上でブログ(Ghost)を運用していたが、無料期間が終わったら月2000円&lt;br /&gt;
-ちょっとかかったので、またGithub Pages上にブログを移行させた。&lt;/p&gt;
-
-&lt;p&gt;以前はGithub PagesでOctopressを使っていたが、最近はHugoというのが流行っているらしいので使ってみた。&lt;/p&gt;
-
-&lt;p&gt;記事が思いの外多かったので、エクスポート用のコードをrubyで書いた。&lt;br /&gt;
-コードを書くのに思ったより時間がかかったが、久々にrubyを使って楽しかった。&lt;/p&gt;
-
-&lt;script src=&#34;https://gist.github.com/tatsuyano/2e74910f360ad1887de2.js&#34;&gt;&lt;/script&gt;
-
-&lt;h2 id=&#34;参考サイト:6703deb5cdbafca18cdf6d5cce74fef9&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://hori-ryota.com/blog/create-blog-with-hugo-and-circleci/&#34;&gt;HugoとCircleCIでGitHub PagesにBlogを公開してみたら超簡単だった&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://machortz.github.io/posts/usinghugo/&#34;&gt;Hugoを使ってみたときのメモ&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/yoheimuta/items/8a619cac356bed89a4c9&#34;&gt;Hugo + Github Pages + Wercker CI = ¥0（無料）でコマンド 1 発&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description> 今までaws上でブログ(Ghost)を運用していたが、無料期間が終わったら月2000円
+ちょっとかかったので、またGithub Pages上にブログを移行させた。
+以前はGithub PagesでOctopressを使っていたが、最近はHugoというのが流行っているらしいので使ってみた。
+記事が思いの外多かったので、エクスポート用のコードをrubyで書いた。
+コードを書くのに思ったより時間がかかったが、久々にrubyを使って楽しかった。
+ 参考サイト  HugoとCircleCIでGitHub PagesにBlogを公開してみたら超簡単だった Hugoを使ってみたときのメモ Hugo + Github Pages + Wercker CI = ¥0（無料）でコマンド 1 発  </description>
     </item>
     
     <item>
@@ -59,86 +44,10 @@ Github pagesのURLで生成されていたので、deploy.shにsedコマンド�
       <pubDate>Wed, 10 Sep 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/09/10/upgrade-to-v05-ghost/</guid>
-      <description>
-
-&lt;p&gt;運用中のGhost(v0.4)にGhost(v0.5)のファイルを一部コピーするだけで、アップグレードすることができます。&lt;/p&gt;
-
-&lt;p&gt;以下のような構成で話をすすめます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ tree $HOME/app -d -L 1
-
-$HOME/app
-├── ghost     #&amp;lt;- 運用中のGhost(v0.4)
-└── ghost.v5  #&amp;lt;- コピー元のGhost(v0.5)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;ghost-v0-5のダウンロード:c290fcb14b6458c0488fd77ee1159704&#34;&gt;Ghost v0.5のダウンロード&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cd app
-$ curl -L https://ghost.org/zip/ghost-latest.zip -o ghost.zip
-$ unzip -uo ghost.zip -d ghost.v5
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;ghost-v0-5から一部ファイルをコピーする:c290fcb14b6458c0488fd77ee1159704&#34;&gt;Ghost v0.5から一部ファイルをコピーする&lt;/h3&gt;
-
-&lt;p&gt;コピーする前に&lt;code&gt;forever&lt;/code&gt;を止めてください。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cd $HOME/app/ghost
-$ NODE_ENV=production forever stop index.js
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;　&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cd ../ghost.v5/
-$ cp -a *.md *.js *.json ../ghost/
-$ cp -R core ../ghost
-$ cp -R content/themes/casper ../ghost/content/themes
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;nodeパッケージを再インストール&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cd ../ghost
-$ npm install --production
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;config.js&lt;/code&gt;も上書いた(コピーした)ので、urlを変更します。&lt;/p&gt;
-
-&lt;p&gt;ghost/config.js&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;config = {
-    // ### Development **(default)**
-    development: {
-        // The url to use when providing links to the site, E.g. in RSS and email.
-//        url: &#39;http://my-ghost-blog.com&#39;,
-        url: &#39;http://blog.10rane.com&#39;,
-
-    production: {
-//        url: &#39;http://my-ghost-blog.com&#39;,
-        url: &#39;http://blog.10rane.com&#39;,
-        mail: {},
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;forever&lt;/code&gt;を起動&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ NODE_ENV=production forever start index.js
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;これでアップグレードの完了です。&lt;br /&gt;
-お疲れ様でした。&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:c290fcb14b6458c0488fd77ee1159704&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://docs.ghost.org/ja/installation/upgrading/&#34;&gt;Ghostのアップグレードについて&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;関連する記事:c290fcb14b6458c0488fd77ee1159704&#34;&gt;関連する記事&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/09/09/how-to-install-and-setup-ghost-on-amazon-linux/&#34;&gt;Amazon LinuxにGhostをインストールする&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/10/get-access-ip-installed-google-analytics-to-ghost/&#34;&gt;GhostにGoogle Analyticsに設置しアクセス元IPを取得する&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>運用中のGhost(v0.4)にGhost(v0.5)のファイルを一部コピーするだけで、アップグレードすることができます。
+以下のような構成で話をすすめます。
+$ tree $HOME/app -d -L 1 $HOME/app ├── ghost #&amp;lt;- 運用中のGhost(v0.4) └── ghost.v5 #&amp;lt;- コピー元のGhost(v0.5)  Ghost v0.5のダウンロード $ cd app $ curl -L https://ghost.org/zip/ghost-latest.zip -o ghost.zip $ unzip -uo ghost.zip -d ghost.v5  Ghost v0.5から一部ファイルをコピーする コピーする前にforeverを止めてください。
+$ cd $HOME/app/ghost $ NODE_ENV=production forever stop index.js  　$ cd ../ghost.v5/ $ cp -a *.md *.js *.json ../ghost/ $ cp -R core ../ghost $ cp -R content/themes/casper ../ghost/content/themes  nodeパッケージを再インストール</description>
     </item>
     
     <item>
@@ -147,155 +56,12 @@ $ npm install --production
       <pubDate>Tue, 09 Sep 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/09/09/how-to-install-and-setup-ghost-on-amazon-linux/</guid>
-      <description>
-
-&lt;p&gt;新たに&lt;code&gt;t2.micro&lt;/code&gt;のインスタンスを立ち上げたので、Ghost を新規でインストールしようと思います。&lt;/p&gt;
-
-&lt;h3 id=&#34;node-js-のインストール:1de3ebcd72298143cbf6759e7ec6289b&#34;&gt;Node.js のインストール&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;anyenv&lt;/code&gt;を使って、&lt;code&gt;0.10.0&lt;/code&gt;以上のNode.js をインストールしてください。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ which node
-HOME/.anyenv/envs/ndenv/shims/node
-
-$ which npm
-$HOME/.anyenv/envs/ndenv/shims/npm
-
-$ node --version
-v0.10.26
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/19/install-anyenv/&#34;&gt;anyenvをインストールする&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;nginx-のインストール:1de3ebcd72298143cbf6759e7ec6289b&#34;&gt;nginx のインストール&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;yum&lt;/code&gt;でのバージョンは1.4.7と少し古いですが、面倒なのでインストール&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo yum -y install nginx
-
-$ /usr/sbin/nginx -v
-nginx version: nginx/1.4.7
-
-$ sudo chkconfig nginx on
-$ sudo chkconfig --list | grep nginx
-nginx           0:off   1:off   2:on    3:on    4:on    5:on    6:off
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;念のため起動テスト&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo /etc/init.d/nginx start
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;confの設定:1de3ebcd72298143cbf6759e7ec6289b&#34;&gt;confの設定&lt;/h4&gt;
-
-&lt;p&gt;特定のドメインのみを停止(切り離)したりするために、
-設定ファイルのリンクを貼ったディレクトリを&lt;code&gt;include&lt;/code&gt;します。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;sites-available&lt;/code&gt;にはドメインごとの設定ファイル、
-&lt;code&gt;sites-enabled&lt;/code&gt;には設定ファイルのリンクを貼ります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo bash
-# cd /etc/nginx
-# mkdir sites-available sites-enabled
-
-# touch sites-available/blog.10rane.com.conf
-# ln -s /etc/nginx/sites-available/blog.10rane.com.conf /etc/nginx/sites-enabled/blog.10rane.com.conf
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;sites-available/blog.10rane.com.conf&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;server {
-    listen 80;
-    server_name blog.10rane.com;
-
-    location / {
-        proxy_set_header   X-Real-IP $remote_addr;
-        proxy_set_header   Host      $http_host;
-        proxy_pass         http://127.0.0.1:2368;
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;シンボリックリンク&lt;code&gt;sites-enabled&lt;/code&gt;を&lt;code&gt;httpディレクティブ&lt;/code&gt;に&lt;code&gt;include&lt;/code&gt;します。&lt;/p&gt;
-
-&lt;p&gt;/etc/nginx/nginx.conf&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;http {
-    include       /etc/nginx/sites-enabled/*.conf; # for Ghost
-....
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Nginx の再起動&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo /etc/init.d/nginx restart
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://docs.ghost.org/ja/installation/linux/&#34;&gt;LinuxにGhostをインストールする方法&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;ghost-のダウンロード-インストール:1de3ebcd72298143cbf6759e7ec6289b&#34;&gt;Ghost のダウンロード&amp;amp;インストール&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;npm start&lt;/code&gt;を実行すると、フォアグラウンドで実行される。実運用するためには、
-Ghost を永続的に動かすためには、Nodeパッケージの&lt;code&gt;forever&lt;/code&gt;などを使う必要があります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ mkdir $HOME/app
-$ cd app
-$ curl -L https://ghost.org/zip/ghost-latest.zip -o ghost.zip
-$ unzip -uo ghost.zip -d ghost
-
-$ cd ghost
-$ npm install --production
-$ npm start
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;$HOME/app/ghost/config.js&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;config = {
-    // ### Development **(default)**
-    development: {
-        // The url to use when providing links to the site, E.g. in RSS and email.
-//        url: &#39;http://my-ghost-blog.com&#39;,
-        url: &#39;http://blog.10rane.com&#39;,
-...
-
-    production: {
-//        url: &#39;http://my-ghost-blog.com&#39;,
-        url: &#39;http://blog.10rane.com&#39;,
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;forever-のインストール:1de3ebcd72298143cbf6759e7ec6289b&#34;&gt;forever のインストール&lt;/h3&gt;
-
-&lt;p&gt;Ghost をバックグラウンドで動かすために&lt;code&gt;forever&lt;/code&gt;を使います。
-&lt;code&gt;forever&lt;/code&gt;は別パッケージでもよく使うので、&lt;code&gt;-g&lt;/code&gt;オプションを指定してグローバルインストールします。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ npm install forever -g
-
-$ ndenv which forever
-$HOME/.anyenv/envs/ndenv/versions/v0.10.26/bin/forever
-
-$ source $HOME/.zshrc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;forever&lt;/code&gt;の起動&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cd $HOME/app/ghost
-$ NODE_ENV=production forever start index.js
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;これでGhost を運用できるようになりました。&lt;br /&gt;
-お疲れ様でした。&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:1de3ebcd72298143cbf6759e7ec6289b&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/19/install-anyenv/&#34;&gt;anyenvをインストールする&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://docs.ghost.org/ja/installation/linux/&#34;&gt;LinuxにGhostをインストールする方法&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://docs.ghost.org/ja/installation/deploy/#foreverを使う場合-(https://npmjs.org/package/forever&#34;&gt;Foreverを使う場合&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>新たにt2.microのインスタンスを立ち上げたので、Ghost を新規でインストールしようと思います。
+Node.js のインストール anyenvを使って、0.10.0以上のNode.js をインストールしてください。
+$ which node HOME/.anyenv/envs/ndenv/shims/node $ which npm $HOME/.anyenv/envs/ndenv/shims/npm $ node --version v0.10.26   anyenvをインストールする  nginx のインストール yumでのバージョンは1.4.7と少し古いですが、面倒なのでインストール
+$ sudo yum -y install nginx $ /usr/sbin/nginx -v nginx version: nginx/1.4.7 $ sudo chkconfig nginx on $ sudo chkconfig --list | grep nginx nginx 0:off 1:off 2:on 3:on 4:on 5:on 6:off  念のため起動テスト
+$ sudo /etc/init.d/nginx start  confの設定 特定のドメインのみを停止(切り離)したりするために、 設定ファイルのリンクを貼ったディレクトリをincludeします。
+sites-availableにはドメインごとの設定ファイル、 sites-enabledには設定ファイルのリンクを貼ります。</description>
     </item>
     
     <item>
@@ -304,164 +70,16 @@ $ NODE_ENV=production forever start index.js
       <pubDate>Sun, 10 Aug 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/08/10/get-access-ip-installed-google-analytics-to-ghost/</guid>
-      <description>
-
-&lt;p&gt;アクセス元IPを取得するには、Google Analyticsのデフォルト設定ではできません。
-IPを取得、集計するには&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Google Analyticsにdimensionを設定し、アクセス元IPを集計できるようにする&lt;/li&gt;
-&lt;li&gt;PHPを使って、blogの参照時のIPを取得する&lt;/li&gt;
-&lt;li&gt;取得したIPをdimensionに渡す&lt;/li&gt;
-&lt;li&gt;集計結果をGoogle Analyticsで参照できるよう、カスタムレポートを作成する&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;という手順で対応します。&lt;/p&gt;
-
-&lt;h4 id=&#34;この記事で紹介するシステム構成:a7cce1dfba537a1b6e65b0790dc867f9&#34;&gt;この記事で紹介するシステム構成&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;CentOS6&lt;/li&gt;
-&lt;li&gt;Ghost&lt;/li&gt;
-&lt;li&gt;Nginx&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;何はともあれ、まずは&lt;a href=&#34;http://www.google.com/intl/ja_jp/analytics/&#34;&gt;GoogleAnalytics&lt;/a&gt;を導入してください。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://viral-community.com/wordpress/google-analytics-setting-864/&#34;&gt;初心者必見！【Google Analytics(アナリティクス)】の導入と使い方&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.ghostforbeginners.com/how-to-add-google-analytics-to-ghost/&#34;&gt;How to Add Google Analytics to Ghost&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;google-analyticsにdimensionを設定し-アクセス元ipを集計できるようにする:a7cce1dfba537a1b6e65b0790dc867f9&#34;&gt;Google Analyticsにdimensionを設定し、アクセス元IPを集計できるようにする&lt;/h4&gt;
-
-&lt;p&gt;Analyticsが提供していない値(今回でいうところのアクセス元IP)を集計するには、dimension(変数)を設定し、その変数に値を代入することで、集計することができるようになります。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;アナリティクス設定 &amp;gt; カスタム定義 &amp;gt; カスタム ディメンション&lt;/code&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/get-access-ip-installed-google-analytics-to-ghost01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;新しいカスタム ディメンション &amp;gt; カスタム ディメンションを編集 &amp;gt; 保存&lt;/code&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/get-access-ip-installed-google-analytics-to-ghost02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;保存すると&lt;code&gt;dimension1&lt;/code&gt;という変数がAnalyticsに設定されます。&lt;/p&gt;
-
-&lt;h4 id=&#34;phpを使って-blogが参照された時のipを取得する:a7cce1dfba537a1b6e65b0790dc867f9&#34;&gt;PHPを使って、blogが参照された時のIPを取得する&lt;/h4&gt;
-
-&lt;p&gt;このblogにはGhostを動かすための最小の設定しかしていなかったので、まずはNginx上でPHPが動く環境を整えます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# yum -y install php php-fpm
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;次に、事前に用意したdomainをバーチャルホスト(VH)に割り振り、そのVHに対してPHPが動くように設定します。&lt;/p&gt;
-
-&lt;p&gt;/etc/nginx/conf.d/php.conf&lt;/p&gt;
-
-&lt;p&gt;````
-server {
-    listen       80;
-    server_name  ga.10rane.com;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;location / {
-      root   /var/www/html;
-      index  index.html index.htm index.php;
-}
-
-location ~ \.php$ {
-      root           html;
-      fastcgi_pass   127.0.0.1:9000;
-      fastcgi_index  index.php;
-      fastcgi_param  SCRIPT_FILENAME  /var/www/html$fastcgi_script_name;
-      include        fastcgi_params;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;}&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;
-php-fpmの起動のおよびNginxの再起動
-
-    # /etc/init.d/php-fpm start
-    # chkconfig php-fpm on
-    # /etc/init.d/nginx restart
-
-`/var/www/html/`配下に、アクセス元IPを取得するスクリプトを配置します。  
-このスクリプト自体はPHPですが、ブラウザ上からはJsとして認識させたいので、
-`header`には`header(&amp;quot;Content-type: application/x-javascript&amp;quot;);`を設定します。
-
-/var/www/html/remote_addr.php
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&amp;lt;?php
-header(&amp;ldquo;Content-type: application/x-javascript&amp;rdquo;);
-echo &amp;ldquo;var remote_addr = &amp;lsquo;&amp;rdquo; . $_SERVER[&amp;lsquo;REMOTE_ADDR&amp;rsquo;] . &amp;ldquo;&amp;lsquo;;&amp;rdquo;;
-?&amp;gt;
-```&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;http://ga.10rane.com/remote_addr.php&lt;/code&gt;にアクセスし、自分(アクセス元)のIPが参照されれば完了です。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/utano320/items/36b6eac2bbd5bb5657f6&#34;&gt;CentOSにてnginxでPHPを動かす&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://ysklog.net/javascript/1870.html&#34;&gt;javascriptでPHPファイルを実行してそれを出力する方法&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://lfll.blog73.fc2.com/blog-entry-258.html&#34;&gt;Google AnalyticsでIPアドレスを表示できるタグ「analyticsIP」を公開&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;取得したipをdimensionに渡す:a7cce1dfba537a1b6e65b0790dc867f9&#34;&gt;取得したIPをdimensionに渡す&lt;/h4&gt;
-
-&lt;p&gt;先ほど作成したソースで、変数&lt;code&gt;remote_addr&lt;/code&gt;にIPを代入するようにしたので、
-今度は&lt;code&gt;remote_addr&lt;/code&gt;をAnalyticsの&lt;code&gt;dimension1&lt;/code&gt;に代入します。&lt;/p&gt;
-
-&lt;p&gt;変更前のタグ&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;script&amp;gt;
-  (function(i,s,o,g,r,a,m){i[&#39;GoogleAnalyticsObject&#39;]=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,&#39;script&#39;,&#39;//www.google-analytics.com/analytics.js&#39;,&#39;ga&#39;);
-
-  ga(&#39;create&#39;, &#39;UA-****&#39;, &#39;auto&#39;);
-  ga(&#39;send&#39;, &#39;pageview&#39;);
-&amp;lt;/script&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;変更後のタグ。Analyticsのタグより前に先ほど用意したスクリプト(PHPファイル)をJsとして読み込んでいます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;script type=&amp;quot;text/javascript&amp;quot; src=&amp;quot;//ga.10rane.com/remote_addr.php&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
-&amp;lt;noscript&amp;gt;&amp;lt;img src=&amp;quot;//ga.10rane.com/remote_addr.php&amp;quot;&amp;gt;&amp;lt;/noscript&amp;gt;
-&amp;lt;script&amp;gt;
-  (function(i,s,o,g,r,a,m){i[&#39;GoogleAnalyticsObject&#39;]=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,&#39;script&#39;,&#39;//www.google-analytics.com/analytics.js&#39;,&#39;ga&#39;);
-
-  ga(&#39;create&#39;, &#39;UA-****&#39;, &#39;auto&#39;);
-  ga(&#39;set&#39;, &#39;dimension1&#39;, remote_addr);
-  ga(&#39;send&#39;, &#39;pageview&#39;);
-&amp;lt;/script&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;ghostの再起動。このブログは&lt;code&gt;forever&lt;/code&gt;で管理しているので、以下のように再起動します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cd src/ghost/
-$ forever stop index.js
-$ NODE_ENV=production forever start index.js
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;集計結果をgoogle-analyticsで参照できるよう-カスタムレポートを作成する:a7cce1dfba537a1b6e65b0790dc867f9&#34;&gt;集計結果をGoogle Analyticsで参照できるよう、カスタムレポートを作成する&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;カスタム &amp;gt; 新しいカスタム レポート &amp;gt;&lt;/code&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/get-access-ip-installed-google-analytics-to-ghost03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;ディメンションを追加 &amp;gt; カスタムディメンション &amp;gt; remote_addr(自分で設定した名前)&lt;/code&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/get-access-ip-installed-google-analytics-to-ghost04.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;カスタム &amp;gt; 設定したカスタムレポート&lt;/code&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/get-access-ip-installed-google-analytics-to-ghost05.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;集計結果は翌日反映されるので、明日以降にIPの集計が確認できれば成功です。&lt;/p&gt;
-
-&lt;p&gt;お疲れ様でした。&lt;/p&gt;
-</description>
+      <description>アクセス元IPを取得するには、Google Analyticsのデフォルト設定ではできません。 IPを取得、集計するには
+ Google Analyticsにdimensionを設定し、アクセス元IPを集計できるようにする PHPを使って、blogの参照時のIPを取得する 取得したIPをdimensionに渡す 集計結果をGoogle Analyticsで参照できるよう、カスタムレポートを作成する  という手順で対応します。
+この記事で紹介するシステム構成  CentOS6 Ghost Nginx  何はともあれ、まずはGoogleAnalyticsを導入してください。
+ 初心者必見！【Google Analytics(アナリティクス)】の導入と使い方 How to Add Google Analytics to Ghost  Google Analyticsにdimensionを設定し、アクセス元IPを集計できるようにする Analyticsが提供していない値(今回でいうところのアクセス元IP)を集計するには、dimension(変数)を設定し、その変数に値を代入することで、集計することができるようになります。
+アナリティクス設定 &amp;gt; カスタム定義 &amp;gt; カスタム ディメンション 新しいカスタム ディメンション &amp;gt; カスタム ディメンションを編集 &amp;gt; 保存 保存するとdimension1という変数がAnalyticsに設定されます。
+PHPを使って、blogが参照された時のIPを取得する このblogにはGhostを動かすための最小の設定しかしていなかったので、まずはNginx上でPHPが動く環境を整えます。
+# yum -y install php php-fpm  次に、事前に用意したdomainをバーチャルホスト(VH)に割り振り、そのVHに対してPHPが動くように設定します。
+/etc/nginx/conf.d/php.conf
+```` server { listen 80; server_name ga.10rane.com;
+location / { root /var/www/html; index index.</description>
     </item>
     
     <item>
@@ -470,9 +88,8 @@ $ NODE_ENV=production forever start index.js
       <pubDate>Thu, 08 May 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/05/08/change-to-ghost-from-octopress/</guid>
-      <description>&lt;p&gt;深い理由はないのですが、何となく乗り換えてみました。&lt;br /&gt;
-また備忘がてらのんびり書いていきたいと思います。&lt;/p&gt;
-</description>
+      <description>深い理由はないのですが、何となく乗り換えてみました。
+また備忘がてらのんびり書いていきたいと思います。</description>
     </item>
     
     <item>
@@ -481,76 +98,10 @@ $ NODE_ENV=production forever start index.js
       <pubDate>Fri, 10 May 2013 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/05/10/octopress-clippit/</guid>
-      <description>
-
-&lt;h3 id=&#34;octopressの標準設定:8bf21ae8dce7b4de73551fc0db3744de&#34;&gt;Octopressの標準設定&lt;/h3&gt;
-
-&lt;p&gt;rdiscountの場合、&lt;code&gt;```&lt;/code&gt;で囲う。色は付かない。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ls
-CHANGELOG.markdown Gemfile.lock       Rakefile           config.rb          plugins            sass
-Gemfile            README.markdown    _config.yml        config.ru          public             source
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;scheme:8bf21ae8dce7b4de73551fc0db3744de&#34;&gt;scheme&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;``` scheme&lt;/code&gt;で囲う。自分はelispの場合などに使っている。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;(defvar dvar 1 &amp;quot;実験用&amp;quot;) ;; -&amp;gt; 1
-(defvar dvar 2)         ;; -&amp;gt; 1 値が上書きされない
-(setq dvar 3)           ;; -&amp;gt; 3 defvar以外で宣言(代入)された場合は上書きされてしまう。
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;js:8bf21ae8dce7b4de73551fc0db3744de&#34;&gt;Js&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;codeblock lang:js&lt;/code&gt;で囲う。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt;
-class Animal
-  constructor:(name) -&gt; @name = name
-      say:(word) -&gt; console.log &#34;#{@name} said: #{word}&#34;
-
-class Dog extends Animal
-  constructor:(name) -&gt; super name
-      say:(word) -&gt; super &#34;Bowwow, #{word}&#34;
-
-dog = new Dog(&#34;Bob&#34;)
-dog.say(&#34;hello&#34;)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;php:8bf21ae8dce7b4de73551fc0db3744de&#34;&gt;PHP&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;https://gist.github.com/clippit/2398211&#34;&gt;コードスニップ PHP&lt;/a&gt;からファイルをDLし、ファイルを上書きする。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cd octopress/plugins
-wget https://gist.github.com/clippit/2398211/raw/a320b384db407d32b0b2034bbc660f15576ff4aa/pygments_code.rb
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;codeblock lang:phpinline&lt;/code&gt;で囲う。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;
-public $default = array(
-    &#39;datasource&#39; =&gt; &#39;Database/Mysql&#39;,
-    &#39;persistent&#39; =&gt; false,
-    &#39;host&#39; =&gt; &#39;localhost&#39;,
-    &#39;login&#39; =&gt; &#39;USERNAME&#39;,
-    &#39;password&#39; =&gt; &#39;PASSWORD&#39;,
-    &#39;database&#39; =&gt; &#39;DATABASE&#39;,
-    &#39;encoding&#39; =&gt; &#39;utf8&#39;,
-    &#39;unix_socket&#39; =&gt; &#39;/Applications/MAMP/tmp/mysql/mysql.sock&#39;
-    );
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;参考サイト:8bf21ae8dce7b4de73551fc0db3744de&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://rcmdnk.github.io/blog/2013/05/05/blog-octopress/&#34;&gt;Octopressでのコードの表示やコメントのあれこれ&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://gist.github.com/clippit/2398211&#34;&gt;コードスニップ PHP&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://dreamrunner.org/wiki/public_html/docs/Web/octopress.html#sec-9-3&#34;&gt;Include Code Snippets&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>Octopressの標準設定 rdiscountの場合、```で囲う。色は付かない。
+ls CHANGELOG.markdown Gemfile.lock Rakefile config.rb plugins sass Gemfile README.markdown _config.yml config.ru public source  scheme ``` schemeで囲う。自分はelispの場合などに使っている。
+(defvar dvar 1 &amp;quot;実験用&amp;quot;) ;; -&amp;gt; 1 (defvar dvar 2) ;; -&amp;gt; 1 値が上書きされない (setq dvar 3) ;; -&amp;gt; 3 defvar以外で宣言(代入)された場合は上書きされてしまう。  Js codeblock lang:jsで囲う。
+class Animal constructor:(name) - @name = name say:(word) - console.log &#34;#{@name} said: #{word}&#34; class Dog extends Animal constructor:(name) - super name say:(word) - super &#34;Bowwow, #{word}&#34;</description>
     </item>
     
     <item>
@@ -559,112 +110,13 @@ public $default = array(
       <pubDate>Thu, 09 May 2013 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/05/09/octopress-install/</guid>
-      <description>
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/octopress_001.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;octopressとは:104b45e224bd247e1ecac5584f543dd5&#34;&gt;Octopressとは&lt;/h2&gt;
-
-&lt;p&gt;github上にブログを構築できるruby製のフレームワーク。&lt;/p&gt;
-
-&lt;h2 id=&#34;インストール:104b45e224bd247e1ecac5584f543dd5&#34;&gt;インストール&lt;/h2&gt;
-
-&lt;p&gt;複数PCで更新したいので、Dropbox上にインストール。手順は&lt;a href=&#34;http://octopress.org/docs/setup/&#34;&gt;公式サイト&lt;/a&gt;と同じです。&lt;br /&gt;
-事前にrbenvかRVMでruby1.9.3以上をインストールしておいてください。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cd $HOME/Dropbox/
-git clone git://github.com/imathis/octopress.git octopress
-cd octopress
-gem install bundler
-rbenv rehash
-bundle install
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;rake-インストール時にエラー:104b45e224bd247e1ecac5584f543dd5&#34;&gt;rake インストール時にエラー&lt;/h3&gt;
-
-&lt;p&gt;rakeをインストールしたさいにOctopressで使うバージョンが違うというエラーがでた。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;rake install
-rake aborted!
-You have already activated rake 10.0.4, but your Gemfile requires rake 0.9.2.2. Using bundle exec may solve this.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;gemのバージョンは、Gemfileに設定されているので、rakeのバージョンを 10.0 から 0.9に変更し、再度 rake install を行う&lt;/p&gt;
-
-&lt;p&gt;octopress/Gemfile&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;source &amp;quot;http://rubygems.org&amp;quot;
-
-group :development do
-  gem &#39;rake&#39;, &#39;~&amp;gt; 0.9&#39; # 10.0 -&amp;gt; 0.9
-  gem &#39;jekyll&#39;, &#39;~&amp;gt; 0.12&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;インストールの確認:104b45e224bd247e1ecac5584f543dd5&#34;&gt;インストールの確認&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;rake preview
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;とコマンドを打ち、ブラウザからlocalhost:4000にアクセスしてください。
-正常にインストールされていれば、記事が0件のOctopressが表示されるはずです。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/octopress_002.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&#34;使い方-最低限のコマンド:104b45e224bd247e1ecac5584f543dd5&#34;&gt;使い方、最低限のコマンド&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;記事の生成&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;octopress/source/_posts/以下にmarkdown形式のファイルが生成される&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;rake new_post [&amp;quot;hoge&amp;quot;]
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;記事の確認&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;ブラウザからlocalhost:4000で、生成した記事を確認できる&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;rake preview
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;記事の再構築&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;記事を変更すると自動で更新されるが、まれに更新されない場合がある。その場合は、手動で更新(再構築)する。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;rake generate
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;rake-preview実行後-logに-regeneration-1-files-changed-が流れ続ける:104b45e224bd247e1ecac5584f543dd5&#34;&gt;rake preview実行後、logに regeneration: 1 files changed が流れ続ける&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&#34;http://blog.satooshi.jp/blog/2013/04/09/octopress-preview-never-stop-auto-regeneration&#34;&gt;Octopressでpreviewしていたらregeneration: 1 files changedが終わらない場合の対処方法&lt;/a&gt;に解決方法がかいてありました。
-これもgemのバージョン違いが原因のようです。&lt;/p&gt;
-
-&lt;p&gt;octopress/Gemfile&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-ruby&#34;&gt;source &amp;quot;http://rubygems.org&amp;quot;
-
-group :development do
-...
-  gem &#39;directory_watcher&#39;, &#39;~&amp;gt; 1.4.1&#39; # 1.5.1 -&amp;gt; 1.4.1
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;参考サイト:104b45e224bd247e1ecac5584f543dd5&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://octopress.org/&#34;&gt;公式サイト&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://rcmdnk.github.io/blog/2013/03/07/setup-octopress/&#34;&gt;GitHub pages + Octopressの導入&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.miukoba.net/blog/2013/01/05/start-octopress/&#34;&gt;Octopressはじめました&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.glidenote.com/blog/2011/11/07/install-octopress-on-github&#34;&gt;GithubとOctopressでモダンな技術系ブログを作ってみる&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.satooshi.jp/blog/2013/04/09/octopress-preview-never-stop-auto-regeneration&#34;&gt;Octopressでpreviewしていたらregeneration: 1 files changedが終わらない場合の対処方法&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>Octopressとは github上にブログを構築できるruby製のフレームワーク。
+インストール 複数PCで更新したいので、Dropbox上にインストール。手順は公式サイトと同じです。
+事前にrbenvかRVMでruby1.9.3以上をインストールしておいてください。
+cd $HOME/Dropbox/ git clone git://github.com/imathis/octopress.git octopress cd octopress gem install bundler rbenv rehash bundle install  rake インストール時にエラー rakeをインストールしたさいにOctopressで使うバージョンが違うというエラーがでた。
+rake install rake aborted! You have already activated rake 10.0.4, but your Gemfile requires rake 0.9.2.2. Using bundle exec may solve this.  gemのバージョンは、Gemfileに設定されているので、rakeのバージョンを 10.0 から 0.9に変更し、再度 rake install を行う
+octopress/Gemfile
+source &amp;quot;http://rubygems.org&amp;quot; group :development do gem &#39;rake&#39;, &#39;~&amp;gt; 0.9&#39; # 10.0 -&amp;gt; 0.9 gem &#39;jekyll&#39;, &#39;~&amp;gt; 0.</description>
     </item>
     
   </channel>

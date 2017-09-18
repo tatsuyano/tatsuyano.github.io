@@ -7,7 +7,9 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Tue, 09 Sep 2014 01:00:00 +0900</lastBuildDate>
-    <atom:link href="http://tatsuyano.github.io/tags/nginx/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://tatsuyano.github.io/tags/nginx/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>Amazon LinuxにGhostをインストールする</title>
@@ -15,155 +17,12 @@
       <pubDate>Tue, 09 Sep 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/09/09/how-to-install-and-setup-ghost-on-amazon-linux/</guid>
-      <description>
-
-&lt;p&gt;新たに&lt;code&gt;t2.micro&lt;/code&gt;のインスタンスを立ち上げたので、Ghost を新規でインストールしようと思います。&lt;/p&gt;
-
-&lt;h3 id=&#34;node-js-のインストール:1de3ebcd72298143cbf6759e7ec6289b&#34;&gt;Node.js のインストール&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;anyenv&lt;/code&gt;を使って、&lt;code&gt;0.10.0&lt;/code&gt;以上のNode.js をインストールしてください。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ which node
-HOME/.anyenv/envs/ndenv/shims/node
-
-$ which npm
-$HOME/.anyenv/envs/ndenv/shims/npm
-
-$ node --version
-v0.10.26
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/19/install-anyenv/&#34;&gt;anyenvをインストールする&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;nginx-のインストール:1de3ebcd72298143cbf6759e7ec6289b&#34;&gt;nginx のインストール&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;yum&lt;/code&gt;でのバージョンは1.4.7と少し古いですが、面倒なのでインストール&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo yum -y install nginx
-
-$ /usr/sbin/nginx -v
-nginx version: nginx/1.4.7
-
-$ sudo chkconfig nginx on
-$ sudo chkconfig --list | grep nginx
-nginx           0:off   1:off   2:on    3:on    4:on    5:on    6:off
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;念のため起動テスト&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo /etc/init.d/nginx start
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;confの設定:1de3ebcd72298143cbf6759e7ec6289b&#34;&gt;confの設定&lt;/h4&gt;
-
-&lt;p&gt;特定のドメインのみを停止(切り離)したりするために、
-設定ファイルのリンクを貼ったディレクトリを&lt;code&gt;include&lt;/code&gt;します。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;sites-available&lt;/code&gt;にはドメインごとの設定ファイル、
-&lt;code&gt;sites-enabled&lt;/code&gt;には設定ファイルのリンクを貼ります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo bash
-# cd /etc/nginx
-# mkdir sites-available sites-enabled
-
-# touch sites-available/blog.10rane.com.conf
-# ln -s /etc/nginx/sites-available/blog.10rane.com.conf /etc/nginx/sites-enabled/blog.10rane.com.conf
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;sites-available/blog.10rane.com.conf&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;server {
-    listen 80;
-    server_name blog.10rane.com;
-
-    location / {
-        proxy_set_header   X-Real-IP $remote_addr;
-        proxy_set_header   Host      $http_host;
-        proxy_pass         http://127.0.0.1:2368;
-    }
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;シンボリックリンク&lt;code&gt;sites-enabled&lt;/code&gt;を&lt;code&gt;httpディレクティブ&lt;/code&gt;に&lt;code&gt;include&lt;/code&gt;します。&lt;/p&gt;
-
-&lt;p&gt;/etc/nginx/nginx.conf&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;http {
-    include       /etc/nginx/sites-enabled/*.conf; # for Ghost
-....
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;Nginx の再起動&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ sudo /etc/init.d/nginx restart
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://docs.ghost.org/ja/installation/linux/&#34;&gt;LinuxにGhostをインストールする方法&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;ghost-のダウンロード-インストール:1de3ebcd72298143cbf6759e7ec6289b&#34;&gt;Ghost のダウンロード&amp;amp;インストール&lt;/h3&gt;
-
-&lt;p&gt;&lt;code&gt;npm start&lt;/code&gt;を実行すると、フォアグラウンドで実行される。実運用するためには、
-Ghost を永続的に動かすためには、Nodeパッケージの&lt;code&gt;forever&lt;/code&gt;などを使う必要があります。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ mkdir $HOME/app
-$ cd app
-$ curl -L https://ghost.org/zip/ghost-latest.zip -o ghost.zip
-$ unzip -uo ghost.zip -d ghost
-
-$ cd ghost
-$ npm install --production
-$ npm start
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;$HOME/app/ghost/config.js&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;config = {
-    // ### Development **(default)**
-    development: {
-        // The url to use when providing links to the site, E.g. in RSS and email.
-//        url: &#39;http://my-ghost-blog.com&#39;,
-        url: &#39;http://blog.10rane.com&#39;,
-...
-
-    production: {
-//        url: &#39;http://my-ghost-blog.com&#39;,
-        url: &#39;http://blog.10rane.com&#39;,
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;forever-のインストール:1de3ebcd72298143cbf6759e7ec6289b&#34;&gt;forever のインストール&lt;/h3&gt;
-
-&lt;p&gt;Ghost をバックグラウンドで動かすために&lt;code&gt;forever&lt;/code&gt;を使います。
-&lt;code&gt;forever&lt;/code&gt;は別パッケージでもよく使うので、&lt;code&gt;-g&lt;/code&gt;オプションを指定してグローバルインストールします。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ npm install forever -g
-
-$ ndenv which forever
-$HOME/.anyenv/envs/ndenv/versions/v0.10.26/bin/forever
-
-$ source $HOME/.zshrc
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&lt;code&gt;forever&lt;/code&gt;の起動&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cd $HOME/app/ghost
-$ NODE_ENV=production forever start index.js
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;これでGhost を運用できるようになりました。&lt;br /&gt;
-お疲れ様でした。&lt;/p&gt;
-
-&lt;h3 id=&#34;参考サイト:1de3ebcd72298143cbf6759e7ec6289b&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.10rane.com/2014/08/19/install-anyenv/&#34;&gt;anyenvをインストールする&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://docs.ghost.org/ja/installation/linux/&#34;&gt;LinuxにGhostをインストールする方法&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://docs.ghost.org/ja/installation/deploy/#foreverを使う場合-(https://npmjs.org/package/forever&#34;&gt;Foreverを使う場合&lt;/a&gt;)&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>新たにt2.microのインスタンスを立ち上げたので、Ghost を新規でインストールしようと思います。
+Node.js のインストール anyenvを使って、0.10.0以上のNode.js をインストールしてください。
+$ which node HOME/.anyenv/envs/ndenv/shims/node $ which npm $HOME/.anyenv/envs/ndenv/shims/npm $ node --version v0.10.26   anyenvをインストールする  nginx のインストール yumでのバージョンは1.4.7と少し古いですが、面倒なのでインストール
+$ sudo yum -y install nginx $ /usr/sbin/nginx -v nginx version: nginx/1.4.7 $ sudo chkconfig nginx on $ sudo chkconfig --list | grep nginx nginx 0:off 1:off 2:on 3:on 4:on 5:on 6:off  念のため起動テスト
+$ sudo /etc/init.d/nginx start  confの設定 特定のドメインのみを停止(切り離)したりするために、 設定ファイルのリンクを貼ったディレクトリをincludeします。
+sites-availableにはドメインごとの設定ファイル、 sites-enabledには設定ファイルのリンクを貼ります。</description>
     </item>
     
     <item>
@@ -172,164 +31,16 @@ $ NODE_ENV=production forever start index.js
       <pubDate>Sun, 10 Aug 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2014/08/10/get-access-ip-installed-google-analytics-to-ghost/</guid>
-      <description>
-
-&lt;p&gt;アクセス元IPを取得するには、Google Analyticsのデフォルト設定ではできません。
-IPを取得、集計するには&lt;/p&gt;
-
-&lt;ol&gt;
-&lt;li&gt;Google Analyticsにdimensionを設定し、アクセス元IPを集計できるようにする&lt;/li&gt;
-&lt;li&gt;PHPを使って、blogの参照時のIPを取得する&lt;/li&gt;
-&lt;li&gt;取得したIPをdimensionに渡す&lt;/li&gt;
-&lt;li&gt;集計結果をGoogle Analyticsで参照できるよう、カスタムレポートを作成する&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;という手順で対応します。&lt;/p&gt;
-
-&lt;h4 id=&#34;この記事で紹介するシステム構成:a7cce1dfba537a1b6e65b0790dc867f9&#34;&gt;この記事で紹介するシステム構成&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;CentOS6&lt;/li&gt;
-&lt;li&gt;Ghost&lt;/li&gt;
-&lt;li&gt;Nginx&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;何はともあれ、まずは&lt;a href=&#34;http://www.google.com/intl/ja_jp/analytics/&#34;&gt;GoogleAnalytics&lt;/a&gt;を導入してください。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://viral-community.com/wordpress/google-analytics-setting-864/&#34;&gt;初心者必見！【Google Analytics(アナリティクス)】の導入と使い方&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.ghostforbeginners.com/how-to-add-google-analytics-to-ghost/&#34;&gt;How to Add Google Analytics to Ghost&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;google-analyticsにdimensionを設定し-アクセス元ipを集計できるようにする:a7cce1dfba537a1b6e65b0790dc867f9&#34;&gt;Google Analyticsにdimensionを設定し、アクセス元IPを集計できるようにする&lt;/h4&gt;
-
-&lt;p&gt;Analyticsが提供していない値(今回でいうところのアクセス元IP)を集計するには、dimension(変数)を設定し、その変数に値を代入することで、集計することができるようになります。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;アナリティクス設定 &amp;gt; カスタム定義 &amp;gt; カスタム ディメンション&lt;/code&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/get-access-ip-installed-google-analytics-to-ghost01.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;新しいカスタム ディメンション &amp;gt; カスタム ディメンションを編集 &amp;gt; 保存&lt;/code&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/get-access-ip-installed-google-analytics-to-ghost02.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;保存すると&lt;code&gt;dimension1&lt;/code&gt;という変数がAnalyticsに設定されます。&lt;/p&gt;
-
-&lt;h4 id=&#34;phpを使って-blogが参照された時のipを取得する:a7cce1dfba537a1b6e65b0790dc867f9&#34;&gt;PHPを使って、blogが参照された時のIPを取得する&lt;/h4&gt;
-
-&lt;p&gt;このblogにはGhostを動かすための最小の設定しかしていなかったので、まずはNginx上でPHPが動く環境を整えます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;# yum -y install php php-fpm
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;次に、事前に用意したdomainをバーチャルホスト(VH)に割り振り、そのVHに対してPHPが動くように設定します。&lt;/p&gt;
-
-&lt;p&gt;/etc/nginx/conf.d/php.conf&lt;/p&gt;
-
-&lt;p&gt;````
-server {
-    listen       80;
-    server_name  ga.10rane.com;&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;location / {
-      root   /var/www/html;
-      index  index.html index.htm index.php;
-}
-
-location ~ \.php$ {
-      root           html;
-      fastcgi_pass   127.0.0.1:9000;
-      fastcgi_index  index.php;
-      fastcgi_param  SCRIPT_FILENAME  /var/www/html$fastcgi_script_name;
-      include        fastcgi_params;
-}
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;}&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;
-php-fpmの起動のおよびNginxの再起動
-
-    # /etc/init.d/php-fpm start
-    # chkconfig php-fpm on
-    # /etc/init.d/nginx restart
-
-`/var/www/html/`配下に、アクセス元IPを取得するスクリプトを配置します。  
-このスクリプト自体はPHPですが、ブラウザ上からはJsとして認識させたいので、
-`header`には`header(&amp;quot;Content-type: application/x-javascript&amp;quot;);`を設定します。
-
-/var/www/html/remote_addr.php
-
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;&amp;lt;?php
-header(&amp;ldquo;Content-type: application/x-javascript&amp;rdquo;);
-echo &amp;ldquo;var remote_addr = &amp;lsquo;&amp;rdquo; . $_SERVER[&amp;lsquo;REMOTE_ADDR&amp;rsquo;] . &amp;ldquo;&amp;lsquo;;&amp;rdquo;;
-?&amp;gt;
-```&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;http://ga.10rane.com/remote_addr.php&lt;/code&gt;にアクセスし、自分(アクセス元)のIPが参照されれば完了です。&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/utano320/items/36b6eac2bbd5bb5657f6&#34;&gt;CentOSにてnginxでPHPを動かす&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://ysklog.net/javascript/1870.html&#34;&gt;javascriptでPHPファイルを実行してそれを出力する方法&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://lfll.blog73.fc2.com/blog-entry-258.html&#34;&gt;Google AnalyticsでIPアドレスを表示できるタグ「analyticsIP」を公開&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&#34;取得したipをdimensionに渡す:a7cce1dfba537a1b6e65b0790dc867f9&#34;&gt;取得したIPをdimensionに渡す&lt;/h4&gt;
-
-&lt;p&gt;先ほど作成したソースで、変数&lt;code&gt;remote_addr&lt;/code&gt;にIPを代入するようにしたので、
-今度は&lt;code&gt;remote_addr&lt;/code&gt;をAnalyticsの&lt;code&gt;dimension1&lt;/code&gt;に代入します。&lt;/p&gt;
-
-&lt;p&gt;変更前のタグ&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;script&amp;gt;
-  (function(i,s,o,g,r,a,m){i[&#39;GoogleAnalyticsObject&#39;]=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,&#39;script&#39;,&#39;//www.google-analytics.com/analytics.js&#39;,&#39;ga&#39;);
-
-  ga(&#39;create&#39;, &#39;UA-****&#39;, &#39;auto&#39;);
-  ga(&#39;send&#39;, &#39;pageview&#39;);
-&amp;lt;/script&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;変更後のタグ。Analyticsのタグより前に先ほど用意したスクリプト(PHPファイル)をJsとして読み込んでいます。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;&amp;lt;script type=&amp;quot;text/javascript&amp;quot; src=&amp;quot;//ga.10rane.com/remote_addr.php&amp;quot;&amp;gt;&amp;lt;/script&amp;gt;
-&amp;lt;noscript&amp;gt;&amp;lt;img src=&amp;quot;//ga.10rane.com/remote_addr.php&amp;quot;&amp;gt;&amp;lt;/noscript&amp;gt;
-&amp;lt;script&amp;gt;
-  (function(i,s,o,g,r,a,m){i[&#39;GoogleAnalyticsObject&#39;]=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,&#39;script&#39;,&#39;//www.google-analytics.com/analytics.js&#39;,&#39;ga&#39;);
-
-  ga(&#39;create&#39;, &#39;UA-****&#39;, &#39;auto&#39;);
-  ga(&#39;set&#39;, &#39;dimension1&#39;, remote_addr);
-  ga(&#39;send&#39;, &#39;pageview&#39;);
-&amp;lt;/script&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;ghostの再起動。このブログは&lt;code&gt;forever&lt;/code&gt;で管理しているので、以下のように再起動します。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ cd src/ghost/
-$ forever stop index.js
-$ NODE_ENV=production forever start index.js
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;集計結果をgoogle-analyticsで参照できるよう-カスタムレポートを作成する:a7cce1dfba537a1b6e65b0790dc867f9&#34;&gt;集計結果をGoogle Analyticsで参照できるよう、カスタムレポートを作成する&lt;/h4&gt;
-
-&lt;p&gt;&lt;code&gt;カスタム &amp;gt; 新しいカスタム レポート &amp;gt;&lt;/code&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/get-access-ip-installed-google-analytics-to-ghost03.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;ディメンションを追加 &amp;gt; カスタムディメンション &amp;gt; remote_addr(自分で設定した名前)&lt;/code&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/get-access-ip-installed-google-analytics-to-ghost04.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;カスタム &amp;gt; 設定したカスタムレポート&lt;/code&gt;
-&lt;img src=&#34;https://dl.dropboxusercontent.com/u/159938/blog_images/get-access-ip-installed-google-analytics-to-ghost05.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
-
-&lt;p&gt;集計結果は翌日反映されるので、明日以降にIPの集計が確認できれば成功です。&lt;/p&gt;
-
-&lt;p&gt;お疲れ様でした。&lt;/p&gt;
-</description>
+      <description>アクセス元IPを取得するには、Google Analyticsのデフォルト設定ではできません。 IPを取得、集計するには
+ Google Analyticsにdimensionを設定し、アクセス元IPを集計できるようにする PHPを使って、blogの参照時のIPを取得する 取得したIPをdimensionに渡す 集計結果をGoogle Analyticsで参照できるよう、カスタムレポートを作成する  という手順で対応します。
+この記事で紹介するシステム構成  CentOS6 Ghost Nginx  何はともあれ、まずはGoogleAnalyticsを導入してください。
+ 初心者必見！【Google Analytics(アナリティクス)】の導入と使い方 How to Add Google Analytics to Ghost  Google Analyticsにdimensionを設定し、アクセス元IPを集計できるようにする Analyticsが提供していない値(今回でいうところのアクセス元IP)を集計するには、dimension(変数)を設定し、その変数に値を代入することで、集計することができるようになります。
+アナリティクス設定 &amp;gt; カスタム定義 &amp;gt; カスタム ディメンション 新しいカスタム ディメンション &amp;gt; カスタム ディメンションを編集 &amp;gt; 保存 保存するとdimension1という変数がAnalyticsに設定されます。
+PHPを使って、blogが参照された時のIPを取得する このblogにはGhostを動かすための最小の設定しかしていなかったので、まずはNginx上でPHPが動く環境を整えます。
+# yum -y install php php-fpm  次に、事前に用意したdomainをバーチャルホスト(VH)に割り振り、そのVHに対してPHPが動くように設定します。
+/etc/nginx/conf.d/php.conf
+```` server { listen 80; server_name ga.10rane.com;
+location / { root /var/www/html; index index.</description>
     </item>
     
     <item>
@@ -338,57 +49,13 @@ $ NODE_ENV=production forever start index.js
       <pubDate>Fri, 21 Dec 2012 02:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2012/12/21/nginx-request-entity-too-large/</guid>
-      <description>
-
-&lt;p&gt;サイズの大きなファイルをアップロードしようとするとタイトルのエラーが出るので、その対処方法。&lt;/p&gt;
-
-&lt;h2 id=&#34;nginx-conf:251fe1633e5a45e2b9c809336377c9e6&#34;&gt;nginx.conf&lt;/h2&gt;
-
-&lt;p&gt;まずはnginx.confファイルに「client_max_body_size 20M;」を追加。&lt;br /&gt;
-私はリバースプロキシを利用しているので、2箇所に記述。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;server {
-   listen       80;
-      server_name blog.10rane.com;
-
-   client_max_body_size 20M; # 413 Request Entity Too Large
-   .....
-
-server {
-   listen       8080;
-      server_name blog.10rane.com;
-
-   client_max_body_size 20M; # 413 Request Entity Too Large
-   .....
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;php-ini:251fe1633e5a45e2b9c809336377c9e6&#34;&gt;php.ini&lt;/h2&gt;
-
-&lt;p&gt;php.iniは3箇所の変更。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-php&#34;&gt;# emacs /etc/php.ini
-upload_max_filesize = 20M
-post_max_size = 20M
-memory_limit = 128M
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;再起動:251fe1633e5a45e2b9c809336377c9e6&#34;&gt;再起動&lt;/h2&gt;
-
-&lt;p&gt;nginx、fast-cgi両方を再起動。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;/etc/init.d/nginx restart
-/etc/init.d/php-fastcgi restart
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;参考サイト:251fe1633e5a45e2b9c809336377c9e6&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://weble.org/2012/05/28/nginx-error-413-request-entity-too-large-%E3%81%A8%E5%87%BA%E3%82%8B%E5%A0%B4%E5%90%88%E3%81%AF%E6%9C%80%E5%A4%A7%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E3%82%B5%E3%82%A4%E3%82%BA%E3%82%92&#34;&gt;nginx error – 413 Request Entity Too Large と出る場合は最大ファイルサイズを変更する&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://se-suganuma.blogspot.jp/2012/04/fileuploadnginxphpini.html&#34;&gt;FileをUploadするためのnginxとphp.iniの設定&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>サイズの大きなファイルをアップロードしようとするとタイトルのエラーが出るので、その対処方法。
+nginx.conf まずはnginx.confファイルに「client_max_body_size 20M;」を追加。
+私はリバースプロキシを利用しているので、2箇所に記述。
+server { listen 80; server_name blog.10rane.com; client_max_body_size 20M; # 413 Request Entity Too Large ..... server { listen 8080; server_name blog.10rane.com; client_max_body_size 20M; # 413 Request Entity Too Large .....  php.ini php.iniは3箇所の変更。
+# emacs /etc/php.ini upload_max_filesize = 20M post_max_size = 20M memory_limit = 128M  再起動 nginx、fast-cgi両方を再起動。
+/etc/init.d/nginx restart /etc/init.d/php-fastcgi restart  参考サイト 以下のサイトを参考にさせていただきました。ありがとうございます！
+ nginx error – 413 Request Entity Too Large と出る場合は最大ファイルサイズを変更する FileをUploadするためのnginxとphp.</description>
     </item>
     
     <item>
@@ -397,51 +64,11 @@ memory_limit = 128M
       <pubDate>Fri, 21 Dec 2012 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2012/12/21/nginx-basic-authentication-limit-ip/</guid>
-      <description>
-
-&lt;h2 id=&#34;basic認証:798fce9c39f0cf864e5e3338113d2019&#34;&gt;Basic認証&lt;/h2&gt;
-
-&lt;p&gt;自分のホーム以下に.htpasswdファイルを配置するとうまく認証できませんでした。&lt;br /&gt;
-なのであまりよくありませんが面倒なので、/etc/nginx配下で、かつパーミッションは777で。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cd /etc/nginx
-htpasswd -c /etc/nginx/.htpasswd hoge
-chmod 777 .htpasswd
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;emacs conf.d/vh_redmine.conf
-   location / {
-     ....
-     auth_basic &amp;quot;Secret Area&amp;quot;;
-     auth_basic_user_file &amp;quot;/etc/nginx/.htpasswd&amp;quot;;
-   }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;ip制限:798fce9c39f0cf864e5e3338113d2019&#34;&gt;IP制限&lt;/h2&gt;
-
-&lt;p&gt;上から順に設定が反映されるらしく、allowより前にdenyの設定を入れてしまうとallowが反映されないので注意。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;  server {
-    ....
-    allow xxx.xxx.xxx.xxx;
-    deny  all;
-  }
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;再起動:798fce9c39f0cf864e5e3338113d2019&#34;&gt;再起動&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code&gt;/etc/init.d/nginx restart
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;参考サイト:798fce9c39f0cf864e5e3338113d2019&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://se-suganuma.blogspot.jp/2012/05/nginxbasic.html&#34;&gt;nginxでBasic認証を設定&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://ecpplus.net/weblog/nginx%E3%81%A7ip%E3%82%A2%E3%83%89%E3%83%AC%E3%82%B9%E3%81%AB%E3%82%88%E3%82%8B%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E5%88%B6%E9%99%90/&#34;&gt;Nginx で IPアドレスによるアクセス制限&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description> Basic認証 自分のホーム以下に.htpasswdファイルを配置するとうまく認証できませんでした。
+なのであまりよくありませんが面倒なので、/etc/nginx配下で、かつパーミッションは777で。
+cd /etc/nginx htpasswd -c /etc/nginx/.htpasswd hoge chmod 777 .htpasswd  emacs conf.d/vh_redmine.conf location / { .... auth_basic &amp;quot;Secret Area&amp;quot;; auth_basic_user_file &amp;quot;/etc/nginx/.htpasswd&amp;quot;; }  IP制限 上から順に設定が反映されるらしく、allowより前にdenyの設定を入れてしまうとallowが反映されないので注意。
+server { .... allow xxx.xxx.xxx.xxx; deny all; }  再起動 /etc/init.d/nginx restart  参考サイト 以下のサイトを参考にさせていただきました。ありがとうございます！
+ nginxでBasic認証を設定 Nginx で IPアドレスによるアクセス制限  </description>
     </item>
     
   </channel>

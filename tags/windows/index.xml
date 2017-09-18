@@ -7,7 +7,9 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Sun, 17 Sep 2017 14:00:00 +0900</lastBuildDate>
-    <atom:link href="http://tatsuyano.github.io/tags/windows/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://tatsuyano.github.io/tags/windows/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>fishをインストールする</title>
@@ -15,141 +17,11 @@
       <pubDate>Sun, 17 Sep 2017 14:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2017/09/17/install-fish/</guid>
-      <description>
-
-&lt;h1 id=&#34;fish-fishermanのインストール:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;fish &amp;amp; fishermanのインストール&lt;/h1&gt;
-
-&lt;p&gt;macを新調したので、shellもzshからfishに乗り換えてみた。&lt;/p&gt;
-
-&lt;h2 id=&#34;install-fish:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;install fish&lt;/h2&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ brew install fish
-
-$ fish -v
-fish, version 2.6.0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;fishをログインシェルにせず-bashから起動する:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;fishをログインシェルにせず、bashから起動する&lt;/h2&gt;
-
-&lt;p&gt;ログインシェルをfishにするとfishに問題があったときにterminalが動かなくなってしまうので、bash_profileの一番下で&lt;code&gt;exec fish&lt;/code&gt;を実行する。
-またanyenvがfishに 完全に対応していないので、bashでanyenvを動かしてからfishを動かす。&lt;/p&gt;
-
-&lt;p&gt;＄HOME/.bash_profile&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;if [ -d $HOME/.anyenv ]; then
-   export PATH=$HOME/.anyenv/bin:$PATH
-   eval &amp;quot;$(anyenv init -)&amp;quot;
-fi
-
-exec fish
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/tak-onda/items/a90b63d9618d6b15c18c&#34;&gt;ログインシェルはbashのままfishを利用する&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://ja.stackoverflow.com/questions/33694/fish%E3%82%B7%E3%82%A7%E3%83%AB%E3%81%A7anyenv%E3%82%92%E8%A8%AD%E5%AE%9A%E3%81%97%E3%81%9F%E3%81%A8%E3%81%8D%E3%81%ABcalled-during-startup%E3%82%A8%E3%83%A9%E3%83%BC%E3%81%8C%E5%87%BA%E3%82%8B&#34;&gt;fishシェルでanyenvを設定したときにcalled during startupエラーが出る&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;install-fisherman:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;install fisherman&lt;/h2&gt;
-
-&lt;p&gt;PluginManagerはfishermanを選択&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher
-
-$ fisher -v
-fisherman version 2.13.1 ~/.config/fish/functions/fisher.fish
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://github.com/fisherman/fisherman&#34;&gt;fisherman/fisherman&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://futurismo.biz/archives/6079&#34;&gt;oh-my-fish は古い！fisherman で置き換えられる&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/ryotako/items/2d9d6fb646d2f3644dc8&#34;&gt;fishのプラグインマネージャ比較&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;テーマはOhMyFishのagnosterを選択。別のテーマに変更する場合は、再度installすると変更される&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ fisher install omf/theme-agnoster
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;pluginのインストール。pecoの代わりにfzfを使ってみる。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ brew install fzf
-$ fisher install z fzf decors/fish-ghq 0rax/fish-bd
-
-$ fisher ls // themeの前には*が付く
-* agnoster        await           bd              fzf             get             getopts         ghq             last_job_id     z
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;fisher edc/bass&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://futurismo.biz/archives/6087&#34;&gt;fish ユーザなら入れておきたいプラグイン 13 選&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/b4b4r07/items/9e1bbffb1be70b6ce033&#34;&gt;おい、peco もいいけど fzf 使えよ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&#34;alliasとfunctionを設定する:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;alliasとfunctionを設定する&lt;/h2&gt;
-
-&lt;p&gt;自分用のaliasとfunctionは下記ファイルに設定&lt;/p&gt;
-
-&lt;p&gt;$HOME/.config/fish/config.fish&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;# git alias
-alias ga  &amp;quot;git add&amp;quot;
-alias gd  &amp;quot;git diff&amp;quot;
-alias gb  &amp;quot;git branch&amp;quot;
-alias gco &amp;quot;git checkout&amp;quot;
-alias gst &amp;quot;git status&amp;quot;
-
-# colordiff or diff
-set tmp (which colordiff) #実行結果を変数にsetすることで、標準出力に出力させないようにする
-if test $status -eq 0
-    alias diff &amp;quot;colordiff -u&amp;quot;
-else
-    alias diff &amp;quot;diff -u&amp;quot;
-end
-
-# tmux
-function tmr
-    tmux new -s $argv[1]; or tmux attach -d -t $argv[1]
-end
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;参考サイト:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.hsbt.org/diary/20170421.html&#34;&gt;zsh から fish にした&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://dev.classmethod.jp/etc/fish-shell-life/&#34;&gt;fish shell を使いたい人生だった&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://qiita.com/susieyy/items/ac2133e249f252dc9a34&#34;&gt;詳解 fishでモダンなシェル環境の構築&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&#34;peco-ghq:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;peco &amp;amp; ghq&lt;/h1&gt;
-
-&lt;p&gt;$ brew install peco ghq
-$ fisher ghq peco yoshiori/fish-peco_select_zsh_history yoshiori/fish-peco_select_ghq_repository&lt;/p&gt;
-
-&lt;h2 id=&#34;ctrl-f-のキーバインドを変える:52e7b1717bbe3e20759ef87297fbc110&#34;&gt;Ctrl+F のキーバインドを変える&lt;/h2&gt;
-
-&lt;p&gt;デフォルトだと&lt;code&gt;Ctrl+F&lt;/code&gt;はautosuggestionがbindされている。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-fish&#34;&gt;bind \cf &#39;forward-word&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://fish.rubikitch.com/bind/&#34;&gt;bind キーバインドを設定・削除 使えるキーを一覧する&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;https://fishshell.com/&#34;&gt;fish shell main page&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-
-&lt;li&gt;&lt;p&gt;&lt;a href=&#34;http://fishshell.com/docs/current/index.html&#34;&gt;Autosuggestions&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;To accept the autosuggestion (replacing the command line contents), press right arrow or Control+F.
-To accept the first suggested word, press Alt+→ or Alt+F. 
-If the autosuggestion is not what you want, just ignore it: it won&#39;t execute unless you accept it.
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://blog.nijohando.jp/post/starting-fishshell/&#34;&gt;fish shellを使う&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>fish &amp;amp; fishermanのインストール macを新調したので、shellもzshからfishに乗り換えてみた。
+install fish $ brew install fish $ fish -v fish, version 2.6.0  fishをログインシェルにせず、bashから起動する ログインシェルをfishにするとfishに問題があったときにterminalが動かなくなってしまうので、bash_profileの一番下でexec fishを実行する。 またanyenvがfishに 完全に対応していないので、bashでanyenvを動かしてからfishを動かす。
+＄HOME/.bash_profile
+if [ -d $HOME/.anyenv ]; then export PATH=$HOME/.anyenv/bin:$PATH eval &amp;quot;$(anyenv init -)&amp;quot; fi exec fish   ログインシェルはbashのままfishを利用する fishシェルでanyenvを設定したときにcalled during startupエラーが出る  install fisherman PluginManagerはfishermanを選択
+$ curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher $ fisher -v fisherman version 2.13.1 ~/.config/fish/functions/fisher.fish   fisherman/fisherman oh-my-fish は古い！fisherman で置き換えられる fishのプラグインマネージャ比較  テーマはOhMyFishのagnosterを選択。別のテーマに変更する場合は、再度installすると変更される</description>
     </item>
     
     <item>
@@ -158,85 +30,13 @@ If the autosuggestion is not what you want, just ignore it: it won&#39;t execute
       <pubDate>Mon, 11 Apr 2016 14:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2016/04/11/check-the-status-of-the-port-using-the-netcat/</guid>
-      <description>
-
-&lt;p&gt;ローカルマシン(今回はWindows)から、ホストのLinux(ローカルマシン内のVagrant)に、
-メッセージを送ってポートの確認を行う方法&lt;/p&gt;
-
-&lt;h3 id=&#34;netcatのインストール:7a56d6968e5ac92315baa20c4b893314&#34;&gt;netcatのインストール&lt;/h3&gt;
-
-&lt;p&gt;まずはyumでLinuxにインストール&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;sudo yum -y install nc.x86_64
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;次に下記URLからWindowsにインストール&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://eternallybored.org/misc/netcat/netcat-win32-1.12.zip&#34;&gt;windows版のnetcat&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;windowsからlinuxの指定のポートにメッセージを送る:7a56d6968e5ac92315baa20c4b893314&#34;&gt;WindowsからLinuxの指定のポートにメッセージを送る&lt;/h3&gt;
-
-&lt;p&gt;Windowsのコンソールを立ち上げ、Linux(192.168,33.10)の(例えば)8082ポートにecho
-これで8082ポートが開いている確認できる&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;C:\Program Files (x86)\netcat&amp;gt; echo &#39;hello&#39; | nc 192.168.33.10 8082
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;次に Linux側で8082ポートをListen。すると期待どおりメッセージが表示される&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ nc -l 8082
-&#39;hello&#39;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;ホスト側の現在開いているポートを確認する:7a56d6968e5ac92315baa20c4b893314&#34;&gt;ホスト側の現在開いているポートを確認する&lt;/h3&gt;
-
-&lt;p&gt;ホスト側でポート状況を確認するには、以下のパラーメータをつける&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-shell&#34;&gt;$ netstat -ant
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h4 id=&#34;オプション:7a56d6968e5ac92315baa20c4b893314&#34;&gt;オプション&lt;/h4&gt;
-
-&lt;ul&gt;
-&lt;li&gt;-t TCPポートを表示する&lt;/li&gt;
-&lt;li&gt;-u UDPポートを表示する&lt;/li&gt;
-&lt;li&gt;-a すべての有効なポートを表示する&lt;/li&gt;
-&lt;li&gt;-n 一切の名前解決を行なわない&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;!--
-### telnetをつかったポートの状況確認
-
-telnetをつかっても確認ができる。下記のコマンドは8082ポート
-
-http://togattti.hateblo.jp/entry/2014/01/19/124912
-
-```
-$ telnet localhost 8082
-Trying ::1...
-telnet: connect to address ::1: Connection refused
-Trying 127.0.0.1...
-Connected to localhost.
-Escape character is &#39;^]&#39;.
-```
-8082がLISTENできる場合は、`Connected to xxx` と表示される
-
-
-* [telnetとnetstatでポート番号の状態を確認する](http://togattti.hateblo.jp/entry/2014/01/19/124912)
-* [TELNETプロトコルでリモートマシンに接続 - Linuxコマンド](http://webkaru.net/linux/telnet-command/)
-
---&gt;
-
-&lt;h3 id=&#34;参考サイト:7a56d6968e5ac92315baa20c4b893314&#34;&gt;参考サイト&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.usupi.org/sysad/190.html&#34;&gt;Netcat でネットワークをもう少し活用する&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.atmarkit.co.jp/ait/articles/0207/20/news003.html&#34;&gt;netstatコマンドを使いこなす&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://itpro.nikkeibp.co.jp/article/COLUMN/20100308/345506/&#34;&gt;netstat（1）――TCP通信の接続状況を調べる&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description> ローカルマシン(今回はWindows)から、ホストのLinux(ローカルマシン内のVagrant)に、 メッセージを送ってポートの確認を行う方法
+netcatのインストール まずはyumでLinuxにインストール
+sudo yum -y install nc.x86_64  次に下記URLからWindowsにインストール
+ windows版のnetcat  WindowsからLinuxの指定のポートにメッセージを送る Windowsのコンソールを立ち上げ、Linux(192.168,33.10)の(例えば)8082ポートにecho これで8082ポートが開いている確認できる
+C:\Program Files (x86)\netcat&amp;gt; echo &#39;hello&#39; | nc 192.168.33.10 8082  次に Linux側で8082ポートをListen。すると期待どおりメッセージが表示される
+$ nc -l 8082 &#39;hello&#39;  ホスト側の現在開いているポートを確認する ホスト側でポート状況を確認するには、以下のパラーメータをつける
+$ netstat -ant  オプション  -t TCPポートを表示する -u UDPポートを表示する -a すべての有効なポートを表示する -n 一切の名前解決を行なわない  参考サイト  Netcat でネットワークをもう少し活用する netstatコマンドを使いこなす netstat（1）――TCP通信の接続状況を調べる  </description>
     </item>
     
   </channel>

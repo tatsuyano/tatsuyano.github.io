@@ -7,7 +7,9 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
     <lastBuildDate>Tue, 15 Oct 2013 01:00:00 +0900</lastBuildDate>
-    <atom:link href="http://tatsuyano.github.io/tags/css/index.xml" rel="self" type="application/rss+xml" />
+    
+	<atom:link href="http://tatsuyano.github.io/tags/css/index.xml" rel="self" type="application/rss+xml" />
+    
     
     <item>
       <title>auto-installでscss-modeをインストールする</title>
@@ -15,35 +17,10 @@
       <pubDate>Tue, 15 Oct 2013 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/10/15/emacs-install-scss-mode/</guid>
-      <description>
-
-&lt;p&gt;el-getでうまくインストールできなかったので、今回はauto-installを使いました。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;M-x auto-install-from-url RET https://raw.github.com/antonj/scss-mode/master/scss-mode.el
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;touch ~/.emacs.d/conf/55-scss.el&lt;/p&gt;
-
-&lt;pre&gt;&lt;code class=&#34;language-scheme&#34;&gt;;; scss-mode
-;; https://github.com/antonj/scss-mode
-(autoload &#39;scss-mode &amp;quot;scss-mode&amp;quot;)
-(add-to-list &#39;auto-mode-alist &#39;(&amp;quot;\\.\\(scss\\|css\\|sass\\)\\&#39;&amp;quot; . scss-mode))
-(setq scss-compile-at-save nil)
-
-;; auto-comple
-(add-to-list &#39;ac-modes &#39;scss-mode)
-(add-hook &#39;scss-mode-hook &#39;ac-css-mode-setup)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;参考サイト:d834f13bee9b64e5b4fe07d231f97490&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.sanojimaru.com/post/20621077969/emacs-scss-scss-mode&#34;&gt;emacsでscssを扱うscss-modeを入れる&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://blog.be-open.net/emacs/emacs-scss-mode/&#34;&gt;Emacsにscss-modeをいれた。&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description> el-getでうまくインストールできなかったので、今回はauto-installを使いました。
+M-x auto-install-from-url RET https://raw.github.com/antonj/scss-mode/master/scss-mode.el  touch ~/.emacs.d/conf/55-scss.el
+;; scss-mode ;; https://github.com/antonj/scss-mode (autoload &#39;scss-mode &amp;quot;scss-mode&amp;quot;) (add-to-list &#39;auto-mode-alist &#39;(&amp;quot;\\.\\(scss\\|css\\|sass\\)\\&#39;&amp;quot; . scss-mode)) (setq scss-compile-at-save nil) ;; auto-comple (add-to-list &#39;ac-modes &#39;scss-mode) (add-hook &#39;scss-mode-hook &#39;ac-css-mode-setup)  参考サイト 以下のサイトを参考にさせていただきました。ありがとうございます！
+ emacsでscssを扱うscss-modeを入れる Emacsにscss-modeをいれた。  </description>
     </item>
     
     <item>
@@ -52,97 +29,13 @@
       <pubDate>Mon, 14 Oct 2013 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2013/10/14/install-sass-and-compass/</guid>
-      <description>
-
-&lt;p&gt;最近PGでもCSSがいじれて当たり前いう空気をヒシヒシと感じ、&lt;br /&gt;
-せっかくなんでsassを勉強することにしました。&lt;/p&gt;
-
-&lt;h3 id=&#34;用語の整理:4ed71d8ab965dfa1df25b16b48a41ba2&#34;&gt;用語の整理&lt;/h3&gt;
-
-&lt;ul&gt;
-&lt;li&gt;less &amp;hellip; CSS拡張メタ言語。コンパイルして使う less -&amp;gt; css&lt;/li&gt;
-&lt;li&gt;scss &amp;hellip; CSS拡張メタ言語。コンパイルして使う scss -&amp;gt; css&lt;/li&gt;
-&lt;li&gt;sass &amp;hellip; scssのバージョン違い。広義の意味ではこれもscss。ファイルの拡張子も.scss&lt;/li&gt;
-&lt;li&gt;compass &amp;hellip; cssのFW、というかツールに近い。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&#34;どれを使うか:4ed71d8ab965dfa1df25b16b48a41ba2&#34;&gt;どれを使うか&lt;/h3&gt;
-
-&lt;p&gt;文法がシンプルでかつoctopressやrailsで採用されているので、sassを使うことにしました。&lt;br /&gt;
-sassを記述するのにcompassを使うと便利、というか標準みたいなのでcompassも使います。&lt;/p&gt;
-
-&lt;h3 id=&#34;sassのインストール:4ed71d8ab965dfa1df25b16b48a41ba2&#34;&gt;sassのインストール&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;gem install sass
-
-gem list sass
-sass (3.2.12)
-
-gem which sass
-/home/hoge/.rbenv/versions/1.9.3-p125/lib/ruby/gems/1.9.1/gems/sass-3.2.12/lib/sass.rb
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;compassのインストール:4ed71d8ab965dfa1df25b16b48a41ba2&#34;&gt;compassのインストール&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;gem install compass
-
-gem list compass
-compass (0.12.2)
-
-gem which compass
-/home/noguchi/.rbenv/versions/1.9.3-p125/lib/ruby/gems/1.9.1/gems/compass-0.12.2/lib/compass.rb
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;パスを通す:4ed71d8ab965dfa1df25b16b48a41ba2&#34;&gt;パスを通す&lt;/h3&gt;
-
-&lt;p&gt;パスが通っていなかったので、パスの通っている&lt;br /&gt;
-$HOME/.rbenv/shims/以下に同じ名前のスクリプトを置きました。&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;cp -a $HOME/.rbenv/shims/rake $HOME/.rbenv/shims/sass
-cp -a $HOME/.rbenv/shims/rake $HOME/.rbenv/shims/compass
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;プロジェクトの作成:4ed71d8ab965dfa1df25b16b48a41ba2&#34;&gt;プロジェクトの作成&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;compass create test --sass-dir &amp;quot;sass&amp;quot; --css-dir &amp;quot;css&amp;quot; --javascripts-dir &amp;quot;js&amp;quot; --images-dir &amp;quot;img&amp;quot;
-tree test
-test
-├── config.rb
-├── css
-│   ├── ie.css
-│   ├── print.css
-│   └── screen.css
-└── sass
-    ├── ie.scss
-        ├── print.scss
-            └── screen.scss
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;既存のプロジェクトにcompassプロジェクトを追加する:4ed71d8ab965dfa1df25b16b48a41ba2&#34;&gt;既存のプロジェクトにCompassプロジェクトを追加する&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;compass init &amp;lt;ディレクトリ名&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;sassファイルのコンパイル:4ed71d8ab965dfa1df25b16b48a41ba2&#34;&gt;Sassファイルのコンパイル&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;compass compile
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&#34;ファイル変更時-自動でコンパイルする:4ed71d8ab965dfa1df25b16b48a41ba2&#34;&gt;ファイル変更時、自動でコンパイルする&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;compass watch
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&#34;参考サイト:4ed71d8ab965dfa1df25b16b48a41ba2&#34;&gt;参考サイト&lt;/h2&gt;
-
-&lt;p&gt;以下のサイトを参考にさせていただきました。ありがとうございます！&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;http://parashuto.com/rriver/development/compass-sass-basics-installation-and-tools&#34;&gt;CompassとSassの基礎の覚書&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://howtohp.com/css/compass-environment_setting.html&#34;&gt;Compassで本番用と開発用で設定を振り分けてみる&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://parashuto.com/rriver/development/utilizing-sass-compass-in-an-organization&#34;&gt;Sass/Compassの社内運用に関するありがたいスライドから学んだことのまとめ&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-</description>
+      <description>最近PGでもCSSがいじれて当たり前いう空気をヒシヒシと感じ、
+せっかくなんでsassを勉強することにしました。
+用語の整理  less &amp;hellip; CSS拡張メタ言語。コンパイルして使う less -&amp;gt; css scss &amp;hellip; CSS拡張メタ言語。コンパイルして使う scss -&amp;gt; css sass &amp;hellip; scssのバージョン違い。広義の意味ではこれもscss。ファイルの拡張子も.scss compass &amp;hellip; cssのFW、というかツールに近い。  どれを使うか 文法がシンプルでかつoctopressやrailsで採用されているので、sassを使うことにしました。
+sassを記述するのにcompassを使うと便利、というか標準みたいなのでcompassも使います。
+sassのインストール gem install sass gem list sass sass (3.2.12) gem which sass /home/hoge/.rbenv/versions/1.9.3-p125/lib/ruby/gems/1.9.1/gems/sass-3.2.12/lib/sass.rb  compassのインストール gem install compass gem list compass compass (0.12.2) gem which compass /home/noguchi/.rbenv/versions/1.9.3-p125/lib/ruby/gems/1.9.1/gems/compass-0.12.2/lib/compass.rb  パスを通す パスが通っていなかったので、パスの通っている
+$HOME/.rbenv/shims/以下に同じ名前のスクリプトを置きました。
+cp -a $HOME/.rbenv/shims/rake $HOME/.rbenv/shims/sass cp -a $HOME/.rbenv/shims/rake $HOME/.rbenv/shims/compass  プロジェクトの作成 compass create test --sass-dir &amp;quot;sass&amp;quot; --css-dir &amp;quot;css&amp;quot; --javascripts-dir &amp;quot;js&amp;quot; --images-dir &amp;quot;img&amp;quot; tree test test ├── config.</description>
     </item>
     
   </channel>
