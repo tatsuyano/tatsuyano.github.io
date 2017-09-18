@@ -69,6 +69,22 @@ casper.createMarkdown = function(title,describe){
   fs.write(&#39;result/&#39;+title+&#39;.md&#39;, template);
 };
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&#34;ファイルアップロード-type-file-を操作する:0f17afad2dfafdb4933c4127f2233642&#34;&gt;ファイルアップロード(type=&amp;ldquo;file&amp;rdquo;)を操作する&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code class=&#34;language-javascript&#34;&gt; casper.then(function() {
+   // 画像はフルパスで、evaluate()の外で実行する
+   this.page.uploadFile(&#39;input[type=&amp;quot;file&amp;quot;]&#39;, &#39;/vagrant/sample_image.jpg&#39;);
+
+   this.evaluate(function(number, title) {
+     $(&#39;[name=&amp;quot;coupon[number]&amp;quot;]&#39;).val(number);
+     $(&#39;[name=&amp;quot;coupon[title]&amp;quot;]&#39;).val(title);
+
+     document.querySelector(&#39;form&#39;).submit();
+
+   }, &#39;999&#39;, &#39;title_test&#39;);
+ });
+&lt;/code&gt;&lt;/pre&gt;
 </description>
     </item>
     
