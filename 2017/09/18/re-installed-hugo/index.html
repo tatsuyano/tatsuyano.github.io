@@ -104,8 +104,9 @@ Tags <a href="http://tatsuyano.github.io/tags/blog">blog</a>
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                   
 
-<p>久々にblogに記事を書こうと新しいmacにhugoをインストールしたが、まったく動かなかっていたので自分用にメモ。<br />
-ちなみに構成は、Hugo本体をbitbucketのリポジトリに非公開で管理し、生成した記事(HTML)をgithub pagesで管理している。</p>
+<p>久々にblogに記事を書こうと新しいmacにhugoをインストールしたが、まったく動かなかっていたので自分用にメモ。</p>
+
+<p>ちなみに構成は、Hugo本体をbitbucketのリポジトリに非公開で管理し、生成した記事(HTML)をgithub pagesで管理している。</p>
 
 <h2 id="install-hugo">Install Hugo</h2>
 
@@ -124,10 +125,10 @@ Hugo Static Site Generator v0.27.1 darwin/amd64 BuildDate: 2017-09-16T19:35:01+0
 
 <p>まずgithub pageでブログを公開するために、github上に生成したHTMLを管理するリポジトリを<code>submodule</code>として管理している。</p>
 
-<p>ちなみにそもそもsubmoduleの仕組みだが、<code>git submodule add</code>すると、リポジトリの直下に<code>.gitmodules</code>、<code>.git/config</code>、<code>.git/modules</code>の３箇所に記載、ファイルが追加される。</p>
+<p>そもそもsubmoduleの仕組みだが、<code>git submodule add</code>すると、リポジトリの直下に<code>.gitmodules</code>、<code>.git/config</code>、<code>.git/modules</code>の３箇所に記載、ファイルが追加される。</p>
 
 <p>しかし今回のように、すでにある(add moduleした)リポジトリをcloneした場合<code>.git/modules</code>中にファイルが存在しない。
-なので、いったん<code>git rm public</code>でsubmoduleを一旦削除(すると上記３ファイルの記載が消える)し、再度<code>git submodule add</code>する。</p>
+なので一旦<code>git rm public</code>でsubmoduleを削除し(すると上記３ファイルの記載が消える)、再度<code>git submodule add</code>する。</p>
 
 <pre><code class="language-shell">$ git rm public
 $ git submodule add git@github.com:tatsuyano/tatsuyano.github.io.git
@@ -167,7 +168,7 @@ $ hugo server --renderToDisk=true
 
 <h2 id="ローカルで確認してからdeploy">ローカルで確認してからdeploy</h2>
 
-<p><code>hugo server</code>でローカル( <a href="http://localhost:1313">http://localhost:1313</a> )で確認し、問題なければいつもどおり<code>deploy.sh</code>でgithubにpushし、github pagesで公開する。</p>
+<p><code>hugo server</code>でローカル( <a href="http://localhost:1313">http://localhost:1313</a> )で確認し終わったら、いつもどおり<code>deploy.sh</code>でgithubにpushし、github pagesでblogを公開する。</p>
 
 <pre><code class="language-shell">$ sh .deploy.sh
 </code></pre>
