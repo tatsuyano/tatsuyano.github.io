@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>git-gutter.elをインストールする -- blog.10rane.com</title>
+    <title>hugoを再インストールした -- blog.10rane.com</title>
 
     
 
@@ -79,16 +79,16 @@
         <div class="row">
            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
              <div class="post-heading">
-               <h1>git-gutter.elをインストールする</h1>
+               <h1>hugoを再インストールした</h1>
                <h2 class="subheading"></h2>
                <span class="meta">
                  
-Posted by <a href="#">Tatsuyano</a> on Tue, Apr 16, 2013
+Posted by <a href="#">Tatsuyano</a> on Mon, Sep 18, 2017
 <br />
 In 
 
 <br />
-Tags <a href="http://tatsuyano.github.io/tags/emacs">emacs</a>, <a href="http://tatsuyano.github.io/tags/git">git</a>
+Tags <a href="http://tatsuyano.github.io/tags/blog">blog</a>
 
                </span>
              </div>
@@ -104,57 +104,73 @@ Tags <a href="http://tatsuyano.github.io/tags/emacs">emacs</a>, <a href="http://
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                   
 
-<p>gitの差分を表示してくれる git-gutter を入れてみました。</p>
+<p>久々にblogに記事を書こうと新しいmacにhugoをインストールしたが、まったく動かなかっていたので自分用にメモ。<br />
+ちなみに構成は、Hugo本体をbitbucketのリポジトリに非公開で管理し、生成した記事(HTML)をgithub pagesで管理している。</p>
 
-<p><img src="https://dl.dropboxusercontent.com/u/159938/blog_images/git_gutter_001.png" alt="" /></p>
+<h2 id="install-hugo">Install Hugo</h2>
 
-<h2 id="インストール">インストール</h2>
+<p>今回はhomebrewでインストール。</p>
 
-<p>はじめREADME.mdにかいてあるとおり、M-x package-install git-gutter で</p>
-
-<blockquote>
-<blockquote>
-<p>Installation
-You can install git-gutter.el from MELPA with package.el (M-x package-install git-gutter).
-And you can also install it with el-get.</p>
-</blockquote>
-</blockquote>
-
-<p>ELPA経由インストールしてみたが、versionが0.28と少し古くエラーがでたので、el-getのrecipeを用意してインストールした。</p>
-
-<pre><code class="language-scheme">(:name emacs-git-gutter
-  :type github
-  :website &quot;https://github.com/syohex/emacs-git-gutter&quot;
-  :description &quot;[My Recipes] git-gutter.el is port of GitGutter which is a plugin of Sublime Text.&quot;
-  :pkgname &quot;syohex/emacs-git-gutter&quot;)
+<pre><code class="language-shell">$ brew install hugo
+$ hugo version
+Hugo Static Site Generator v0.27.1 darwin/amd64 BuildDate: 2017-09-16T19:35:01+09:00
 </code></pre>
-
-<h2 id="設定">設定</h2>
-
-<p>とりあえず差分の表示だけがほしいので、最小限の設定に。</p>
-
-<p>.emacs.d/conf/81-git-gutter.el</p>
-
-<pre><code class="language-scheme">(require 'git-gutter)
-;;(global-git-gutter-mode t)
-
-(setq git-gutter:separator-sign &quot;|&quot;)
-(set-face-foreground 'git-gutter:separator &quot;yellow&quot;)
-
-(add-hook 'cperl-mode-hook 'git-gutter-mode)
-(add-hook 'js2-mode-hook   'git-gutter-mode)
-(add-hook 'php-mode-hook   'git-gutter-mode)
-(add-hook 'ruby-mode-hook  'git-gutter-mode)
-</code></pre>
-
-<h2 id="参考サイト">参考サイト</h2>
-
-<p>以下のサイトを参考にさせていただきました。ありがとうございます！</p>
 
 <ul>
-<li><a href="https://github.com/syohex/emacs-git-gutter/blob/master/README.md">github</a></li>
-<li><a href="http://d.hatena.ne.jp/naoya/20130414/1365967372">git-gutter.el</a></li>
+<li><a href="https://gohugo.io/getting-started/quick-start/">Quick Start</a></li>
 </ul>
+
+<h2 id="add-submodule">Add submodule</h2>
+
+<p>まずgithub pageでブログを公開するために、github上に生成したHTMLを管理するリポジトリを<code>submodule</code>として管理している。</p>
+
+<p>ちなみにそもそもsubmoduleの仕組みだが、<code>git submodule add</code>すると、リポジトリの直下に<code>.gitmodules</code>、<code>.git/config</code>、<code>.git/modules</code>の３箇所に記載、ファイルが追加される。</p>
+
+<p>しかし今回のように、すでにある(add moduleした)リポジトリをcloneした場合<code>.git/modules</code>中にファイルが存在しない。
+なので、いったん<code>git rm public</code>でsubmoduleを一旦削除(すると上記３ファイルの記載が消える)し、再度<code>git submodule add</code>する。</p>
+
+<pre><code class="language-shell">$ git rm public
+$ git submodule add git@github.com:tatsuyano/tatsuyano.github.io.git
+
+##.gitsubmodules
+[submodule &quot;public&quot;]
+        path = public
+        url = git@github.com:tatsuyano/tatsuyano.github.io.git
+
+## .git/config
+[submodule &quot;public&quot;]
+    url = git@github.com:tatsuyano/tatsuyano.github.io.git
+
+## git/modules
+$ ll .git/modules/
+drwxr-xr-x  13 noguchi  staff   442B Sep 18 19:50 public //&lt;-追加される
+drwxr-xr-x   4 noguchi  staff   136B Sep 18 20:20 themes
+</code></pre>
+
+<ul>
+<li><a href="https://git-scm.com/book/ja/v1/Git-%E3%81%AE%E3%81%95%E3%81%BE%E3%81%96%E3%81%BE%E3%81%AA%E3%83%84%E3%83%BC%E3%83%AB-%E3%82%B5%E3%83%96%E3%83%A2%E3%82%B8%E3%83%A5%E3%83%BC%E3%83%AB">Git のさまざまなツール - サブモジュール</a></li>
+</ul>
+
+<h2 id="version-0-15から静的ファイル-public-が自動生成されなくなった">version 0.15から静的ファイル(public)が自動生成されなくなった</h2>
+
+<p>そのためまず<code>hugo server --renderToDisk=true</code>でpublic配下にHTMLファイルを生成してから、deploy(githubにpush)する必要がでてきた。</p>
+
+<pre><code class="language-shell">$ hugo version
+Hugo Static Site Generator v0.27.1 darwin/amd64 BuildDate: 2017-09-16T19:35:01+09:00
+
+$ hugo server --renderToDisk=true
+</code></pre>
+
+<ul>
+<li><a href="http://lab.geo.jp/blog/other/hugo-public-v015.html">Hugo の public フォルダへの生成が v0.15 から変更に</a></li>
+</ul>
+
+<h2 id="ローカルで確認してからdeploy">ローカルで確認してからdeploy</h2>
+
+<p><code>hugo server</code>でローカル( <a href="http://localhost:1313">http://localhost:1313</a> )で確認し、問題なければいつもどおり<code>deploy.sh</code>でgithubにpushし、github pagesで公開する。</p>
+
+<pre><code class="language-shell">$ sh .deploy.sh
+</code></pre>
 
                   
 

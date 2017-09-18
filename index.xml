@@ -6,10 +6,25 @@
     <description>Recent content on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 17 Sep 2017 14:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 18 Sep 2017 20:00:00 +0900</lastBuildDate>
     
 	<atom:link href="http://tatsuyano.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>hugoを再インストールした</title>
+      <link>http://tatsuyano.github.io/2017/09/18/re-installed-hugo/</link>
+      <pubDate>Mon, 18 Sep 2017 20:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2017/09/18/re-installed-hugo/</guid>
+      <description>久々にblogに記事を書こうと新しいmacにhugoをインストールしたが、まったく動かなかっていたので自分用にメモ。
+ちなみに構成は、Hugo本体をbitbucketのリポジトリに非公開で管理し、生成した記事(HTML)をgithub pagesで管理している。
+Install Hugo 今回はhomebrewでインストール。
+$ brew install hugo $ hugo version Hugo Static Site Generator v0.27.1 darwin/amd64 BuildDate: 2017-09-16T19:35:01+09:00   Quick Start  Add submodule まずgithub pageでブログを公開するために、github上に生成したHTMLを管理するリポジトリをsubmoduleとして管理している。
+ちなみにそもそもsubmoduleの仕組みだが、git submodule addすると、リポジトリの直下に.gitmodules、.git/config、.git/modulesの３箇所に記載、ファイルが追加される。
+しかし今回のように、すでにある(add moduleした)リポジトリをcloneした場合.git/modules中にファイルが存在しない。 なので、いったんgit rm publicでsubmoduleを一旦削除(すると上記３ファイルの記載が消える)し、再度git submodule addする。
+$ git rm public $ git submodule add git@github.com:tatsuyano/tatsuyano.github.io.git ##.gitsubmodules [submodule &amp;quot;public&amp;quot;] path = public url = git@github.com:tatsuyano/tatsuyano.github.io.git ## .git/config [submodule &amp;quot;public&amp;quot;] url = git@github.com:tatsuyano/tatsuyano.github.io.git ## git/modules $ ll .</description>
+    </item>
     
     <item>
       <title>fishをインストールする</title>
