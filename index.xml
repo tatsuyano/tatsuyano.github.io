@@ -6,10 +6,21 @@
     <description>Recent content on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Mon, 18 Sep 2017 20:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 19 Sep 2017 10:00:00 +0900</lastBuildDate>
     
 	<atom:link href="http://tatsuyano.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Syntax checker html-tidy reported too many errors</title>
+      <link>http://tatsuyano.github.io/2017/09/19/installed-tidy-html5-for-flycheck/</link>
+      <pubDate>Tue, 19 Sep 2017 10:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2017/09/19/installed-tidy-html5-for-flycheck/</guid>
+      <description>macのemacsでHTMLを開くとflycheck(html-tidy)で警告がでるようになった。
+Warning (flycheck): Syntax checker html-tidy reported too many errors (960) and is disabled.  tidyという名前のパッケージがなかったので調べたら、最近はtidy-html5という名前らしい。
+$ brew install tidy-html5  </description>
+    </item>
     
     <item>
       <title>hugoを再インストールした</title>
@@ -32,11 +43,11 @@ $ git rm public $ git submodule add git@github.com:tatsuyano/tatsuyano.github.io
       <pubDate>Sun, 17 Sep 2017 14:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/2017/09/17/install-fish/</guid>
-      <description>fish &amp;amp; fishermanのインストール macを新調したので、shellもzshからfishに乗り換えてみた。
-install fish $ brew install fish $ fish -v fish, version 2.6.0  fishをログインシェルにせず、bashから起動する ログインシェルをfishにするとfishに問題があったときにterminalが動かなくなってしまうので、bash_profileの一番下でexec fishを実行する。 またanyenvがfishに 完全に対応していないので、bashでanyenvを動かしてからfishを動かす。
-＄HOME/.bash_profile
-if [ -d $HOME/.anyenv ]; then export PATH=$HOME/.anyenv/bin:$PATH eval &amp;quot;$(anyenv init -)&amp;quot; fi exec fish   ログインシェルはbashのままfishを利用する fishシェルでanyenvを設定したときにcalled during startupエラーが出る  install fisherman PluginManagerはfishermanを選択
-$ curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher $ fisher -v fisherman version 2.13.1 ~/.config/fish/functions/fisher.fish   fisherman/fisherman oh-my-fish は古い！fisherman で置き換えられる fishのプラグインマネージャ比較  テーマはOhMyFishのagnosterを選択。別のテーマに変更する場合は、再度installすると変更される</description>
+      <description>macを新調したので、shellもzshからfishに乗り換えてみた。
+Install fish $ brew install fish $ fish -v fish, version 2.6.0  fishをログインシェルにせず、bashから起動する ログインシェルをfishにするとfishに問題があったときにterminalが動かなくなってしまうので、bash_profileからexec fishで起動する。 またanyenvがfishに完全に対応していないみたいなので、bashでanyenvを動かしてからfishを動かす。
+## HOME/.bash_profile if [ -d $HOME/.anyenv ]; then export PATH=$HOME/.anyenv/bin:$PATH eval &amp;quot;$(anyenv init -)&amp;quot; fi exec fish   ログインシェルはbashのままfishを利用する fishシェルでanyenvを設定したときにcalled during startupエラーが出る  Install fisherman はじめはOhMyFishをインストールしたが、調べた結果fishermanのほうがよさそうだったのでプラグインマネージャーはfishermanに。コマンドはfisher
+$ curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher $ fisher -v fisherman version 2.13.1 ~/.config/fish/functions/fisher.fish   fisherman/fisherman oh-my-fish は古い！fisherman で置き換えられる fishのプラグインマネージャ比較  テーマはOhMyFishのagnosterを選択。別のテーマに変更する場合は、再度installすると変更される。
+$ fisher install omf/theme-agnoster  pluginのインストール</description>
     </item>
     
     <item>

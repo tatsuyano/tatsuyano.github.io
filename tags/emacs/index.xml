@@ -6,10 +6,21 @@
     <description>Recent content in Emacs on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Thu, 06 Aug 2015 16:51:00 +0900</lastBuildDate>
+    <lastBuildDate>Tue, 19 Sep 2017 10:00:00 +0900</lastBuildDate>
     
 	<atom:link href="http://tatsuyano.github.io/tags/emacs/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Syntax checker html-tidy reported too many errors</title>
+      <link>http://tatsuyano.github.io/2017/09/19/installed-tidy-html5-for-flycheck/</link>
+      <pubDate>Tue, 19 Sep 2017 10:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2017/09/19/installed-tidy-html5-for-flycheck/</guid>
+      <description>macのemacsでHTMLを開くとflycheck(html-tidy)で警告がでるようになった。
+Warning (flycheck): Syntax checker html-tidy reported too many errors (960) and is disabled.  tidyという名前のパッケージがなかったので調べたら、最近はtidy-html5という名前らしい。
+$ brew install tidy-html5  </description>
+    </item>
     
     <item>
       <title>EmacsにternをインストールしてjQueryを補完する</title>

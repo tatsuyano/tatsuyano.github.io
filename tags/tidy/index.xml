@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tidy on blog.10rane.com</title>
+    <link>http://tatsuyano.github.io/tags/tidy/</link>
+    <description>Recent content in Tidy on blog.10rane.com</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>ja</language>
+    <lastBuildDate>Tue, 19 Sep 2017 10:00:00 +0900</lastBuildDate>
+    
+	<atom:link href="http://tatsuyano.github.io/tags/tidy/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Syntax checker html-tidy reported too many errors</title>
+      <link>http://tatsuyano.github.io/2017/09/19/installed-tidy-html5-for-flycheck/</link>
+      <pubDate>Tue, 19 Sep 2017 10:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/2017/09/19/installed-tidy-html5-for-flycheck/</guid>
+      <description>macのemacsでHTMLを開くとflycheck(html-tidy)で警告がでるようになった。
+Warning (flycheck): Syntax checker html-tidy reported too many errors (960) and is disabled.  tidyという名前のパッケージがなかったので調べたら、最近はtidy-html5という名前らしい。
+$ brew install tidy-html5  </description>
+    </item>
+    
+  </channel>
+</rss>

@@ -77,7 +77,7 @@
     <item>
       <title>Emacs</title>
       <link>http://tatsuyano.github.io/tags/emacs/</link>
-      <pubDate>Thu, 06 Aug 2015 16:51:00 +0900</pubDate>
+      <pubDate>Tue, 19 Sep 2017 10:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/tags/emacs/</guid>
       <description></description>
@@ -93,11 +93,29 @@
     </item>
     
     <item>
+      <title>Fish</title>
+      <link>http://tatsuyano.github.io/tags/fish/</link>
+      <pubDate>Sun, 17 Sep 2017 14:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/tags/fish/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Fluentd</title>
       <link>http://tatsuyano.github.io/tags/fluentd/</link>
       <pubDate>Tue, 21 Oct 2014 01:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/tags/fluentd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Flycheck</title>
+      <link>http://tatsuyano.github.io/tags/flycheck/</link>
+      <pubDate>Tue, 19 Sep 2017 10:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/tags/flycheck/</guid>
       <description></description>
     </item>
     
@@ -149,7 +167,7 @@
     <item>
       <title>Linux</title>
       <link>http://tatsuyano.github.io/tags/linux/</link>
-      <pubDate>Sun, 17 Sep 2017 14:00:00 +0900</pubDate>
+      <pubDate>Mon, 11 Apr 2016 14:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/tags/linux/</guid>
       <description></description>
@@ -291,6 +309,15 @@
     </item>
     
     <item>
+      <title>Shell</title>
+      <link>http://tatsuyano.github.io/tags/shell/</link>
+      <pubDate>Sun, 17 Sep 2017 14:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/tags/shell/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Slack</title>
       <link>http://tatsuyano.github.io/tags/slack/</link>
       <pubDate>Fri, 13 Mar 2015 02:00:00 +0900</pubDate>
@@ -305,6 +332,15 @@
       <pubDate>Wed, 06 Jan 2016 10:40:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/tags/swift/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Tidy</title>
+      <link>http://tatsuyano.github.io/tags/tidy/</link>
+      <pubDate>Tue, 19 Sep 2017 10:00:00 +0900</pubDate>
+      
+      <guid>http://tatsuyano.github.io/tags/tidy/</guid>
       <description></description>
     </item>
     
@@ -338,7 +374,7 @@
     <item>
       <title>Windows</title>
       <link>http://tatsuyano.github.io/tags/windows/</link>
-      <pubDate>Sun, 17 Sep 2017 14:00:00 +0900</pubDate>
+      <pubDate>Mon, 11 Apr 2016 14:00:00 +0900</pubDate>
       
       <guid>http://tatsuyano.github.io/tags/windows/</guid>
       <description></description>

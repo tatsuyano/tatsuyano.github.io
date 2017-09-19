@@ -9,11 +9,8 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Emacs -- blog.10rane.com</title>
+    <title>Syntax checker html-tidy reported too many errors -- blog.10rane.com</title>
 
-    
-    <link href="http://tatsuyano.github.io/tags/emacs/index.xml" rel="alternate" type="application/rss+xml" title="blog.10rane.com" />
-    <link href="http://tatsuyano.github.io/tags/emacs/index.xml" rel="feed" type="application/rss+xml" title="blog.10rane.com" />
     
 
     
@@ -75,121 +72,52 @@
 
 
     
-    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io/img/home-bg.jpg')">
-     <div class="container">
-       <div class="row">
-         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-           <div class="site-heading">
-             <h1>Emacs</h1>
-             <hr class="small">
-             <span class="subheading"></span>
+    
+    <header class="intro-header" style="background-image: url('http://tatsuyano.github.io//img/about-bg.jpg')">
+      
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Syntax checker html-tidy reported too many errors</h1>
+               <h2 class="subheading"></h2>
+               <span class="meta">
+                 
+Posted by <a href="#">Tatsuyano</a> on Tue, Sep 19, 2017
+<br />
+In 
+
+<br />
+Tags <a href="http://tatsuyano.github.io/tags/emacs">emacs</a>, <a href="http://tatsuyano.github.io/tags/flycheck">flycheck</a>, <a href="http://tatsuyano.github.io/tags/tidy">tidy</a>
+
+               </span>
+             </div>
            </div>
-         </div>
-       </div>
-     </div>
+        </div>
+      </div>
     </header>
 
     
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://tatsuyano.github.io/2012/08/20/emacs-auto-complete/">auto-complete.elをインストールする</a> on Mon, Aug 20, 2012
-                    <br />
-                    In 
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <p>macのemacsでHTMLを開くとflycheck(html-tidy)で警告がでるようになった。</p>
 
-                    Tags <a href="http://tatsuyano.github.io/tags/emacs">emacs</a>
-                  </p>
-               </div>
+<pre><code class="language-shell">Warning (flycheck): Syntax checker html-tidy reported too many errors (960) and is disabled.
+</code></pre>
 
-          
-                             <div class="post-preview">
-                  <p class="post-meta"><a href="http://tatsuyano.github.io/2012/08/20/emacs-auto-install/">auto-install.elをインストールする</a> on Mon, Aug 20, 2012
-                    <br />
-                    In 
+<p><code>tidy</code>という名前のパッケージがなかったので調べたら、最近は<code>tidy-html5</code>という名前らしい。</p>
 
-                    Tags <a href="http://tatsuyano.github.io/tags/emacs">emacs</a>
-                  </p>
-               </div>
+<pre><code class="language-shell">$ brew install tidy-html5
+</code></pre>
 
-          
-          
+                  
 
-<ul class="pagination">
-    
-    <li>
-        <a href="http://tatsuyano.github.io/tags/emacs/" aria-label="First"><span aria-hidden="true">&laquo;&laquo;</span></a>
-    </li>
-    
-    <li
-    >
-    <a href="http://tatsuyano.github.io/tags/emacs/page/3/" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
-    </li>
-    
-    
-    
-    
-    
-    
-        
-        
-    
-    
-    <li
-    ><a href="http://tatsuyano.github.io/tags/emacs/">1</a></li>
-    
-    
-    
-    
-    
-    
-        
-        
-    
-    
-    <li
-    ><a href="http://tatsuyano.github.io/tags/emacs/page/2/">2</a></li>
-    
-    
-    
-    
-    
-    
-        
-        
-    
-    
-    <li
-    ><a href="http://tatsuyano.github.io/tags/emacs/page/3/">3</a></li>
-    
-    
-    
-    
-    
-    
-        
-        
-    
-    
-    <li
-    class="active"><a href="http://tatsuyano.github.io/tags/emacs/page/4/">4</a></li>
-    
-    
-    <li
-    class="disabled">
-    <a href="" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
-    </li>
-    
-    <li>
-        <a href="http://tatsuyano.github.io/tags/emacs/page/4/" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
-    </li>
-    
-</ul>
-
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
+    </article>
 
     <hr>
     

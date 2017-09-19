@@ -6,23 +6,10 @@
     <description>Recent content in Linux on blog.10rane.com</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>ja</language>
-    <lastBuildDate>Sun, 17 Sep 2017 14:00:00 +0900</lastBuildDate>
+    <lastBuildDate>Mon, 11 Apr 2016 14:00:00 +0900</lastBuildDate>
     
 	<atom:link href="http://tatsuyano.github.io/tags/linux/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>fishをインストールする</title>
-      <link>http://tatsuyano.github.io/2017/09/17/install-fish/</link>
-      <pubDate>Sun, 17 Sep 2017 14:00:00 +0900</pubDate>
-      
-      <guid>http://tatsuyano.github.io/2017/09/17/install-fish/</guid>
-      <description>fish &amp;amp; fishermanのインストール macを新調したので、shellもzshからfishに乗り換えてみた。
-install fish $ brew install fish $ fish -v fish, version 2.6.0  fishをログインシェルにせず、bashから起動する ログインシェルをfishにするとfishに問題があったときにterminalが動かなくなってしまうので、bash_profileの一番下でexec fishを実行する。 またanyenvがfishに 完全に対応していないので、bashでanyenvを動かしてからfishを動かす。
-＄HOME/.bash_profile
-if [ -d $HOME/.anyenv ]; then export PATH=$HOME/.anyenv/bin:$PATH eval &amp;quot;$(anyenv init -)&amp;quot; fi exec fish   ログインシェルはbashのままfishを利用する fishシェルでanyenvを設定したときにcalled during startupエラーが出る  install fisherman PluginManagerはfishermanを選択
-$ curl -Lo ~/.config/fish/functions/fisher.fish --create-dirs https://git.io/fisher $ fisher -v fisherman version 2.13.1 ~/.config/fish/functions/fisher.fish   fisherman/fisherman oh-my-fish は古い！fisherman で置き換えられる fishのプラグインマネージャ比較  テーマはOhMyFishのagnosterを選択。別のテーマに変更する場合は、再度installすると変更される</description>
-    </item>
     
     <item>
       <title>netcatを使って、ポートの状況を確認する</title>
